@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مغامرة شمشون والشفرة السرية - بالعامية المصرية والتعلم الحديث</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ocean: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#06b6d4',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                            dark: '#031c30'
+                        },
+                        sponge: {
+                            light: '#fef08a',
+                            DEFAULT: '#eab308',
+                            dark: '#ca8a04'
+                        },
+                        plankton: {
+                            light: '#a7f3d0',
+                            DEFAULT: '#10b981',
+                            dark: '#047857'
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        tajawal: ['Tajawal', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: linear-gradient(180deg, #0284c7 0%, #0369a1 40%, #0f172a 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Underwater Bubble Effect */
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            animation: rise 12s infinite ease-in-out;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(100vh) scale(0.3); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-20vh) scale(1.2); opacity: 0; }
+        }
+
+        /* Glassmorphism card */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0284c7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #eab308;
+            border-radius: 4px;
+        }
+
+        .tab-btn.active {
+            background-color: #eab308;
+            color: #0f172a;
+            font-weight: 900;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(234, 179, 8, 0.4);
+        }
+
+        /* Flip card for Flashcards */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(234, 179, 8, 0.6); }
+            50% { box-shadow: 0 0 30px rgba(234, 179, 8, 0.9); }
+        }
+    </style>
+</head>
+<body class="relative min-h-screen flex flex-col justify-between selection:bg-yellow-300 selection:text-black">
+
+    <!-- Background Bubbles Container -->
+    <div id="bubbles-container" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
+
+    <!-- Header / Navigation -->
+    <header class="relative z-10 border-b border-white/10 bg-slate-900/90 backdrop-filter backdrop-blur-md sticky top-0">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col lg:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-yellow-400 rounded-2xl flex items-center justify-center text-slate-900 text-2xl font-black shadow-lg shadow-yellow-500/30 transform hover:rotate-6 transition">
+                    <i class="fa-solid fa-burger"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-200 to-cyan-300">
+                        مغامرة شمشون والشفرة السرية 🍔
+                    </h1>
+                    <p class="text-xs text-cyan-200 font-bold">بالعامية المصرية + أحدث تقنيات علوم التعلم والذاكرة</p>
+                </div>
+            </div>
+
+            <!-- Tab Buttons -->
+            <nav class="flex flex-wrap justify-center gap-2 bg-slate-800/80 p-1.5 rounded-2xl border border-white/10">
+                <button onclick="switchTab('story')" id="btn-story" class="tab-btn active px-3.5 py-2 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-masks-theater text-amber-400"></i>القصة الكوميدية
+                </button>
+                <button onclick="switchTab('feynman')" id="btn-feynman" class="tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-brain text-cyan-400"></i>طريقة فاينمان
+                </button>
+                <button onclick="switchTab('concepts')" id="btn-concepts" class="tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-sitemap text-emerald-400"></i>الربط والإنفوجرافيك
+                </button>
+                <button onclick="switchTab('flashcards')" id="btn-flashcards" class="tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-clone text-purple-400"></i>فلاش كاردز
+                </button>
+                <button onclick="switchTab('game')" id="btn-game" class="tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-gamepad text-red-400"></i>لعبة معمل شمشون
+                </button>
+                <button onclick="switchTab('quiz')" id="btn-quiz" class="tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-graduation-cap text-yellow-300"></i>تحدي التميز
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="relative z-10 max-w-7xl mx-auto px-4 py-8 flex-grow w-full">
+
+        <!-- ==================== SECTION 1: STORY ==================== -->
+        <section id="tab-story" class="space-y-8">
+            <div class="glass-card p-6 sm:p-8 rounded-3xl text-center max-w-3xl mx-auto border-yellow-400/30">
+                <span class="inline-block px-3 py-1 bg-yellow-400/20 text-yellow-300 rounded-full text-xs font-black mb-3 border border-yellow-400/30">
+                    <i class="fa-solid fa-clapperboard ml-1"></i>قصة تفاعلية ضاحكة بالعامية المصرية
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-black text-white mb-2">سر "سلطع برجر" وإزاي شمشون اتصدم!</h2>
+                <p class="text-cyan-100 text-xs sm:text-sm leading-relaxed font-semibold">
+                    افتح المشاهد مشهد مشهد وشوف بنفسك إزاي الرموز المطرقعة بتتحول لمعلومات ثم معرفة تكتكها سبونج بوب!
+                </p>
+            </div>
+
+            <!-- Story Stepper Control -->
+            <div class="flex justify-center items-center gap-2 overflow-x-auto pb-2">
+                <button onclick="goToStoryScene(1)" id="scene-dot-1" class="scene-dot px-3.5 py-2 rounded-2xl bg-yellow-400 font-black text-slate-900 text-xs transition flex items-center gap-1.5">
+                    <span>1️⃣</span> الرموز المطرقعة
+                </button>
+                <i class="fa-solid fa-chevron-left text-slate-500 text-xs"></i>
+                <button onclick="goToStoryScene(2)" id="scene-dot-2" class="scene-dot px-3.5 py-2 rounded-2xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition flex items-center gap-1.5">
+                    <span>2️⃣</span> فرم كارن والتشفير
+                </button>
+                <i class="fa-solid fa-chevron-left text-slate-500 text-xs"></i>
+                <button onclick="goToStoryScene(3)" id="scene-dot-3" class="scene-dot px-3.5 py-2 rounded-2xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition flex items-center gap-1.5">
+                    <span>3️⃣</span> اللقطة والانتشار
+                </button>
+                <i class="fa-solid fa-chevron-left text-slate-500 text-xs"></i>
+                <button onclick="goToStoryScene(4)" id="scene-dot-4" class="scene-dot px-3.5 py-2 rounded-2xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition flex items-center gap-1.5">
+                    <span>4️⃣</span> معلم المفهومية
+                </button>
+                <i class="fa-solid fa-chevron-left text-slate-500 text-xs"></i>
+                <button onclick="goToStoryScene(5)" id="scene-dot-5" class="scene-dot px-3.5 py-2 rounded-2xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition flex items-center gap-1.5">
+                    <span>5️⃣</span> إيد في المطبخ ولا قراءة
+                </button>
+            </div>
+
+            <!-- Story Display Card Container -->
+            <div id="story-viewport" class="glass-card rounded-3xl p-6 sm:p-10 transition-all duration-500 border border-white/20">
+                <!-- Dynamic Content injected via JS -->
+            </div>
+
+            <!-- Story Navigation Controls -->
+            <div class="flex justify-between items-center max-w-4xl mx-auto pt-2">
+                <button onclick="prevStoryScene()" id="btn-prev-scene" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs sm:text-sm transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-right"></i> المشهد اللي قبله
+                </button>
+                <span id="scene-indicator" class="text-xs font-black text-cyan-300 bg-slate-900/80 px-4 py-1.5 rounded-full border border-cyan-500/30">
+                    مشهد 1 من 5
+                </span>
+                <button onclick="nextStoryScene()" id="btn-next-scene" class="px-5 py-2.5 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-black text-xs sm:text-sm transition flex items-center gap-2 shadow-lg shadow-yellow-500/20">
+                    المشهد اللي بعده <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- ==================== SECTION 2: FEYNMAN TECHNIQUE ==================== -->
+        <section id="tab-feynman" class="hidden space-y-8">
+            <div class="glass-card p-6 sm:p-8 rounded-3xl text-center max-w-3xl mx-auto border-cyan-400/30">
+                <span class="inline-block px-3 py-1 bg-cyan-400/20 text-cyan-300 rounded-full text-xs font-black mb-3 border border-cyan-400/30">
+                    <i class="fa-solid fa-user-ninja ml-1"></i>طريقة فاينمان للتعلم الخارق (Feynman Technique)
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-black text-white mb-2">اشرح المفهوم لـ "بسيط هوبا"! ⭐️</h2>
+                <p class="text-cyan-100 text-xs sm:text-sm leading-relaxed font-semibold">
+                    "لو مش قادر تشرح المفهوم لواحد زي بسيط ببساطة.. يبقى أنت لسه ملميتش بيه صح!" اختر أسهل طريقة لشرح كل مفهوم وبسيط هيفهمك فوراً!
+                </p>
+            </div>
+
+            <!-- Interactive Feynman Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                
+                <!-- Data to Patrick -->
+                <div class="glass-card p-6 rounded-3xl space-y-4 border border-emerald-500/30">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-emerald-500/20 rounded-2xl text-emerald-400 flex items-center justify-center text-xl font-black">
+                            1
+                        </div>
+                        <div>
+                            <h3 class="font-black text-emerald-400 text-lg">البيانات (Data)</h3>
+                            <span class="text-[10px] text-slate-400">إزاي تشرحها لـ بسيط؟</span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-xs text-slate-300">بسيط بيسألك: <span class="text-pink-300 font-bold">"يعني ايه بيانات يا صاحبي؟"</span></p>
+
+                    <div class="space-y-2">
+                        <button onclick="checkFeynman('d1', false)" id="fey-d1" class="w-full text-right p-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-xs border border-white/5 font-medium transition">
+                            أ) دي وصفة أكولات بحرية متسبكة ومفهومة.
+                        </button>
+                        <button onclick="checkFeynman('d2', true)" id="fey-d2" class="w-full text-right p-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-xs border border-white/5 font-medium transition">
+                            ب) دي شخابيط وأرقام صامتة زي (100 - س - 5) ملهاش معنى لوحدها خالص!
+                        </button>
+                    </div>
+                    <div id="fey-res-d" class="text-xs font-bold p-3 rounded-xl hidden"></div>
+                </div>
+
+                <!-- Info to Patrick -->
+                <div class="glass-card p-6 rounded-3xl space-y-4 border border-cyan-500/30">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-cyan-500/20 rounded-2xl text-cyan-400 flex items-center justify-center text-xl font-black">
+                            2
+                        </div>
+                        <div>
+                            <h3 class="font-black text-cyan-400 text-lg">المعلومات (Info)</h3>
+                            <span class="text-[10px] text-slate-400">إزاي تشرحها لـ بسيط؟</span>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-slate-300">بسيط بيسألك: <span class="text-pink-300 font-bold">"وإزاي بتتحول لمعلومات بقى؟"</span></p>
+
+                    <div class="space-y-2">
+                        <button onclick="checkFeynman('i1', true)" id="fey-i1" class="w-full text-right p-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-xs border border-white/5 font-medium transition">
+                            أ) لما كارن تفرز الأرقام وتطبع جملة مفيدة: "حط سكر وخردل" فنفهم ونأخد قرار!
+                        </button>
+                        <button onclick="checkFeynman('i2', false)" id="fey-i2" class="w-full text-right p-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-xs border border-white/5 font-medium transition">
+                            ب) دي لما مستر سلطع يحرق الورقة في الشواية.
+                        </button>
+                    </div>
+                    <div id="fey-res-i" class="text-xs font-bold p-3 rounded-xl hidden"></div>
+                </div>
+
+                <!-- Knowledge to Patrick -->
+                <div class="glass-card p-6 rounded-3xl space-y-4 border border-amber-500/30">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-amber-500/20 rounded-2xl text-amber-400 flex items-center justify-center text-xl font-black">
+                            3
+                        </div>
+                        <div>
+                            <h3 class="font-black text-amber-400 text-lg">المعرفة (Knowledge)</h3>
+                            <span class="text-[10px] text-slate-400">إزاي تشرحها لـ بسيط؟</span>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-slate-300">بسيط بيسألك: <span class="text-pink-300 font-bold">"ليه خبرة سبونج بوب اسمها معرفة؟"</span></p>
+
+                    <div class="space-y-2">
+                        <button onclick="checkFeynman('k1', false)" id="fey-k1" class="w-full text-right p-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-xs border border-white/5 font-medium transition">
+                            أ) عشان بيحب اللون الأصفر والسبونج.
+                        </button>
+                        <button onclick="checkFeynman('k2', true)" id="fey-k2" class="w-full text-right p-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-xs border border-white/5 font-medium transition">
+                            ب) عشان عنده خبرة 10 سنين تحليلات وتنظيم خلت عنده قدرة يحل الأزمة ويبتكر!
+                        </button>
+                    </div>
+                    <div id="fey-res-k" class="text-xs font-bold p-3 rounded-xl hidden"></div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==================== SECTION 3: CONCEPTS & INFOGRAPHIC ==================== -->
+        <section id="tab-concepts" class="hidden space-y-8">
+            <div class="glass-card p-6 sm:p-8 rounded-3xl text-center max-w-3xl mx-auto border-emerald-400/30">
+                <span class="inline-block px-3 py-1 bg-emerald-400/20 text-emerald-300 rounded-full text-xs font-black mb-3 border border-emerald-400/30">
+                    <i class="fa-solid fa-sitemap ml-1"></i>المخطط العلمي المباشر
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-black text-white mb-2">تسلسل المعرفة وتفكيك الخصائص</h2>
+                <p class="text-cyan-100 text-xs sm:text-sm font-semibold">
+                    المقارنة المنهجية الكاملة بالعامية المصرية مع أمثلة قاع الهامور السريعة!
+                </p>
+            </div>
+
+            <!-- Transformation Chain Card -->
+            <div class="glass-card p-6 sm:p-8 rounded-3xl">
+                <h3 class="text-lg font-black text-yellow-300 mb-6 text-center">
+                    <i class="fa-solid fa-arrows-spin ml-2"></i>خط إنتاج المعرفة (من الرمز للابتكار)
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Data -->
+                    <div class="bg-slate-900/90 rounded-2xl p-5 border border-emerald-500/40 space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="px-2.5 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-extrabold">الخطوة 1</span>
+                            <i class="fa-solid fa-hashtag text-emerald-400"></i>
+                        </div>
+                        <h4 class="text-xl font-black text-emerald-400">البيانات (Data)</h4>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            <strong>التعريف:</strong> حقائق متسجلة بأرقام أو حروف أو رموز. مادة خام مالهاش أي معنى قبل ما تتعالج!
+                        </p>
+                        <div class="bg-slate-800 p-3 rounded-xl text-xs text-yellow-300 border border-white/5">
+                            <strong>مثال القصة:</strong> الرموز الغامضة (100 - س - 5 - % - خ).
+                        </div>
+                    </div>
+
+                    <!-- Information -->
+                    <div class="bg-slate-900/90 rounded-2xl p-5 border border-cyan-500/40 space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="px-2.5 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-xs font-extrabold">الخطوة 2</span>
+                            <i class="fa-solid fa-lightbulb text-cyan-400"></i>
+                        </div>
+                        <h4 class="text-xl font-black text-cyan-400">المعلومات (Information)</h4>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            <strong>التعريف:</strong> بيانات اتعالجت فبقى ليها معنى وقيمة للمتلقي وتخليه يأخد قرار. (فكرة معنوية غير ملموسة).
+                        </p>
+                        <div class="bg-slate-800 p-3 rounded-xl text-xs text-yellow-300 border border-white/5">
+                            <strong>مثال القصة:</strong> جملة كارن ("حط 100 جرام سكر و5 نقط خردل").
+                        </div>
+                    </div>
+
+                    <!-- Knowledge -->
+                    <div class="bg-slate-900/90 rounded-2xl p-5 border border-amber-500/40 space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="px-2.5 py-1 bg-amber-500/20 text-amber-300 rounded-full text-xs font-extrabold">الخطوة 3</span>
+                            <i class="fa-solid fa-brain text-amber-400"></i>
+                        </div>
+                        <h4 class="text-xl font-black text-amber-400">المعرفة (Knowledge)</h4>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            <strong>التعريف:</strong> معلومات اتفرزت واتحللت واتنظمت في العقل بأسلوب منهجي عشان تحل مشكلات وتخلّيك تبتكر.
+                        </p>
+                        <div class="bg-slate-800 p-3 rounded-xl text-xs text-yellow-300 border border-white/5">
+                            <strong>مثال القصة:</strong> خبرة 10 سنين لسبونج بوب حلت المشكلة واكتسحت!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formula summary bar -->
+                <div class="mt-6 bg-slate-950 p-4 rounded-2xl border border-yellow-400/30 text-center text-xs sm:text-sm font-extrabold flex flex-wrap items-center justify-center gap-2">
+                    <span class="text-slate-400">الكبسولة الملخصة:</span>
+                    <span class="text-emerald-400 bg-emerald-950 px-2 py-1 rounded">بيانات (رموز شمشون)</span>
+                    <i class="fa-solid fa-arrow-left text-yellow-400"></i>
+                    <span class="text-cyan-400 bg-cyan-950 px-2 py-1 rounded">معلومات (وصفة كارن المفهومة)</span>
+                    <i class="fa-solid fa-arrow-left text-yellow-400"></i>
+                    <span class="text-amber-400 bg-amber-950 px-2 py-1 rounded">معرفة (خبرة سبونج بوب لحل الأزمة)</span>
+                </div>
+            </div>
+
+            <!-- Deep Dive Breakdown -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Primary vs Secondary -->
+                <div class="glass-card p-6 rounded-3xl space-y-4">
+                    <h3 class="text-lg font-black text-cyan-300 flex items-center gap-2">
+                        <i class="fa-solid fa-boxes-stacked"></i> مصادر المعلومات (أولية وثانوية)
+                    </h3>
+
+                    <div class="space-y-3">
+                        <div class="bg-slate-900/80 p-4 rounded-2xl border-r-4 border-emerald-400 space-y-1">
+                            <div class="font-black text-emerald-400 text-sm">المعلومات الأولية (Primary)</div>
+                            <p class="text-xs text-slate-300">معلومات متجمعة لأول مرة طازة من المصدر الأصلي مباشرة.</p>
+                            <div class="text-xs text-yellow-300 bg-slate-800 p-2 rounded-lg font-bold">
+                                🍳 سبونج بوب بيطبخ بيده في المطبخ وبيجرب المقادير بنفسه.
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/80 p-4 rounded-2xl border-r-4 border-purple-400 space-y-1">
+                            <div class="font-black text-purple-400 text-sm">المعلومات الثانوية (Secondary)</div>
+                            <p class="text-xs text-slate-300">معلومات حد تاني جمعها وعالجها وأنت واخدها جاهزة ومعدّة سابقاً.</p>
+                            <div class="text-xs text-yellow-300 bg-slate-800 p-2 rounded-lg font-bold">
+                                📖 شفيق قرا مقادير الوصفة جاهزة من كراسة سبونج بوب من غير ما يقف ع الشواية!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Characteristics -->
+                <div class="glass-card p-6 rounded-3xl space-y-4">
+                    <h3 class="text-lg font-black text-yellow-300 flex items-center gap-2">
+                        <i class="fa-solid fa-bolt"></i> الخصائص الثلاث الجوهرية للمعلومات
+                    </h3>
+
+                    <div class="space-y-3">
+                        <div class="bg-slate-900/80 p-3 rounded-2xl flex items-start gap-3">
+                            <span class="w-7 h-7 rounded-lg bg-yellow-400/20 text-yellow-300 flex items-center justify-center font-black text-xs">1</span>
+                            <div>
+                                <div class="text-xs font-black text-yellow-300">قابلية التكرار (Reproducibility)</div>
+                                <p class="text-[11px] text-slate-300">تقدر تنسخ المعلومة 10,000 مرة بضغطة زرار واحدة بدون مجهود.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/80 p-3 rounded-2xl flex items-start gap-3">
+                            <span class="w-7 h-7 rounded-lg bg-cyan-400/20 text-cyan-300 flex items-center justify-center font-black text-xs">2</span>
+                            <div>
+                                <div class="text-xs font-black text-cyan-300">الانتشار (Propagation)</div>
+                                <p class="text-[11px] text-slate-300">تطير وتنتشر في ثانية واحدة عبر النت والتلفزيون والتواصل للجميع.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/80 p-3 rounded-2xl flex items-start gap-3">
+                            <span class="w-7 h-7 rounded-lg bg-red-400/20 text-red-300 flex items-center justify-center font-black text-xs">3</span>
+                            <div>
+                                <div class="text-xs font-black text-red-300">الاستمرارية (Persistence)</div>
+                                <p class="text-[11px] text-slate-300">لو حرقت الورقة الأصلية المعلومة مش بتموت ولا تتقضى عليها خلاص لإنها اتسجلت بالذاكرة والنت!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SECTION 4: FLASHCARDS (ACTIVE RECALL) ==================== -->
+        <section id="tab-flashcards" class="hidden space-y-6">
+            <div class="glass-card p-6 rounded-3xl text-center max-w-3xl mx-auto border-purple-400/30">
+                <span class="inline-block px-3 py-1 bg-purple-400/20 text-purple-300 rounded-full text-xs font-black mb-2 border border-purple-400/30">
+                    <i class="fa-solid fa-clone ml-1"></i>تقنية الاسترجاع النشط (Active Recall)
+                </span>
+                <h2 class="text-2xl font-black text-white">بطاقات الذاكرة السريعة 🎴</h2>
+                <p class="text-purple-100 text-xs sm:text-sm font-semibold">
+                    فكر في الإجابة بعقلك الأول.. وبعدين اضغط على الكارت عشان يتقلب وتتأكد من صحة إجابتك!
+                </p>
+            </div>
+
+            <!-- Flashcard Deck Container -->
+            <div class="max-w-xl mx-auto perspective-1000">
+                <div id="flashcard-element" onclick="flipCard()" class="w-full h-64 relative cursor-pointer transform-style-3d transition-transform duration-500 glass-card rounded-3xl p-6 flex flex-col items-center justify-center text-center border-2 border-yellow-400/50 shadow-2xl">
+                    <!-- Front Face -->
+                    <div id="card-front" class="absolute inset-0 backface-hidden p-6 flex flex-col items-center justify-center space-y-3">
+                        <span id="fc-category-badge" class="px-3 py-1 bg-yellow-400/20 text-yellow-300 rounded-full text-xs font-black">
+                            سؤال الذاكرة 1
+                        </span>
+                        <h3 id="fc-question" class="text-lg sm:text-xl font-black text-white"></h3>
+                        <p class="text-[11px] text-cyan-300 underline font-bold mt-2"><i class="fa-solid fa-hand-pointer ml-1"></i>اضغط هنا لتقليب الكارت ورؤية الإجابة</p>
+                    </div>
+
+                    <!-- Back Face -->
+                    <div id="card-back" class="absolute inset-0 backface-hidden rotate-y-180 p-6 flex flex-col items-center justify-center space-y-3 bg-slate-900 rounded-3xl border-2 border-emerald-400">
+                        <span class="px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-black">
+                            الإجابة العلمية + ربط القصة
+                        </span>
+                        <p id="fc-answer" class="text-xs sm:text-sm font-bold text-slate-100 leading-relaxed"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flashcard Nav Controls -->
+            <div class="flex justify-between items-center max-w-xl mx-auto">
+                <button onclick="prevFlashcard()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs transition">
+                    <i class="fa-solid fa-arrow-right ml-1"></i> الكارت السابق
+                </button>
+                <span id="fc-index-indicator" class="text-xs font-bold text-yellow-300">1 / 5</span>
+                <button onclick="nextFlashcard()" class="px-4 py-2 bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-extrabold rounded-xl text-xs transition">
+                    الكارت التالي <i class="fa-solid fa-arrow-left mr-1"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- ==================== SECTION 5: GAME ==================== -->
+        <section id="tab-game" class="hidden space-y-6">
+            <div class="glass-card p-6 rounded-3xl text-center max-w-3xl mx-auto border-red-400/30">
+                <span class="inline-block px-3 py-1 bg-red-400/20 text-red-300 rounded-full text-xs font-black mb-2 border border-red-400/30">
+                    <i class="fa-solid fa-flask-vial ml-1"></i>التطبيق اللعبي لتثبيت المعلومة
+                </span>
+                <h2 class="text-2xl font-black text-white">لعبة تصنيف كبسولات شمشون وكارن! 🧪</h2>
+                <p class="text-cyan-100 text-xs sm:text-sm font-semibold">
+                    كبسولات طايرة من أعماق قاع الهامور! صنّف كل بطاقة بسرعة في مكانها المضبوط عشان تشحّن كمبيوتر شمشون وتكسب النقط!
+                </p>
+            </div>
+
+            <!-- Game Arena Card -->
+            <div class="glass-card p-6 rounded-3xl max-w-4xl mx-auto border border-white/20 relative">
+                
+                <!-- Game Stats Header -->
+                <div class="flex flex-wrap justify-between items-center bg-slate-900/90 p-4 rounded-2xl mb-6 border border-white/10 gap-2">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-trophy text-yellow-400 text-xl"></i>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block">النقاط</span>
+                            <span id="game-score" class="text-lg font-black text-yellow-400">0</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-fire text-amber-500 text-xl"></i>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block">التتابع الصحيح</span>
+                            <span id="game-streak" class="text-lg font-black text-amber-500">0</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-cyan-400 text-xl"></i>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block">الكبسولة</span>
+                            <span id="game-progress" class="text-lg font-black text-cyan-400">1 / 10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Floating Item Card -->
+                <div class="text-center py-8 px-4 my-4 bg-slate-900/90 rounded-3xl border-2 border-yellow-400/40 relative overflow-hidden">
+                    <span class="text-xs font-black text-yellow-400 bg-yellow-400/10 px-3 py-1 rounded-full border border-yellow-400/20 mb-3 inline-block">
+                        الكبسولة الحالية
+                    </span>
+                    <h3 id="game-item-text" class="text-xl sm:text-2xl font-black text-white my-3 leading-snug">
+                        جارٍ تحميل اللعبة...
+                    </h3>
+                    <p id="game-item-hint" class="text-xs text-slate-400 italic font-semibold">
+                        اقرأ الكبسولة وفكر بتنتمي لـ أنهي تصنيف؟
+                    </p>
+                </div>
+
+                <!-- Game Action Target Buttons -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+                    <button onclick="classifyItem('data')" class="p-4 rounded-2xl bg-emerald-600/30 hover:bg-emerald-600/60 border border-emerald-400 text-emerald-200 font-black text-sm sm:text-base transition transform hover:-translate-y-1 flex flex-col items-center gap-2">
+                        <i class="fa-solid fa-hashtag text-2xl text-emerald-400"></i>
+                        <span>بيانات (Data)</span>
+                        <span class="text-[10px] text-emerald-300 font-normal">رموز وأرقام خام صامتة</span>
+                    </button>
+
+                    <button onclick="classifyItem('info')" class="p-4 rounded-2xl bg-cyan-600/30 hover:bg-cyan-600/60 border border-cyan-400 text-cyan-200 font-black text-sm sm:text-base transition transform hover:-translate-y-1 flex flex-col items-center gap-2">
+                        <i class="fa-solid fa-lightbulb text-2xl text-cyan-400"></i>
+                        <span>معلومات (Info)</span>
+                        <span class="text-[10px] text-cyan-300 font-normal">معالجة معنوية لها معنى</span>
+                    </button>
+
+                    <button onclick="classifyItem('knowledge')" class="p-4 rounded-2xl bg-amber-600/30 hover:bg-amber-600/60 border border-amber-400 text-amber-200 font-black text-sm sm:text-base transition transform hover:-translate-y-1 flex flex-col items-center gap-2">
+                        <i class="fa-solid fa-brain text-2xl text-amber-400"></i>
+                        <span>معرفة (Knowledge)</span>
+                        <span class="text-[10px] text-amber-300 font-normal">خبرة ومنهجية لحل المشكلات</span>
+                    </button>
+                </div>
+
+                <!-- Feedback Alert Container -->
+                <div id="game-feedback" class="mt-6 p-4 rounded-2xl text-center text-sm font-black hidden transition-all duration-300">
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SECTION 6: QUIZ ==================== -->
+        <section id="tab-quiz" class="hidden space-y-6">
+            <div class="glass-card p-6 rounded-3xl text-center max-w-3xl mx-auto border-yellow-400/30">
+                <span class="inline-block px-3 py-1 bg-yellow-400/20 text-yellow-300 rounded-full text-xs font-black mb-2 border border-yellow-400/30">
+                    <i class="fa-solid fa-award ml-1"></i>الاختبار الشامل لقياس الفهم والأداء
+                </span>
+                <h2 class="text-2xl font-black text-white">تحدي التميز الأكاديمي 🎓</h2>
+                <p class="text-cyan-100 text-xs sm:text-sm font-semibold">
+                    جاوب على الأسئلة وتحدّ نفسك، وهنحسبلك النسبة المئوية فوراً مع تفسير كل إجابة!
+                </p>
+            </div>
+
+            <!-- Quiz Main Container -->
+            <div id="quiz-container" class="glass-card p-6 sm:p-8 rounded-3xl max-w-3xl mx-auto border border-white/20">
+                <!-- Quiz Progress Bar -->
+                <div class="mb-6 space-y-2">
+                    <div class="flex justify-between items-center text-xs font-bold text-slate-300">
+                        <span id="quiz-question-number">سؤال 1 من 10</span>
+                        <span id="quiz-score-badge" class="text-yellow-300 font-black">النتيجة الحالية: 0/0</span>
+                    </div>
+                    <div class="w-full h-3 bg-slate-900 rounded-full overflow-hidden border border-white/10">
+                        <div id="quiz-progress-fill" class="h-full bg-gradient-to-r from-yellow-400 to-amber-500 transition-all duration-300" style="width: 10%;"></div>
+                    </div>
+                </div>
+
+                <!-- Question Text -->
+                <div class="mb-6 bg-slate-900/90 p-5 rounded-2xl border border-white/10">
+                    <h3 id="quiz-question-text" class="text-base sm:text-lg font-black text-white leading-relaxed">
+                        جارٍ إعداد السؤال...
+                    </h3>
+                </div>
+
+                <!-- Quiz Options Grid -->
+                <div id="quiz-options-container" class="space-y-3">
+                    <!-- Dynamic Options Injected via JS -->
+                </div>
+
+                <!-- Quiz Explanation Container -->
+                <div id="quiz-explanation" class="mt-6 p-4 rounded-2xl bg-slate-900 border border-cyan-500/30 text-xs sm:text-sm font-semibold text-cyan-200 hidden leading-relaxed">
+                </div>
+
+                <!-- Quiz Controls -->
+                <div class="mt-6 flex justify-end">
+                    <button onclick="nextQuizQuestion()" id="btn-quiz-next" disabled class="px-6 py-3 rounded-2xl bg-yellow-400 hover:bg-yellow-300 disabled:opacity-40 disabled:cursor-not-allowed text-slate-900 font-black text-xs sm:text-sm transition flex items-center gap-2 shadow-lg shadow-yellow-500/20">
+                        السؤال التالي <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Summary Modal (Hidden by default) -->
+            <div id="quiz-result-card" class="glass-card p-8 rounded-3xl max-w-2xl mx-auto text-center space-y-6 hidden border-2 border-yellow-400">
+                <div class="w-20 h-20 bg-yellow-400/20 text-yellow-300 rounded-full flex items-center justify-center text-4xl mx-auto border-2 border-yellow-400">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h3 class="text-2xl font-black text-white">مبروك! أنهيت الاختبار بنجاح 🎉</h3>
+                
+                <div class="bg-slate-900/90 p-6 rounded-2xl border border-white/10 space-y-2">
+                    <p class="text-xs text-slate-400 font-bold">درجتك النهائية:</p>
+                    <div id="quiz-final-score" class="text-4xl font-black text-yellow-400">10 / 10</div>
+                    <div id="quiz-percentage" class="text-sm font-black text-emerald-400">(100%)</div>
+                </div>
+
+                <p id="quiz-feedback-msg" class="text-xs sm:text-sm font-bold text-cyan-200">
+                    ممتاز جداً! أنت الآن معلّم في البيانات والمعلومات والمعرفة!
+                </p>
+
+                <button onclick="restartQuiz()" class="px-8 py-3 rounded-2xl bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-black text-sm transition shadow-lg shadow-yellow-500/30">
+                    <i class="fa-solid fa-rotate-right ml-2"></i>إعادة الاختبار
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 border-t border-white/10 bg-slate-950/90 py-6 text-center text-xs text-slate-400 font-semibold">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p>مغامرة شمشون والشفرة السرية - مصممة بأحدث استراتيجيات التعلم التفاعلي والألعاب التعليمية 🧠✨</p>
+            <p class="text-[10px] text-slate-500">تم التنسيق والربط الأكاديمي الشامل لجميع مفاهيم البيانات والمعلومات والمعرفة</p>
+        </div>
+    </footer>
+
+    <!-- Scripts & Application Logic -->
+    <script>
+        // Generate Background Bubbles dynamically
+        function initBubbles() {
+            const container = document.getElementById('bubbles-container');
+            for (let i = 0; i < 15; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                const size = Math.random() * 40 + 10;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.animationDuration = `${Math.random() * 8 + 6}s`;
+                bubble.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(bubble);
+            }
+        }
+
+        // Tab switching logic
+        function switchTab(tabId) {
+            const tabs = ['story', 'feynman', 'concepts', 'flashcards', 'game', 'quiz'];
+            tabs.forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                document.getElementById(`btn-${t}`).classList.remove('active');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.getElementById(`btn-${tabId}`).classList.add('active');
+
+            // Scroll smoothly to top of main content
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ==================== STORY LOGIC ====================
+        const storyScenes = [
+            {
+                scene: 1,
+                title: "المشهد الأول: الرموز المطرقعة (البيانات - Data)",
+                badge: "مفهوم البيانات الخام",
+                badgeBg: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                        <div class="space-y-4 text-right">
+                            <p class="text-sm sm:text-base leading-relaxed text-slate-200">
+                                دخل <strong class="text-yellow-300">شمشون</strong> معمله في دكان "دلو الصدأ" طالع حواجب ومتحمس جداً.. ومسك كراسة قديمة ومخربش فيها شخابيط غريبة:
+                            </p>
+                            <div class="bg-slate-950 p-4 rounded-2xl font-mono text-center text-emerald-400 border border-emerald-500/40 text-lg font-black tracking-widest">
+                                100 - س - 5 - % - خ
+                            </div>
+                            <p class="text-sm leading-relaxed text-slate-300">
+                                شمشون جرى على زوجته الإلكترونية <strong class="text-cyan-300">كارن</strong> وقائلها وهوا بيهيج: <br>
+                                <span class="text-yellow-300 italic">"أنا أخيرًا جبت سر خلطة سلطع برجر يا كارن! الأرقام والحروف دي هي الخلطة السحرية!"</span>
+                            </div>
+                        <div class="bg-slate-900/90 p-5 rounded-2xl border border-white/10 space-y-3">
+                            <h4 class="font-black text-yellow-300 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-lightbulb"></i> إيه السر العلمي هنا؟
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                اللي كان في إيد شمشون ده اسمه <strong class="text-emerald-400">بيانات (Data)</strong>. 
+                                دي عبارة عن رموز أو أرقام أو حروف صامتة، مادتها خام ملهاش أي معنى ولا قيمة طالما محدش شرحها أو عالجها!
+                            </p>
+                            <div class="text-[11px] bg-slate-800 p-2.5 rounded-xl text-emerald-300 font-bold border border-emerald-500/20">
+                                📌 الخلاصة: البيانات = رموز وأرقام خام بدون معنى ولا اتخاذ قرار!
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                scene: 2,
+                title: "المشهد الثاني: فرم كارن والتشفير (المعلومات - Info)",
+                badge: "المعالجة وتحويل البيانات لمعلومات",
+                badgeBg: "bg-cyan-500/20 text-cyan-300 border-cyan-500/30",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                        <div class="space-y-4 text-right">
+                            <p class="text-sm sm:text-base leading-relaxed text-slate-200">
+                                كارن بصت للرموز وسحبتهملها جوة البروسيسور بتاعها، وبدأت تعمل <strong class="text-cyan-300">معالجة وتجميع وتصنيف (Processing)</strong>.. وفجأة الشاشة نورت وطبعت جملة واضحة:
+                            </p>
+                            <div class="bg-slate-950 p-4 rounded-2xl text-center text-cyan-300 border border-cyan-500/40 text-base font-black">
+                                "المقادير المضبوطة: حط 100 جرام سكر و5 نقط خردل لتسبيك طعم البرجر!"
+                            </div>
+                            <p class="text-sm leading-relaxed text-slate-300">
+                                شمشون صرخ من الفرحة وقال: <span class="text-yellow-300 italic">"الله! هي دي الشفرة المفيدة اللي خلتني أفهم هاخبط إيه على إيه!"</span>
+                            </p>
+                        </div>
+                        <div class="bg-slate-900/90 p-5 rounded-2xl border border-white/10 space-y-3">
+                            <h4 class="font-black text-cyan-300 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-brain"></i> إيه السر العلمي هنا؟
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                الرموز الصامتة لما اتعالجت برمجياً أصبحت <strong class="text-cyan-400">معلومات (Information)</strong>.
+                                المعلومات هي بيانات متنفذة وليها معنى وقيمة عند المتلقي وتساعده على اتخاذ قرار. وهى شيء معنوي غير ملموس!
+                            </p>
+                            <div class="text-[11px] bg-slate-800 p-2.5 rounded-xl text-cyan-300 font-bold border border-cyan-500/20">
+                                📌 الخلاصة: المعلومات = بيانات معالجة ليها معنى واضح وتساعد في اتخاذ القرار!
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                scene: 3,
+                title: "المشهد الثالث: اللقطة والانتشار (خصائص المعلومات)",
+                badge: "الخصائص الثلاث للمعلومات",
+                badgeBg: "bg-purple-500/20 text-purple-300 border-purple-500/30",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                        <div class="space-y-4 text-right">
+                            <p class="text-sm sm:text-base leading-relaxed text-slate-200">
+                                شمشون طبع من الوصفة 1000 نسخة بضغطة زرار، وبعتها على النت لقاع الهامور كله! <strong class="text-yellow-300">مستر سلطع</strong> لما عرف جرى وحرق الورقة الأصلية في الشواية!
+                            </p>
+                            <p class="text-sm leading-relaxed text-slate-300">
+                                لكن شمشون ضحك بشدة وقال: <span class="text-yellow-300 italic">"عبيط قوي يا سلطع! فاكر لو حرقت الورقة الأصلية الوصفة تموت؟ خلاص الوصفة انتشرت وتكررت في الذاكرة والنت!"</span>
+                            </p>
+                        </div>
+                        <div class="bg-slate-900/90 p-5 rounded-2xl border border-white/10 space-y-3">
+                            <h4 class="font-black text-purple-300 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-shield-halved"></i> الخصائص الثلاث الجوهرية للمعلومات:
+                            </h4>
+                            <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside">
+                                <li><strong class="text-yellow-300">قابلية التكرار:</strong> تقدر تنسخ المعلومة ملايين المرات بسهولة.</li>
+                                <li><strong class="text-cyan-300">الانتشار:</strong> بتطير على الإنترنت والتلفزيون للجميع فوراً.</li>
+                                <li><strong class="text-red-300">الاستمرارية:</strong> حتى لو اتدمر المصدر المادي، المعلومة بتبتنسخ وبتفضل موجودة!</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                scene: 4,
+                title: "المشهد الرابع: معلم المفهومية (المعرفة - Knowledge)",
+                badge: "تحويل المعلومات إلى معرفة",
+                badgeBg: "bg-amber-500/20 text-amber-300 border-amber-500/30",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                        <div class="space-y-4 text-right">
+                            <p class="text-sm sm:text-base leading-relaxed text-slate-200">
+                                شمشون أخذ المقادير ونزل المطبخ يحضر البرجر.. لكن البرجر طلع محروق وطعمه يفزع! جابوا <strong class="text-yellow-300">سبونج بوب</strong> اللي بيقف على الشواية بقاله 10 سنين.
+                            </p>
+                            <p class="text-sm leading-relaxed text-slate-300">
+                                سبونج بوب بصلهم وتبسم وقال: <span class="text-amber-300 italic">"المقادير لوحدها معلومات يا شمشون! لكن سر الطعم الأصلي هو الخبرة والتنظيم المنهجي لتقليب النار وتحليل العجينة.. دي اسمها المعرفة!"</span>
+                            </p>
+                        </div>
+                        <div class="bg-slate-900/90 p-5 rounded-2xl border border-white/10 space-y-3">
+                            <h4 class="font-black text-amber-300 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-graduation-cap"></i> إيه السر العلمي هنا؟
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                <strong class="text-amber-400">المعرفة (Knowledge)</strong> هي أعلى مراتب الفهم. هي معلومات اتنظمت واتحللت بشكل منهجي وتطبيقي في العقل عشان تحل مشكلات حقيقية وتخليك تبتكر!
+                            </p>
+                            <div class="text-[11px] bg-slate-800 p-2.5 rounded-xl text-amber-300 font-bold border border-amber-500/20">
+                                📌 الخلاصة: المعرفة = معلومات + تحليل وتطبيق + خبرة منهجية لحل المشاكل!
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                scene: 5,
+                title: "المشهد الخامس: إيد في المطبخ ولا قراءة (المصادر)",
+                badge: "المعلومات الأولية والثانوية",
+                badgeBg: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                        <div class="space-y-4 text-right">
+                            <p class="text-sm sm:text-base leading-relaxed text-slate-200">
+                                شفيق قعد يقرأ مقادير البرجر من كتاب قديم وقال: <strong class="text-purple-300">"أنا كدة بقيت شيف!"</strong>، لكن سبونج بوب قاله: <span class="text-emerald-300 font-bold">"لا يا شفيق.. أنت قريت معلومات ثانوية، لكن أنا بجمع معلومات أولية طازة بيدي على الشواية!"</span>
+                            </p>
+                        </div>
+                        <div class="bg-slate-900/90 p-5 rounded-2xl border border-white/10 space-y-3">
+                            <h4 class="font-black text-emerald-300 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-boxes-stacked"></i> المصادر المنهجية للمعلومات:
+                            </h4>
+                            <div class="space-y-2 text-xs text-slate-300">
+                                <div class="bg-slate-800 p-2.5 rounded-xl border-r-4 border-emerald-400">
+                                    <strong class="text-emerald-400">معلومات أولية (Primary):</strong> بيانات متجمعة لأول مرة طازة من صاحب البحث أو صاحب التجربة المباشرة.
+                                </div>
+                                <div class="bg-slate-800 p-2.5 rounded-xl border-r-4 border-purple-400">
+                                    <strong class="text-purple-400">معلومات ثانوية (Secondary):</strong> معلومات اتجمعت قبل كدة من طرف تالت زي الكتب الصحف والتقارير.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        let currentStoryScene = 1;
+
+        function updateStoryUI() {
+            const sceneData = storyScenes[currentStoryScene - 1];
+            const viewport = document.getElementById('story-viewport');
+
+            viewport.innerHTML = `
+                <div class="space-y-4 animate-fade-in">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-4">
+                        <h3 class="text-xl sm:text-2xl font-black text-white">${sceneData.title}</h3>
+                        <span class="px-3 py-1 rounded-full text-xs font-black border ${sceneData.badgeBg}">
+                            ${sceneData.badge}
+                        </span>
+                    </div>
+                    ${sceneData.content}
+                </div>
+            `;
+
+            // Update indicators & dots
+            document.getElementById('scene-indicator').innerText = `مشهد ${currentStoryScene} من ${storyScenes.length}`;
+            document.getElementById('btn-prev-scene').disabled = currentStoryScene === 1;
+            document.getElementById('btn-next-scene').disabled = currentStoryScene === storyScenes.length;
+
+            for (let i = 1; i <= storyScenes.length; i++) {
+                const dot = document.getElementById(`scene-dot-${i}`);
+                if (i === currentStoryScene) {
+                    dot.className = 'scene-dot px-3.5 py-2 rounded-2xl bg-yellow-400 font-black text-slate-900 text-xs transition flex items-center gap-1.5 shadow-lg shadow-yellow-500/20';
+                } else {
+                    dot.className = 'scene-dot px-3.5 py-2 rounded-2xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition flex items-center gap-1.5';
+                }
+            }
+        }
+
+        function goToStoryScene(index) {
+            currentStoryScene = index;
+            updateStoryUI();
+        }
+
+        function nextStoryScene() {
+            if (currentStoryScene < storyScenes.length) {
+                currentStoryScene++;
+                updateStoryUI();
+            }
+        }
+
+        function prevStoryScene() {
+            if (currentStoryScene > 1) {
+                currentStoryScene--;
+                updateStoryUI();
+            }
+        }
+
+        // ==================== FEYNMAN LOGIC ====================
+        function checkFeynman(choiceId, isCorrect) {
+            let resId = '';
+            if (choiceId.startsWith('d')) resId = 'fey-res-d';
+            if (choiceId.startsWith('i')) resId = 'fey-res-i';
+            if (choiceId.startsWith('k')) resId = 'fey-res-k';
+
+            const resDiv = document.getElementById(resId);
+            resDiv.classList.remove('hidden', 'bg-emerald-500/20', 'text-emerald-300', 'border-emerald-500/40', 'bg-red-500/20', 'text-red-300', 'border-red-500/40');
+
+            if (isCorrect) {
+                resDiv.classList.add('bg-emerald-500/20', 'text-emerald-300', 'border', 'border-emerald-500/40');
+                resDiv.innerHTML = `<i class="fa-solid fa-circle-check ml-1"></i> الله ينور عليك! الشرح ده مظبوط وسهل جداً يفهمه بسيط بأبسط أسلوب!`;
+            } else {
+                resDiv.classList.add('bg-red-500/20', 'text-red-300', 'border', 'border-red-500/40');
+                resDiv.innerHTML = `<i class="fa-solid fa-circle-xmark ml-1"></i> لسه للأسف الشرح ده معقد أو مش دقيق.. حاول تختار الإجابة التانية المباشرة!`;
+            }
+        }
+
+        // ==================== FLASHCARDS LOGIC ====================
+        const flashcardData = [
+            {
+                category: "سؤال الذاكرة 1",
+                question: "ما التعريف الدقيق للبيانات (Data)؟ وكيف ميزت بينها القصة؟",
+                answer: "البيانات هي حقائق متمثلة بأرقام أو حروف أو رموز، وهي مادة خام لا تعبر عن معنى محدد بذاتها حتى تُعالج (زي رموز شمشون 100-س-5)."
+            },
+            {
+                category: "سؤال الذاكرة 2",
+                question: "ما مفهوم المعلومات (Information)؟ وكيف تشكل قيمة للمتلقي؟",
+                answer: "هي بيانات تمت معالجتها وتنظيمها فأصبح لها معنى وقيمة تُمكن من اتخاذ القرارات، وهي مفهوم معنوي غير ملموس (زي وصفة كارن المكتوبة)."
+            },
+            {
+                category: "سؤال الذاكرة 3",
+                question: "ما تعريف المعرفة (Knowledge) وما الذي يجعلها أرقى من المعلومات؟",
+                answer: "المعرفة هي معلومات مُنسقة ومُحللة منهجياً لحل المشكلات والابتكار وتراكم الخبرات العملية (زي خبرة سبونج بوب 10 سنين)."
+            },
+            {
+                category: "سؤال الذاكرة 4",
+                question: "ما الفرق بين المعلومات الأولية والمعلومات الثانوية؟",
+                answer: "الأولية: تُجمع لأول مرة مباشرة من المصدر الأصلي (طهي سبونج بوب بنفسه). الثانوية: معلومات معالجة سابقاً ومأخوذة من طرف ثالث (قراءة شفيق للكتب)."
+            },
+            {
+                category: "سؤال الذاكرة 5",
+                question: "اذكر الخصائص الثلاث الجوهرية للمعلومات مع تفسير كل واحدة؟",
+                answer: "1. قابلية التكرار (نسخها بسهولة)، 2. الانتشار (سريعة النقل عبر الوسائل)، 3. الاستمرارية (لا تموت بحرق مصدرها المادي)."
+            }
+        ];
+
+        let currentCardIndex = 0;
+        let isCardFlipped = false;
+
+        function updateFlashcardUI() {
+            const cardData = flashcardData[currentCardIndex];
+            document.getElementById('fc-category-badge').innerText = cardData.category;
+            document.getElementById('fc-question').innerText = cardData.question;
+            document.getElementById('fc-answer').innerText = cardData.answer;
+            document.getElementById('fc-index-indicator').innerText = `${currentCardIndex + 1} / ${flashcardData.length}`;
+
+            // Reset Flip State
+            const fcElem = document.getElementById('flashcard-element');
+            fcElem.classList.remove('rotate-y-180');
+            isCardFlipped = false;
+        }
+
+        function flipCard() {
+            const fcElem = document.getElementById('flashcard-element');
+            isCardFlipped = !isCardFlipped;
+            if (isCardFlipped) {
+                fcElem.classList.add('rotate-y-180');
+            } else {
+                fcElem.classList.remove('rotate-y-180');
+            }
+        }
+
+        function nextFlashcard() {
+            if (currentCardIndex < flashcardData.length - 1) {
+                currentCardIndex++;
+                updateFlashcardUI();
+            }
+        }
+
+        function prevFlashcard() {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                updateFlashcardUI();
+            }
+        }
+
+        // ==================== MINI-GAME LOGIC ====================
+        const gameItems = [
+            { text: "رموز صامتة غامضة (100 - س - 5 - %)", type: "data", hint: "مادة خام ملهاش معنى لوحدها" },
+            { text: "جملة: 'ضع 100 جرام سكر و5 نقط خردل لتسبيك الطعام'", type: "info", hint: "بيانات اتعالجت وبقى ليها معنى وقيمة" },
+            { text: "خبرة شيف 10 سنين في تعديل مقادير الشواية لحل الأزمات", type: "knowledge", hint: "معلومات اتنظمت منهجياً لحل المشاكل" },
+            { text: "أرقام درجات حرارة الحساسات (30 - 45 - 90)", type: "data", hint: "قراءات خام من غير سياق" },
+            { text: "تقرير مكتوب: 'الطقس حار جداً والحرارة مرتفعة'", type: "info", hint: "معنى واضح يساعد في اتخاذ القرار" },
+            { text: "ابتكار خطة طوارئ كاملة لحماية المحل من الحرائق بناءً على الخبرة", type: "knowledge", hint: "تطبيق منهجي رفيع للمعلومات" },
+            { text: "شخابيط وحروف مبعثرة على ورقة قديمة", type: "data", hint: "رموز خام" },
+            { text: "جدول المبيعات النهائي المنسق لشهور السنة", type: "info", hint: "بيانات معالجة ومفهومة" },
+            { text: "إتقان تشخيص المرض وعلاجه بناءً على تحليل نتائج التحاليل", type: "knowledge", hint: "قدرة تنظيمية وحل مشكلات" },
+            { text: "أرقام هواتف غير مسمّاة في كشكول", type: "data", hint: "بيانات مجردة" }
+        ];
+
+        let gameCurrentIndex = 0;
+        let gameScore = 0;
+        let gameStreak = 0;
+
+        function loadGameItem() {
+            if (gameCurrentIndex >= gameItems.length) {
+                // Game Finished
+                document.getElementById('game-item-text').innerText = "🏆 عظيم جداً! شحنت الكمبيوتر بالكامل وأنهيت اللعبة!";
+                document.getElementById('game-item-hint').innerText = `نقاطك النهائية: ${gameScore} من 100`;
+                document.getElementById('game-feedback').className = "mt-6 p-4 rounded-2xl text-center text-sm font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 block";
+                document.getElementById('game-feedback').innerHTML = `ألف مبروك! أثبت إنك فاهم كويس جداً الفرق بين البيانات والمعلومات والمعرفة! <button onclick="restartGame()" class="mr-3 px-4 py-1.5 bg-yellow-400 text-slate-900 rounded-xl text-xs font-black">إعادة اللعبة</button>`;
+                return;
+            }
+
+            const item = gameItems[gameCurrentIndex];
+            document.getElementById('game-item-text').innerText = item.text;
+            document.getElementById('game-item-hint').innerText = item.hint;
+            document.getElementById('game-progress').innerText = `${gameCurrentIndex + 1} / ${gameItems.length}`;
+            document.getElementById('game-feedback').classList.add('hidden');
+        }
+
+        function classifyItem(userType) {
+            if (gameCurrentIndex >= gameItems.length) return;
+
+            const item = gameItems[gameCurrentIndex];
+            const feedbackEl = document.getElementById('game-feedback');
+            feedbackEl.classList.remove('hidden');
+
+            if (userType === item.type) {
+                gameScore += 10;
+                gameStreak++;
+                feedbackEl.className = "mt-6 p-4 rounded-2xl text-center text-sm font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 block animate-bounce";
+                feedbackEl.innerHTML = `<i class="fa-solid fa-circle-check ml-1"></i> إجابة صحيحة ممتاز! (+10 نقط)`;
+            } else {
+                gameStreak = 0;
+                feedbackEl.className = "mt-6 p-4 rounded-2xl text-center text-sm font-black bg-red-500/20 text-red-300 border border-red-500/40 block";
+                feedbackEl.innerHTML = `<i class="fa-solid fa-circle-xmark ml-1"></i> إجابة خاطئة! التصنيف المضبوط كان: (${item.type === 'data' ? 'بيانات' : item.type === 'info' ? 'معلومات' : 'معرفة'})`;
+            }
+
+            document.getElementById('game-score').innerText = gameScore;
+            document.getElementById('game-streak').innerText = gameStreak;
+
+            gameCurrentIndex++;
+            setTimeout(() => {
+                loadGameItem();
+            }, 1200);
+        }
+
+        function restartGame() {
+            gameCurrentIndex = 0;
+            gameScore = 0;
+            gameStreak = 0;
+            document.getElementById('game-score').innerText = '0';
+            document.getElementById('game-streak').innerText = '0';
+            loadGameItem();
+        }
+
+        // ==================== COMPREHENSIVE QUIZ LOGIC ====================
+        const quizData = [
+            {
+                question: "ما المصطلح الذي يطلق على الحقائق التي تُمثل باستخدام الأرقام أو الأحرف دون معنى مباشر؟",
+                options: ["البيانات", "المعلومات", "المعرفة", "القرارات"],
+                correct: 0,
+                explanation: "البيانات هي الحقائق الخام المتمثلة بالأرقام والحروف قبل المعالجة والتفسير."
+            },
+            {
+                question: "أي مما يلي يُعرف بأنه 'معنى أو قيمة للمتلقي وتُستخدم لاتخاذ القرار'؟",
+                options: ["البيانات الخام", "المعلومات", "الرموز", "الحساسات"],
+                correct: 1,
+                explanation: "المعلومات هي البيانات التي اتعالجت وصار لها معنى يتخذ بناءً عليه القرار."
+            },
+            {
+                question: "تُعرف المعلومات التي يتم تحليلها وتنظيمها بشكل منهجي لحل المشكلات والابتكار بـ:",
+                options: ["المعرفة", "البيانات الثانوية", "الرموز الصامتة", "البيانات الأولية"],
+                correct: 0,
+                explanation: "المعرفة هي الفهم العميق والمنهجي والتطبيقي المكتسب للحل والابتكار."
+            },
+            {
+                question: "ما هي خاصية المعلومات التي تعني 'صعوبة محوها بالكامل بمجرد إنشائها ونشرها'؟",
+                options: ["الاستمرارية", "قابلية التكرار", "الانتشار", "المادية"],
+                correct: 0,
+                explanation: "خاصية الاستمرارية تفسر بقاء المعلومة رغم تدمير حاملها المادي أو محاولة حذفها."
+            },
+            {
+                question: "إمكانية نسخ المعلومات بسهولة وبكميات ضخمة دون مجهود تعبر عن خاصية:",
+                options: ["قابلية التكرار", "المادية", "الاستمرارية", "السرية"],
+                correct: 0,
+                explanation: "قابلية التكرار تعني القدرة على استنساب ملايين النسخ رقمياً بضغطة زر."
+            },
+            {
+                question: "أي من الأمثلة التالية يمثل 'معلومات أولية' (Primary Information)؟",
+                options: ["نتائج استبيان أو تجربة قمت بها بنفسك", "قراءة مقال في مجلة", "مشاهدة برنامج في التلفزيون", "قراءة كتاب تاريخي"],
+                correct: 0,
+                explanation: "المعلومات الأولية هي التي تُجمع لأول مرة طازجة من المصدر الأصلي والباحث مباشرة."
+            },
+            {
+                question: "المعلومات التي نحصل عليها جاهزة ومعدّة سابقاً من خلال 'طرف ثالث' تسمى:",
+                options: ["المعلومات الثانوية", "المعلومات الأولية", "البيانات الخام", "المعرفة المباشرة"],
+                correct: 0,
+                explanation: "المعلومات الثانوية تُجمع وتُعالج من قِبل الآخرين ونحصل عليها جاهزة كالكتب والصحف."
+            },
+            {
+                question: "عندما يقوم طبيب بتشخيص مرض بناءً على 'تحليل نتائج التحاليل وخبرته المنهجية'، فإنه يستخدم:",
+                options: ["المعرفة", "بيانات خام", "معلومات ثانوية فقط", "رموز صامتة"],
+                correct: 0,
+                explanation: "الربط المنهجي والتحليلي للبيانات للوصول إلى حل مشكلة المرض هو معالجة معرفية (Knowledge)."
+            },
+            {
+                question: "سهولة توصيل المعلومات وانتقالها بسرعة البرق عبر وسائل التواصل والإعلام تعبر عن خاصية:",
+                options: ["الانتشار", "الاستمرارية", "المادية", "التعقيد"],
+                correct: 0,
+                explanation: "الانتشار هو سرعة وطبيعة طيران وسريان المعلومة بين الأفراد والشبكات."
+            },
+            {
+                question: "ما العلاقة الصحيحة والتسلسل المنطقي لإنتاج المعرفة؟",
+                options: [
+                    "بيانات ⬅️ تعالج فتصبح معلومات ⬅️ تنظم بأسلوب منهجي فتصبح معرفة",
+                    "معرفة ⬅️ تتحول لبيانات ⬅️ ثم معلومات",
+                    "معلومات ⬅️ تصبح بيانات ⬅️ ثم معرفة",
+                    "البيانات والمعلومات والمصطلحات كلها شىء واحد متطابق"
+                ],
+                correct: 0,
+                explanation: "التسلسل يبدأ بالبيانات الخام، ثم معالجتها لتكون معلومات ذات معنى، ثم تنظيمها منهجيًا لتكون معرفة."
+            }
+        ];
+
+        let quizCurrentIndex = 0;
+        let quizScore = 0;
+        let selectedOption = null;
+
+        function loadQuizQuestion() {
+            const q = quizData[quizCurrentIndex];
+            document.getElementById('quiz-question-number').innerText = `سؤال ${quizCurrentIndex + 1} من ${quizData.length}`;
+            document.getElementById('quiz-score-badge').innerText = `النتيجة الحالية: ${quizScore}/${quizCurrentIndex}`;
+            document.getElementById('quiz-progress-fill').style.width = `${((quizCurrentIndex + 1) / quizData.length) * 100}%`;
+            document.getElementById('quiz-question-text').innerText = q.question;
+
+            const optionsContainer = document.getElementById('quiz-options-container');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-right p-4 rounded-2xl bg-slate-900/80 hover:bg-slate-800 text-xs sm:text-sm border border-white/10 font-bold transition flex items-center justify-between group';
+                btn.onclick = () => selectQuizOption(idx);
+                btn.id = `quiz-opt-${idx}`;
+                btn.innerHTML = `
+                    <span>${opt}</span>
+                    <i class="fa-regular fa-circle text-slate-500 group-hover:text-yellow-400"></i>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-explanation').classList.add('hidden');
+            document.getElementById('btn-quiz-next').disabled = true;
+            selectedOption = null;
+        }
+
+        function selectQuizOption(idx) {
+            if (selectedOption !== null) return; // Prevent multiple clicks
+            selectedOption = idx;
+
+            const q = quizData[quizCurrentIndex];
+            const isCorrect = idx === q.correct;
+
+            if (isCorrect) quizScore++;
+
+            // Highlight buttons
+            q.options.forEach((_, optIdx) => {
+                const btn = document.getElementById(`quiz-opt-${optIdx}`);
+                btn.disabled = true;
+
+                if (optIdx === q.correct) {
+                    btn.className = 'w-full text-right p-4 rounded-2xl bg-emerald-500/20 border-2 border-emerald-400 text-emerald-200 text-xs sm:text-sm font-black flex items-center justify-between';
+                    btn.innerHTML += `<i class="fa-solid fa-circle-check text-emerald-400"></i>`;
+                } else if (optIdx === idx && !isCorrect) {
+                    btn.className = 'w-full text-right p-4 rounded-2xl bg-red-500/20 border-2 border-red-400 text-red-200 text-xs sm:text-sm font-black flex items-center justify-between';
+                    btn.innerHTML += `<i class="fa-solid fa-circle-xmark text-red-400"></i>`;
+                }
+            });
+
+            // Show explanation
+            const expDiv = document.getElementById('quiz-explanation');
+            expDiv.classList.remove('hidden');
+            expDiv.innerHTML = `<strong class="text-yellow-300 block mb-1"><i class="fa-solid fa-lightbulb ml-1"></i>التفسير المنهجي:</strong> ${q.explanation}`;
+
+            document.getElementById('btn-quiz-next').disabled = false;
+        }
+
+        function nextQuizQuestion() {
+            quizCurrentIndex++;
+            if (quizCurrentIndex < quizData.length) {
+                loadQuizQuestion();
+            } else {
+                // Show Quiz Summary Results
+                document.getElementById('quiz-container').classList.add('hidden');
+                document.getElementById('quiz-result-card').classList.remove('hidden');
+
+                const percentage = Math.round((quizScore / quizData.length) * 100);
+                document.getElementById('quiz-final-score').innerText = `${quizScore} / ${quizData.length}`;
+                document.getElementById('quiz-percentage').innerText = `(${percentage}%)`;
+
+                const feedbackMsg = document.getElementById('quiz-feedback-msg');
+                if (percentage >= 80) {
+                    feedbackMsg.innerText = "🌟 أداء ممتاز أسطوري! أنت الآن مستعد تماماً لتطبيق مفاهيم البيانات والمعلومات والمعرفة بامتياز!";
+                } else if (percentage >= 50) {
+                    feedbackMsg.innerText = "👍 أداء جيد جداً! يمكنك مراجعة القصة والإنفوجرافيك مرة أخرى للحصول على الدرجة النهائة!";
+                } else {
+                    feedbackMsg.innerText = "💪 بداية طيبة! أنصحك بقراءة مشاهد القصة والتفاعل مع بطاقات فاينمان ثم التحدي مجدداً!";
+                }
+            }
+        }
+
+        function restartQuiz() {
+            quizCurrentIndex = 0;
+            quizScore = 0;
+            document.getElementById('quiz-result-card').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            loadQuizQuestion();
+        }
+
+        // Window Load Initializer
+        window.onload = function () {
+            initBubbles();
+            updateStoryUI();
+            updateFlashcardUI();
+            loadGameItem();
+            loadQuizQuestion();
+        };
+    </script>
+</body>
+</html>

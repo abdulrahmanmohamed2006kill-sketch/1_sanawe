@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار البيانات والمعلومات والمعرفة التفاعلي</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Cairo & Tajawal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        tajawal: ['Tajawal', 'sans-serif'],
+                    },
+                    colors: {
+                        easy: { DEFAULT: '#10B981', light: '#ECFDF5', dark: '#047857' },
+                        medium: { DEFAULT: '#F59E0B', light: '#FFFBEB', dark: '#B45309' },
+                        hard: { DEFAULT: '#EF4444', light: '#FEF2F2', dark: '#B91C1C' },
+                        expert: { DEFAULT: '#8B5CF6', light: '#F5F3FF', dark: '#6D28D9' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            min-height: 100vh;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .option-btn {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+        }
+        .badge-pulse {
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(1.03); }
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="text-slate-100 flex flex-col justify-between min-h-screen p-2 md:p-6 selection:bg-indigo-500 selection:text-white">
+
+    <header class="max-w-5xl w-full mx-auto mb-4">
+        <div class="glass-panel rounded-2xl p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-2xl">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-brain text-2xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-black bg-gradient-to-r from-white via-slate-200 to-indigo-200 bg-clip-text text-transparent">
+                        منصة اختبار المعلومات والمعرفة
+                    </h1>
+                    <p class="text-xs text-slate-400 font-tajawal">30 سؤالاً متدرجة الصعوبة (مبتدئ • متوسط • صعب • مستوى رفيع)</p>
+                </div>
+            </div>
+
+            <!-- Mode Controls & Stats summary -->
+            <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-center">
+                <button id="modeQuizBtn" onclick="switchMode('quiz')" class="px-4 py-2 rounded-xl text-xs md:text-sm font-bold bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 hover:bg-indigo-500 transition-all">
+                    <i class="fa-solid fa-gamepad ml-1"></i> الوضع التفاعلي
+                </button>
+                <button id="modeStudyBtn" onclick="switchMode('study')" class="px-4 py-2 rounded-xl text-xs md:text-sm font-bold bg-slate-800/60 text-slate-400 border border-slate-700/60 transition-all flex items-center gap-1.5 opacity-80 hover:bg-slate-800">
+                    <i id="studyLockIcon" class="fa-solid fa-lock text-amber-400 text-xs"></i>
+                    <span>وضع الدراسة</span>
+                    <span id="studyLockBadge" class="text-[10px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-mono">مغلق</span>
+                </button>
+                <button onclick="openQuestionGrid()" class="px-3 py-2 rounded-xl text-xs md:text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700">
+                    <i class="fa-solid fa-border-all ml-1"></i> خريطة الأسئلة
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Notification Toast for Locked Mode -->
+    <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 z-50 hidden transition-all duration-300 transform -translate-y-4 opacity-0">
+        <div class="bg-amber-500/95 text-slate-950 px-5 py-3 rounded-2xl shadow-2xl font-bold text-xs md:text-sm flex items-center gap-2 backdrop-blur-md border border-amber-300/40">
+            <i class="fa-solid fa-lock text-slate-950 text-base"></i>
+            <span id="toastMessage">وضع الدراسة مغلق! يجب إكمال جميع الأسئلة أولاً لتتمكن من تصفحه.</span>
+        </div>
+    </div>
+
+    <main class="max-w-5xl w-full mx-auto flex-grow flex flex-col justify-center">
+
+        <!-- QUIZ VIEW -->
+        <div id="quizContainer" class="space-y-4">
+            
+            <!-- Progress Header Card -->
+            <div class="glass-panel rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <!-- Question Counter & Badge -->
+                <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+                    <span id="questionNumBadge" class="px-3 py-1.5 rounded-lg text-sm font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                        سؤال <span id="currentQIndex">1</span> من 30
+                    </span>
+                    <!-- Dynamic Difficulty Badge -->
+                    <div id="diffBadge" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black shadow-sm uppercase tracking-wider">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Stats Counters -->
+                <div class="flex items-center gap-4 text-xs md:text-sm font-bold">
+                    <div class="flex items-center gap-1.5 text-emerald-400 bg-emerald-950/40 px-3 py-1.5 rounded-xl border border-emerald-800/40">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>صحيح: <strong id="correctCount">0</strong></span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-rose-400 bg-rose-950/40 px-3 py-1.5 rounded-xl border border-rose-800/40">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                        <span>خطأ: <strong id="wrongCount">0</strong></span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-amber-400 bg-amber-950/40 px-3 py-1.5 rounded-xl border border-amber-800/40">
+                        <i class="fa-solid fa-trophy"></i>
+                        <span>النقاط: <strong id="scoreCount">0</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-900/80 h-2.5 rounded-full overflow-hidden p-0.5 border border-slate-800">
+                <div id="progressBar" class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-full rounded-full transition-all duration-300 w-0"></div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="glass-card rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden border border-slate-700/50">
+                
+                <!-- Category Tag -->
+                <div class="flex items-center justify-between mb-4">
+                    <span id="topicTag" class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                        <i class="fa-solid fa-layer-group text-indigo-400"></i>
+                        <span id="topicText">مفهوم البيانات والمعلومات</span>
+                    </span>
+                    <span id="pointsBadge" class="text-xs font-bold text-amber-300 bg-amber-500/10 px-2.5 py-1 rounded-md border border-amber-500/20">
+                        +10 نقاط
+                    </span>
+                </div>
+
+                <!-- Question Text -->
+                <h2 id="questionText" class="text-lg md:text-2xl font-bold leading-relaxed text-white mb-6 font-tajawal">
+                    <!-- Loaded dynamically -->
+                </h2>
+
+                <!-- Options Grid -->
+                <div id="optionsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-6">
+                    <!-- Loaded dynamically -->
+                </div>
+
+                <!-- Explanation Box (Initially Hidden) -->
+                <div id="explanationBox" class="hidden p-4 rounded-xl bg-slate-800/90 border border-slate-700 text-slate-200 text-sm leading-relaxed mb-4 animate-fade-in">
+                    <div class="font-bold text-indigo-300 mb-1 flex items-center gap-2">
+                        <i class="fa-solid fa-lightbulb text-amber-400"></i> التوضيح الشامل:
+                    </div>
+                    <p id="explanationText" class="font-tajawal text-slate-300"></p>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="flex items-center justify-between pt-4 border-t border-slate-800">
+                    <button id="prevBtn" onclick="navigateQuestion(-1)" class="px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed">
+                        <i class="fa-solid fa-arrow-right ml-1"></i> السابق
+                    </button>
+                    
+                    <button id="skipBtn" onclick="skipQuestion()" class="text-xs md:text-sm font-bold text-slate-400 hover:text-white transition-all underline underline-offset-4">
+                        تخطي السؤال
+                    </button>
+
+                    <button id="nextBtn" onclick="navigateQuestion(1)" class="px-5 py-2.5 rounded-xl text-xs md:text-sm font-bold bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 hover:bg-indigo-500 transition-all">
+                        التالي <i class="fa-solid fa-arrow-left mr-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STUDY MODE VIEW (Initially hidden) -->
+        <div id="studyContainer" class="hidden space-y-6">
+            <div class="glass-panel rounded-2xl p-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-white mb-1">دليل المراجعة والدراسة الشامل</h2>
+                        <p class="text-xs text-slate-400">جميع الأسئلة الـ 30 مقسمة حسب مستوى الصعوبة ومزودة بالإجابات الصحيحة والتفسير المنهجي.</p>
+                    </div>
+                    <!-- Difficulty Filters -->
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <button onclick="filterStudyMode('all')" class="study-filter-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white">الكل (30)</button>
+                        <button onclick="filterStudyMode('easy')" class="study-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700">سهل (8)</button>
+                        <button onclick="filterStudyMode('medium')" class="study-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-amber-400 border border-slate-700">متوسط (8)</button>
+                        <button onclick="filterStudyMode('hard')" class="study-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-rose-400 border border-slate-700">صعب (8)</button>
+                        <button onclick="filterStudyMode('expert')" class="study-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-purple-400 border border-slate-700">مستوى رفيع (6)</button>
+                    </div>
+                </div>
+
+                <div id="studyList" class="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULTS MODAL / VIEW (Initially hidden) -->
+        <div id="resultsContainer" class="hidden">
+            <div class="glass-card rounded-3xl p-6 md:p-10 shadow-2xl text-center max-w-3xl mx-auto border border-indigo-500/30 relative overflow-hidden">
+                <div class="absolute -top-24 -left-24 w-48 h-48 bg-indigo-500/20 rounded-full blur-3xl"></div>
+                <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl"></div>
+
+                <div class="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-tr from-amber-400 to-amber-600 flex items-center justify-center text-4xl text-slate-950 shadow-lg shadow-amber-500/30">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+
+                <h2 class="text-2xl md:text-3xl font-black text-white mb-2">اكتمل الاختبار بنجاح!</h2>
+                <p id="resultTagline" class="text-slate-300 font-tajawal mb-6">إليك تفاصيل أداءك في اختبار البيانات والمعلومات والمعرفة</p>
+
+                <!-- Big Score Display -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+                    <div class="p-4 rounded-2xl bg-slate-800/80 border border-slate-700">
+                        <span class="text-xs text-slate-400 block mb-1">النتيجة الكلية</span>
+                        <span id="finalScore" class="text-2xl font-black text-indigo-400">0%</span>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-slate-800/80 border border-slate-700">
+                        <span class="text-xs text-slate-400 block mb-1">الإجابات الصحيحة</span>
+                        <span id="finalCorrect" class="text-2xl font-black text-emerald-400">0/30</span>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-slate-800/80 border border-slate-700">
+                        <span class="text-xs text-slate-400 block mb-1">إجمالي النقاط</span>
+                        <span id="finalPoints" class="text-2xl font-black text-amber-400">0</span>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-slate-800/80 border border-slate-700">
+                        <span class="text-xs text-slate-400 block mb-1">التقييم العام</span>
+                        <span id="finalBadge" class="text-sm font-black text-purple-300 mt-1 block">ممتاز</span>
+                    </div>
+                </div>
+
+                <!-- Breakdown by difficulty level -->
+                <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 text-right mb-8">
+                    <h3 class="text-sm font-bold text-slate-300 mb-3 border-b border-slate-800 pb-2">تحليل المستويات:</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div class="flex items-center justify-between p-2.5 rounded-xl bg-emerald-950/30 border border-emerald-900/40">
+                            <span class="text-emerald-400 font-bold"><i class="fa-solid fa-leaf ml-1"></i> المستوى السهل (8 أسئلة)</span>
+                            <span id="breakdownEasy" class="font-bold text-white">0/8</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2.5 rounded-xl bg-amber-950/30 border border-amber-900/40">
+                            <span class="text-amber-400 font-bold"><i class="fa-solid fa-gauge-half ml-1"></i> المستوى المتوسط (8 أسئلة)</span>
+                            <span id="breakdownMedium" class="font-bold text-white">0/8</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2.5 rounded-xl bg-rose-950/30 border border-rose-900/40">
+                            <span class="text-rose-400 font-bold"><i class="fa-solid fa-fire ml-1"></i> المستوى الصعب (8 أسئلة)</span>
+                            <span id="breakdownHard" class="font-bold text-white">0/8</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2.5 rounded-xl bg-purple-950/30 border border-purple-900/40">
+                            <span class="text-purple-400 font-bold"><i class="fa-solid fa-crown ml-1"></i> المستوى الرفيع (6 أسئلة)</span>
+                            <span id="breakdownExpert" class="font-bold text-white">0/6</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <button onclick="restartQuiz()" class="w-full sm:w-auto px-6 py-3 rounded-xl font-bold bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 hover:bg-indigo-500 transition-all">
+                        <i class="fa-solid fa-rotate-right ml-1"></i> إعادة الاختبار
+                    </button>
+                    <button onclick="switchMode('study')" class="w-full sm:w-auto px-6 py-3 rounded-xl font-bold bg-slate-800 text-slate-200 hover:bg-slate-700 transition-all border border-slate-700">
+                        <i class="fa-solid fa-book-open ml-1"></i> مراجعة الإجابات التفسيرية
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- QUESTION GRID MODAL -->
+    <div id="gridModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card rounded-3xl p-6 max-w-2xl w-full border border-slate-700 shadow-2xl relative max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-th-large text-indigo-400"></i> خريطة الأسئلة الـ 30
+                </h3>
+                <button onclick="closeQuestionGrid()" class="text-slate-400 hover:text-white text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Legend -->
+            <div class="flex flex-wrap gap-3 text-xs mb-4 p-2.5 rounded-xl bg-slate-900/60 border border-slate-800">
+                <span class="flex items-center gap-1 text-emerald-400"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> سهل (1-8)</span>
+                <span class="flex items-center gap-1 text-amber-400"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> متوسط (9-16)</span>
+                <span class="flex items-center gap-1 text-rose-400"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> صعب (17-24)</span>
+                <span class="flex items-center gap-1 text-purple-400"><span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span> مستوى رفيع (25-30)</span>
+            </div>
+
+            <!-- Grid Items -->
+            <div id="gridModalItems" class="grid grid-cols-5 sm:grid-cols-6 gap-2.5 overflow-y-auto p-1 flex-grow">
+                <!-- Populated dynamically -->
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-800 text-left">
+                <button onclick="closeQuestionGrid()" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="max-w-5xl w-full mx-auto mt-6 text-center text-xs text-slate-500 font-tajawal py-2">
+        اختبار البيانات والمعلومات والمعرفة • تم التطوير للعرض التفاعلي الشامل
+    </footer>
+
+    <script>
+        const questionsData = [
+            // LEVEL 1: EASY / مبتدئ (1 - 8)
+            {
+                id: 1,
+                difficulty: 'easy',
+                difficultyLabel: 'سهل - مبتدئ',
+                difficultyColor: 'emerald',
+                points: 10,
+                topic: 'مفهوم البيانات',
+                question: 'ما المصطلح الذي يطلق على الحقائق التي تُمثل باستخدام الأرقام أو الأحرف أو الرموز المجردة؟',
+                options: ['البيانات (Data)', 'المعلومات (Information)', 'المعرفة (Knowledge)', 'الحكمة (Wisdom)'],
+                correct: 0,
+                explanation: 'البيانات هي الحقائق الخام التي تُمثل بالأرقام أو الأحرف أو الرموز قبل إعطائها أي معنى أو سياق.'
+            },
+            {
+                id: 2,
+                difficulty: 'easy',
+                difficultyLabel: 'سهل - مبتدئ',
+                difficultyColor: 'emerald',
+                points: 10,
+                topic: 'مفهوم المعلومات',
+                question: 'أي مما يلي يُعرف بأنه "معنى أو قيمة للمتلقي وتُستخدم لاتخاذ القرار" وليس لها كيان مادي ثابت؟',
+                options: ['الأجهزة والمعدات', 'البيانات الخام', 'المعلومات', 'المعرفة التنظيمية'],
+                correct: 2,
+                explanation: 'المعلومات هي البيانات التي تم تفسيرها وإعطاؤها معنى وقيمة للمتلقي لتساعده على اتخاذ القرارات.'
+            },
+            {
+                id: 3,
+                difficulty: 'easy',
+                difficultyLabel: 'سهل - مبتدئ',
+                difficultyColor: 'emerald',
+                points: 10,
+                topic: 'مفهوم المعرفة',
+                question: 'تُعرف المعلومات التي يتم تحليلها وتنظيمها بشكل منهجي لحل المشكلات بـ:',
+                options: ['البيانات الثانوية', 'المعرفة (Knowledge)', 'الإعلام الجماهيري', 'الاستبيانات'],
+                correct: 1,
+                explanation: 'المعرفة ترتقي عن المعلومات بكونها مُنظمة ومُحللة بشكل منهجي وموجهة خصيصاً للتطبيق وحل المشكلات.'
+            },
+            {
+                id: 4,
+                difficulty: 'easy',
+                difficultyLabel: 'سهل - مبتدئ',
+                difficultyColor: 'emerald',
+                points: 10,
+                topic: 'المعلومات الأولية',
+                question: 'المعلومات التي يتم الحصول عليها من خلال التجربة الشخصية المباشرة أو البحث الميداني تسمى:',
+                options: ['المعلومات الثانوية', 'المعلومات الأولية', 'البيانات المنظمة', 'المعلومات الرقمية'],
+                correct: 1,
+                explanation: 'المعلومات الأولية هي التي تجمعها بنفسك بشكل مباشر عبر التجارب الشحصية أو الاستطلاعات والأبحاث.'
+            },
+            {
+                id: 5,
+                difficulty: 'easy',
+                difficultyLabel: 'سهل - مبتدئ',
+                difficultyColor: 'emerald',
+                points: 10,
+                topic: 'المعلومات الثانوية',
+                question: 'المعلومات التي نحصل عليها من خلال "طرف ثالث" كـالكتب والصحف والتلفزيون تُسمى:',
+                options: ['المعلومات الأولية', 'المعلومات الثانوية', 'البيانات المباشرة', 'المعرفة التطبيقية'],
+                correct: 1,
+                explanation: 'المعلومات الثانوية هي التي لم تقم بجمعها بنفسك، بل تلقتها من مصدر خارجي أو طرف ثالث.'
+            },
+            {
+                id: 6,
+                difficulty: 'easy',
+                difficultyLabel: 'سهل - مبتدئ',
+                difficultyColor: 'emerald',
+                points: 10,
+                topic: 'خصائص المعلومات',
+                question: 'خاصية المعلومات التي تعني "صعوبة محوها بالكامل بمجرد إنشائها" هي:',
+                options: ['قابلية التكرار', 'الاستمرارية (Persistence)', 'الانتشار', 'المرونة'],
+                correct: 1,
+                explanation: 'الاستمرارية تعني أن المعلومات بمجرد تسجيلها ونشرها تظل قائمة ويصعب إزالتها كلياً من الوجود.'
+            },
+            {
+                id: 7,
+                difficulty: 'easy',
+                difficultyLabel: 'سهل - مبتدئ',
+                difficultyColor: 'emerald',
+                points: 10,
+                topic: 'خصائص المعلومات',
+                question: 'إمكانية نسخ المعلومات بسهولة وبكميات كبيرة جداً تعبر عن خاصية:',
+                options: ['التشفر الرقمي', 'الاستمرارية', 'قابلية التكرار (Reproducibility)', 'التحليل المنهجي'],
+                correct: 2,
+                explanation: 'قابلية التكرار تشير إلى القدرة على إعادة إنتاج أو نسخ نفس المعلومات مرات لا حصر لها دون جهد إضافي تذكر.'
+            },
+            {
+                id: 8,
+                difficulty: 'easy',
+                difficultyLabel: 'سهل - مبتدئ',
+                difficultyColor: 'emerald',
+                points: 10,
+                topic: 'خصائص المعلومات',
+                question: 'سهولة توصيل المعلومات عبر وسائل الإعلام الجماهيرية والإنترنت تعبر عن خاصية:',
+                options: ['الانتشار (Propagation)', 'التكيّف', 'الثبات المادي', 'الاستمرارية'],
+                correct: 0,
+                explanation: 'الانتشار يعني تدفق المعلومات وانتقالها السريع من نقطة إلى آلاف النقاط عبر قنوات الاتصال والإنترنت.'
+            },
+
+            // LEVEL 2: MEDIUM / متوسط (9 - 16)
+            {
+                id: 9,
+                difficulty: 'medium',
+                difficultyLabel: 'متوسط',
+                difficultyColor: 'amber',
+                points: 15,
+                topic: 'تطبيق المصادر الأولية',
+                question: 'أي من الأمثلة التالية يُعد مثالاً صريحاً على "المعلومات الأولية"؟',
+                options: ['مقالة في صحيفة يومية', 'تقرير لنتائج تجربة كيميائية أجريتها بنفسك', 'قراءة كتاب تاريخي', 'مشاهدة برنامج وثائقي'],
+                correct: 1,
+                explanation: 'تقارير التجارب والاستبيانات المباشرة التي تنفذها بيدك توفر معلومات أولية لأنك المصدر المباشر لها.'
+            },
+            {
+                id: 10,
+                difficulty: 'medium',
+                difficultyLabel: 'متوسط',
+                difficultyColor: 'amber',
+                points: 15,
+                topic: 'تطبيق المصادر الثانوية',
+                question: 'تعتبر المقالات المنشورة في الجرائد والموسوعات أمثلة على:',
+                options: ['معلومات أولية', 'بيانات غير معالجة', 'معلومات ثانوية', 'معرفة تجريبية'],
+                correct: 2,
+                explanation: 'لأن القارئ يتلقاها عبر وسطاء وصحفيين (طرف ثالث)، فهي تندرج تحت المعلومات الثانوية.'
+            },
+            {
+                id: 11,
+                difficulty: 'medium',
+                difficultyLabel: 'متوسط',
+                difficultyColor: 'amber',
+                points: 15,
+                topic: 'طبيعة المعلومات',
+                question: 'ما الفرق الجوهري بين "المعلومات" و"الأشياء المادية" الملموسة حسب النص؟',
+                options: ['المعلومات أثقل وزناً', 'المعلومات ليس لها شكل أو كيان ثابت', 'المعلومات تنتهي بالاستخدام', 'المعلومات لا يمكن نقلها'],
+                correct: 1,
+                explanation: 'على عكس الماديات كالسيارات أو الكتب الورقية ذات الأبعاد المحسوسة، المعلومات أفكار ورموز بلا كيان مادي ثابت.'
+            },
+            {
+                id: 12,
+                difficulty: 'medium',
+                difficultyLabel: 'متوسط',
+                difficultyColor: 'amber',
+                points: 15,
+                topic: 'التحول المفاهيمي',
+                question: 'عندما يقوم مهندس بتحليل قراءات أجهزة الاستشعار لتحديد خريطة صيانة الوقاية من الأعطال، فإنه قد وصل إلى مرحلة:',
+                options: ['جمع البيانات', 'توليد المعلومات', 'تطبيق المعرفة', 'النسخ والانتشار'],
+                correct: 2,
+                explanation: 'التحليل المنهجي الموجه لحل مشكلة محددة (مثل منع الأعطال) هو تعريف المعرفة.'
+            },
+            {
+                id: 13,
+                difficulty: 'medium',
+                difficultyLabel: 'متوسط',
+                difficultyColor: 'amber',
+                points: 15,
+                topic: 'خصائص الوسائل',
+                question: 'وسائل الإعلام الجماهيرية (Mass Media) مثل التلفزيون تُعد أداة رئيسية لتحقيق خاصية:',
+                options: ['الاستمرارية', 'الانتشار (Propagation)', 'التشفر المباشر', 'السرية تامّة'],
+                correct: 1,
+                explanation: 'وسائل الإعلام تعمل كقنوات سريعة لتوصيل ونشر المعلومات لأكبر عدد من الجمهور (الانتشار).'
+            },
+            {
+                id: 14,
+                difficulty: 'medium',
+                difficultyLabel: 'متوسط',
+                difficultyColor: 'amber',
+                points: 15,
+                topic: 'المقارنة بين المصادر',
+                question: 'إذا قرأت نتائج استبيان تم نشره داخل مجلة علمية، فإن هذه المعلومات بالنسبة لك تُعتبر:',
+                options: ['معلومات أولية', 'معلومات ثانوية', 'بيانات مجردة', 'معرفة تجريبية'],
+                correct: 1,
+                explanation: 'على الرغم من أن الاستبيان في الأصل أولي بالنسبة للباحث، إلا أنه أصبح "معلومات ثانوية" بالنسبة لك لأنك قرأته عبر طرف ثالث (المجلة).'
+            },
+            {
+                id: 15,
+                difficulty: 'medium',
+                difficultyLabel: 'متوسط',
+                difficultyColor: 'amber',
+                points: 15,
+                topic: 'تحول البيانات لمعلومات',
+                question: 'العملية التي تحول الأرقام (البيانات) إلى مخرجات ذات فائدة للقرار تسمى عملية:',
+                options: ['التخزين فقط', 'المعالجة والتنظيم والإعطاء قيمة', 'التكرار الميكانيكي', 'الانتشار الإعلامي'],
+                correct: 1,
+                explanation: 'تحويل البيانات إلى معلومات يقتضي معالجتها وتنظيمها وربطها بسياق يمنحها قيمة لاتخاذ القرار.'
+            },
+            {
+                id: 16,
+                difficulty: 'medium',
+                difficultyLabel: 'متوسط',
+                difficultyColor: 'amber',
+                points: 15,
+                topic: 'أثر التكنولوجيا',
+                question: 'لماذا تسهّل شبكة الإنترنت إمكانية "قابلية التكرار" و"الانتشار" مقارنة بالماضي؟',
+                options: ['لأن الإنترنت يلغي الحاجة للمعلومات', 'لأن النسخ والنقل الرقمي يتم برمجياً بضغطة زر وبلا تكلفة تُذكر', 'لأن الإنترنت يحول المعلومات لكيان مادي', 'لأن الإنترنت يقضي على الاستمرارية'],
+                correct: 1,
+                explanation: 'التقنيات الرقمية والشبكات تسمح بنسخ الملفات (التكرار) وإرسالها فورياً لجميع أنحاء العالم (الانتشار).'
+            },
+
+            // LEVEL 3: HARD / صعب (17 - 24)
+            {
+                id: 17,
+                difficulty: 'hard',
+                difficultyLabel: 'صعب',
+                difficultyColor: 'rose',
+                points: 20,
+                topic: 'تحليل المصادر المزدوجة',
+                question: 'قام عالم فيزياء بإجراء تجربة معملية وتدوين قراءاتها في تقرير شخصي، ثم استعان مؤلف بهذا التقرير لتأليف كتاب مدرسي. القراءات بالنسبة للعالم وبالنسبة للطالب الذي يقرأ الكتاب هي على التوالي:',
+                options: ['ثانوية / أولية', 'أولية / ثانوية', 'معرفة / بيانات', 'بيانات / بيانات'],
+                correct: 1,
+                explanation: 'العالم حصل عليها مباشرة بالتجربة (أولية)، بينما الطالب حصل عليها عبر وسيط وطرف ثالث وهو الكتاب (ثانوية).'
+            },
+            {
+                id: 18,
+                difficulty: 'hard',
+                difficultyLabel: 'صعب',
+                difficultyColor: 'rose',
+                points: 20,
+                topic: 'تداخل خصائص المعلومات',
+                question: 'أي الخصائص التالية تفسر لماذا يظل خبر خاطئ منشوراً على الإنترنت متاحاً حتى بعد محاولة صاحبه حذفه ورغبة الجماهير في إزالته؟',
+                options: ['قابلية التكرار فقط', 'الاستمرارية المقترنة بقابلية التكرار والانتشار', 'الانتشار دون تكرار', 'الكيان المادي الثابت'],
+                correct: 1,
+                explanation: 'الاستمرارية تعني صعوبة المحو، ويعززها انتشار الخبر ونسخه (تكراره) من قبل آلاف المستخدمين على خوادم متعددة.'
+            },
+            {
+                id: 19,
+                difficulty: 'hard',
+                difficultyLabel: 'صعب',
+                difficultyColor: 'rose',
+                points: 20,
+                topic: 'الفروق الهيكلية',
+                question: 'ما الذي يمنح "المعرفة" تفوقاً عملياً وتطبيقياً على مجرد "المعلومات"؟',
+                options: ['أنها أسرع انتشارات عبر التلفزيون', 'أنها تتضمن تحليلاً وتنظيماً منهجيين موجهين مباشرة لحل المشكلات', 'أنها معلومات أولية دائماً', 'أنها سهلة النسخ بغير حدود'],
+                correct: 1,
+                explanation: 'المعلومات تصف واقعاً أو توضح معنى، بينما المعرفة تعيد هيكلة وتحليل هذا المعنى بطريقة منهجية قابلة لتنفيذ الحلول.'
+            },
+            {
+                id: 20,
+                difficulty: 'hard',
+                difficultyLabel: 'صعب',
+                difficultyColor: 'rose',
+                points: 20,
+                topic: 'تحويل المستويات',
+                question: 'إذا قام باحث بجمع 50 كتاباً (معلومات ثانوية) ثم قام بـ "تحليلها وتنظيمها منهجيًا" للوصول إلى خوارزمية تعالج أزمة المرور، فإنه قد ناتج عملية تحويل:',
+                options: ['بيانات خالية إلى معلومات أولية', 'معلومات ثانوية إلى معرفة جديدة', 'معرفة إلى بيانات مجردة', 'معلومات أولية إلى ثانوية'],
+                correct: 1,
+                explanation: 'الباحث استخدم مدخلات من مصادر ثانوية، لكنه أجرى عليها تحليلاً ومنهجية موجهة لحل مشكلة (المرور)، فتكونت لديه معرفة.'
+            },
+            {
+                id: 21,
+                difficulty: 'hard',
+                difficultyLabel: 'صعب',
+                difficultyColor: 'rose',
+                points: 20,
+                topic: 'التحديات التقنية والقانونية',
+                question: 'ما الخاصية التي تفرض التحدي الأكبر أمام حماية "حقوق الملكية الفكرية" للكتب والمحتوى الرقمي؟',
+                options: ['الاستمرارية', 'قابلية التكرار والانتشار السهل', 'عدم وجود بيانات', 'التحليل المنهجي'],
+                correct: 1,
+                explanation: 'سهولة نسخ المحتوى بدون تكلفة (قابلية التكرار) وتوزيعة لحظياً عبر الشبكات (الانتشار) يسهل القرصنة وينتهك الملكية الفكرية.'
+            },
+            {
+                id: 22,
+                difficulty: 'hard',
+                difficultyLabel: 'صعب',
+                difficultyColor: 'rose',
+                points: 20,
+                topic: 'العلاقات بين المفاهيم',
+                question: 'قارن بين "قابلية التكرار" و "الانتشار" من حيث طبيعة كل منهما:',
+                options: ['التكرار يعبر عن النقل، والانتشار يعبر عن الحذف', 'التكرار يرتبط بإنشاء النسخ، والانتشار يرتبط بتوصيل ونقل تلك النسخ للآخرين', 'لا يوجد أي فرق بينهما', 'التكرار للمعلومات الأولية والانتشار للثانوية فقط'],
+                correct: 1,
+                explanation: 'التكرار (Reproducibility) هو مضاعفة النسخ، والانتشار (Propagation) هو آلية وسرعة وصول هذه النسخ للجمهور.'
+            },
+            {
+                id: 23,
+                difficulty: 'hard',
+                difficultyLabel: 'صعب',
+                difficultyColor: 'rose',
+                points: 20,
+                topic: 'القدرة على اتخاذ القرار',
+                question: 'لماذا تُعتبر "البيانات" غير كافية لمدير المؤسسة لاتخاذ قرار مصيري فوراً؟',
+                options: ['لأن البيانات باهظة الثمن', 'لأن البيانات مجرد حقائق أولية تفتقر للمعنى والسياق والتفسير', 'لأن البيانات تتغير بالتلف المادي', 'لأن البيانات لا يمكن كتابتها بالأرقام'],
+                correct: 1,
+                explanation: 'البيانات مثل (35، 80، 12) لا تعطي معنى للمتلقي حتى تُعالج وتوضع في سياقها لتنقل معنى ينفع في القرار.'
+            },
+            {
+                id: 24,
+                difficulty: 'hard',
+                difficultyLabel: 'صعب',
+                difficultyColor: 'rose',
+                points: 20,
+                topic: 'التراكم المعرفي',
+                question: 'كيف تخدم خاصية "الاستمرارية" التراكم المعرفي والتطور العلمي للبشرية عبر التاريخ؟',
+                options: ['تمنع الناس من قراءة الصحف', 'تضمن حفظ الإنجازات والاكتشافات السابقة من الضياع التام لتبني عليها الأجيال القادمة', 'تجعل البيانات سريعة التغير', 'تمنع انتشار المعلومات الثانوية'],
+                correct: 1,
+                explanation: 'استمرارية المعلومات تضمن عدم تلاشي نتائج تجارب السابقين، مما يتيح للبشرية عدم البدء من الصفر في كل جيل.'
+            },
+
+            // LEVEL 4: EXPERT / مستوى رفيع (25 - 30)
+            {
+                id: 25,
+                difficulty: 'expert',
+                difficultyLabel: 'مستوى رفيع',
+                difficultyColor: 'purple',
+                points: 25,
+                topic: 'الهرم المفاهيمي الشامل',
+                question: 'تأمل النظام الذكي التالي للتنبؤ بالأرصاد: (أ) القراءات الرقمية لمعدل الرطوبة والضغط، (ب) التقرير الذي يوضح أن هناك عاصفة متوقعة غداً، (ج) خوارزمية إخلاء المناطق الساحلية وإدارة الأزمات. الترتيب الصحيح لـ (أ، ب، ج) هو:',
+                options: ['أ: معلومات، ب: بيانات، ج: معرفة', 'أ: بيانات، ب: معلومات، ج: معرفة', 'أ: معرفة، ب: معلومات، ج: بيانات', 'أ: بيانات، ب: معرفة، ج: معلومات'],
+                correct: 1,
+                explanation: 'القراءات الرقمية (أ) = بيانات. التقرير ذو المعنى (ب) = معلومات. خوارزمية حل الأزمة والإخلاء المنهجية (ج) = معرفة.'
+            },
+            {
+                id: 26,
+                difficulty: 'expert',
+                difficultyLabel: 'مستوى رفيع',
+                difficultyColor: 'purple',
+                points: 25,
+                topic: 'التكامل العلمي للمصادر',
+                question: 'تُشير الأدبيات إلى أن "المعلومات الثانوية قد تكون شرارة لإنتاج معلومات أولية جديدة". أي السيناريوهات التالية يجسد ذلك بأعلى دقة؟',
+                options: ['شراء كتاب وقراءته ثم إعارته لصديق', 'قراءة أوراق علمية سابقة (ثانوية) للتعرف على الفجوات البحثية ثم إعداد تجربة ميدانية جديدة بذاتك', 'طباعة 1000 نسخة من مقال صحفي ونشره', 'حفظ ملف PDF على قرص صلب'],
+                correct: 1,
+                explanation: 'استغلال ما كتبه الآخرون (ثانوية) لتحديد المشكلة ثم تصميم وتنفيذ تجربة خاصة بك للحصول على نتائج تجريبية (أولية).'
+            },
+            {
+                id: 27,
+                difficulty: 'expert',
+                difficultyLabel: 'مستوى رفيع',
+                difficultyColor: 'purple',
+                points: 25,
+                topic: 'الفلسفة المعرفية للبيانات',
+                question: 'أي العبارات التحليلية التالية تُعد الأكثر دقة وفهماً فلسفياً وعملياً للعلاقة بين مفاهيم النص؟',
+                options: ['البيانات هي غاية النظام، والمعلومات وسيلة ملغاة', 'البيانات مادة خام، والمعلومات تمنح الفهم والتوجيه، والمعرفة توفر المنهجية والقدرة الفعلية على حل المشكلات', 'المعرفة أسهل في الحصول عليها من البيانات', 'المعلومات الأولية أسرع انتشاراً دائماً من الثانوية'],
+                correct: 1,
+                explanation: 'تسلسل الدلالة: البيانات (خام) -> المعلومات (معنى وفهم لاتخاذ القرار) -> المعرفة (تحليل ومنهجية لحل مشكلة).'
+            },
+            {
+                id: 28,
+                difficulty: 'expert',
+                difficultyLabel: 'مستوى رفيع',
+                difficultyColor: 'purple',
+                points: 25,
+                topic: 'ديناميكية انتشار الشائعات',
+                question: 'تحليل الأزمات الرقمية يُظهر أن الشائعة سريعة الانتشار على شبكات التواصل تحظى بالقدرة على إحداث تأثير واسع بسبب تضافر ثلاث خواص للمعلومات هي:',
+                options: ['عدم التكرار، البطء، والكيان المادي', 'الاستمرارية (عدم المحو الكامل)، قابلية التكرار (النسخ الفوري)، والانتشار (عبر الوسائط)', 'السرية، المرونة، والأولية', 'المادية، التجريب المباشر، والسرعة'],
+                correct: 1,
+                explanation: 'الشائعة تُنسخ فوراً (تكرار)، وتنتقل عبر الآلاف (انتشار)، وتظل مؤرشفة وصعبة التدمير التام (استمرارية).'
+            },
+            {
+                id: 29,
+                difficulty: 'expert',
+                difficultyLabel: 'مستوى رفيع',
+                difficultyColor: 'purple',
+                points: 25,
+                topic: 'تقييم الفاعلية التنظيمية',
+                question: 'لو أن شركة تلقت أرقام المبيعات الأسبوعية (بيانات)، وقامت بتحويلها إلى رسم بياني يوضح انخفاض المبيعات بـ 20% (معلومات)، ولكن الفريق لم يستطع تقديم أي خطة أو تحليل منهجي لمعالجة الهبوط. أين يقف النظام الحالي للشركة؟',
+                options: ['توقف عند مستوى المعرفة ولم يبلغ البيانات', 'توقف عند مستوى المعلومات ولم يرتقِ لمستوى المعرفة', 'حقق المعرفة الكاملة بنجاح', 'لم يحصل حتى على البيانات'],
+                correct: 1,
+                explanation: 'الشركة توقفت عند فهم الواقع (المعلومات) وفشلت في تحليله وتنظيمه منهجيًا لحل المشكلة (المعرفة).'
+            },
+            {
+                id: 30,
+                difficulty: 'expert',
+                difficultyLabel: 'مستوى رفيع',
+                difficultyColor: 'purple',
+                points: 25,
+                topic: 'نظريات المعلومات الرقمية',
+                question: 'إذا طُرح السؤال التالي: "لماذا تُعتبر المعلومات مورد غير ناضب بعكس النفط والمواد الخام المادية؟"، فالإجابة الأدق استناداً لخصائص النص هي:',
+                options: ['لأنها تعتمد على الكتب والمجلات فقط', 'لأنها تفتقر للكيان المادي الثابت وتتميز بقابلية التكرار والانتشار دون أن ينقص منها شيء عند مشاركتها', 'لأن الحصول عليها يتطلب دائماً طرفاً ثالثاً', 'لأن الاستمرارية تمنع نسخها'],
+                correct: 1,
+                explanation: 'الأشياء المادية تنقص وتستهلك بالمشاركة، أما المعلومات فلكونها لا مادية وقابلة للتكرار والانتشار، فإن منحها للغير يزيد من قيمتها دون إنقاص اصلها.'
+            }
+        ];
+
+        let currentIndex = 0;
+        let score = 0;
+        let correctAnswersCount = 0;
+        let wrongAnswersCount = 0;
+        let userAnswers = new Array(questionsData.length).fill(null);
+        let currentMode = 'quiz'; // 'quiz' or 'study'
+        let studyFilter = 'all';
+        let isQuizCompleted = false;
+
+        window.onload = function() {
+            renderQuestion();
+            updateStatsUI();
+            buildStudyList();
+            buildGridModal();
+            updateStudyButtonState();
+        };
+
+        function getDifficultyStyle(diff) {
+            switch(diff) {
+                case 'easy':
+                    return {
+                        bg: 'bg-emerald-500/15',
+                        border: 'border-emerald-500/30',
+                        text: 'text-emerald-400',
+                        badgeBg: 'bg-emerald-500',
+                        icon: 'fa-leaf'
+                    };
+                case 'medium':
+                    return {
+                        bg: 'bg-amber-500/15',
+                        border: 'border-amber-500/30',
+                        text: 'text-amber-400',
+                        badgeBg: 'bg-amber-500',
+                        icon: 'fa-gauge-half'
+                    };
+                case 'hard':
+                    return {
+                        bg: 'bg-rose-500/15',
+                        border: 'border-rose-500/30',
+                        text: 'text-rose-400',
+                        badgeBg: 'bg-rose-500',
+                        icon: 'fa-fire'
+                    };
+                case 'expert':
+                    return {
+                        bg: 'bg-purple-500/15',
+                        border: 'border-purple-500/30',
+                        text: 'text-purple-300',
+                        badgeBg: 'bg-purple-600',
+                        icon: 'fa-crown'
+                    };
+                default:
+                    return { bg: 'bg-indigo-500/15', border: 'border-indigo-500/30', text: 'text-indigo-400', badgeBg: 'bg-indigo-500', icon: 'fa-star' };
+            }
+        }
+
+        function renderQuestion() {
+            const q = questionsData[currentIndex];
+            const diffStyle = getDifficultyStyle(q.difficulty);
+
+            // Update Index & ProgressBar
+            document.getElementById('currentQIndex').innerText = currentIndex + 1;
+            const progressPercent = ((currentIndex + 1) / questionsData.length) * 100;
+            document.getElementById('progressBar').style.width = `${progressPercent}%`;
+
+            // Update Difficulty Badge
+            const diffBadge = document.getElementById('diffBadge');
+            diffBadge.className = `flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black border ${diffStyle.bg} ${diffStyle.border} ${diffStyle.text}`;
+            diffBadge.innerHTML = `<i class="fa-solid ${diffStyle.icon}"></i> ${q.difficultyLabel}`;
+
+            // Update Topic Tag
+            document.getElementById('topicText').innerText = q.topic;
+            document.getElementById('pointsBadge').innerText = `+${q.points} نقطة`;
+
+            // Update Question Text
+            document.getElementById('questionText').innerText = q.question;
+
+            // Render Options
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = '';
+
+            const answered = userAnswers[currentIndex];
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `option-btn w-full p-4 rounded-xl text-right font-bold text-sm md:text-base border flex items-center justify-between gap-3 font-tajawal transition-all `;
+
+                // State styles
+                if (answered === null) {
+                    btn.className += `bg-slate-800/80 border-slate-700 hover:border-indigo-500 text-slate-200 hover:bg-slate-700/80`;
+                    btn.onclick = () => selectAnswer(idx);
+                } else {
+                    btn.disabled = true;
+                    if (idx === q.correct) {
+                        // Correct option
+                        btn.className += `bg-emerald-950/80 border-emerald-500 text-emerald-200 shadow-lg shadow-emerald-900/20`;
+                    } else if (answered.userChoice === idx) {
+                        // Wrong option selected by user
+                        btn.className += `bg-rose-950/80 border-rose-500 text-rose-200 shadow-lg shadow-rose-900/20`;
+                    } else {
+                        // Other unselected options
+                        btn.className += `bg-slate-900/40 border-slate-800 text-slate-500 opacity-60`;
+                    }
+                }
+
+                // Inner Content
+                const letters = ['أ', 'ب', 'ج', 'د'];
+                let statusIcon = '';
+                if (answered !== null) {
+                    if (idx === q.correct) {
+                        statusIcon = `<i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>`;
+                    } else if (answered.userChoice === idx) {
+                        statusIcon = `<i class="fa-solid fa-circle-xmark text-rose-400 text-lg"></i>`;
+                    }
+                }
+
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-slate-900/80 border border-slate-700 text-slate-400 flex items-center justify-center text-xs font-bold shrink-0">
+                            ${letters[idx]}
+                        </span>
+                        <span>${opt}</span>
+                    </div>
+                    ${statusIcon}
+                `;
+
+                optionsGrid.appendChild(btn);
+            });
+
+            // Explanation Box Handling
+            const explanationBox = document.getElementById('explanationBox');
+            if (answered !== null) {
+                explanationBox.classList.remove('hidden');
+                document.getElementById('explanationText').innerText = q.explanation;
+            } else {
+                explanationBox.classList.add('hidden');
+            }
+
+            // Button States
+            document.getElementById('prevBtn').disabled = currentIndex === 0;
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentIndex === questionsData.length - 1) {
+                nextBtn.innerHTML = `إنهاء الاختبار <i class="fa-solid fa-flag-checkered mr-1"></i>`;
+                nextBtn.className = "px-5 py-2.5 rounded-xl text-xs md:text-sm font-bold bg-emerald-600 text-white shadow-lg shadow-emerald-600/30 hover:bg-emerald-500 transition-all";
+            } else {
+                nextBtn.innerHTML = `التالي <i class="fa-solid fa-arrow-left mr-1"></i>`;
+                nextBtn.className = "px-5 py-2.5 rounded-xl text-xs md:text-sm font-bold bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 hover:bg-indigo-500 transition-all";
+            }
+
+            // Skip button visibility
+            document.getElementById('skipBtn').style.display = answered === null ? 'inline-block' : 'none';
+        }
+
+        function selectAnswer(choiceIdx) {
+            if (userAnswers[currentIndex] !== null) return;
+
+            const q = questionsData[currentIndex];
+            const isCorrect = choiceIdx === q.correct;
+
+            userAnswers[currentIndex] = {
+                userChoice: choiceIdx,
+                isCorrect: isCorrect
+            };
+
+            if (isCorrect) {
+                score += q.points;
+                correctAnswersCount++;
+                // Small particle effect for correct answer
+                confetti({
+                    particleCount: 30,
+                    spread: 60,
+                    origin: { y: 0.8 }
+                });
+            } else {
+                wrongAnswersCount++;
+            }
+
+            updateStatsUI();
+            renderQuestion();
+            buildGridModal(); // Update modal states
+        }
+
+        function skipQuestion() {
+            if (currentIndex < questionsData.length - 1) {
+                currentIndex++;
+                renderQuestion();
+            }
+        }
+
+        function navigateQuestion(direction) {
+            if (direction === 1) {
+                if (currentIndex < questionsData.length - 1) {
+                    currentIndex++;
+                    renderQuestion();
+                } else {
+                    finishQuiz();
+                }
+            } else if (direction === -1) {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    renderQuestion();
+                }
+            }
+        }
+
+        function updateStatsUI() {
+            document.getElementById('correctCount').innerText = correctAnswersCount;
+            document.getElementById('wrongCount').innerText = wrongAnswersCount;
+            document.getElementById('scoreCount').innerText = score;
+        }
+
+        function finishQuiz() {
+            isQuizCompleted = true;
+            updateStudyButtonState();
+
+            document.getElementById('quizContainer').classList.add('hidden');
+            document.getElementById('resultsContainer').classList.remove('hidden');
+
+            const totalQuestions = questionsData.length;
+            const percentage = Math.round((correctAnswersCount / totalQuestions) * 100);
+
+            document.getElementById('finalScore').innerText = `${percentage}%`;
+            document.getElementById('finalCorrect').innerText = `${correctAnswersCount}/${totalQuestions}`;
+            document.getElementById('finalPoints').innerText = score;
+
+            // Calculate Breakdown by Difficulty
+            let easyOk = 0, medOk = 0, hardOk = 0, expertOk = 0;
+            userAnswers.forEach((ans, idx) => {
+                if (ans && ans.isCorrect) {
+                    const diff = questionsData[idx].difficulty;
+                    if (diff === 'easy') easyOk++;
+                    else if (diff === 'medium') medOk++;
+                    else if (diff === 'hard') hardOk++;
+                    else if (diff === 'expert') expertOk++;
+                }
+            });
+
+            document.getElementById('breakdownEasy').innerText = `${easyOk}/8`;
+            document.getElementById('breakdownMedium').innerText = `${medOk}/8`;
+            document.getElementById('breakdownHard').innerText = `${hardOk}/8`;
+            document.getElementById('breakdownExpert').innerText = `${expertOk}/6`;
+
+            // Badge & Tagline based on performance
+            const badgeEl = document.getElementById('finalBadge');
+            const taglineEl = document.getElementById('resultTagline');
+
+            if (percentage >= 90) {
+                badgeEl.innerText = '🏆 خبير خوارزمي متميز';
+                badgeEl.className = 'text-sm font-black text-amber-300 mt-1 block';
+                taglineEl.innerText = 'ما شاء الله! أداء متفوق يعكس استيعاباً عميقاً لمفاهيم البيانات والمعلومات والمعرفة.';
+                confetti({ particleCount: 100, spread: 100, origin: { y: 0.6 } });
+            } else if (percentage >= 70) {
+                badgeEl.innerText = '🥇 باحث خبير';
+                badgeEl.className = 'text-sm font-black text-indigo-300 mt-1 block';
+                taglineEl.innerText = 'أداء ممتاز جداً! لديك فهم متين لأغلب خصائص ومستويات المفاهيم.';
+            } else if (percentage >= 50) {
+                badgeEl.innerText = '🥈 متدرب واعد';
+                badgeEl.className = 'text-sm font-black text-emerald-300 mt-1 block';
+                taglineEl.innerText = 'أداء جيد! يُمكنك مراجعة وضع الدراسة لتعزيز المفاهيم الصعبة.';
+            } else {
+                badgeEl.innerText = '📘 مبتدئ طموح';
+                badgeEl.className = 'text-sm font-black text-rose-300 mt-1 block';
+                taglineEl.innerText = 'بداية جيدة، ينصح بمراجعة المادة المفاهيمية عبر "وضع الدراسة" وإعادة الاختبار.';
+            }
+        }
+
+        function restartQuiz() {
+            currentIndex = 0;
+            score = 0;
+            correctAnswersCount = 0;
+            wrongAnswersCount = 0;
+            userAnswers = new Array(questionsData.length).fill(null);
+            isQuizCompleted = false;
+            updateStudyButtonState();
+
+            document.getElementById('resultsContainer').classList.add('hidden');
+            document.getElementById('studyContainer').classList.add('hidden');
+            document.getElementById('quizContainer').classList.remove('hidden');
+
+            updateStatsUI();
+            renderQuestion();
+            buildGridModal();
+        }
+
+        function updateStudyButtonState() {
+            const studyBtn = document.getElementById('modeStudyBtn');
+            const icon = document.getElementById('studyLockIcon');
+            const badge = document.getElementById('studyLockBadge');
+
+            if (isQuizCompleted) {
+                icon.className = "fa-solid fa-book-open text-emerald-400 text-xs";
+                badge.className = "text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-mono";
+                badge.innerText = "مفتوح";
+                if (currentMode !== 'study') {
+                    studyBtn.className = "px-4 py-2 rounded-xl text-xs md:text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700 flex items-center gap-1.5";
+                }
+            } else {
+                icon.className = "fa-solid fa-lock text-amber-400 text-xs";
+                badge.className = "text-[10px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-mono";
+                badge.innerText = "مغلق";
+                if (currentMode !== 'study') {
+                    studyBtn.className = "px-4 py-2 rounded-xl text-xs md:text-sm font-bold bg-slate-800/60 text-slate-400 border border-slate-700/60 transition-all flex items-center gap-1.5 opacity-80 hover:bg-slate-800";
+                }
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.remove('opacity-0', '-translate-y-4');
+                toast.classList.add('opacity-100', 'translate-y-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', '-translate-y-4');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 300);
+            }, 3000);
+        }
+
+        function switchMode(mode) {
+            if (mode === 'study' && !isQuizCompleted) {
+                const remaining = userAnswers.filter(a => a === null).length;
+                showToast(`وضع الدراسة مغلق حالياً! متبقي لديك ${remaining} سؤال للإنهاء وتفعيل هذا الوضع.`);
+                return;
+            }
+
+            currentMode = mode;
+            const quizBtn = document.getElementById('modeQuizBtn');
+            const studyBtn = document.getElementById('modeStudyBtn');
+
+            if (mode === 'quiz') {
+                quizBtn.className = "px-4 py-2 rounded-xl text-xs md:text-sm font-bold bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 hover:bg-indigo-500 transition-all";
+                updateStudyButtonState();
+
+                document.getElementById('studyContainer').classList.add('hidden');
+                document.getElementById('resultsContainer').classList.add('hidden');
+                document.getElementById('quizContainer').classList.remove('hidden');
+            } else {
+                studyBtn.className = "px-4 py-2 rounded-xl text-xs md:text-sm font-bold bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 hover:bg-indigo-500 transition-all flex items-center gap-1.5";
+                quizBtn.className = "px-4 py-2 rounded-xl text-xs md:text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700";
+
+                document.getElementById('quizContainer').classList.add('hidden');
+                document.getElementById('resultsContainer').classList.add('hidden');
+                document.getElementById('studyContainer').classList.remove('hidden');
+
+                buildStudyList();
+            }
+        }
+
+        function buildStudyList() {
+            const container = document.getElementById('studyList');
+            container.innerHTML = '';
+
+            const filtered = questionsData.filter(q => {
+                if (studyFilter === 'all') return true;
+                return q.difficulty === studyFilter;
+            });
+
+            filtered.forEach((q, idx) => {
+                const diffStyle = getDifficultyStyle(q.difficulty);
+                const card = document.createElement('div');
+                card.className = `p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3 font-tajawal`;
+
+                const letters = ['أ', 'ب', 'ج', 'د'];
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between gap-2 border-b border-slate-800 pb-2">
+                        <span class="text-xs font-bold text-slate-400">سؤال ${q.id} من 30 • ${q.topic}</span>
+                        <span class="px-2.5 py-1 rounded-md text-xs font-bold border ${diffStyle.bg} ${diffStyle.border} ${diffStyle.text}">
+                            <i class="fa-solid ${diffStyle.icon} ml-1"></i> ${q.difficultyLabel}
+                        </span>
+                    </div>
+
+                    <h3 class="text-base font-bold text-white leading-relaxed">${q.question}</h3>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        ${q.options.map((opt, i) => `
+                            <div class="p-2.5 rounded-xl border flex items-center gap-2 ${i === q.correct ? 'bg-emerald-950/60 border-emerald-500 text-emerald-200 font-bold' : 'bg-slate-800/40 border-slate-800 text-slate-400'}">
+                                <span class="w-5 h-5 rounded flex items-center justify-center bg-slate-900 border border-slate-700 text-[10px] shrink-0">${letters[i]}</span>
+                                <span>${opt}</span>
+                                ${i === q.correct ? '<i class="fa-solid fa-check text-emerald-400 mr-auto"></i>' : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60 text-xs text-slate-300">
+                        <strong class="text-amber-400 block mb-1"><i class="fa-solid fa-lightbulb ml-1"></i> الشرح والتفسير المنهجي:</strong>
+                        ${q.explanation}
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function filterStudyMode(filter) {
+            studyFilter = filter;
+            document.querySelectorAll('.study-filter-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white');
+                btn.classList.add('bg-slate-800', 'border-slate-700');
+            });
+
+            event.target.classList.remove('bg-slate-800', 'border-slate-700');
+            event.target.classList.add('bg-indigo-600', 'text-white');
+
+            buildStudyList();
+        }
+
+        function openQuestionGrid() {
+            buildGridModal();
+            document.getElementById('gridModal').classList.remove('hidden');
+        }
+
+        function closeQuestionGrid() {
+            document.getElementById('gridModal').classList.add('hidden');
+        }
+
+        function buildGridModal() {
+            const gridContainer = document.getElementById('gridModalItems');
+            gridContainer.innerHTML = '';
+
+            questionsData.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                const ans = userAnswers[idx];
+                const diffStyle = getDifficultyStyle(q.difficulty);
+
+                let statusBg = 'bg-slate-800 border-slate-700 text-slate-300';
+                if (ans !== null) {
+                    if (ans.isCorrect) {
+                        statusBg = 'bg-emerald-600 text-white border-emerald-500';
+                    } else {
+                        statusBg = 'bg-rose-600 text-white border-rose-500';
+                    }
+                } else if (idx === currentIndex) {
+                    statusBg = 'bg-indigo-600 text-white border-indigo-400 ring-2 ring-indigo-400/50';
+                }
+
+                btn.className = `p-2.5 rounded-xl text-center text-xs font-bold border transition-all flex flex-col items-center justify-center gap-1 ${statusBg} hover:scale-105`;
+                btn.onclick = () => {
+                    currentIndex = idx;
+                    switchMode('quiz');
+                    renderQuestion();
+                    closeQuestionGrid();
+                };
+
+                btn.innerHTML = `
+                    <span>${idx + 1}</span>
+                    <span class="w-2 h-2 rounded-full ${diffStyle.badgeBg}"></span>
+                `;
+
+                gridContainer.appendChild(btn);
+            });
+        }
+    </script>
+</body>
+</html>
