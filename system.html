@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة دروس الطلاب والشهريات</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Cairo Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f8fafc;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white shadow-xl no-print sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600/30 p-2.5 rounded-2xl border border-indigo-400/30 text-indigo-300">
+                    <i class="fa-solid fa-graduation-cap text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-black tracking-tight">نظام متابعة الدروس والشهريات</h1>
+                    <p class="text-xs text-slate-300 font-light">إدارة الطلاب، التسديدات الشهرية، والتقارير</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+                <button onclick="openStudentModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-indigo-600/30 transition duration-200 flex items-center gap-2 text-sm sm:text-base cursor-pointer">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>إضافة طالب جديد</span>
+                </button>
+                <button onclick="exportData()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium px-3 py-2.5 rounded-xl transition text-xs sm:text-sm flex items-center gap-2 cursor-pointer" title="تصدير نسخة احتياطية">
+                    <i class="fa-solid fa-download"></i>
+                    <span class="hidden sm:inline">نسخة احتياطية</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-grow">
+
+        <!-- Dashboard Cards -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 no-print">
+            <!-- Card 1: Total Students -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">إجمالي الطلاب</p>
+                    <h3 id="statTotalStudents" class="text-2xl sm:text-3xl font-extrabold text-slate-900">0</h3>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+            </div>
+
+            <!-- Card 2: Selected Month Collected -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">المحصل بالشهر المحدد</p>
+                    <h3 id="statMonthCollected" class="text-2xl sm:text-3xl font-extrabold text-emerald-600">0 ج.م</h3>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                </div>
+            </div>
+
+            <!-- Card 3: Remaining Unpaid -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">المتبقي بالشهر المحدد</p>
+                    <h3 id="statMonthPending" class="text-2xl sm:text-3xl font-extrabold text-rose-600">0 ج.م</h3>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                </div>
+            </div>
+
+            <!-- Card 4: Expected Total -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">المتوقع كاملاً</p>
+                    <h3 id="statMonthTarget" class="text-2xl sm:text-3xl font-extrabold text-slate-800">0 ج.م</h3>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-calculator"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Controls & Filters Section -->
+        <section class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/80 mb-6 no-print">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                <!-- Search Input -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1.5">بحث باسم الطالب أو الهاتف</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" id="searchInput" oninput="renderTable()" placeholder="اكتب اسم الطالب..." class="w-full pr-10 pl-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition">
+                    </div>
+                </div>
+
+                <!-- Academic Year Filter -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1.5">السنة الدراسية / الصف</label>
+                    <select id="gradeFilter" onchange="renderTable()" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition cursor-pointer">
+                        <option value="ALL">جميع المراحل الدراسية</option>
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+
+                <!-- Active Month Selection -->
+                <div>
+                    <label class="block text-xs font-bold text-indigo-700 mb-1.5">الشهر المراد متابعته</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-calendar-days absolute right-3.5 top-1/2 -translate-y-1/2 text-indigo-500"></i>
+                        <input type="month" id="selectedMonthInput" onchange="handleMonthChange()" class="w-full pr-10 pl-3 py-2 bg-indigo-50/70 border border-indigo-200 text-indigo-950 font-bold rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition cursor-pointer">
+                    </div>
+                </div>
+
+                <!-- Payment Status Filter -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1.5">حالة السداد للشهر</label>
+                    <select id="statusFilter" onchange="renderTable()" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition cursor-pointer">
+                        <option value="ALL">الكل (مدفوع وغير مدفوع)</option>
+                        <option value="PAID">تم الدفع فقط</option>
+                        <option value="UNPAID">لم يدفع بعد</option>
+                    </select>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Student Table & Cards -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+            <div class="p-4 sm:p-5 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <h2 class="text-lg font-bold text-slate-800">قائمة الطلاب والاشتراكات</h2>
+                    <span id="filteredCountBadge" class="bg-indigo-100 text-indigo-700 font-bold text-xs px-2.5 py-1 rounded-full">0 طالب</span>
+                </div>
+                <div class="text-xs text-slate-500 font-medium" id="currentMonthDisplayLabel">
+                    متابعة شهر: <span class="font-bold text-indigo-600" id="monthTextLabel">--</span>
+                </div>
+            </div>
+
+            <!-- Table for Desktop -->
+            <div class="hidden md:block overflow-x-auto custom-scrollbar">
+                <table class="w-full text-right text-sm">
+                    <thead class="bg-slate-50/80 text-slate-600 border-b border-slate-200 text-xs uppercase font-bold">
+                        <tr>
+                            <th class="py-3.5 px-4">#</th>
+                            <th class="py-3.5 px-4">اسم الطالب</th>
+                            <th class="py-3.5 px-4">السنة الدراسية</th>
+                            <th class="py-3.5 px-4">تاريخ الانضمام</th>
+                            <th class="py-3.5 px-4">سعر الشهر</th>
+                            <th class="py-3.5 px-4 text-center">حالة الدفع (الشهر الحالي)</th>
+                            <th class="py-3.5 px-4 text-center">إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTableBody" class="divide-y divide-slate-100">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Cards for Mobile View -->
+            <div id="studentsMobileContainer" class="md:hidden divide-y divide-slate-100">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden py-12 px-4 text-center">
+                <div class="w-16 h-16 bg-indigo-50 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                    <i class="fa-solid fa-user-slash"></i>
+                </div>
+                <h3 class="text-slate-700 font-bold text-base mb-1">لا يوجد طلاب مطبقين للبحث</h3>
+                <p class="text-slate-400 text-xs max-w-sm mx-auto mb-4">قم بتغيير خيارات البحث أو أضف طلاب جدد للسنتر.</p>
+                <button onclick="openStudentModal()" class="inline-flex items-center gap-2 bg-indigo-600 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-indigo-700 transition">
+                    <i class="fa-solid fa-plus"></i> إضافة طالب جديد
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Printable Receipt Container (Hidden on Screen, visible on print) -->
+    <div id="printableReceipt" class="hidden print-only p-8 max-w-lg mx-auto border-2 border-slate-800 font-sans">
+        <div class="text-center border-b-2 border-slate-800 pb-4 mb-4">
+            <h2 class="text-2xl font-black mb-1">إيصال استلام نقدية - سنتر الدروس</h2>
+            <p class="text-xs text-slate-600">سند استلام شهري رسمي</p>
+        </div>
+        <div class="space-y-3 text-sm">
+            <div class="flex justify-between">
+                <span class="font-bold">التاريخ:</span>
+                <span id="receiptPrintDate">--</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="font-bold">اسم الطالب:</span>
+                <span id="receiptStudentName" class="font-extrabold text-base">--</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="font-bold">السنة الدراسية:</span>
+                <span id="receiptStudentGrade">--</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="font-bold">عن شهر:</span>
+                <span id="receiptMonth" class="font-bold">--</span>
+            </div>
+            <div class="flex justify-between border-t border-slate-300 pt-2 text-base">
+                <span class="font-bold">المبلغ المدفوع:</span>
+                <span id="receiptAmount" class="font-black">-- ج.م</span>
+            </div>
+        </div>
+        <div class="mt-8 pt-4 border-t border-dashed border-slate-400 text-xs flex justify-between">
+            <div>التوقيع / الأستاذ: ..................</div>
+            <div>شكراً لالتزامكم بالتسديد</div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-8 py-4 no-print text-center text-xs text-slate-500">
+        <p>نظام إدارة دروس الطلاب © <span id="currentYear">2026</span> - يعمل محلياً وآمن على جهازك 100%</p>
+    </footer>
+
+    <!-- Add/Edit Student Modal -->
+    <div id="studentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 no-print">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden transform transition-all">
+            <div class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center">
+                <h3 id="modalTitle" class="font-extrabold text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-user-plus text-indigo-400"></i>
+                    <span>إضافة طالب جديد</span>
+                </h3>
+                <button onclick="closeStudentModal()" class="text-slate-400 hover:text-white transition text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="studentForm" onsubmit="saveStudent(event)" class="p-6 space-y-4">
+                <input type="hidden" id="studentId">
+
+                <!-- Name Field -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">اسم الطالب بالكامل <span class="text-rose-500">*</span></label>
+                    <input type="text" id="studentName" required placeholder="مثال: أحمد محمد علي" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition">
+                </div>
+
+                <!-- Academic Year / Grade -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">السنة الدراسية / الصف <span class="text-rose-500">*</span></label>
+                    <input type="text" id="studentGrade" list="gradesDatalist" required placeholder="مثال: الصف الثالث الثانوي أو أختار من القائمة" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition">
+                    <datalist id="gradesDatalist">
+                        <option value="الصف الأول الإعدادي">
+                        <option value="الصف الثاني الإعدادي">
+                        <option value="الصف الثالث الإعدادي">
+                        <option value="الصف الأول الثانوي">
+                        <option value="الصف الثاني الثانوي">
+                        <option value="الصف الثالث الثانوي">
+                        <option value="المرحلة الابتدائية">
+                    </datalist>
+                </div>
+
+                <!-- Grid: Date Joined & Monthly Fee -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">تاريخ دخول الدرس <span class="text-rose-500">*</span></label>
+                        <input type="date" id="joinDate" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">سعر الشهر (ج.م) <span class="text-rose-500">*</span></label>
+                        <input type="number" id="monthlyFee" required min="0" placeholder="مثال: 200" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition">
+                    </div>
+                </div>
+
+                <!-- Phone Number Optional -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف / الواتساب (اختياري)</label>
+                    <input type="tel" id="studentPhone" placeholder="01012345678" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition">
+                </div>
+
+                <!-- Notes Optional -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">ملاحظات إضافية (اختياري)</label>
+                    <textarea id="studentNotes" rows="2" placeholder="أي ملاحظات تخص الطالب أو المجموعة..." class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition"></textarea>
+                </div>
+
+                <!-- Form Buttons -->
+                <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeStudentModal()" class="px-4 py-2.5 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition cursor-pointer">إلغاء</button>
+                    <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl shadow-md shadow-indigo-600/30 transition cursor-pointer flex items-center gap-2">
+                        <i class="fa-solid fa-check"></i>
+                        <span>حفظ الطالب</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Student Payment History Modal -->
+    <div id="historyModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 no-print">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center">
+                <div>
+                    <h3 id="historyStudentName" class="font-extrabold text-base sm:text-lg">سجل الشهور للطالب</h3>
+                    <p id="historyStudentSub" class="text-xs text-indigo-300">تفاصيل وسجلات التسديد</p>
+                </div>
+                <button onclick="closeHistoryModal()" class="text-slate-400 hover:text-white transition text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto custom-scrollbar flex-grow space-y-3" id="historyListContainer">
+                <!-- Populated dynamically -->
+            </div>
+
+            <div class="bg-slate-50 p-4 border-t border-slate-100 text-left">
+                <button onclick="closeHistoryModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl transition">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Modal Dialog (Replaces Browser Alert/Confirm) -->
+    <div id="customDialog" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 no-print">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center space-y-4">
+            <div id="dialogIcon" class="w-14 h-14 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto text-2xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h4 id="dialogTitle" class="font-extrabold text-slate-800 text-base">تأكيد الإجراء</h4>
+            <p id="dialogMessage" class="text-xs text-slate-500 leading-relaxed">هل أنت أكتد من إتمام هذا الإجراء؟</p>
+            <div class="flex justify-center gap-3 pt-2">
+                <button id="dialogCancelBtn" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition cursor-pointer">إلغاء</button>
+                <button id="dialogConfirmBtn" class="px-5 py-2 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-xl shadow-md transition cursor-pointer">تأكيد</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 left-5 z-50 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-800 transform translate-y-20 opacity-0 transition-all duration-300 no-print">
+        <div id="toastIcon" class="text-emerald-400"><i class="fa-solid fa-circle-check"></i></div>
+        <div id="toastMessage" class="text-xs font-bold">تمت العملية بنجاح</div>
+    </div>
+
+    <script>
+        // App State
+        let students = [];
+        let currentMonthKey = ''; // e.g. "2026-08"
+        let activeDialogResolver = null;
+
+        // Initialize App on DOM Load
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            // Set default selected month to current month YYYY-MM
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            currentMonthKey = `${year}-${month}`;
+            
+            const monthInput = document.getElementById('selectedMonthInput');
+            if (monthInput) {
+                monthInput.value = currentMonthKey;
+            }
+
+            // Load data from LocalStorage
+            loadStudentsData();
+            
+            // Update UI
+            updateGradeFilterOptions();
+            updateMonthLabel();
+            renderTable();
+            updateStats();
+        });
+
+        // Local Storage Sync
+        function loadStudentsData() {
+            try {
+                const stored = localStorage.getItem('lesson_system_students');
+                if (stored) {
+                    students = JSON.parse(stored);
+                } else {
+                    // Pre-populate with dummy data if first run for easy experience
+                    students = [
+                        {
+                            id: 'std_' + Date.now() + '_1',
+                            name: 'محمود أحمد عثمان',
+                            grade: 'الصف الثالث الثانوي',
+                            joinDate: '2026-01-15',
+                            monthlyFee: 300,
+                            phone: '01012345678',
+                            notes: 'طالب ممتاز ومواظب',
+                            payments: {
+                                '2026-08': { status: 'PAID', datePaid: '2026-08-01', amount: 300 }
+                            }
+                        },
+                        {
+                            id: 'std_' + Date.now() + '_2',
+                            name: 'سارة محمد السيد',
+                            grade: 'الصف الثاني الثانوي',
+                            joinDate: '2026-02-01',
+                            monthlyFee: 250,
+                            phone: '01123456789',
+                            notes: '',
+                            payments: {}
+                        }
+                    ];
+                    saveStudentsData();
+                }
+            } catch (e) {
+                console.error("Error loading data:", e);
+                students = [];
+            }
+        }
+
+        function saveStudentsData() {
+            try {
+                localStorage.setItem('lesson_system_students', JSON.stringify(students));
+            } catch (e) {
+                showToast('خطأ في حفظ البيانات بالذاكرة المحلية', 'error');
+            }
+        }
+
+        function handleMonthChange() {
+            const inputVal = document.getElementById('selectedMonthInput').value;
+            if (inputVal) {
+                currentMonthKey = inputVal;
+                updateMonthLabel();
+                renderTable();
+                updateStats();
+            }
+        }
+
+        function updateMonthLabel() {
+            if (!currentMonthKey) return;
+            const [y, m] = currentMonthKey.split('-');
+            const date = new Date(parseInt(y), parseInt(m) - 1, 1);
+            const monthName = date.toLocaleDateString('ar-EG', { month: 'long', year: 'numeric' });
+            document.getElementById('monthTextLabel').textContent = monthName;
+        }
+
+        function updateGradeFilterOptions() {
+            const select = document.getElementById('gradeFilter');
+            const currentSelection = select.value;
+            
+            // Extract unique grades
+            const gradesSet = new Set(students.map(s => s.grade).filter(Boolean));
+            
+            select.innerHTML = '<option value="ALL">جميع المراحل الدراسية</option>';
+            gradesSet.forEach(grade => {
+                const option = document.createElement('option');
+                option.value = grade;
+                option.textContent = grade;
+                select.appendChild(option);
+            });
+
+            select.value = currentSelection || 'ALL';
+        }
+
+        function renderTable() {
+            const searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+            const gradeFilter = document.getElementById('gradeFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            const tbody = document.getElementById('studentsTableBody');
+            const mobileContainer = document.getElementById('studentsMobileContainer');
+            const emptyState = document.getElementById('emptyState');
+
+            tbody.innerHTML = '';
+            mobileContainer.innerHTML = '';
+
+            let filtered = students.filter(student => {
+                // Search filter
+                const matchesSearch = student.name.toLowerCase().includes(searchQuery) || 
+                                     (student.phone && student.phone.includes(searchQuery));
+                
+                // Grade filter
+                const matchesGrade = (gradeFilter === 'ALL') || (student.grade === gradeFilter);
+
+                // Status filter
+                const paymentInfo = student.payments?.[currentMonthKey];
+                const isPaid = paymentInfo && paymentInfo.status === 'PAID';
+                let matchesStatus = true;
+                if (statusFilter === 'PAID') matchesStatus = isPaid;
+                if (statusFilter === 'UNPAID') matchesStatus = !isPaid;
+
+                return matchesSearch && matchesGrade && matchesStatus;
+            });
+
+            document.getElementById('filteredCountBadge').textContent = `${filtered.length} طالب`;
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            filtered.forEach((student, index) => {
+                const paymentInfo = student.payments?.[currentMonthKey];
+                const isPaid = paymentInfo && paymentInfo.status === 'PAID';
+
+                // Desktop Table Row
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50/70 transition border-b border-slate-100';
+                tr.innerHTML = `
+                    <td class="py-3.5 px-4 font-bold text-slate-400">${index + 1}</td>
+                    <td class="py-3.5 px-4 font-bold text-slate-900">
+                        <div>${escapeHtml(student.name)}</div>
+                        ${student.phone ? `<div class="text-xs text-slate-400 font-normal"><i class="fa-solid fa-phone text-[10px] ml-1"></i>${escapeHtml(student.phone)}</div>` : ''}
+                    </td>
+                    <td class="py-3.5 px-4 text-slate-600">
+                        <span class="bg-slate-100 text-slate-700 font-semibold px-2.5 py-1 rounded-lg text-xs">${escapeHtml(student.grade)}</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-slate-500 font-medium">${student.joinDate || '--'}</td>
+                    <td class="py-3.5 px-4 font-extrabold text-slate-800">${student.monthlyFee} ج.م</td>
+                    <td class="py-3.5 px-4 text-center">
+                        ${isPaid ? 
+                            `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-700">
+                                <i class="fa-solid fa-circle-check"></i> مدفوع
+                            </span>` : 
+                            `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-rose-100 text-rose-700">
+                                <i class="fa-solid fa-circle-xmark"></i> غير مدفوع
+                            </span>`
+                        }
+                    </td>
+                    <td class="py-3.5 px-4 text-center">
+                        <div class="flex items-center justify-center gap-1.5">
+                            <button onclick="togglePaymentStatus('${student.id}')" class="${isPaid ? 'bg-amber-100 text-amber-800 hover:bg-amber-200' : 'bg-emerald-600 text-white hover:bg-emerald-500'} font-bold px-3 py-1.5 rounded-xl text-xs transition flex items-center gap-1 cursor-pointer">
+                                <i class="fa-solid ${isPaid ? 'fa-rotate-left' : 'fa-hand-holding-dollar'}"></i>
+                                <span>${isPaid ? 'إلغاء الدفع' : 'تسجيل دفع'}</span>
+                            </button>
+                            ${isPaid ? `
+                                <button onclick="printReceipt('${student.id}')" class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-xl transition" title="طباعة إيصال">
+                                    <i class="fa-solid fa-print"></i>
+                                </button>
+                            ` : ''}
+                            <button onclick="sendWhatsAppReminder('${student.id}')" class="p-2 text-emerald-600 hover:bg-emerald-50 rounded-xl transition" title="إرسال واتساب">
+                                <i class="fa-brands fa-whatsapp text-lg"></i>
+                            </button>
+                            <button onclick="openHistoryModal('${student.id}')" class="p-2 text-slate-500 hover:bg-slate-100 rounded-xl transition" title="سجل الشهور">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                            </button>
+                            <button onclick="openStudentModal('${student.id}')" class="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition" title="تعديل البيانات">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button onclick="confirmDeleteStudent('${student.id}')" class="p-2 text-rose-600 hover:bg-rose-50 rounded-xl transition" title="حذف الطالب">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+
+                // Mobile Card View
+                const card = document.createElement('div');
+                card.className = 'p-4 space-y-3';
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-base">${escapeHtml(student.name)}</h4>
+                            <span class="inline-block bg-slate-100 text-slate-700 text-xs px-2 py-0.5 rounded-md font-semibold mt-1">${escapeHtml(student.grade)}</span>
+                        </div>
+                        <div>
+                            ${isPaid ? 
+                                `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-700">
+                                    <i class="fa-solid fa-circle-check"></i> مدفوع
+                                </span>` : 
+                                `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-black bg-rose-100 text-rose-700">
+                                    <i class="fa-solid fa-circle-xmark"></i> غير مدفوع
+                                </span>`
+                            }
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl">
+                        <div><span class="font-bold text-slate-700">تاريخ الانضمام:</span> ${student.joinDate || '--'}</div>
+                        <div><span class="font-bold text-slate-700">سعر الشهر:</span> <strong class="text-slate-900">${student.monthlyFee} ج.م</strong></div>
+                    </div>
+                    <div class="flex items-center justify-between gap-2 pt-1">
+                        <button onclick="togglePaymentStatus('${student.id}')" class="flex-grow ${isPaid ? 'bg-amber-100 text-amber-800' : 'bg-emerald-600 text-white'} font-bold py-2 rounded-xl text-xs transition text-center">
+                            ${isPaid ? 'إلغاء دفع الشهر' : 'تسجيل سداد الشهر'}
+                        </button>
+                        <div class="flex gap-1">
+                            <button onclick="sendWhatsAppReminder('${student.id}')" class="p-2 text-emerald-600 bg-emerald-50 rounded-xl" title="واتساب">
+                                <i class="fa-brands fa-whatsapp text-base"></i>
+                            </button>
+                            <button onclick="openHistoryModal('${student.id}')" class="p-2 text-slate-600 bg-slate-100 rounded-xl" title="السجل">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                            </button>
+                            <button onclick="openStudentModal('${student.id}')" class="p-2 text-blue-600 bg-blue-50 rounded-xl">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button onclick="confirmDeleteStudent('${student.id}')" class="p-2 text-rose-600 bg-rose-50 rounded-xl">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                mobileContainer.appendChild(card);
+            });
+        }
+
+        function updateStats() {
+            const totalStudents = students.length;
+            let monthCollected = 0;
+            let monthPending = 0;
+            let monthTarget = 0;
+
+            students.forEach(s => {
+                const fee = Number(s.monthlyFee) || 0;
+                monthTarget += fee;
+
+                const payment = s.payments?.[currentMonthKey];
+                if (payment && payment.status === 'PAID') {
+                    monthCollected += fee;
+                } else {
+                    monthPending += fee;
+                }
+            });
+
+            document.getElementById('statTotalStudents').textContent = totalStudents;
+            document.getElementById('statMonthCollected').textContent = `${monthCollected.toLocaleString('ar-EG')} ج.م`;
+            document.getElementById('statMonthPending').textContent = `${monthPending.toLocaleString('ar-EG')} ج.م`;
+            document.getElementById('statMonthTarget').textContent = `${monthTarget.toLocaleString('ar-EG')} ج.م`;
+        }
+
+        function togglePaymentStatus(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            if (!student.payments) student.payments = {};
+
+            const currentPayment = student.payments[currentMonthKey];
+            const isPaid = currentPayment && currentPayment.status === 'PAID';
+
+            if (isPaid) {
+                // Cancel payment
+                delete student.payments[currentMonthKey];
+                showToast(`تم إلغاء سداد شهر للطالب: ${student.name}`, 'info');
+            } else {
+                // Record payment
+                student.payments[currentMonthKey] = {
+                    status: 'PAID',
+                    datePaid: new Date().toISOString().split('T')[0],
+                    amount: student.monthlyFee
+                };
+                showToast(`تم تسجيل سداد شهر للطالب: ${student.name}`, 'success');
+            }
+
+            saveStudentsData();
+            renderTable();
+            updateStats();
+        }
+
+        // Student Modal (Add/Edit)
+        function openStudentModal(studentId = null) {
+            const modal = document.getElementById('studentModal');
+            const form = document.getElementById('studentForm');
+            const title = document.getElementById('modalTitle');
+
+            form.reset();
+
+            if (studentId) {
+                const student = students.find(s => s.id === studentId);
+                if (student) {
+                    document.getElementById('studentId').value = student.id;
+                    document.getElementById('studentName').value = student.name;
+                    document.getElementById('studentGrade').value = student.grade;
+                    document.getElementById('joinDate').value = student.joinDate;
+                    document.getElementById('monthlyFee').value = student.monthlyFee;
+                    document.getElementById('studentPhone').value = student.phone || '';
+                    document.getElementById('studentNotes').value = student.notes || '';
+                    title.innerHTML = '<i class="fa-solid fa-pen-to-square text-indigo-400"></i><span>تعديل بيانات الطالب</span>';
+                }
+            } else {
+                document.getElementById('studentId').value = '';
+                // Default join date to today
+                document.getElementById('joinDate').value = new Date().toISOString().split('T')[0];
+                title.innerHTML = '<i class="fa-solid fa-user-plus text-indigo-400"></i><span>إضافة طالب جديد</span>';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeStudentModal() {
+            document.getElementById('studentModal').classList.add('hidden');
+        }
+
+        function saveStudent(e) {
+            e.preventDefault();
+            const id = document.getElementById('studentId').value;
+            const name = document.getElementById('studentName').value.trim();
+            const grade = document.getElementById('studentGrade').value.trim();
+            const joinDate = document.getElementById('joinDate').value;
+            const monthlyFee = Number(document.getElementById('monthlyFee').value);
+            const phone = document.getElementById('studentPhone').value.trim();
+            const notes = document.getElementById('studentNotes').value.trim();
+
+            if (!name || !grade || !monthlyFee) {
+                showToast('الرجاء إدخال كافة البيانات المطلوبة', 'error');
+                return;
+            }
+
+            if (id) {
+                // Edit existing
+                const index = students.findIndex(s => s.id === id);
+                if (index !== -1) {
+                    students[index] = {
+                        ...students[index],
+                        name,
+                        grade,
+                        joinDate,
+                        monthlyFee,
+                        phone,
+                        notes
+                    };
+                    showToast('تم تحديث بيانات الطالب بنجاح', 'success');
+                }
+            } else {
+                // Add new
+                const newStudent = {
+                    id: 'std_' + Date.now(),
+                    name,
+                    grade,
+                    joinDate,
+                    monthlyFee,
+                    phone,
+                    notes,
+                    payments: {}
+                };
+                students.push(newStudent);
+                showToast('تمت إضافة الطالب الجديد بنجاح', 'success');
+            }
+
+            saveStudentsData();
+            updateGradeFilterOptions();
+            renderTable();
+            updateStats();
+            closeStudentModal();
+        }
+
+        async function confirmDeleteStudent(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            const confirmed = await showCustomDialog(
+                'حذف طالب',
+                `هل أنت تأكد من رغبتك في حذف الطالب (${student.name})؟ سيتم حذف جميع سجلاته نهائياً.`,
+                'حذف الطالب',
+                'fa-user-slash',
+                'rose'
+            );
+
+            if (confirmed) {
+                students = students.filter(s => s.id !== studentId);
+                saveStudentsData();
+                updateGradeFilterOptions();
+                renderTable();
+                updateStats();
+                showToast('تم حذف الطالب من النظام', 'info');
+            }
+        }
+
+        // History Modal Logic
+        function openHistoryModal(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            document.getElementById('historyStudentName').textContent = student.name;
+            document.getElementById('historyStudentSub').textContent = `${student.grade} - سعر الشهر: ${student.monthlyFee} ج.م`;
+
+            const container = document.getElementById('historyListContainer');
+            container.innerHTML = '';
+
+            // Generate last 12 months list
+            const now = new Date();
+            const monthsList = [];
+            for (let i = 0; i < 12; i++) {
+                const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const yKey = d.getFullYear();
+                const mKey = String(d.getMonth() + 1).padStart(2, '0');
+                const key = `${yKey}-${mKey}`;
+                const name = d.toLocaleDateString('ar-EG', { month: 'long', year: 'numeric' });
+                monthsList.push({ key, name });
+            }
+
+            monthsList.forEach(m => {
+                const payment = student.payments?.[m.key];
+                const isPaid = payment && payment.status === 'PAID';
+
+                const div = document.createElement('div');
+                div.className = `p-3 rounded-2xl border flex items-center justify-between ${isPaid ? 'bg-emerald-50/60 border-emerald-200' : 'bg-slate-50 border-slate-200'}`;
+                div.innerHTML = `
+                    <div>
+                        <div class="font-bold text-slate-800 text-sm">${m.name}</div>
+                        ${isPaid ? `<div class="text-[11px] text-emerald-700 font-medium">تاريخ الدفع: ${payment.datePaid || '--'}</div>` : '<div class="text-[11px] text-slate-400">لم يتم التسديد</div>'}
+                    </div>
+                    <div>
+                        ${isPaid ? 
+                            `<span class="bg-emerald-600 text-white font-extrabold text-xs px-3 py-1 rounded-full"><i class="fa-solid fa-check ml-1"></i>مدفوع</span>` : 
+                            `<span class="bg-rose-100 text-rose-700 font-bold text-xs px-3 py-1 rounded-full">غير مدفوع</span>`
+                        }
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            document.getElementById('historyModal').classList.remove('hidden');
+        }
+
+        function closeHistoryModal() {
+            document.getElementById('historyModal').classList.add('hidden');
+        }
+
+        function sendWhatsAppReminder(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            if (!student.phone) {
+                showToast('لا يوجد رقم هاتف مسجل لـ ' + student.name, 'error');
+                return;
+            }
+
+            const payment = student.payments?.[currentMonthKey];
+            const isPaid = payment && payment.status === 'PAID';
+            const [y, m] = currentMonthKey.split('-');
+            const monthName = new Date(parseInt(y), parseInt(m) - 1, 1).toLocaleDateString('ar-EG', { month: 'long' });
+
+            let cleanPhone = student.phone.replace(/[^0-9]/g, '');
+            if (cleanPhone.startsWith('01')) {
+                cleanPhone = '2' + cleanPhone; // Egypt Country Code
+            }
+
+            let text = '';
+            if (isPaid) {
+                text = `السلام عليكم ورحمة الله، تم استلام اشتراك شهر (${monthName}) للطالب: ${student.name} وقيمته (${student.monthlyFee} ج.م). شكراً لكم.`;
+            } else {
+                text = `السلام عليكم ورحمة الله، تذكير بموعد سداد اشتراك شهر (${monthName}) للطالب: ${student.name} وقيمته (${student.monthlyFee} ج.م). شاكرين تعاونكم معنا.`;
+            }
+
+            const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        function printReceipt(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            const payment = student.payments?.[currentMonthKey];
+            const [y, m] = currentMonthKey.split('-');
+            const monthName = new Date(parseInt(y), parseInt(m) - 1, 1).toLocaleDateString('ar-EG', { month: 'long', year: 'numeric' });
+
+            document.getElementById('receiptPrintDate').textContent = payment?.datePaid || new Date().toISOString().split('T')[0];
+            document.getElementById('receiptStudentName').textContent = student.name;
+            document.getElementById('receiptStudentGrade').textContent = student.grade;
+            document.getElementById('receiptMonth').textContent = monthName;
+            document.getElementById('receiptAmount').textContent = `${student.monthlyFee} ج.م`;
+
+            window.print();
+        }
+
+        // Export Backup
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(students, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `نسخة_احتياطية_الطلاب_${new Date().toISOString().split('T')[0]}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showToast('تم تحميل نسخة احتياطية من البيانات بنجاح', 'success');
+        }
+
+        function showCustomDialog(title, message, confirmText = 'تأكيد', icon = 'fa-triangle-exclamation', color = 'indigo') {
+            return new Promise((resolve) => {
+                const dialog = document.getElementById('customDialog');
+                document.getElementById('dialogTitle').textContent = title;
+                document.getElementById('dialogMessage').textContent = message;
+                
+                const confirmBtn = document.getElementById('dialogConfirmBtn');
+                confirmBtn.textContent = confirmText;
+
+                dialog.classList.remove('hidden');
+
+                const handleConfirm = () => {
+                    cleanup();
+                    resolve(true);
+                };
+
+                const handleCancel = () => {
+                    cleanup();
+                    resolve(false);
+                };
+
+                const cleanup = () => {
+                    dialog.classList.add('hidden');
+                    confirmBtn.removeEventListener('click', handleConfirm);
+                    document.getElementById('dialogCancelBtn').removeEventListener('click', handleCancel);
+                };
+
+                confirmBtn.addEventListener('click', handleConfirm);
+                document.getElementById('dialogCancelBtn').addEventListener('click', handleCancel);
+            });
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            const msg = document.getElementById('toastMessage');
+
+            msg.textContent = message;
+
+            if (type === 'success') {
+                icon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i>';
+            } else if (type === 'error') {
+                icon.innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-400"></i>';
+            } else {
+                icon.innerHTML = '<i class="fa-solid fa-circle-info text-blue-400"></i>';
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, "&amp;")
+                      .replace(/</g, "&lt;")
+                      .replace(/>/g, "&gt;")
+                      .replace(/"/g, "&quot;")
+                      .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
