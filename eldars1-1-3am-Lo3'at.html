@@ -27,11 +27,6 @@
                             300: '#fde047',
                             400: '#facc15',
                             500: '#eab308',
-                        },
-                        accent: {
-                            purple: '#8b5cf6',
-                            pink: '#ec4899',
-                            sky: '#0284c7',
                         }
                     },
                     fontFamily: {
@@ -51,12 +46,12 @@
             min-height: 100vh;
         }
         .glass-panel {
-            background: rgba(17, 24, 39, 0.82);
+            background: rgba(17, 24, 39, 0.85);
             backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.12);
         }
         .glass-card {
-            background: rgba(15, 23, 42, 0.65);
+            background: rgba(15, 23, 42, 0.7);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -71,18 +66,13 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .text-gradient-purple {
-            background: linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #f43f5e 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .story-step-active {
-            border-color: #facc15 !important;
-            box-shadow: 0 0 20px rgba(250, 204, 21, 0.3);
-        }
         .en-badge {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.01em;
+            transition: all 0.3s ease;
+        }
+        .hide-en .en-badge {
+            display: none !important;
         }
         .roadmap-line::before {
             content: '';
@@ -105,6 +95,7 @@
 </head>
 <body class="selection:bg-ocean-500 selection:text-white">
 
+<!-- Header Navbar -->
 <header class="sticky top-0 z-50 glass-panel border-b border-slate-700/60 shadow-xl">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
         <div class="flex items-center gap-3">
@@ -113,7 +104,7 @@
             </div>
             <div>
                 <div class="flex items-center gap-2">
-                    <h1 class="text-xl font-black text-white leading-tight">تكنولوجيا المعلومات والاتصالات</h1>
+                    <h1 class="text-lg md:text-xl font-black text-white leading-tight">تكنولوجيا المعلومات والاتصالات</h1>
                     <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full font-bold">ICT Grade 10</span>
                 </div>
                 <p class="text-xs text-cyan-400 font-medium">مذكرة عام ولغات | General & Language Schools</p>
@@ -124,116 +115,113 @@
             <a href="#interactive-story" class="hover:text-yellow-400 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-gamepad text-yellow-400"></i> القصة التفاعلية</a>
             <a href="#roadmap" class="hover:text-cyan-400 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-map-location-dot text-cyan-400"></i> خريطة المنهج</a>
             <a href="#theory" class="hover:text-emerald-400 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-book-open text-emerald-400"></i> الشرح المزدوج</a>
-            <a href="#simulators" class="hover:text-pink-400 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-flask-vial text-pink-400"></i> المختبرات التفاعلية</a>
+            <a href="#simulators" class="hover:text-pink-400 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-flask-vial text-pink-400"></i> المختبر التفاعلي</a>
             <a href="#quiz" class="hover:text-amber-400 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-award text-amber-400"></i> اختبر نفسك</a>
         </nav>
 
         <div class="flex items-center gap-2">
-            <button onclick="toggleLangMode()" id="lang-toggle-btn" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/40 font-bold py-2 px-3.5 rounded-xl text-xs flex items-center gap-2 transition-all shadow-md">
+            <button onclick="toggleLangMode()" id="lang-toggle-btn" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/40 font-bold py-2 px-3 rounded-xl text-xs flex items-center gap-2 transition-all shadow-md">
                 <i class="fa-solid fa-language text-base"></i>
-                <span id="lang-btn-text">عرض اللغات (English On)</span>
+                <span id="lang-btn-text">إخفاء الإنجليزي (Hide EN)</span>
+            </button>
+            <button onclick="toggleMobileMenu()" class="lg:hidden text-slate-300 text-xl p-2">
+                <i class="fa-solid fa-bars"></i>
             </button>
         </div>
     </div>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden lg:hidden bg-slate-900 border-b border-slate-800 px-4 py-3 space-y-2 text-xs font-bold">
+        <a href="#interactive-story" onclick="toggleMobileMenu()" class="block py-2 text-yellow-400"><i class="fa-solid fa-gamepad ml-2"></i> القصة التفاعلية</a>
+        <a href="#roadmap" onclick="toggleMobileMenu()" class="block py-2 text-cyan-400"><i class="fa-solid fa-map-location-dot ml-2"></i> خريطة المنهج</a>
+        <a href="#theory" onclick="toggleMobileMenu()" class="block py-2 text-emerald-400"><i class="fa-solid fa-book-open ml-2"></i> الشرح المزدوج</a>
+        <a href="#simulators" onclick="toggleMobileMenu()" class="block py-2 text-pink-400"><i class="fa-solid fa-flask-vial ml-2"></i> المختبر التفاعلي</a>
+        <a href="#quiz" onclick="toggleMobileMenu()" class="block py-2 text-amber-400"><i class="fa-solid fa-award ml-2"></i> اختبر نفسك</a>
+    </div>
 </header>
 
-<section class="relative py-16 px-4 overflow-hidden">
+<!-- Hero Section -->
+<section class="relative py-12 px-4 overflow-hidden">
     <div class="max-w-7xl mx-auto text-center relative z-10">
         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card text-cyan-300 text-xs font-extrabold mb-6 border border-cyan-500/30">
             <span class="animate-pulse text-lg">🚀</span> المنهج المطور للصف الأول الثانوي - الترم الأول (عربي + English)
         </div>
-        <h1 class="text-3xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+        <h1 class="text-3xl md:text-5xl font-black text-white mb-6 leading-tight">
             المفهوم الشامل للبيانات والمعلومات والوسائط <br>
-            <span class="text-gradient">Data, Information, Knowledge & Media Literacy</span>
+            <span class="text-gradient en-badge">Data, Information, Knowledge & Media Literacy</span>
         </h1>
-        <p class="text-base md:text-lg text-slate-300 max-w-4xl mx-auto leading-relaxed mb-8 font-tajawal">
-            مذكرة تعليمية شاملة ومصممة خصيصاً لطلاب المدارس العامة ولغات! تجمع بين **القصة الكرتونية التفاعلية**، **الشرح العلمي المزدوج (عربي/إنجليزي)**، **المختبرات البرمجية لتشغيل البيانات**، و**بنك الأسئلة الإلكتروني الذكي**.
+        <p class="text-sm md:text-base text-slate-300 max-w-4xl mx-auto leading-relaxed mb-8 font-tajawal">
+            مذكرة تعليمية تفاعلية شاملة تجمع بين **القصة المصورة**، **الشرح الأكاديمي المزدوج مع الأمثلة الكاملة**، **المختبر البرمجي للبيانات**، و**بنك الأسئلة الذكي المفصل**.
         </p>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto text-right">
             <div class="glass-card p-4 rounded-2xl border-r-4 border-yellow-400">
-                <div class="text-yellow-400 font-black text-base mb-1">1. البيانات (Data)</div>
-                <div class="text-xs text-slate-300 font-medium">حقائق وأمور مُمَثَّلة <span class="en-badge text-yellow-300 text-[11px] block">(Facts or matters represented using numbers, characters, or symbols)</span></div>
+                <div class="text-yellow-400 font-black text-sm mb-1">1. البيانات (Data)</div>
+                <div class="text-xs text-slate-300 font-medium">حقائق مُمثلة بالأرقام والحروف والرموز <span class="en-badge text-yellow-300 text-[11px] block mt-1">(Facts represented using numbers, characters, symbols)</span></div>
             </div>
             <div class="glass-card p-4 rounded-2xl border-r-4 border-teal-400">
-                <div class="text-teal-400 font-black text-base mb-1">2. المعلومات (Information)</div>
-                <div class="text-xs text-slate-300 font-medium">معنى وقيمة لاتخاذ القرار <span class="en-badge text-teal-300 text-[11px] block">(Holds meaning/value; basis for decision-making)</span></div>
+                <div class="text-teal-400 font-black text-sm mb-1">2. المعلومات (Information)</div>
+                <div class="text-xs text-slate-300 font-medium">معنى وقيمة لاتخاذ القرار ليس لها شكل ثابت <span class="en-badge text-teal-300 text-[11px] block mt-1">(Holds meaning/value; basis for decisions; no form)</span></div>
             </div>
             <div class="glass-card p-4 rounded-2xl border-r-4 border-emerald-400">
-                <div class="text-emerald-400 font-black text-base mb-1">3. المعرفة (Knowledge)</div>
-                <div class="text-xs text-slate-300 font-medium">معلومات محللة ومنظمة <span class="en-badge text-emerald-300 text-[11px] block">(Analyzed & systematized for problem-solving)</span></div>
+                <div class="text-emerald-400 font-black text-sm mb-1">3. المعرفة (Knowledge)</div>
+                <div class="text-xs text-slate-300 font-medium">معلومات محللة ومنظمة لحل المشكلات <span class="en-badge text-emerald-300 text-[11px] block mt-1">(Analyzed & systematized to aid problem-solving)</span></div>
             </div>
             <div class="glass-card p-4 rounded-2xl border-r-4 border-purple-400">
-                <div class="text-purple-400 font-black text-base mb-1">4. الوسائط (Media)</div>
-                <div class="text-xs text-slate-300 font-medium">وسيلة نقل المعلومات <span class="en-badge text-purple-300 text-[11px] block">(Media for conveying information to people)</span></div>
+                <div class="text-purple-400 font-black text-sm mb-1">4. الوسائط (Media)</div>
+                <div class="text-xs text-slate-300 font-medium">وسائل نقل المعلومات للأفراد <span class="en-badge text-purple-300 text-[11px] block mt-1">(Media for conveying information to people)</span></div>
             </div>
         </div>
     </div>
 </section>
 
-<section id="interactive-story" class="py-16 px-4 max-w-7xl mx-auto">
-    <div class="glass-panel p-6 md:p-10 rounded-3xl border border-amber-500/30 shadow-2xl relative overflow-hidden">
-        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-700/80">
+<!-- Interactive Story Section -->
+<section id="interactive-story" class="py-12 px-4 max-w-7xl mx-auto">
+    <div class="glass-panel p-6 md:p-8 rounded-3xl border border-amber-500/30 shadow-2xl relative overflow-hidden">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-700/80">
             <div>
                 <span class="inline-flex items-center gap-1.5 text-xs font-black px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-full border border-yellow-500/40">
-                    <i class="fa-solid fa-clapperboard"></i> الموديل التفاعلي الأول: القصة الكرتونية التفاعلية
+                    <i class="fa-solid fa-clapperboard"></i> الموديل التفاعلي الأول: القصة الكرتونية
                 </span>
-                <h2 class="text-2xl md:text-3xl font-black text-white mt-2">🧽 مغامرة شمشون والشفرة السرية (Interactive Story Quest)</h2>
-                <p class="text-slate-300 text-xs md:text-sm mt-1 font-tajawal">اضغط على الخيارات التفاعلية لتقود شمشون وسبونج بوب عبر مراحل تحويل البيانات إلى معرفة!</p>
+                <h2 class="text-xl md:text-2xl font-black text-white mt-2">🧽 مغامرة شمشون والشفرة السرية (Interactive Quest)</h2>
             </div>
             <div class="flex items-center gap-2 bg-slate-900/90 p-2 rounded-2xl border border-slate-700">
                 <span class="text-xs text-slate-400 font-bold px-2">التقدم في القصة:</span>
-                <span id="story-progress-text" class="text-sm font-black text-yellow-400">مرحلة 1 من 6</span>
+                <span id="story-progress-text" class="text-sm font-black text-yellow-400">مرحلة 1 من 5</span>
             </div>
         </div>
 
-        <!-- Story Stepper Canvas Container -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-            <!-- Left Character / Scene Visualizer -->
-            <div class="lg:col-span-5 bg-gradient-to-b from-slate-900 to-slate-950 p-6 rounded-3xl border border-slate-800 text-center relative flex flex-col items-center justify-center min-h-[320px]">
-                <div id="story-avatar" class="text-7xl mb-4 transform hover:scale-110 transition-all duration-300">
-                    👾
-                </div>
-                <div id="story-character-name" class="text-lg font-extrabold text-yellow-400 mb-1">
-                    شمشون (Plankton)
-                </div>
-                <div id="story-location-badge" class="text-xs bg-slate-800 text-cyan-300 px-3 py-1 rounded-full border border-slate-700 mb-4 font-mono">
-                    📍 مختبر ديلتا (Deltabeck Lab)
-                </div>
+            <!-- Left Character Card -->
+            <div class="lg:col-span-4 bg-gradient-to-b from-slate-900 to-slate-950 p-6 rounded-3xl border border-slate-800 text-center flex flex-col items-center justify-center min-h-[280px]">
+                <div id="story-avatar" class="text-6xl mb-3 transform hover:scale-110 transition-all">👾</div>
+                <div id="story-character-name" class="text-base font-extrabold text-yellow-400 mb-1">شمشون (Plankton)</div>
+                <div id="story-location-badge" class="text-xs bg-slate-800 text-cyan-300 px-3 py-1 rounded-full border border-slate-700 mb-3 font-mono">📍 مطعم دلو الصداقة (Chum Bucket)</div>
                 <div id="story-concept-tag" class="px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-xl text-xs font-black border border-yellow-500/30">
-                    مفهوم: البيانات الخام (Raw Data)
+                    مفهوم: البيانات الخام (Data)
                 </div>
             </div>
 
-            <!-- Right Interactive Dialogue & Choices -->
-            <div class="lg:col-span-7 flex flex-col justify-between min-h-[320px] bg-slate-900/60 p-6 rounded-3xl border border-slate-800">
+            <!-- Right Story Body -->
+            <div class="lg:col-span-8 flex flex-col justify-between min-h-[280px] bg-slate-900/60 p-6 rounded-3xl border border-slate-800">
                 <div>
-                    <h3 id="story-title" class="text-xl font-bold text-white mb-3 flex items-center gap-2">
+                    <h3 id="story-title" class="text-lg font-bold text-white mb-3 flex items-center gap-2">
                         <i class="fa-solid fa-scroll text-yellow-400"></i> المشهد الأول: سرقة الورقة الغامضة
                     </h3>
-                    <p id="story-body" class="text-slate-200 text-sm leading-relaxed font-tajawal mb-6">
-                        نجح **شمشون** في الحصول على ورقة ممزقة من مطعم مقرمشات سلطع، ولكن عندما نظر إليها وجد رموزاً وأرقاماً غير مفهومة: <span class="bg-slate-950 text-yellow-300 font-mono px-2 py-0.5 rounded font-bold border border-yellow-500/30">(100 - س - 5 - % - خ)</span>. صرخ حائراً: "ما هذا؟! إنها مجرد رموز مبعثرة صامتة لا تساعدني على طبخ شيء!".
+                    <p id="story-body" class="text-slate-200 text-xs md:text-sm leading-relaxed font-tajawal mb-4">
+                        نجح **شمشون** في الحصول على ورقة ممزقة من مطعم مقرمشات سلطع، ولكن عندما نظر إليها وجد أرقاماً ورموزاً صامتة: <span class="bg-slate-950 text-yellow-300 font-mono px-2 py-0.5 rounded font-bold border border-yellow-500/30">(100 - س - 5 - % - خ)</span>. صرخ حائراً: "ما هذا؟! إنها مجرد أرقام ورموز مبعثرة لا معنى لها!".
                     </p>
-                    
-                    <!-- Curriculum Bilingual Link Box -->
-                    <div id="story-academic-link" class="p-4 rounded-2xl bg-slate-950/80 border border-yellow-500/30 text-xs text-slate-300 mb-6">
+                    <div id="story-academic-link" class="p-3.5 rounded-2xl bg-slate-950/80 border border-yellow-500/30 text-xs text-slate-300 mb-4">
                         <strong class="text-yellow-400 block mb-1 font-bold">💡 الربط المنهجي (Curriculum Link):</strong>
-                        <span class="block text-slate-200">البيانات (Data) هي حقائق أولية صامتة تمثل بأرقام وحروف ورموز ليس لها معنى مستقل بدون معالجة.</span>
-                        <span class="block en-badge text-cyan-300 mt-1 font-semibold">Data refers to raw facts represented by numbers, letters, or symbols with no direct meaning prior to processing.</span>
+                        <span class="block text-slate-200">البيانات (Data) هي حقائق تمثل باستخدام الأرقام أو الأحرف أو الرموز وليس لها معنى مباشر قبل المعالجة.</span>
+                        <span class="block en-badge text-cyan-300 mt-1 font-semibold">Data: Facts or matters represented using numbers, characters, or symbols.</span>
                     </div>
                 </div>
 
-                <!-- Action Controls -->
-                <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-800">
-                    <button onclick="prevStoryStep()" id="btn-prev-story" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed">
-                        <i class="fa-solid fa-arrow-right ml-1"></i> المشهد السابق
+                <div class="flex items-center justify-between gap-3 pt-3 border-t border-slate-800">
+                    <button onclick="prevStoryStep()" id="btn-prev-story" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs font-bold transition-all disabled:opacity-40">
+                        <i class="fa-solid fa-arrow-right ml-1"></i> السابق
                     </button>
-
-                    <div id="story-interactive-choices" class="flex gap-2">
-                        <!-- Dynamic choices generated by JS -->
-                    </div>
-
-                    <button onclick="nextStoryStep()" id="btn-next-story" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-black text-xs transition-all shadow-lg shadow-yellow-500/20">
+                    <button onclick="nextStoryStep()" id="btn-next-story" class="px-5 py-2 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 text-slate-950 font-black text-xs transition-all shadow-lg">
                         المشهد التالي <i class="fa-solid fa-arrow-left mr-1"></i>
                     </button>
                 </div>
@@ -242,122 +230,104 @@
     </div>
 </section>
 
-<section id="roadmap" class="py-16 px-4 max-w-7xl mx-auto">
-    <div class="text-center mb-16">
-        <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-3">
+<!-- Curriculum Roadmap -->
+<section id="roadmap" class="py-12 px-4 max-w-7xl mx-auto">
+    <div class="text-center mb-12">
+        <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-2">
             <i class="fa-solid fa-route text-cyan-400 ml-2"></i> خريطة المنهج الشاملة (Curriculum Roadmap)
         </h2>
-        <p class="text-slate-400 text-sm">التسلسل المفاهيمي الكامل لدرس تكنولوجيا المعلومات للصف الأول الثانوي</p>
+        <p class="text-slate-400 text-xs md:text-sm">التسلسل المفاهيمي الكامل للدرس وفق الكتب المدرسية الرسمية</p>
     </div>
 
     <div class="relative roadmap-line max-w-5xl mx-auto">
         <!-- Step 1 -->
-        <div class="relative z-10 mb-12 md:flex items-center justify-between group">
-            <div class="md:w-5/12 mb-4 md:mb-0 md:text-left text-right">
-                <div class="glass-card p-6 rounded-3xl border border-yellow-500/30 group-hover:border-yellow-400 transition-all">
-                    <span class="inline-block px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-full text-xs font-bold mb-2">المحطة الأولى</span>
-                    <h3 class="text-xl font-bold text-yellow-400 mb-1">1. البيانات (Data)</h3>
+        <div class="relative z-10 mb-10 md:flex items-center justify-between group">
+            <div class="md:w-5/12 mb-4 md:mb-0 text-right">
+                <div class="glass-card p-5 rounded-3xl border border-yellow-500/30 group-hover:border-yellow-400 transition-all">
+                    <span class="inline-block px-3 py-0.5 bg-yellow-500/20 text-yellow-300 rounded-full text-[11px] font-bold mb-2">المحطة الأولى</span>
+                    <h3 class="text-lg font-bold text-yellow-400 mb-1">1. البيانات (Data)</h3>
                     <p class="en-badge text-xs text-yellow-200/80 font-semibold mb-2">Facts or matters represented using numbers, characters, or symbols.</p>
-                    <p class="text-slate-300 text-xs leading-relaxed font-tajawal">
-                        حقائق وأمور يُعبَّر عنها ويتم تمثيلها باستخدام الأرقام أو الحروف أو الرموز.
-                    </p>
+                    <p class="text-slate-300 text-xs leading-relaxed font-tajawal">حقائق أو أمور تُثّل باستخدام الأرقام أو الأحرف أو الرموز.</p>
                 </div>
             </div>
-            <div class="w-12 h-12 rounded-full bg-yellow-400 text-slate-950 font-black flex items-center justify-center text-lg mx-auto md:mx-0 shadow-lg shadow-yellow-400/50 z-20">
-                1
-            </div>
+            <div class="w-10 h-10 rounded-full bg-yellow-400 text-slate-950 font-black flex items-center justify-center text-base mx-auto md:mx-0 shadow-lg z-20">1</div>
             <div class="md:w-5/12 hidden md:block"></div>
         </div>
 
         <!-- Step 2 -->
-        <div class="relative z-10 mb-12 md:flex items-center justify-between group flex-row-reverse">
+        <div class="relative z-10 mb-10 md:flex items-center justify-between group flex-row-reverse">
             <div class="md:w-5/12 mb-4 md:mb-0 text-right">
-                <div class="glass-card p-6 rounded-3xl border border-teal-500/30 group-hover:border-teal-400 transition-all">
-                    <span class="inline-block px-3 py-1 bg-teal-500/20 text-teal-300 rounded-full text-xs font-bold mb-2">المحطة الثانية</span>
-                    <h3 class="text-xl font-bold text-teal-300 mb-1">2. المعلومات (Information)</h3>
-                    <p class="en-badge text-xs text-teal-200/80 font-semibold mb-2">Something that holds meaning or value for the recipient and serves as a basis for decision-making. Unlike objects, information has no form.</p>
-                    <p class="text-slate-300 text-xs leading-relaxed font-tajawal">
-                        شيء يحمل معنى أو قيمة للمتلقي ويُستخدم كأساس لاتخاذ القرار. وعلى عكس الأجسام المادية، ليس للمعلومة شكل مادي.
-                    </p>
+                <div class="glass-card p-5 rounded-3xl border border-teal-500/30 group-hover:border-teal-400 transition-all">
+                    <span class="inline-block px-3 py-0.5 bg-teal-500/20 text-teal-300 rounded-full text-[11px] font-bold mb-2">المحطة الثانية</span>
+                    <h3 class="text-lg font-bold text-teal-300 mb-1">2. المعلومات وخصائصها (Information)</h3>
+                    <p class="en-badge text-xs text-teal-200/80 font-semibold mb-2">Holds meaning or value; basis for decision-making; has no form.</p>
+                    <p class="text-slate-300 text-xs leading-relaxed font-tajawal">معنى وقيمة للمتلقي تُستخدم لاتخاذ القرار، وليس لها شكل مادي. وتتميز بـ: الاستمرارية، قابلية التكرار، والانتشار.</p>
                 </div>
             </div>
-            <div class="w-12 h-12 rounded-full bg-teal-400 text-slate-950 font-black flex items-center justify-center text-lg mx-auto md:mx-0 shadow-lg shadow-teal-400/50 z-20">
-                2
-            </div>
+            <div class="w-10 h-10 rounded-full bg-teal-400 text-slate-950 font-black flex items-center justify-center text-base mx-auto md:mx-0 shadow-lg z-20">2</div>
             <div class="md:w-5/12 hidden md:block"></div>
         </div>
 
         <!-- Step 3 -->
-        <div class="relative z-10 mb-12 md:flex items-center justify-between group">
-            <div class="md:w-5/12 mb-4 md:mb-0 md:text-left text-right">
-                <div class="glass-card p-6 rounded-3xl border border-emerald-500/30 group-hover:border-emerald-400 transition-all">
-                    <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-bold mb-2">المحطة الثالثة</span>
-                    <h3 class="text-xl font-bold text-emerald-400 mb-1">3. المعرفة (Knowledge)</h3>
-                    <p class="en-badge text-xs text-emerald-200/80 font-semibold mb-2">Information that has been analyzed and systematized to aid in problem-solving.</p>
-                    <p class="text-slate-300 text-xs leading-relaxed font-tajawal">
-                        معلومات تم تحليلها وتنظيمها بشكل منهجي للمساعدة في حل المشكلات.
-                    </p>
+        <div class="relative z-10 mb-10 md:flex items-center justify-between group">
+            <div class="md:w-5/12 mb-4 md:mb-0 text-right">
+                <div class="glass-card p-5 rounded-3xl border border-emerald-500/30 group-hover:border-emerald-400 transition-all">
+                    <span class="inline-block px-3 py-0.5 bg-emerald-500/20 text-emerald-300 rounded-full text-[11px] font-bold mb-2">المحطة الثالثة</span>
+                    <h3 class="text-lg font-bold text-emerald-400 mb-1">3. المعرفة (Knowledge)</h3>
+                    <p class="en-badge text-xs text-emerald-200/80 font-semibold mb-2">Information analyzed and systematized to aid in problem-solving.</p>
+                    <p class="text-slate-300 text-xs leading-relaxed font-tajawal">المعلومات التي تم تحليلها وتنظيمها بشكل منهجي للمساعدة في حل المشكلات.</p>
                 </div>
             </div>
-            <div class="w-12 h-12 rounded-full bg-emerald-400 text-slate-950 font-black flex items-center justify-center text-lg mx-auto md:mx-0 shadow-lg shadow-emerald-400/50 z-20">
-                3
-            </div>
+            <div class="w-10 h-10 rounded-full bg-emerald-400 text-slate-950 font-black flex items-center justify-center text-base mx-auto md:mx-0 shadow-lg z-20">3</div>
             <div class="md:w-5/12 hidden md:block"></div>
         </div>
 
         <!-- Step 4 -->
-        <div class="relative z-10 mb-12 md:flex items-center justify-between group flex-row-reverse">
+        <div class="relative z-10 mb-10 md:flex items-center justify-between group flex-row-reverse">
             <div class="md:w-5/12 mb-4 md:mb-0 text-right">
-                <div class="glass-card p-6 rounded-3xl border border-sky-500/30 group-hover:border-sky-400 transition-all">
-                    <span class="inline-block px-3 py-1 bg-sky-500/20 text-sky-300 rounded-full text-xs font-bold mb-2">المحطة الرابعة</span>
-                    <h3 class="text-xl font-bold text-sky-300 mb-1">4. مصادر التحقق (Primary & Secondary)</h3>
-                    <p class="en-badge text-xs text-sky-200/80 font-semibold mb-2">Information Sources & Cross-Checking</p>
-                    <p class="text-slate-300 text-xs leading-relaxed font-tajawal">
-                        التمييز بين المصادر الأولية والمصادر الثانوية، وممارسة التحقق المتبادل (Cross-checking).
-                    </p>
+                <div class="glass-card p-5 rounded-3xl border border-sky-500/30 group-hover:border-sky-400 transition-all">
+                    <span class="inline-block px-3 py-0.5 bg-sky-500/20 text-sky-300 rounded-full text-[11px] font-bold mb-2">المحطة الرابعة</span>
+                    <h3 class="text-lg font-bold text-sky-300 mb-1">4. المصادر الأولية والثانوية والتحقق المتبادل</h3>
+                    <p class="en-badge text-xs text-sky-200/80 font-semibold mb-2">Primary & Secondary Information & Cross-checking</p>
+                    <p class="text-slate-300 text-xs leading-relaxed font-tajawal">التمييز بين الملاحظة المباشرة (التجارب) والطرف الثالث (الكتب والتلفزيون)، وممارسة التحقق المتبادل لتحديد الدقة والموثوقية.</p>
                 </div>
             </div>
-            <div class="w-12 h-12 rounded-full bg-sky-400 text-slate-950 font-black flex items-center justify-center text-lg mx-auto md:mx-0 shadow-lg shadow-sky-400/50 z-20">
-                4
-            </div>
+            <div class="w-10 h-10 rounded-full bg-sky-400 text-slate-950 font-black flex items-center justify-center text-base mx-auto md:mx-0 shadow-lg z-20">4</div>
             <div class="md:w-5/12 hidden md:block"></div>
         </div>
 
         <!-- Step 5 -->
         <div class="relative z-10 md:flex items-center justify-between group">
-            <div class="md:w-5/12 mb-4 md:mb-0 md:text-left text-right">
-                <div class="glass-card p-6 rounded-3xl border border-purple-500/30 group-hover:border-purple-400 transition-all">
-                    <span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-xs font-bold mb-2">المحطة الأخيرة</span>
-                    <h3 class="text-xl font-bold text-purple-300 mb-1">5. أنواع الوسائط والثقافة الإعلامية</h3>
+            <div class="md:w-5/12 mb-4 md:mb-0 text-right">
+                <div class="glass-card p-5 rounded-3xl border border-purple-500/30 group-hover:border-purple-400 transition-all">
+                    <span class="inline-block px-3 py-0.5 bg-purple-500/20 text-purple-300 rounded-full text-[11px] font-bold mb-2">المحطة الخامسة</span>
+                    <h3 class="text-lg font-bold text-purple-300 mb-1">5. أنواع الوسائط والثقافة الإعلامية</h3>
                     <p class="en-badge text-xs text-purple-200/80 font-semibold mb-2">Media Types & Media Literacy</p>
-                    <p class="text-slate-300 text-xs leading-relaxed font-tajawal">
-                        وسائط التعبير (Expression)، النقل (Transmission)، والتسجيل (Recording) وفهم الرسائل الإعلامية بوعي.
-                    </p>
+                    <p class="text-slate-300 text-xs leading-relaxed font-tajawal">وسائط التعبير، والنقل/الإرسال، والتسجيل، والقدرة على تفسير المعلومات بدقة (Media literacy).</p>
                 </div>
             </div>
-            <div class="w-12 h-12 rounded-full bg-purple-400 text-slate-950 font-black flex items-center justify-center text-lg mx-auto md:mx-0 shadow-lg shadow-purple-400/50 z-20">
-                5
-            </div>
+            <div class="w-10 h-10 rounded-full bg-purple-400 text-slate-950 font-black flex items-center justify-center text-base mx-auto md:mx-0 shadow-lg z-20">5</div>
             <div class="md:w-5/12 hidden md:block"></div>
         </div>
     </div>
 </section>
 
-<section id="theory" class="py-16 px-4 max-w-7xl mx-auto">
-    <div class="text-center mb-12">
-        <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-2">
-            <i class="fa-solid fa-graduation-cap text-emerald-400 ml-2"></i> الشرح العلمي الأكاديمي المزدوج (Bilingual Theory)
+<!-- Academic Bilingual Theory -->
+<section id="theory" class="py-12 px-4 max-w-7xl mx-auto">
+    <div class="text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-2">
+            <i class="fa-solid fa-graduation-cap text-emerald-400 ml-2"></i> الشرح العلمي المزدوج (Bilingual Theory)
         </h2>
-        <p class="text-slate-400 text-sm">معد بدقة للمدارس العامة ومدارس اللغات وفقاً للمعايير الوزارية</p>
+        <p class="text-slate-400 text-xs md:text-sm">مطابق تماماً لجدول ومحتوى كتاب تكنولوجيا المعلومات المدرسي</p>
     </div>
 
-    <!-- Triple Concepts Grid -->
-    <div class="glass-panel rounded-3xl overflow-hidden border border-slate-700 shadow-2xl mb-12">
-        <div class="p-6 bg-slate-900/90 border-b border-slate-700 flex items-center justify-between">
-            <h3 class="text-lg font-bold text-cyan-300 flex items-center gap-2">
-                <i class="fa-solid fa-table-list"></i> جدول المفاهيم الأكاديمية الثلاثية (The Core Triad)
+    <!-- Data / Information / Knowledge Table -->
+    <div class="glass-panel rounded-3xl overflow-hidden border border-slate-700 shadow-2xl mb-10">
+        <div class="p-5 bg-slate-900/90 border-b border-slate-700 flex items-center justify-between">
+            <h3 class="text-base font-bold text-cyan-300 flex items-center gap-2">
+                <i class="fa-solid fa-table-list"></i> 1. المفاهيم الأساسية (Data, Information, Knowledge)
             </h3>
-            <span class="text-xs bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full border border-emerald-500/40 font-bold">عربي + English</span>
+            <span class="text-xs bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full border border-emerald-500/40 font-bold">مطابق للكتاب</span>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-right text-xs md:text-sm text-slate-200">
@@ -365,778 +335,517 @@
                     <tr>
                         <th class="p-4 border-b border-slate-800">المصطلح (Term)</th>
                         <th class="p-4 border-b border-slate-800">التعريف باللغة العربية</th>
-                        <th class="p-4 border-b border-slate-800 en-badge">English Definition (Official Textbook)</th>
-                        <th class="p-4 border-b border-slate-800">الخاصية والكيان (Characteristics)</th>
+                        <th class="p-4 border-b border-slate-800 en-badge">English Definition (Official Text)</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-800/80 font-tajawal">
-                    <tr class="hover:bg-slate-800/40 transition-colors">
+                    <tr class="hover:bg-slate-800/40">
                         <td class="p-4 font-black text-yellow-400">
-                            <div>البيانات</div>
+                            <div>(1) البيانات</div>
                             <span class="en-badge text-yellow-300 text-xs block font-bold">Data</span>
                         </td>
-                        <td class="p-4">حقائق أو أمور يتم تمثيلها باستخدام الأرقام أو الحروف أو الرموز.</td>
-                        <td class="p-4 en-badge text-slate-300 text-xs leading-relaxed font-mono">Facts or matters represented using numbers, characters, or symbols.</td>
-                        <td class="p-4"><span class="bg-yellow-950 text-yellow-300 px-2.5 py-1 rounded-md text-xs border border-yellow-800">Raw representation</span></td>
+                        <td class="p-4">هي حقائق تمثل باستخدام الأرقام أو الأحرف أو الرموز.</td>
+                        <td class="p-4 en-badge text-slate-300 text-xs font-mono">Facts or matters represented using numbers, characters, or symbols.</td>
                     </tr>
-                    <tr class="hover:bg-slate-800/40 transition-colors">
+                    <tr class="hover:bg-slate-800/40">
                         <td class="p-4 font-black text-teal-400">
-                            <div>المعلومات</div>
+                            <div>(2) المعلومات</div>
                             <span class="en-badge text-teal-300 text-xs block font-bold">Information</span>
                         </td>
-                        <td class="p-4">شيء يحمل معنى أو قيمة للمتلقي ويُستخدم كأساس لاتخاذ القرار. وعلى عكس الأجسام المادية، ليس للمعلومة شكل مادي.</td>
-                        <td class="p-4 en-badge text-slate-300 text-xs leading-relaxed font-mono">Something that holds meaning or value for the recipient and serves as a basis for decision-making. Unlike objects, information has no form.</td>
-                        <td class="p-4"><span class="bg-teal-950 text-teal-300 px-2.5 py-1 rounded-md text-xs border border-teal-800">Has no form</span></td>
+                        <td class="p-4">هي معنى أو قيمة للمتلقي وتستخدم لاتخاذ القرار. وعلى عكس الأشياء المادية، فالمعلومات ليس لها شكل أو كيان ثابت.</td>
+                        <td class="p-4 en-badge text-slate-300 text-xs font-mono">Something that holds meaning or value for the recipient and serves as a basis for decision-making. Unlike objects, information has no form.</td>
                     </tr>
-                    <tr class="hover:bg-slate-800/40 transition-colors">
+                    <tr class="hover:bg-slate-800/40">
                         <td class="p-4 font-black text-emerald-400">
-                            <div>المعرفة</div>
+                            <div>(3) المعرفة</div>
                             <span class="en-badge text-emerald-300 text-xs block font-bold">Knowledge</span>
                         </td>
-                        <td class="p-4">معلومات تم تحليلها وتنظيمها بشكل منهجي للمساعدة في حل المشكلات.</td>
-                        <td class="p-4 en-badge text-slate-300 text-xs leading-relaxed font-mono">Information that has been analyzed and systematized to aid in problem-solving.</td>
-                        <td class="p-4"><span class="bg-emerald-950 text-emerald-300 px-2.5 py-1 rounded-md text-xs border border-emerald-800">Systematized analysis</span></td>
+                        <td class="p-4">هي المعلومات التي تم تحليلها وتنظيمها بشكل منهجي للمساعدة في حل المشكلات.</td>
+                        <td class="p-4 en-badge text-slate-300 text-xs font-mono">Information that has been analyzed and systematized to aid in problem-solving.</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- Properties of Information Detailed Cards -->
-    <div class="mb-14">
-        <h3 class="text-2xl font-bold text-white mb-6 text-center">
-            ✨ خصائص المعلومات (Characteristics of Information)
+    <!-- Characteristics of Information Cards -->
+    <div class="mb-10">
+        <h3 class="text-xl font-bold text-white mb-4 text-right">
+            📌 خصائص المعلومات (Characteristics of Information)
         </h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
             <!-- Persistence -->
-            <div class="glass-card p-6 rounded-3xl border-t-4 border-cyan-400 relative">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs bg-cyan-500/20 text-cyan-300 px-2.5 py-1 rounded-full font-bold">[1] الخاصية</span>
-                    <i class="fa-solid fa-infinity text-cyan-400 text-xl"></i>
+            <div class="glass-card p-5 rounded-3xl border-t-4 border-cyan-400">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs bg-cyan-500/20 text-cyan-300 px-2.5 py-0.5 rounded-full font-bold">[1] الاستمرارية</span>
+                    <i class="fa-solid fa-infinity text-cyan-400 text-lg"></i>
                 </div>
-                <h4 class="text-lg font-bold text-white mb-1">الاستمرارية</h4>
-                <p class="en-badge text-xs text-cyan-300 font-semibold mb-3">Persistence</p>
-                <p class="text-slate-300 text-xs leading-relaxed font-tajawal mb-3">
-                    المعلومات بمجرد إنشائها لا يمكن محوها بالكامل.
+                <p class="en-badge text-xs text-cyan-300 font-semibold mb-2">Persistence</p>
+                <p class="text-slate-300 text-xs leading-relaxed font-tajawal">
+                    بمجرد إنشاء المعلومات، لا يمكن محوها بالكامل.
                 </p>
-                <div class="p-2.5 bg-slate-900 rounded-xl text-[11px] text-cyan-200 border border-cyan-800/50 font-mono">
-                    <strong class="block text-cyan-400 mb-0.5">Official Definition:</strong> Information, once created, cannot be completely erased.
+                <div class="mt-3 p-2 bg-slate-950 rounded-xl text-[11px] text-cyan-200 en-badge font-mono border border-slate-800">
+                    Information, once created, cannot be completely erased.
                 </div>
             </div>
 
             <!-- Reproducibility -->
-            <div class="glass-card p-6 rounded-3xl border-t-4 border-yellow-400 relative">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs bg-yellow-500/20 text-yellow-300 px-2.5 py-1 rounded-full font-bold">[2] الخاصية</span>
-                    <i class="fa-solid fa-copy text-yellow-400 text-xl"></i>
+            <div class="glass-card p-5 rounded-3xl border-t-4 border-yellow-400">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs bg-yellow-500/20 text-yellow-300 px-2.5 py-0.5 rounded-full font-bold">[2] قابليّة التكرار</span>
+                    <i class="fa-solid fa-copy text-yellow-400 text-lg"></i>
                 </div>
-                <h4 class="text-lg font-bold text-white mb-1">قابليّة التكرار / النسخ</h4>
-                <p class="en-badge text-xs text-yellow-300 font-semibold mb-3">Reproducibility</p>
-                <p class="text-slate-300 text-xs leading-relaxed font-tajawal mb-3">
-                    يمكن نسخ المعلومات بسهولة وبكميات كبيرة.
+                <p class="en-badge text-xs text-yellow-300 font-semibold mb-2">Reproducibility</p>
+                <p class="text-slate-300 text-xs leading-relaxed font-tajawal">
+                    إمكانية نسخ المعلومات بسهولة بكميات كبيرة.
                 </p>
-                <div class="p-2.5 bg-slate-900 rounded-xl text-[11px] text-yellow-200 border border-yellow-800/50 font-mono">
-                    <strong class="block text-yellow-400 mb-0.5">Official Definition:</strong> Information can be easily copied in large quantities.
+                <div class="mt-3 p-2 bg-slate-950 rounded-xl text-[11px] text-yellow-200 en-badge font-mono border border-slate-800">
+                    Information can be easily copied in large quantities.
                 </div>
             </div>
 
             <!-- Propagation -->
-            <div class="glass-card p-6 rounded-3xl border-t-4 border-purple-400 relative">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs bg-purple-500/20 text-purple-300 px-2.5 py-1 rounded-full font-bold">[3] الخاصية</span>
-                    <i class="fa-solid fa-tower-cell text-purple-400 text-xl"></i>
+            <div class="glass-card p-5 rounded-3xl border-t-4 border-purple-400">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs bg-purple-500/20 text-purple-300 px-2.5 py-0.5 rounded-full font-bold">[3] الانتشار</span>
+                    <i class="fa-solid fa-tower-cell text-purple-400 text-lg"></i>
                 </div>
-                <h4 class="text-lg font-bold text-white mb-1">الانتشار والتدفق</h4>
-                <p class="en-badge text-xs text-purple-300 font-semibold mb-3">Propagation</p>
-                <p class="text-slate-300 text-xs leading-relaxed font-tajawal mb-3">
-                    المعلومات سهلة النقل والانتشار عبر وسائل الإعلام مثل الصحف، التلفزيون، والإنترنت (Mass Media).
+                <p class="en-badge text-xs text-purple-300 font-semibold mb-2">Propagation</p>
+                <p class="text-slate-300 text-xs leading-relaxed font-tajawal">
+                    من السهل توصيل المعلومات ونشرها عبر وسائل الإعلام الجماهيرية (<span class="en-badge">Mass Media</span>) مثل الصحف والتلفزيون وكذلك الإنترنت.
                 </p>
-                <div class="p-2.5 bg-slate-900 rounded-xl text-[11px] text-purple-200 border border-purple-800/50 font-mono">
-                    <strong class="block text-purple-400 mb-0.5">Official Definition:</strong> Information is easy to convey and spread. Information can easily spread through (mass media) such as newspapers and television, as well as the internet.
+                <div class="mt-3 p-2 bg-slate-950 rounded-xl text-[11px] text-purple-200 en-badge font-mono border border-slate-800">
+                    Information is easy to convey and spread through mass media (newspapers, TV, internet).
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Media Types & Sources Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Sources & Cross Checking -->
-        <div class="glass-panel p-6 md:p-8 rounded-3xl border border-slate-700">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-lg">
-                    <i class="fa-solid fa-layer-group"></i>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold text-white">المعلومات الأولية والثانوية والتحقق (Primary & Secondary Info)</h3>
-                    <p class="text-xs text-slate-400">Primary Information, Secondary Information & Cross-checking</p>
-                </div>
-            </div>
-
-            <div class="space-y-4 text-xs font-tajawal">
-                <!-- Primary Source -->
-                <div class="p-4 bg-slate-900/90 rounded-2xl border border-sky-500/30">
-                    <div class="flex items-center justify-between mb-1">
-                        <strong class="text-sky-300 font-bold text-sm">[1] المعلومات الأولية (Primary Information)</strong>
-                        <span class="en-badge text-[10px] bg-sky-950 text-sky-300 px-2 py-0.5 rounded border border-sky-800">Direct Experience</span>
-                    </div>
-                    <p class="text-slate-300 mb-2">المعلومات التي يتم الحصول عليها من خلال التجربة الشخصية المباشرة أو من خلال الأبحاث والتجارب.</p>
-                    <p class="en-badge text-cyan-200 text-[11px] font-mono mb-2">Definition: Information obtained through direct personal experience or acquired through research and experiments.</p>
-                    <div class="text-cyan-300 text-[11px] font-semibold bg-slate-950 p-2 rounded-lg border border-slate-800">
-                        <strong>📌 Examples / الأمثلة:</strong> Experimental reports, survey results, tabulations of questionnaire results, etc. (تقارير التجارب، نتائج الاستبيانات واستطلاعات الرأي)
-                    </div>
-                </div>
-
-                <!-- Secondary Source -->
-                <div class="p-4 bg-slate-900/90 rounded-2xl border border-amber-500/30">
-                    <div class="flex items-center justify-between mb-1">
-                        <strong class="text-amber-300 font-bold text-sm">[2] المعلومات الثانوية (Secondary Information)</strong>
-                        <span class="en-badge text-[10px] bg-amber-950 text-amber-300 px-2 py-0.5 rounded border border-amber-800">Third Party</span>
-                    </div>
-                    <p class="text-slate-300 mb-2">المعلومات التي لا يحصل عليها الشخص مباشرة بنفسه، بل يتم الحصول عليها عن طريق طرف ثالث.</p>
-                    <p class="en-badge text-amber-200 text-[11px] font-mono mb-2">Definition: Information not obtained directly by oneself, but acquired through a third party.</p>
-                    <div class="text-amber-300 text-[11px] font-semibold bg-slate-950 p-2 rounded-lg border border-slate-800">
-                        <strong>📌 Examples / الأمثلة:</strong> Books, newspapers, television, etc. (الكتب، الصحف، التلفزيون)
-                    </div>
-                </div>
-
-                <!-- Cross Checking -->
-                <div class="p-4 bg-purple-950/60 rounded-2xl border border-purple-500/40">
-                    <strong class="text-purple-300 font-bold text-sm block mb-1">
-                        🔍 التحقق المتبادل (Cross-checking)
-                    </strong>
-                    <p class="text-slate-200 text-xs leading-relaxed mb-2">
-                        قد تختلف المعلومات الثانوية أحياناً عن المعلومة الأصلية أو قد تضاف إليها تفسيرات. لذلك، من الضروري مقارنة المعلومات التي تم الحصول عليها من وجهات نظر متعددة مع معلومات أخرى لتحديد درجة دقتها وموثوقيتها.
-                    </p>
-                    <p class="en-badge text-purple-200 text-[11px] font-mono bg-slate-950 p-2.5 rounded-lg border border-purple-900">
-                        "Secondary information can sometimes differ from the original information or have interpretations added to it. In other words, it is necessary to compare the obtained information from multiple perspectives with other information to determine the degree of its accuracy and reliability. This is called (cross-checking)."
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Types of Media -->
-        <div class="glass-panel p-6 md:p-8 rounded-3xl border border-slate-700">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center font-bold text-lg">
-                    <i class="fa-solid fa-photo-film"></i>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold text-white">الوسائط وأنواعها والثقافة الإعلامية (Media & Types)</h3>
-                    <p class="text-xs text-slate-400">Media, Expression, Propagation/Transmission & Recording Media</p>
-                </div>
-            </div>
-
-            <div class="mb-4 p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs">
-                <span class="text-pink-300 font-bold block mb-1">تعريف الوسائط (Media):</span>
-                <span class="text-slate-300">وسائل نقل وتوصيل المعلومات إلى الناس.</span>
-                <span class="en-badge text-pink-200 font-mono text-[11px] block mt-1">Media for conveying information to people.</span>
-            </div>
-
-            <div class="space-y-3 text-xs font-tajawal">
-                <!-- Expression Media -->
-                <div class="p-3.5 bg-slate-900/90 rounded-2xl border border-pink-500/30">
-                    <div class="flex items-center justify-between mb-1">
-                        <strong class="text-pink-300 text-sm">1. وسائط التعبير (Expression Media)</strong>
-                        <span class="en-badge text-[10px] bg-pink-950 text-pink-300 px-2 py-0.5 rounded">Expressing</span>
-                    </div>
-                    <p class="text-slate-300 mb-1">الوسائط المستخدمة كوسيلة للتعبير عن المعلومات.</p>
-                    <p class="en-badge text-pink-200 font-mono text-[11px]">Content: Media used as a means of expressing information.</p>
-                    <p class="text-yellow-300 font-mono text-[11px] mt-1"><i class="fa-solid fa-check ml-1"></i> Examples: Text, images, audio, video</p>
-                </div>
-
-                <!-- Transmission Media -->
-                <div class="p-3.5 bg-slate-900/90 rounded-2xl border border-blue-500/30">
-                    <div class="flex items-center justify-between mb-1">
-                        <strong class="text-blue-300 text-sm">2. وسائط الانتشار / النقل (Propagation / Transmission Media)</strong>
-                        <span class="en-badge text-[10px] bg-blue-950 text-blue-300 px-2 py-0.5 rounded">Transmission</span>
-                    </div>
-                    <p class="text-slate-300 mb-1">الوسائط المستخدمة كوسيط لنقل وتبادل المعلومات والتواضل بها.</p>
-                    <p class="en-badge text-blue-200 font-mono text-[11px]">Content: Media used as an intermediary for the transmission and communication of information.</p>
-                    <p class="text-yellow-300 font-mono text-[11px] mt-1"><i class="fa-solid fa-check ml-1"></i> Examples: Television, radio, newspapers, books, telephone, internet</p>
-                </div>
-
-                <!-- Recording Media -->
-                <div class="p-3.5 bg-slate-900/90 rounded-2xl border border-emerald-500/30">
-                    <div class="flex items-center justify-between mb-1">
-                        <strong class="text-emerald-300 text-sm">3. وسائط التسجيل والحفظ (Recording Media)</strong>
-                        <span class="en-badge text-[10px] bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded">Recording</span>
-                    </div>
-                    <p class="text-slate-300 mb-1">الوسائط المستخدمة لتسجيل وتخزين المعلومات.</p>
-                    <p class="en-badge text-emerald-200 font-mono text-[11px]">Content: Media used for recording and storing information.</p>
-                    <p class="text-yellow-300 font-mono text-[11px] mt-1"><i class="fa-solid fa-check ml-1"></i> Examples: Paper, USB drives, DVDs, cloud storage</p>
-                </div>
-
-                <!-- Media Literacy -->
-                <div class="p-3.5 bg-purple-950/80 rounded-2xl border border-purple-500/40 mt-3">
-                    <div class="flex items-center justify-between mb-1">
-                        <strong class="text-purple-300 text-sm">🧠 الثقافة الإعلامية (Media Literacy)</strong>
-                    </div>
-                    <p class="text-slate-300 mb-1">القدرة على تفسير ودراسة المعلومات التي يتم الحصول عليها من الوسائط بدقة.</p>
-                    <p class="en-badge text-purple-200 font-mono text-[11px]">Definition: The ability to accurately interpret information obtained from media.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section id="simulators" class="py-16 px-4 max-w-7xl mx-auto">
-    <div class="text-center mb-12">
-        <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-2">
-            <i class="fa-solid fa-flask text-pink-400 ml-2"></i> المختبرات والتجارب التفاعلية (Interactive Labs)
-        </h2>
-        <p class="text-slate-400 text-sm">جرب بنفسك تحويل البيانات إلى معلومات والتحقق المتبادل بين المصادر!</p>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Lab 1: Data-to-Information Processing Engine -->
-        <div class="glass-panel p-6 md:p-8 rounded-3xl border border-cyan-500/40 bg-slate-900/90">
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2.5 py-1 rounded-full font-bold">تجربة 1</span>
-                    <h3 class="text-xl font-bold text-white mt-1">⚙️ محاكي معالجة البيانات (Data Processor)</h3>
-                </div>
-                <i class="fa-solid fa-microchip text-2xl text-cyan-400"></i>
-            </div>
-
-            <p class="text-slate-300 text-xs mb-4 font-tajawal">
-                أدخل رموزاً خام مبعثرة، ثم اختر نوع المعالجة لترى كيف تتحول فوراً إلى معلومة معنوية ومعرفة!
-            </p>
-
-            <div class="space-y-4 text-xs">
-                <div>
-                    <label class="block text-slate-300 font-bold mb-1">البيانات الخام المدخلة (Raw Input Data):</label>
-                    <input type="text" id="sim-raw-data" value="100 - س - 5 - % - خ" class="w-full bg-slate-950 text-yellow-300 font-mono p-3 rounded-xl border border-slate-700 focus:outline-none focus:border-cyan-400">
-                </div>
-
-                <div>
-                    <label class="block text-slate-300 font-bold mb-1">اختر خوارزمية المعالجة (Processing Context):</label>
-                    <select id="sim-process-type" class="w-full bg-slate-950 text-slate-200 p-3 rounded-xl border border-slate-700 focus:outline-none focus:border-cyan-400 font-tajawal">
-                        <option value="recipe">معالجة وصفة سلطع برجر (Kitchen Recipe Decoding)</option>
-                        <option value="grades">معالجة درجات الطالب بالفيزياء (Student Grades Processing)</option>
-                        <option value="weather">معالجة حالة الطقس بالأسكندرية (Weather Data Context)</option>
-                    </select>
-                </div>
-
-                <button onclick="processRawDataSim()" class="w-full bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-slate-950 font-black py-3 rounded-xl transition-all shadow-lg text-xs">
-                    <i class="fa-solid fa-play ml-1"></i> تشغيل معالجة البيانات الأن (Process Data)
-                </button>
-
-                <!-- Processing Result Display -->
-                <div id="sim-proc-output" class="hidden p-4 rounded-2xl bg-slate-950 border border-teal-500/40 text-right animate-fade-in space-y-2">
-                    <div class="text-teal-300 font-bold flex items-center justify-between">
-                        <span>💡 المعلومة المخرجة (Information Output):</span>
-                        <span class="en-badge text-[10px] bg-teal-950 text-teal-300 px-2 py-0.5 rounded">Context Added</span>
-                    </div>
-                    <div id="out-info-text" class="text-slate-200 font-bold text-sm bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                        --
-                    </div>
-
-                    <div class="text-emerald-300 font-bold text-xs pt-2">
-                        🧠 المعرفة المكتسبة (Derived Knowledge):
-                    </div>
-                    <div id="out-knowledge-text" class="text-slate-300 text-xs font-tajawal">
-                        --
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Lab 2: Interactive Cross-Checking Simulator -->
-        <div class="glass-panel p-6 md:p-8 rounded-3xl border border-purple-500/40 bg-slate-900/90">
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <span class="text-[10px] bg-purple-500/20 text-purple-300 px-2.5 py-1 rounded-full font-bold">تجربة 2</span>
-                    <h3 class="text-xl font-bold text-white mt-1">🧪 معمل التحقق المتبادل (Cross-Checking Lab)</h3>
-                </div>
-                <i class="fa-solid fa-magnifying-glass-chart text-2xl text-purple-400"></i>
-            </div>
-
-            <p class="text-slate-300 text-xs mb-4 font-tajawal">
-                قارن بين المصدر الأولي (المختبر المباشر)، والمصدر الثانوي (كشكول المنقول) لاكتشاف الشائعات والأخطاء!
-            </p>
-
-            <div class="space-y-3 text-xs mb-4">
-                <div class="p-3 bg-slate-950 rounded-xl border border-sky-500/30">
-                    <span class="text-sky-400 font-bold block mb-1">مصدر 1 (أولي - Primary):</span>
-                    <span class="text-slate-200">سبونج بوب: "الوصفة تحتاج 100 جرام سكر نقي"</span>
-                </div>
-
-                <div class="p-3 bg-slate-950 rounded-xl border border-pink-500/30">
-                    <span class="text-pink-400 font-bold block mb-1">مصدر 2 (ثانوي - Secondary):</span>
-                    <span class="text-slate-200">كشكول شفيق المنقول: "ضع 100 جرام ملح طعام"</span>
-                </div>
-            </div>
-
-            <button onclick="runCrossCheckLab()" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 rounded-xl transition-all shadow-lg text-xs">
-                <i class="fa-solid fa-shield-halved ml-1"></i> مطابقة المصادر واكتشاف التناقض (Cross-Check)
-            </button>
-
-            <div id="sim-cross-result" class="hidden mt-4 p-4 rounded-2xl bg-purple-950/70 border border-purple-500/50 text-xs font-tajawal leading-relaxed">
-                <strong class="text-pink-300 block mb-1 font-bold">🚨 النتيجة: تم اكتشاف تناقض في المصدر الثانوي!</strong>
-                <p class="text-slate-200">
-                    كلمة **"ملح"** في كشكول شفيق خاطئة نتيجة النقل غير المباشر. الاعتماد فقط على المصادر الثانوية دون تحقق متبادل (Cross-checking) يؤدي لاتخاذ قرارات خاطئة!
+    <!-- Primary vs Secondary Info & Cross-checking -->
+    <div class="glass-panel p-6 rounded-3xl border border-slate-700 mb-10">
+        <h3 class="text-xl font-bold text-white mb-4 text-right flex items-center gap-2">
+            <i class="fa-solid fa-magnifying-glass text-sky-400"></i> (4) المعلومات الأولية والثانوية والتحقق المتبادل
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Primary Info -->
+            <div class="bg-slate-900/90 p-5 rounded-2xl border border-sky-500/30">
+                <h4 class="text-sm font-bold text-sky-300 mb-1">[1] المعلومات الأولية <span class="en-badge text-xs font-normal text-sky-200">(Primary information)</span></h4>
+                <p class="text-xs text-slate-300 leading-relaxed font-tajawal mb-2">
+                    هي المعلومات التي يتم الحصول عليها من خلال التجربة الشخصية المباشرة أو عن طريق البحث والتجارب.
                 </p>
+                <div class="text-[11px] text-cyan-300 bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                    <strong>📌 أمثلة (Examples):</strong> تقارير التجارب، نتائج الاستطلاعات، جداول نتائج الاستبيانات، إلخ. <br>
+                    <span class="en-badge text-slate-400 block mt-1">(Experimental reports, survey results, tabulations of questionnaire results, etc.)</span>
+                </div>
+            </div>
+
+            <!-- Secondary Info -->
+            <div class="bg-slate-900/90 p-5 rounded-2xl border border-pink-500/30">
+                <h4 class="text-sm font-bold text-pink-300 mb-1">[2] المعلومات الثانوية <span class="en-badge text-xs font-normal text-pink-200">(Secondary information)</span></h4>
+                <p class="text-xs text-slate-300 leading-relaxed font-tajawal mb-2">
+                    هي المعلومات التي لا تحصل عليها بنفسك بشكل مباشر، بل من خلال طرف ثالث.
+                </p>
+                <div class="text-[11px] text-pink-300 bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                    <strong>📌 أمثلة (Examples):</strong> الكتب، الصحف، التلفزيون، إلخ. <br>
+                    <span class="en-badge text-slate-400 block mt-1">(Books, newspapers, television, etc.)</span>
+                </div>
             </div>
         </div>
-    </div>
-</section>
 
-<section id="quiz" class="py-16 px-4 max-w-5xl mx-auto">
-    <div class="glass-panel p-6 md:p-10 rounded-3xl border border-amber-500/40 shadow-2xl">
-        <div class="text-center mb-8">
-            <span class="px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full text-xs font-bold border border-amber-500/30">
-                اختبار النظام الحديث (Secondary Exam Quiz)
-            </span>
-            <h2 class="text-3xl font-black text-white mt-2">🏆 اختبر نفسك في مادة تكنولوجيا المعلومات</h2>
-            <p class="text-slate-400 text-xs mt-1">أسئلة اختيار من متعدد مصممة للمدارس العامة ولغات مع التقييم الفوري والتصحيح الشامل</p>
+        <!-- Cross Checking Note -->
+        <div class="mt-4 p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-xs text-slate-200 leading-relaxed">
+            <strong class="text-amber-400 block mb-1 font-bold">🔍 التحقق المتبادل (Cross-checking):</strong>
+            يمكن أن تختلف المعلومات الثانوية في بعض الأحيان عن المعلومات الأصلية، أو تحتوي على تفسيرات مضافة إليها. لذلك، من الضروري مقارنة المعلومات التي تحصل عليها من مصادر متعددة مع معلومات أخرى لتحديد مدى دقتها وموثوقيتها.
+            <span class="block en-badge text-amber-200 mt-1 font-mono">It is necessary to compare obtained information from multiple perspectives with other information to determine accuracy and reliability. This is called (cross-checking).</span>
         </div>
-
-        <form id="quiz-form" class="space-y-6 text-right font-tajawal">
-            <!-- Q1 -->
-            <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-700">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs font-bold text-yellow-400">السؤال الأول / Question 1</span>
-                    <span class="en-badge text-[10px] text-slate-400">Data vs Information</span>
-                </div>
-                <h3 class="font-bold text-white text-sm md:text-base mb-3 leading-snug">
-                    1. الرموز المبعثرة والأرقام التي لا تعطي معنى مستقلاً بذاتها قبل المعالجة تُعرف بـ: <br>
-                    <span class="en-badge text-cyan-300 text-xs font-normal">Raw symbols and figures that lack independent meaning before processing are defined as:</span>
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-                    <label class="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-cyan-400 cursor-pointer flex items-center gap-2">
-                        <input type="radio" name="q1" value="A" class="accent-teal-400">
-                        <span>أ) المعرفة (Knowledge)</span>
-                    </label>
-                    <label class="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-cyan-400 cursor-pointer flex items-center gap-2">
-                        <input type="radio" name="q1" value="B" class="accent-teal-400">
-                        <span>ب) البيانات (Data)</span>
-                    </label>
-                    <label class="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-cyan-400 cursor-pointer flex items-center gap-2">
-                        <input type="radio" name="q1" value="C" class="accent-teal-400">
-                        <span>ج) وسائط النقل (Transmission)</span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- Q2 -->
-            <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-700">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs font-bold text-teal-400">السؤال الثاني / Question 2</span>
-                    <span class="en-badge text-[10px] text-slate-400">Properties of Information</span>
-                </div>
-                <h3 class="font-bold text-white text-sm md:text-base mb-3 leading-snug">
-                    2. قدرة الحاسوب على نسخ ملف الوصفة مليون مرة بضغطة زر واحدة تمثل خاصية: <br>
-                    <span class="en-badge text-teal-300 text-xs font-normal">The capability to make a million copies of a digital file effortlessly demonstrates:</span>
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-                    <label class="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-cyan-400 cursor-pointer flex items-center gap-2">
-                        <input type="radio" name="q2" value="A" class="accent-teal-400">
-                        <span>أ) قابلية التكرار (Reproducibility)</span>
-                    </label>
-                    <label class="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-cyan-400 cursor-pointer flex items-center gap-2">
-                        <input type="radio" name="q2" value="B" class="accent-teal-400">
-                        <span>ب) المصادر الأولية</span>
-                    </label>
-                    <label class="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-cyan-400 cursor-pointer flex items-center gap-2">
-                        <input type="radio" name="q2" value="C" class="accent-teal-400">
-                        <span>ج) وسائط التعبير</span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- Q3 -->
-            <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-700">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs font-bold text-emerald-400">السؤال الثالث / Question 3</span>
-                    <span class="en-badge text-[10px] text-slate-400">Verification & Sources</span>
-                </div>
-                <h3 class="font-bold text-white text-sm md:text-base mb-3 leading-snug">
-                    3. الحصول على المعلومة من كشكول شفيق المنقول بدلاً من التجربة المباشرة يُصنف كـ: <br>
-                    <span class="en-badge text-emerald-300 text-xs font-normal">Obtaining information from a secondhand notebook rather than direct experience is classified as:</span>
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-                    <label class="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-cyan-400 cursor-pointer flex items-center gap-2">
-                        <input type="radio" name="q3" value="A" class="accent-teal-400">
-                        <span>أ) مصدر أولي (Primary Source)</span>
-                    </label>
-                    <label class="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-cyan-400 cursor-pointer flex items-center gap-2">
-                        <input type="radio" name="q3" value="B" class="accent-teal-400">
-                        <span>ب) مصدر ثانوي (Secondary Source)</span>
-                    </label>
-                    <label class="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-cyan-400 cursor-pointer flex items-center gap-2">
-                        <input type="radio" name="q3" value="C" class="accent-teal-400">
-                        <span>ج) ذاكرة التخزين السحابي</span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- Q4 -->
-            <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-700">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs font-bold text-purple-400">السؤال الرابع / Question 4</span>
-                    <span class="en-badge text-[10px] text-slate-400">Media Classification</span>
-                </div>
-                <h3 class="font-bold text-white text-sm md:text-base mb-3 leading-snug">
-                    4. يُصنف الـ USB Flash والـ CD/DVD الأقراص المدمجة ضمن: <br>
-                    <span class="en-badge text-purple-300 text-xs font-normal">USB flash drives and CDs/DVDs are categorized under:</span>
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-                    <label class="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-cyan-400 cursor-pointer flex items-center gap-2">
-                        <input type="radio" name="q4" value="A" class="accent-teal-400">
-                        <span>أ) وسائط التعبير (Expression)</span>
-                    </label>
-                    <label class="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-cyan-400 cursor-pointer flex items-center gap-2">
-                        <input type="radio" name="q4" value="B" class="accent-teal-400">
-                        <span>ب) وسائط النقل (Transmission)</span>
-                    </label>
-                    <label class="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-cyan-400 cursor-pointer flex items-center gap-2">
-                        <input type="radio" name="q4" value="C" class="accent-teal-400">
-                        <span>ج) وسائط التسجيل والحفظ (Recording)</span>
-                    </label>
-                </div>
-            </div>
-
-            <div class="text-center pt-4">
-                <button type="button" onclick="evaluateQuiz()" class="bg-gradient-to-r from-amber-400 via-yellow-500 to-emerald-400 text-slate-950 font-black py-3.5 px-10 rounded-2xl shadow-xl hover:scale-105 transition-all text-sm">
-                    تصحيح الاختبار وعرض النتيجة 🏆 (Grade Quiz)
-                </button>
-            </div>
-        </form>
-
-        <div id="quiz-result" class="hidden mt-8 p-6 rounded-2xl text-center"></div>
     </div>
-</section>
 
-<section class="py-12 px-4 max-w-6xl mx-auto">
-    <div class="glass-panel p-6 rounded-3xl border border-slate-700">
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+    <!-- Media Section Table -->
+    <div class="glass-panel rounded-3xl overflow-hidden border border-slate-700">
+        <div class="p-5 bg-slate-900/90 border-b border-slate-700 flex items-center justify-between">
             <div>
-                <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-spell-check text-cyan-400"></i> القاموس الثنائي للمصطلحات (Bilingual ICT Glossary)
+                <h3 class="text-base font-bold text-purple-300 flex items-center gap-2">
+                    <i class="fa-solid fa-photo-film"></i> ب. الوسائط (Media) وثقافة الإعلام
                 </h3>
-                <p class="text-xs text-slate-400">بحث سريع في المصطلحات العربية والإنجليزية للمدارس العامة واللغات</p>
+                <p class="text-xs text-slate-400 mt-0.5">هي وسائل لنقل المعلومات إلى عدد من الأفراد (Media for conveying information to people)</p>
             </div>
-            <input type="text" id="term-search" onkeyup="searchTerms()" placeholder="ابحث بالعربي أو English (Data, Media...)..." class="bg-slate-950 text-slate-200 px-4 py-2.5 rounded-xl text-xs border border-slate-700 focus:outline-none focus:border-cyan-400 w-full sm:w-80 font-tajawal">
+            <span class="text-xs bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full border border-purple-500/40 font-bold">أنواع الوسائط</span>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" id="terms-list">
-            <div class="term-item p-3.5 bg-slate-900/80 rounded-xl border border-slate-800 text-xs">
-                <div class="flex justify-between font-bold text-yellow-400 mb-1">
-                    <span>البيانات</span>
-                    <span class="en-badge font-mono">Data</span>
+        <div class="overflow-x-auto">
+            <table class="w-full text-right text-xs md:text-sm text-slate-200">
+                <thead class="bg-slate-950 text-purple-400 font-bold uppercase text-xs">
+                    <tr>
+                        <th class="p-4 border-b border-slate-800">الاسم (Name)</th>
+                        <th class="p-4 border-b border-slate-800">المحتوى (Content)</th>
+                        <th class="p-4 border-b border-slate-800">مثال (Example)</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/80 font-tajawal">
+                    <tr class="hover:bg-slate-800/40">
+                        <td class="p-4 font-bold text-pink-400">
+                            وسائط الإعلام التعبيرية
+                            <span class="en-badge text-pink-300 text-xs block font-normal">(Expression media)</span>
+                        </td>
+                        <td class="p-4">الوسائط المستخدمة كوسيلة للتعبير عن المعلومات. <span class="en-badge block text-xs text-slate-400">(Media used as a means of expressing information)</span></td>
+                        <td class="p-4 font-mono text-cyan-300">النص، الصور، الصوت، الفيديو <span class="en-badge block text-xs text-slate-400">(Text, images, audio, video)</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-800/40">
+                        <td class="p-4 font-bold text-sky-400">
+                            وسائط النقل / الإرسال
+                            <span class="en-badge text-sky-300 text-xs block font-normal">(Propagation / Transmission media)</span>
+                        </td>
+                        <td class="p-4">الوسائط المستخدمة كوسيط لنقل وتبادل المعلومات. <span class="en-badge block text-xs text-slate-400">(Media used as an intermediary for transmission and communication)</span></td>
+                        <td class="p-4 font-mono text-cyan-300">التلفزيون، الراديو، الصحف، الكتب، الهاتف، الإنترنت <span class="en-badge block text-xs text-slate-400">(Television, radio, newspapers, books, telephone, internet)</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-800/40">
+                        <td class="p-4 font-bold text-emerald-400">
+                            وسائط التسجيل
+                            <span class="en-badge text-emerald-300 text-xs block font-normal">(Recording media)</span>
+                        </td>
+                        <td class="p-4">الوسائط المستخدمة لتسجيل وتخزين المعلومات. <span class="en-badge block text-xs text-slate-400">(Media used for recording and storing information)</span></td>
+                        <td class="p-4 font-mono text-cyan-300">الورق، محركات أقراص USB، أقراص DVD، التخزين السحابي <span class="en-badge block text-xs text-slate-400">(Paper, USB drives, DVDs, cloud storage)</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="p-4 bg-purple-950/40 border-t border-slate-800 text-xs text-purple-200">
+            <strong class="text-purple-300 font-bold"> (3) الثقافة الإعلامية (Media literacy):</strong>
+            القدرة على تفسير المعلومات التي تم الحصول عليها من الوسائط بدقة.
+            <span class="en-badge text-purple-300 block font-mono mt-0.5">The ability to accurately interpret information obtained from media.</span>
+        </div>
+    </div>
+</section>
+
+<!-- Interactive Simulators -->
+<section id="simulators" class="py-12 px-4 max-w-7xl mx-auto">
+    <div class="glass-panel p-6 md:p-8 rounded-3xl border border-pink-500/30 shadow-2xl">
+        <div class="text-center mb-8">
+            <span class="text-xs font-black px-3 py-1 bg-pink-500/20 text-pink-300 rounded-full border border-pink-500/40">
+                <i class="fa-solid fa-flask-vial ml-1"></i> الموديل التفاعلي الثاني: المختبر البرمجي
+            </span>
+            <h2 class="text-2xl font-black text-white mt-2">🧪 معمل تشغيل وتحويل البيانات (Data Processing Lab)</h2>
+            <p class="text-slate-300 text-xs md:text-sm mt-1">جرب بنفسك أدخل البيانات الخام لترى كيف تحولها خوارزمية المعالجة إلى معلومات ثم معرفة اتخاذ قرار!</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+            <!-- Step 1 Input -->
+            <div class="bg-slate-900/90 p-5 rounded-2xl border border-yellow-500/30">
+                <label class="block text-xs font-bold text-yellow-400 mb-2">1. أدخل البيانات الخام (Raw Data Input):</label>
+                <div class="space-y-2">
+                    <input type="text" id="sim-temp" value="39.5" class="w-full bg-slate-950 text-yellow-300 text-xs p-2.5 rounded-xl border border-slate-700 font-mono" placeholder="درجة الحرارة الرقمية">
+                    <input type="text" id="sim-unit" value="درجة مئوية" class="w-full bg-slate-950 text-yellow-300 text-xs p-2.5 rounded-xl border border-slate-700" placeholder="الوحدة">
+                    <input type="text" id="sim-subject" value="طالب بالصف الأول" class="w-full bg-slate-950 text-yellow-300 text-xs p-2.5 rounded-xl border border-slate-700" placeholder="العينة">
                 </div>
-                <p class="text-slate-300 leading-relaxed font-tajawal">Facts or matters represented using numbers, characters, or symbols.</p>
+                <button onclick="runDataSimulation()" class="w-full mt-4 bg-yellow-400 hover:bg-yellow-500 text-slate-950 font-black text-xs py-2.5 rounded-xl transition-all shadow-md">
+                    <i class="fa-solid fa-gears ml-1"></i> تشغيل معالجة البيانات
+                </button>
             </div>
 
-            <div class="term-item p-3.5 bg-slate-900/80 rounded-xl border border-slate-800 text-xs">
-                <div class="flex justify-between font-bold text-teal-400 mb-1">
-                    <span>المعلومات</span>
-                    <span class="en-badge font-mono">Information</span>
+            <!-- Step 2 Information -->
+            <div class="bg-slate-900/90 p-5 rounded-2xl border border-teal-500/30">
+                <h4 class="text-xs font-bold text-teal-300 mb-2">2. المعلومة الناتجة (Information):</h4>
+                <div id="sim-info-output" class="bg-slate-950 p-3.5 rounded-xl text-xs text-slate-300 border border-slate-800 min-h-[110px] font-tajawal leading-relaxed">
+                    اضغط على زر التشغيل لمعالجة البيانات...
                 </div>
-                <p class="text-slate-300 leading-relaxed font-tajawal">Something that holds meaning or value for the recipient and serves as a basis for decision-making. Unlike objects, information has no form.</p>
             </div>
 
-            <div class="term-item p-3.5 bg-slate-900/80 rounded-xl border border-slate-800 text-xs">
-                <div class="flex justify-between font-bold text-emerald-400 mb-1">
-                    <span>المعرفة</span>
-                    <span class="en-badge font-mono">Knowledge</span>
+            <!-- Step 3 Knowledge -->
+            <div class="bg-slate-900/90 p-5 rounded-2xl border border-emerald-500/30">
+                <h4 class="text-xs font-bold text-emerald-400 mb-2">3. المعرفة القرار التطبيقي (Knowledge):</h4>
+                <div id="sim-knowledge-output" class="bg-slate-950 p-3.5 rounded-xl text-xs text-slate-300 border border-slate-800 min-h-[110px] font-tajawal leading-relaxed">
+                    في انتظار تنظيم المعلومات لتوليد القرار...
                 </div>
-                <p class="text-slate-300 leading-relaxed font-tajawal">Information that has been analyzed and systematized to aid in problem-solving.</p>
             </div>
+        </div>
+    </div>
+</section>
 
-            <div class="term-item p-3.5 bg-slate-900/80 rounded-xl border border-slate-800 text-xs">
-                <div class="flex justify-between font-bold text-sky-400 mb-1">
-                    <span>المعلومات الأولية</span>
-                    <span class="en-badge font-mono">Primary Information</span>
-                </div>
-                <p class="text-slate-300 leading-relaxed font-tajawal">Information obtained through direct personal experience or acquired through research and experiments.</p>
+<!-- Quiz Section -->
+<section id="quiz" class="py-12 px-4 max-w-7xl mx-auto">
+    <div class="glass-panel p-6 md:p-8 rounded-3xl border border-amber-500/30 shadow-2xl">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8 pb-4 border-b border-slate-700">
+            <div>
+                <span class="text-xs font-black px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full border border-amber-500/40">
+                    <i class="fa-solid fa-award ml-1"></i> بنك الأسئلة الإلكتروني
+                </span>
+                <h2 class="text-2xl font-black text-white mt-2">📝 اختبر نفسك (Interactive Knowledge Quiz)</h2>
+                <p class="text-slate-400 text-xs mt-1">أسئلة قياسية متوازنة الخيارات متطابقة مع امتحانات الوزارة واللغات</p>
             </div>
+            <div class="text-left bg-slate-900 p-3 rounded-2xl border border-slate-800">
+                <span class="text-xs text-slate-400 block font-bold">النتيجة الكلية:</span>
+                <span id="quiz-score-display" class="text-lg font-black text-amber-400">0 / 5</span>
+            </div>
+        </div>
 
-            <div class="term-item p-3.5 bg-slate-900/80 rounded-xl border border-slate-800 text-xs">
-                <div class="flex justify-between font-bold text-amber-400 mb-1">
-                    <span>المعلومات الثانوية</span>
-                    <span class="en-badge font-mono">Secondary Information</span>
-                </div>
-                <p class="text-slate-300 leading-relaxed font-tajawal">Information not obtained directly by oneself, but acquired through a third party.</p>
-            </div>
+        <!-- Quiz Container -->
+        <div id="quiz-questions-container" class="space-y-6">
+            <!-- Questions dynamically generated by JS for perfect consistency -->
+        </div>
 
-            <div class="term-item p-3.5 bg-slate-900/80 rounded-xl border border-slate-800 text-xs">
-                <div class="flex justify-between font-bold text-purple-400 mb-1">
-                    <span>التحقق المتبادل</span>
-                    <span class="en-badge font-mono">Cross-checking</span>
-                </div>
-                <p class="text-slate-300 leading-relaxed font-tajawal">Comparing obtained information from multiple perspectives with other information to determine its accuracy and reliability.</p>
-            </div>
-
-            <div class="term-item p-3.5 bg-slate-900/80 rounded-xl border border-slate-800 text-xs">
-                <div class="flex justify-between font-bold text-pink-400 mb-1">
-                    <span>وسائط التعبير</span>
-                    <span class="en-badge font-mono">Expression Media</span>
-                </div>
-                <p class="text-slate-300 leading-relaxed font-tajawal">Media used as a means of expressing information (Text, images, audio, video).</p>
-            </div>
-
-            <div class="term-item p-3.5 bg-slate-900/80 rounded-xl border border-slate-800 text-xs">
-                <div class="flex justify-between font-bold text-blue-400 mb-1">
-                    <span>وسائط النقل والانتشار</span>
-                    <span class="en-badge font-mono">Propagation/Transmission Media</span>
-                </div>
-                <p class="text-slate-300 leading-relaxed font-tajawal">Media used as an intermediary for the transmission and communication of information.</p>
-            </div>
-
-            <div class="term-item p-3.5 bg-slate-900/80 rounded-xl border border-slate-800 text-xs">
-                <div class="flex justify-between font-bold text-emerald-400 mb-1">
-                    <span>وسائط التسجيل</span>
-                    <span class="en-badge font-mono">Recording Media</span>
-                </div>
-                <p class="text-slate-300 leading-relaxed font-tajawal">Media used for recording and storing information (Paper, USB drives, DVDs, cloud storage).</p>
-            </div>
-
-            <div class="term-item p-3.5 bg-slate-900/80 rounded-xl border border-slate-800 text-xs">
-                <div class="flex justify-between font-bold text-purple-300 mb-1">
-                    <span>الثقافة الإعلامية</span>
-                    <span class="en-badge font-mono">Media Literacy</span>
-                </div>
-                <p class="text-slate-300 leading-relaxed font-tajawal">The ability to accurately interpret information obtained from media.</p>
-            </div>
+        <div class="mt-8 pt-4 border-t border-slate-800 text-center">
+            <button onclick="submitQuiz()" class="px-8 py-3 bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-slate-950 font-black text-sm rounded-2xl shadow-xl transition-all">
+                <i class="fa-solid fa-check-double ml-1"></i> إنهاء الاختبار وتصحيح الإجابات
+            </button>
         </div>
     </div>
 </section>
 
 <!-- Footer -->
-<footer class="py-8 border-t border-slate-800 text-center text-slate-400 text-xs font-tajawal">
-    <p>مذكرة تكنولوجيا المعلومات والاتصالات - الصف الأول الثانوي (عام ولغات) | تصميم تفاعلي حديث 🚀</p>
+<footer class="border-t border-slate-800 py-8 px-4 text-center text-xs text-slate-400">
+    <p>مذكرة تكنولوجيا المعلومات والاتصالات - الصف الأول الثانوي | General & Language Schools ICT</p>
+    <p class="mt-1 text-slate-500">تمت مراجعة المحتوى وإصلاحه بالكامل وفقاً للكتب والمفاهيم الرسمية المعتمدة.</p>
 </footer>
 
+<!-- JavaScript Logic -->
 <script>
-    // Interactive Story Data Array with Exact Ministry English Texts
+    // --- 1. Language Toggle ---
+    let hideEN = false;
+    function toggleLangMode() {
+        hideEN = !hideEN;
+        document.body.classList.toggle('hide-en', hideEN);
+        const btnText = document.getElementById('lang-btn-text');
+        if (hideEN) {
+            btnText.textContent = 'إظهار الإنجليزي (Show EN)';
+        } else {
+            btnText.textContent = 'إخفاء الإنجليزي (Hide EN)';
+        }
+    }
+
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+    }
+
+    // --- 2. Interactive Story Logic ---
     const storySteps = [
         {
+            progress: "مرحلة 1 من 5",
             avatar: "👾",
             character: "شمشون (Plankton)",
-            location: "📍 مختبر ديلتا (Deltabeck Lab)",
-            concept: "1. البيانات (Data)",
-            title: "المشهد الأول: سرقة الورقة والرموز الصامتة",
-            body: "نجح **شمشون** في الحصول على ورقة سرية، لكنه وجد فقط رموزاً صامتة: <span class='bg-slate-950 text-yellow-300 font-mono px-2 py-0.5 rounded font-bold'>(100 - س - 5 - % - خ)</span>. صرخ حائراً: 'رموز مبعثرة لا أفهم منها شيئاً ولا أستطيع طبخ الخلطة بها!'.",
-            arLink: "البيانات (Data) هي حقائق أو أمور يتم تمثيلها باستخدام الأرقام أو الحروف أو الرموز.",
-            enLink: "Data: Facts or matters represented using numbers, characters, or symbols.",
-            choices: [
-                { label: "ضع الورقة في الحاسوب كارن 💻", nextStep: 1 }
-            ]
+            location: "📍 مطعم دلو الصداقة (Chum Bucket)",
+            concept: "مفهوم: البيانات الخام (Data)",
+            title: "المشهد الأول: سرقة الورقة الغامضة",
+            body: "نجح **شمشون** في الحصول على ورقة ممزقة من مطعم مقرمشات سلطع، ولكن عندما نظر إليها وجد أرقاماً ورموزاً صامتة: <span class='bg-slate-950 text-yellow-300 font-mono px-2 py-0.5 rounded font-bold border border-yellow-500/30'>(100 - س - 5 - % - خ)</span>. صرخ حائراً: 'ما هذا؟! إنها مجرد أرقام ورموز مبعثرة لا معنى لها!'.",
+            linkAr: "البيانات (Data): هي حقائق تمثل باستخدام الأرقام أو الأحرف أو الرموز ليس لها معنى مباشر قبل المعالجة.",
+            linkEn: "Data: Facts or matters represented using numbers, characters, or symbols."
         },
         {
+            progress: "مرحلة 2 من 5",
             avatar: "💻",
-            character: "كارن (Karen AI)",
-            location: "📍 شاشة الحاسوب الذكي",
-            concept: "2. المعلومات (Information)",
-            title: "المشهد الثاني: المعالجة الفورية وإكشاف المعنى",
-            body: "قام الحاسوب **كارن** بمعالجة الرموز المبعثرة وحوّلها إلى فكرة مفيدة: <span class='text-teal-300 font-bold bg-slate-950 px-2 py-0.5 rounded'>'ضع 100 جرام سكر و5 قطرات خردل'</span>. صرخ شمشون فرحاً: 'الآن أصبحت معلومة معنوية مكنتني من القرار!'.",
-            arLink: "المعلومات (Information) هي شيء يحمل معنى أو قيمة للمتلقي ويُستخدم كأساس لاتخاذ القرار. وعلى عكس الأجسام المادية، ليس للمعلومة شكل مادي.",
-            enLink: "Information: Something that holds meaning or value for the recipient and serves as a basis for decision-making. Unlike objects, information has no form.",
-            choices: [
-                { label: "انسخ الوصفة وقم ببثها 📢", nextStep: 2 }
-            ]
+            character: "الحاسوب كالمار (Computer)",
+            location: "📍 مختبر دلو الصداقة",
+            concept: "مفهوم: المعالجة والمعلومات (Information)",
+            title: "المشهد الثاني: معالجة البيانات وتحويلها لمعنى",
+            body: "أدخل شمشون الرموز في الحاسوب لمعالجتها، فظهرت النتيجة: <span class='text-teal-300 font-bold'>'نسبة الخصم 5% على أول 100 وجبة سبونج بوب'</span>. صرخ فرحاً: 'الآن فهمت! أصبح للرموز معنى وقيمة تُستخدم لاتخاذ القرار!'.",
+            linkAr: "المعلومات (Information): هي معنى أو قيمة للمتلقي وتستخدم لاتخاذ القرار، وليس لها شكل مادي.",
+            linkEn: "Information: Something that holds meaning or value for the recipient and serves as a basis for decision-making."
         },
         {
-            avatar: "📺",
-            character: "شبكة البث (Broadcast Tower)",
-            location: "📍 قناة الفضائيات والإنترنت",
-            concept: "3. خصائص المعلومات (Characteristics of Information)",
-            title: "المشهد الثالث: النسخ الفائق والبث المستمر",
-            body: "ضغط شمشون زراً فنسخت كارن الوصفة 10,000 مرة في ثانية **(Reproducibility)**، وبثها في التلفزيون والإنترنت **(Propagation)**. وعندما حرق سلطع الورقة، ضحك شمشون: 'المعلومات لا تمحى كلياً!' **(Persistence)**.",
-            arLink: "خصائص المعلومات: الاستمرارية (Persistence)، قابلية التكرار (Reproducibility)، والانتشار (Propagation).",
-            enLink: "Persistence (cannot be erased), Reproducibility (copied in large quantities), Propagation (easy to spread via mass media).",
-            choices: [
-                { label: "انتقل لمطبخ سبونج بوب 🧽", nextStep: 3 }
-            ]
+            progress: "مرحلة 3 من 5",
+            avatar: "🧠",
+            character: "شمشون المفكر (Knowledge)",
+            location: "📍 غرف التخطيط",
+            concept: "مفهوم: المعالجة المنهجية والمعرفة (Knowledge)",
+            title: "المشهد الثالث: توليد المعرفة لحل المشكلة",
+            body: "قام شمشون بتحليل هذه المعلومة وتنظيمها لمواجهة المنافسة، واستنتج خطة تسويقية لحل مشكلة قلة الزبائن. هذه هي المعرفة المنهجية لحل المشكلات!",
+            linkAr: "المعرفة (Knowledge): هي المعلومات التي تم تحليلها وتنظيمها بشكل منهجي للمساعدة في حل المشكلات.",
+            linkEn: "Knowledge: Information that has been analyzed and systematized to aid in problem-solving."
         },
         {
+            progress: "مرحلة 4 من 5",
+            avatar: "📻",
+            character: "شاشة التلفزيون والأخبار",
+            location: "📍 وسائل الإعلام",
+            concept: "مفهوم: مصادر المعلومات والتحقق (Cross-checking)",
+            title: "المشهد الرابع: الشائعة والتحقق المتبادل",
+            body: "سمع شمشون خبراً في التلفزيون (معلومات ثانوية) عن وصفة سلطع. ولكي يتأكد من صحتها، قام بمقارنتها بتقرير التجربة المباشرة (معلومات أولية). هذه العملية تُعرف بـ **التحقق المتبادل (Cross-checking)**.",
+            linkAr: "التحقق المتبادل (Cross-checking): مقارنة المعلومات من مصادر متعددة لتحديد مدى دقتها وموثوقيتها.",
+            linkEn: "Cross-checking: Comparing obtained information from multiple perspectives to determine accuracy and reliability."
+        },
+        {
+            progress: "مرحلة 5 من 5",
             avatar: "🧽",
-            character: "سبونج بوب (SpongeBob)",
-            location: "📍 مطبخ مقرمشات سلطع",
-            concept: "4. المعرفة (Knowledge)",
-            title: "المشهد الرابع: الخبرة التراكمية وحل المشكلة",
-            body: "ابتسم سبونج بوب بثقة! فخبرته الممتدة مكنته من تحليل المعلومات وتنظيمها بذكاء لحل المشكلة الطارئة.",
-            arLink: "المعرفة (Knowledge) هي معلومات تم تحليلها وتنظيمها بشكل منهجي للمساعدة في حل المشكلات.",
-            enLink: "Knowledge: Information that has been analyzed and systematized to aid in problem-solving.",
-            choices: [
-                { label: "شاهد خطأ شفيق في النقل 🦑", nextStep: 4 }
-            ]
-        },
-        {
-            avatar: "🦑",
-            character: "شفيق (Squidward)",
-            location: "📍 كاونتر المطعم",
-            concept: "5. التحقق المتبادل (Cross-checking)",
-            title: "المشهد الخامس: المصادر الثانوية وخطأ النقل",
-            body: "سبونج بوب حصل على الوصفة بتجربة مباشرة **(Primary Information)**. بينما قرأ شفيق الكشكول ونقل بالخطأ **(Secondary Information)**. فقام شمشون بمقارنة المصادر عبر **Cross-checking**.",
-            arLink: "المعلومات الثانوية قد تختلف عن الأصلية؛ لذا يلزم مقارنتها من وجهات نظر متعددة بـ Cross-checking.",
-            enLink: "Comparing obtained information from multiple perspectives to determine accuracy and reliability is called Cross-checking.",
-            choices: [
-                { label: "افحص تحليل بسيط للإعلام ⭐", nextStep: 5 }
-            ]
-        },
-        {
-            avatar: "⭐",
-            character: "بسيط (Patrick)",
-            location: "📍 شاشة التلفزيون",
-            concept: "6. الثقافة الإعلامية (Media Literacy)",
-            title: "المشهد السادس: التفكير النقدي والوسائط",
-            body: "عندما أذاع شمشون السر في التلفزيون والإنترنت **(Propagation Media)**، قام 'بسيط' بتفسير وتدقيق الرسالة بذكاء. هذه هي **الثقافة الإعلامية (Media Literacy)**!",
-            arLink: "الثقافة الإعلامية (Media Literacy) هي القدرة على تفسير ودراسة المعلومات التي يتم الحصول عليها من الوسائط بدقة.",
-            enLink: "Media Literacy: The ability to accurately interpret information obtained from media.",
-            choices: [
-                { label: "إعادة القصة من البداية 🔄", nextStep: 0 }
-            ]
+            character: "سبونج بوب الواعي",
+            location: "📍 قاع الهامور",
+            concept: "مفهوم: الثقافة الإعلامية (Media Literacy)",
+            title: "المشهد الخامس: الثقافة الإعلامية وسائط الإعلام",
+            body: "استخدم سبونج بوب وسائط التعبير (الفيديو) ووسائط النقل (الإنترنت) ووسائط التسجيل (أقراص USB) لنشر الوعي، وأظهر قدرة على تفسير الأخبار بدقة وهو ما يسمى **الثقافة الإعلامية (Media literacy)**.",
+            linkAr: "الثقافة الإعلامية (Media literacy): القدرة على تفسير المعلومات التي تم الحصول عليها من الوسائط بدقة.",
+            linkEn: "Media literacy: The ability to accurately interpret information obtained from media."
         }
     ];
 
     let currentStoryIdx = 0;
-    let isLangShown = true;
 
-    function renderStoryStep(idx) {
-        currentStoryIdx = idx;
-        const step = storySteps[idx];
-
-        document.getElementById('story-avatar').innerText = step.avatar;
-        document.getElementById('story-character-name').innerText = step.character;
-        document.getElementById('story-location-badge').innerText = step.location;
-        document.getElementById('story-concept-tag').innerText = step.concept;
+    function renderStoryStep() {
+        const step = storySteps[currentStoryIdx];
+        document.getElementById('story-progress-text').textContent = step.progress;
+        document.getElementById('story-avatar').textContent = step.avatar;
+        document.getElementById('story-character-name').textContent = step.character;
+        document.getElementById('story-location-badge').textContent = step.location;
+        document.getElementById('story-concept-tag').textContent = step.concept;
         document.getElementById('story-title').innerHTML = `<i class="fa-solid fa-scroll text-yellow-400"></i> ${step.title}`;
         document.getElementById('story-body').innerHTML = step.body;
         
-        document.getElementById('story-progress-text').innerText = `مرحلة ${idx + 1} من ${storySteps.length}`;
-
         document.getElementById('story-academic-link').innerHTML = `
             <strong class="text-yellow-400 block mb-1 font-bold">💡 الربط المنهجي (Curriculum Link):</strong>
-            <span class="block text-slate-200">${step.arLink}</span>
-            <span class="block en-badge text-cyan-300 mt-1 font-semibold">${step.enLink}</span>
+            <span class="block text-slate-200">${step.linkAr}</span>
+            <span class="block en-badge text-cyan-300 mt-1 font-semibold">${step.linkEn}</span>
         `;
 
-        // Render interactive choices
-        const choicesContainer = document.getElementById('story-interactive-choices');
-        choicesContainer.innerHTML = '';
-        step.choices.forEach(ch => {
-            const btn = document.createElement('button');
-            btn.className = "px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-black text-xs transition-all shadow-md";
-            btn.innerText = ch.label;
-            btn.onclick = () => renderStoryStep(ch.nextStep);
-            choicesContainer.appendChild(btn);
-        });
-
-        // Prev button disability check
-        document.getElementById('btn-prev-story').disabled = (idx === 0);
+        document.getElementById('btn-prev-story').disabled = (currentStoryIdx === 0);
+        document.getElementById('btn-next-story').disabled = (currentStoryIdx === storySteps.length - 1);
     }
 
     function nextStoryStep() {
         if (currentStoryIdx < storySteps.length - 1) {
-            renderStoryStep(currentStoryIdx + 1);
-        } else {
-            renderStoryStep(0);
+            currentStoryIdx++;
+            renderStoryStep();
         }
     }
 
     function prevStoryStep() {
         if (currentStoryIdx > 0) {
-            renderStoryStep(currentStoryIdx - 1);
+            currentStoryIdx--;
+            renderStoryStep();
         }
     }
 
-    // Data Simulator Function
-    function processRawDataSim() {
-        const raw = document.getElementById('sim-raw-data').value;
-        const type = document.getElementById('sim-process-type').value;
-        const outputDiv = document.getElementById('sim-proc-output');
-        const infoText = document.getElementById('out-info-text');
-        const knowText = document.getElementById('out-knowledge-text');
+    // --- 3. Data Processing Simulation ---
+    function runDataSimulation() {
+        const temp = document.getElementById('sim-temp').value || '39.5';
+        const unit = document.getElementById('sim-unit').value || 'درجة مئوية';
+        const subject = document.getElementById('sim-subject').value || 'طالب بالصف الأول';
 
-        outputDiv.classList.remove('hidden');
+        const infoOut = document.getElementById('sim-info-output');
+        const knowOut = document.getElementById('sim-knowledge-output');
 
-        if (type === 'recipe') {
-            infoText.innerText = `"تحويل الرموز (${raw}) إلى: إضافة 100 جرام سكر مع 5 قطرات خردل."`;
-            knowText.innerText = "خبرة الطبخ: السكر يعادل الحموضة، والخردل يعزز النكهة بناءً على تجارب المطبخ المترسبة.";
-        } else if (type === 'grades') {
-            infoText.innerText = `"تحويل الرقم إلى: درجة الطالب أحمد في مادة الفيزياء هي 100 من 100 (ممتاز)."`;
-            knowText.innerText = "خبرة المعلم: استمرار حصول الطالب على 100% يدل على تفوقه وبقاء علاماته في الصدارة.";
-        } else {
-            infoText.innerText = `"تحويل البيانات إلى: درجة الحرارة بالأسكندرية اليوم 25° مئوية مع نسبة رطوبة 5%."`;
-            knowText.innerText = "خبرة الأرصاد: هذه الأجواء معتدلة ومثالية للرحلات البحرية دون الحاجة لارتداء ملابس ثقيلة.";
+        infoOut.innerHTML = `
+            <span class="text-teal-300 font-bold block mb-1">✅ تمت المعالجة (Processed Info):</span>
+            قراءة درجة حرارة الجسد لـ (<strong>${subject}</strong>) هي <strong>${temp} ${unit}</strong>، وهي أعلى من المعدل الطبيعي (37 °C).
+        `;
+
+        knowOut.innerHTML = `
+            <span class="text-emerald-400 font-bold block mb-1">💡 القرار والتطبيق (Systematized Action):</span>
+            النتيجة تشير إلى وجود حُمى/ارتفاع حرارة. القرار المنهجي لحل المشكلة: منح إجازة مرضية فورية للراحة واستشارة الطبيب المختص.
+        `;
+    }
+
+    // --- 4. Interactive Quiz Implementation ---
+    const quizData = [
+        {
+            q: "1. أي مما يلي يُعد من وسائط التسجيل (Recording media) المستخدمة لتخزين المعلومات؟",
+            options: [
+                "التلفزيون (Television)",
+                "محركات أقراص USB والأقراص الذكية (USB drives & DVDs)",
+                "الراديو والصحف (Radio & Newspapers)",
+                "النص والصور التعبيرية (Text & Images)"
+            ],
+            correct: 1,
+            explain: "وسائط التسجيل تُستخدم لتخزين المعلومات مثل الورق ومحركات USB وأقراص DVD والتخزين السحابي."
+        },
+        {
+            q: "2. ما هي المعرفة (Knowledge) وفقاً للتعريف المعتمد في المنهج المدرسى؟",
+            options: [
+                "حقائق أولية تمثل بأرقام ورموز ليس لها معنى (Raw data)",
+                "وسائط تستخدم كوسيط لنقل وتبادل المعلومات (Transmission media)",
+                "معلومات تم تحليلها وتنظيمها بشكل منهجي للمساعدة في حل المشكلات (Knowledge)",
+                "القدرة على تفسير وسائل الإعلام بشكل عام (Media literacy)"
+            ],
+            correct: 2,
+            explain: "المعرفة هي معلومات تم تحليلها وتنظيمها منهجياً للمساعدة في حل المشكلات."
+        },
+        {
+            q: "3. تُعتبر تقارير التجارب المباشرة ونتائج الاستطلاعات والاستبيانات مثالاً على:",
+            options: [
+                "المعلومات الأولية (Primary information)",
+                "المعلومات الثانوية (Secondary information)",
+                "وسائط النقل والإرسال (Transmission media)",
+                "خصائص قابليّة التكرار (Reproducibility)"
+            ],
+            correct: 0,
+            explain: "المعلومات الأولية يتم الحصول عليها بالتجربة المباشرة أو البحث والتجارب كتقارير الاستبيانات والتجارب."
+        },
+        {
+            q: "4. عملية مقارنة المعلومات من مصادر متعددة لتحديد مدى دقتها وموثوقيتها تُسمى:",
+            options: [
+                "الاستمرارية (Persistence)",
+                "التحقق المتبادل (Cross-checking)",
+                "وسائط التعبير (Expression media)",
+                "التكرار والنسخ (Reproducibility)"
+            ],
+            correct: 1,
+            explain: "التحقق المتبادل (Cross-checking) هو مقارنة المعلومات الثانوية مع مصادر أخرى للتأكد من الدقة."
+        },
+        {
+            q: "5. الخاصية التي تعني أن المعلومات بمجرد إنشائها لا يمكن محوها بالكامل هي:",
+            options: [
+                "الانتشار والتدفق (Propagation)",
+                "قابليّة التكرار والنسخ (Reproducibility)",
+                "الاستمرارية (Persistence)",
+                "الثقافة الإعلامية (Media literacy)"
+            ],
+            correct: 2,
+            explain: "خاصية الاستمرارية (Persistence) تعني أن المعلومة بمجرد إنشائها لا يمكن محوها بالكامل."
         }
+    ];
+
+    function renderQuiz() {
+        const container = document.getElementById('quiz-questions-container');
+        container.innerHTML = '';
+
+        quizData.forEach((item, qIdx) => {
+            let optionsHTML = '';
+            item.options.forEach((opt, oIdx) => {
+                optionsHTML += `
+                    <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-amber-500/50 cursor-pointer transition-all">
+                        <input type="radio" name="quiz-q-${qIdx}" value="${oIdx}" class="w-4 h-4 text-amber-500 bg-slate-900 border-slate-700">
+                        <span class="text-xs text-slate-200 font-medium">${opt}</span>
+                    </label>
+                `;
+            });
+
+            container.innerHTML += `
+                <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800" id="quiz-card-${qIdx}">
+                    <h4 class="text-sm font-bold text-white mb-3">${item.q}</h4>
+                    <div class="space-y-2 mb-3">
+                        ${optionsHTML}
+                    </div>
+                    <div id="quiz-feedback-${qIdx}" class="hidden p-3 rounded-xl text-xs font-tajawal"></div>
+                </div>
+            `;
+        });
     }
 
-    function runCrossCheckLab() {
-        document.getElementById('sim-cross-result').classList.remove('hidden');
-    }
-
-    // Quiz evaluation
-    function evaluateQuiz() {
-        const answers = { q1: 'B', q2: 'A', q3: 'B', q4: 'C' };
+    function submitQuiz() {
         let score = 0;
-        let total = 4;
+        quizData.forEach((item, qIdx) => {
+            const selected = document.querySelector(`input[name="quiz-q-${qIdx}"]:checked`);
+            const feedbackEl = document.getElementById(`quiz-feedback-${qIdx}`);
+            const cardEl = document.getElementById(`quiz-card-${qIdx}`);
 
-        const form = document.getElementById('quiz-form');
-        const formData = new FormData(form);
+            feedbackEl.classList.remove('hidden', 'bg-emerald-500/20', 'text-emerald-300', 'bg-rose-500/20', 'text-rose-300', 'border-emerald-500/40', 'border-rose-500/40');
 
-        for (let key in answers) {
-            if (formData.get(key) === answers[key]) {
+            if (selected && parseInt(selected.value) === item.correct) {
                 score++;
+                feedbackEl.classList.add('bg-emerald-500/20', 'text-emerald-300', 'border', 'border-emerald-500/40');
+                feedbackEl.innerHTML = `<strong>إجابة صحيحة! 🎉</strong> ${item.explain}`;
+            } else {
+                feedbackEl.classList.add('bg-rose-500/20', 'text-rose-300', 'border', 'border-rose-500/40');
+                feedbackEl.innerHTML = `<strong>إجابة خاطئة! ❌</strong> الإجابة الصحيحة هي: (${item.options[item.correct]}). <br>الشرح: ${item.explain}`;
             }
-        }
-
-        const resultDiv = document.getElementById('quiz-result');
-        resultDiv.classList.remove('hidden');
-
-        if (score === total) {
-            resultDiv.className = "mt-8 p-6 rounded-2xl text-center bg-emerald-950/90 border border-emerald-500/60 text-emerald-200 animate-bounce";
-            resultDiv.innerHTML = `
-                <div class="text-3xl mb-2">🎉 الدرجة النهائية! Excellent (100%)</div>
-                <p class="font-bold text-lg">حصلت على ${score} من ${total}</p>
-                <p class="text-xs mt-1 text-slate-300">أنت الآن متقن لجميع مفاهيم البيانات والمعلومات والوسائط للمدارس العامة واللغات!</p>
-            `;
-        } else if (score >= 2) {
-            resultDiv.className = "mt-8 p-6 rounded-2xl text-center bg-yellow-950/90 border border-yellow-500/60 text-yellow-200";
-            resultDiv.innerHTML = `
-                <div class="text-2xl mb-2">👏 أحسنت! Good Job</div>
-                <p class="font-bold text-lg">حصلت على ${score} من ${total}</p>
-                <p class="text-xs mt-1 text-slate-300">راجع الشرح العلمي المزدوج للدرجة النهائية.</p>
-            `;
-        } else {
-            resultDiv.className = "mt-8 p-6 rounded-2xl text-center bg-rose-950/90 border border-rose-500/60 text-rose-200";
-            resultDiv.innerHTML = `
-                <div class="text-2xl mb-2">💪 يُرجى إعادة المراجعة</div>
-                <p class="font-bold text-lg">حصلت على ${score} من ${total}</p>
-                <p class="text-xs mt-1 text-slate-300">أعد قراءة القصة التفاعلية وجدول الشرح المزدوج ثم حاول مرة أخرى.</p>
-            `;
-        }
-        resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-
-    function toggleLangMode() {
-        const enBadges = document.querySelectorAll('.en-badge');
-        const btnText = document.getElementById('lang-btn-text');
-        
-        isLangShown = !isLangShown;
-        enBadges.forEach(el => {
-            el.style.display = isLangShown ? '' : 'none';
         });
 
-        btnText.innerText = isLangShown ? 'عرض اللغات (English On)' : 'اخفاء اللغات (Arabic Only)';
+        document.getElementById('quiz-score-display').textContent = `${score} / ${quizData.length}`;
     }
 
-    function searchTerms() {
-        const input = document.getElementById('term-search').value.toLowerCase();
-        const items = document.querySelectorAll('.term-item');
-
-        items.forEach(item => {
-            const text = item.textContent.toLowerCase();
-            item.style.display = text.includes(input) ? 'block' : 'none';
-        });
-    }
-
-    // Initialize story step on load
-    window.onload = function() {
-        renderStoryStep(0);
-    };
+    // Initialize Page
+    window.addEventListener('DOMContentLoaded', () => {
+        renderStoryStep();
+        renderQuiz();
+    });
 </script>
 
 </body>
