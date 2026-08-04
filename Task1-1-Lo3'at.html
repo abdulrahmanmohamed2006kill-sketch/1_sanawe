@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار تكنولوجيا المعلومات المتوقع - IT Exam Quiz</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        .option-card:hover {
+            transform: translateY(-2px);
+        }
+        .option-card {
+            transition: all 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- Top Header -->
+    <header class="bg-slate-900 text-white shadow-xl sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-laptop-code text-white"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg md:text-xl leading-tight">اختبار تكنولوجيا المعلومات النهائي</h1>
+                    <p class="text-xs text-slate-400">Data, Information, Knowledge & Media</p>
+                </div>
+            </div>
+
+            <!-- Quiz Status Tracker -->
+            <div id="quiz-header-status" class="hidden flex items-center gap-4 bg-slate-800 px-4 py-2 rounded-xl border border-slate-700 text-sm">
+                <div class="flex items-center gap-2">
+                    <i class="fa-regular fa-clock text-indigo-400"></i>
+                    <span id="timer" class="font-mono font-bold text-indigo-300">00:00</span>
+                </div>
+                <div class="h-4 w-[1px] bg-slate-700"></div>
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-emerald-400"></i>
+                    <span>المُجاب: <strong id="answered-count" class="text-emerald-400">0</strong>/30</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-5xl mx-auto px-4 py-8 w-full flex-grow">
+
+        <!-- Start Screen / Registration -->
+        <section id="registration-section" class="max-w-xl mx-auto bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8 text-center my-6">
+            <div class="w-20 h-20 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl shadow-inner">
+                <i class="fa-solid fa-user-graduate"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-900 mb-2">مرحباً بك في اختبار المراجعة النهائية</h2>
+            <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                يحتوي هذا الاختبار على <span class="font-bold text-indigo-600">30 سؤالاً</span> متدرجة الصعوبة (سهل، متوسط، صعب) وفقاً لمحتوى الدرس المحدد بالكامل. الرجاء أدخال بياناتك للبدء.
+            </p>
+
+            <form id="start-form" onsubmit="startQuiz(event)" class="space-y-4 text-right">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">اسم الطالب الثلاثي <span class="text-rose-500">*</span></label>
+                    <div class="relative">
+                        <i class="fa-regular fa-user absolute right-3 top-3.5 text-slate-400"></i>
+                        <input type="text" id="student-name" required placeholder="أدخل اسمك بالكامل..." class="w-full pr-10 pl-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none transition text-slate-800">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">رقم واتساب المدرس (مثبت)</label>
+                    <div class="relative">
+                        <i class="fa-brands fa-whatsapp absolute right-3 top-3.5 text-emerald-500 text-lg"></i>
+                        <input type="tel" id="teacher-phone" value="01224855509" readonly class="w-full pr-10 pl-4 py-3 bg-slate-100 border border-slate-200 rounded-xl outline-none text-slate-800 text-left dir-ltr font-bold cursor-not-allowed">
+                    </div>
+                    <p class="text-xs text-amber-600 font-semibold mt-1">🔒 رقم المدرس محدد تلقائياً ولا يمكن تغييره.</p>
+                </div>
+
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3 text-amber-800 text-xs mt-4">
+                    <i class="fa-solid fa-circle-info text-amber-600 text-base mt-0.5"></i>
+                    <div>
+                        <strong>ملاحظة هامة:</strong> قسم الإجابات النموذجية مع شرح كل سؤال باللغة العربية سيكون <strong class="text-amber-900">مغلقاً</strong> ولن يظهر إلا بعد إنهاء الاختبار وتسليم النتيجة.
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 transition duration-200 flex items-center justify-center gap-2 text-lg">
+                    <span>ابدأ الاختبار الآن</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </form>
+        </section>
+
+        <!-- Active Quiz Section -->
+        <section id="quiz-section" class="hidden space-y-6">
+
+            <!-- Progress Bar -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex justify-between items-center text-xs font-bold text-slate-500 mb-2">
+                    <span id="progress-text">السؤال 1 من 30</span>
+                    <span id="difficulty-badge" class="px-2.5 py-1 rounded-full text-xs font-bold">سهل 🟢</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                    <div id="progress-bar" class="bg-indigo-600 h-full rounded-full transition-all duration-300" style="width: 3.33%;"></div>
+                </div>
+            </div>
+
+            <!-- Quick Navigation Grid -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div class="text-xs font-bold text-slate-500 mb-3 flex justify-between items-center">
+                    <span>خريطة الأسئلة (انقر للانتقال المباشر):</span>
+                    <div class="flex gap-3">
+                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-indigo-600 rounded-full inline-block"></span> الحالي</span>
+                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-emerald-500 rounded-full inline-block"></span> مُجاب</span>
+                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-slate-200 rounded-full inline-block"></span> متبقي</span>
+                    </div>
+                </div>
+                <div id="question-navigator" class="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-15 gap-1.5">
+                    <!-- Nav buttons populated by JS -->
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8 relative overflow-hidden">
+                <div class="flex justify-between items-start mb-6 border-b border-slate-100 pb-4">
+                    <span class="bg-indigo-100 text-indigo-800 text-sm font-bold px-3 py-1 rounded-lg" id="q-number-title">Question #1</span>
+                    <span class="text-xs font-semibold text-slate-400 bg-slate-100 px-3 py-1 rounded-md" id="q-level-label">Level 1: Easy</span>
+                </div>
+
+                <!-- Question Text -->
+                <h3 id="question-text" class="text-lg md:text-xl font-bold text-slate-900 leading-relaxed mb-6 font-mono text-left dir-ltr">
+                    Data is defined as facts or matters represented using:
+                </h3>
+
+                <!-- Options Grid -->
+                <div id="options-container" class="space-y-3">
+                    <!-- Options populated by JS -->
+                </div>
+
+                <!-- Footer Navigation inside Card -->
+                <div class="flex justify-between items-center mt-8 pt-6 border-t border-slate-100">
+                    <button id="prev-btn" onclick="navigateQuestion(-1)" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition flex items-center gap-2 text-sm disabled:opacity-40">
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span>السابق</span>
+                    </button>
+
+                    <button id="next-btn" onclick="navigateQuestion(1)" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition flex items-center gap-2 text-sm">
+                        <span>التالي</span>
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+
+                    <button id="submit-btn" onclick="confirmFinishQuiz()" class="hidden px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>إنهاء وتسليم الاختبار</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Results & Score Board -->
+        <section id="results-section" class="hidden space-y-8">
+            
+            <!-- Overall Score Card -->
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8 text-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 left-0 h-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+
+                <div class="w-24 h-24 rounded-full bg-slate-50 border-4 border-indigo-500 flex flex-col items-center justify-center mx-auto mb-4 shadow-lg">
+                    <span id="score-percent" class="text-2xl font-black text-indigo-600">0%</span>
+                    <span class="text-[10px] font-bold text-slate-400">النتيجة النهائية</span>
+                </div>
+
+                <h2 id="student-result-name" class="text-2xl font-black text-slate-900 mb-1">نتيجة الطالب</h2>
+                <p id="grade-badge" class="inline-block px-4 py-1.5 rounded-full text-sm font-bold bg-emerald-100 text-emerald-800 mb-4">ممتاز 🎉</p>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto my-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span class="block text-xs text-slate-400 font-bold mb-1">مجموع الدرجات</span>
+                        <span id="score-text" class="text-xl font-bold text-slate-800">0 / 30</span>
+                    </div>
+                    <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100">
+                        <span class="block text-xs text-emerald-600 font-bold mb-1">الإجابات الصحيحة</span>
+                        <span id="correct-count" class="text-xl font-bold text-emerald-700">0</span>
+                    </div>
+                    <div class="bg-rose-50 p-4 rounded-xl border border-rose-100">
+                        <span class="block text-xs text-rose-600 font-bold mb-1">الإجابات الخاطئة</span>
+                        <span id="wrong-count" class="text-xl font-bold text-rose-700">0</span>
+                    </div>
+                    <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                        <span class="block text-xs text-indigo-600 font-bold mb-1">الوقت المستغرق</span>
+                        <span id="time-taken" class="text-xl font-bold text-indigo-700">00:00</span>
+                    </div>
+                </div>
+
+                <!-- Incorrect Questions Summary -->
+                <div id="wrong-questions-box" class="bg-rose-50/70 border border-rose-200 rounded-xl p-4 max-w-2xl mx-auto mb-6 text-right">
+                    <h4 class="text-sm font-bold text-rose-900 mb-1 flex items-center gap-2">
+                        <i class="fa-solid fa-triangle-exclamation text-rose-600"></i>
+                        <span>أرقام الأسئلة التي أخطأت فيها:</span>
+                    </h4>
+                    <p id="wrong-q-numbers" class="text-sm text-rose-800 font-mono font-bold">لا توجد أخطاء! ممتاز جداً.</p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-xl mx-auto">
+                    <button onclick="sendToWhatsApp()" class="w-full sm:w-auto px-6 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-xl"></i>
+                        <span>إرسال التقرير والنتيجة للمدرس</span>
+                    </button>
+
+                    <a href="#explanations-section" class="w-full sm:w-auto px-6 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-key"></i>
+                        <span>عرض نموذج الإجابات والشرح</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Answer Key & Arabic Explanation Section -->
+            <div id="explanations-section" class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-lock-open"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-900">نموذج الإجابات النموذجية والشرح التفصيلي</h3>
+                            <p class="text-xs text-slate-500">تم فك القفل عن هذا القسم بعد تسليم الاختبار بنجاح</p>
+                        </div>
+                    </div>
+                    <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">مفتوح الآن</span>
+                </div>
+
+                <!-- Detailed Answer Cards Container -->
+                <div id="answers-list" class="space-y-6">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800 text-center text-xs">
+        <div class="max-w-5xl mx-auto px-4">
+            <p>منظومة التقييم الذكي لمادة تكنولوجيا المعلومات - جميع الحقوق محفوظة © 2026</p>
+            <p class="text-slate-600 mt-1">مصمم بناءً على كتاب المنهج الرسمي (Data, Information, Knowledge & Media)</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- 🔒 LOCK TEACHER PHONE FIELD logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const teacherPhoneInput = document.getElementById('teacher-phone');
+            if (teacherPhoneInput) {
+                teacherPhoneInput.value = "01224855509";
+
+                const handleUnauthorizedEdit = (e) => {
+                    e.preventDefault();
+                    teacherPhoneInput.value = "01224855509";
+                    alert("سيب الرقم زي ما هو يعجل و خش حل ");
+                    return false;
+                };
+
+                teacherPhoneInput.addEventListener('keydown', (e) => {
+                    if (e.key !== 'Tab') {
+                        handleUnauthorizedEdit(e);
+                    }
+                });
+                teacherPhoneInput.addEventListener('paste', handleUnauthorizedEdit);
+                teacherPhoneInput.addEventListener('cut', handleUnauthorizedEdit);
+                teacherPhoneInput.addEventListener('input', (e) => {
+                    if (teacherPhoneInput.value !== "01224855509") {
+                        handleUnauthorizedEdit(e);
+                    }
+                });
+            }
+        });
+
+        // --- QUESTION BANK DATASET (30 Questions) ---
+        const questionsData = [
+            { id: 1, level: "Easy", levelLabel: "🟢 سهل", question: "Data is defined as facts or matters represented using:", options: ["Text and video only", "Numbers, characters, or symbols", "Analyzed reports", "Sound and images only"], correct: 1, explanation: "البيانات (Data) تُعرف بكونها الحقائق أو الموضوعات الممثلة باستخدام الأرقام، الحروف، أو الرموز." },
+            { id: 2, level: "Easy", levelLabel: "🟢 سهل", question: "Which of the following holds meaning or value for the recipient and serves as a basis for decision-making?", options: ["Data", "Information", "Recording media", "Computer hardware"], correct: 1, explanation: "المعلومات (Information) هي الشي الذي يحمل معنى أو قيمة للمستقبل ويستخدم كأساس لاتخاذ القرارات." },
+            { id: 3, level: "Easy", levelLabel: "🟢 سهل", question: "Information that has been analyzed and systematized to aid in problem-solving is called:", options: ["Data", "Secondary information", "Knowledge", "Expression media"], correct: 2, explanation: "المعرفة (Knowledge) هي المعلومات التي تم تحليلها وتنظيمها بشكل منهجي للمساعدة في حل المشكلات." },
+            { id: 4, level: "Easy", levelLabel: "🟢 سهل", question: "What is defined as 'media for conveying information to people'?", options: ["Media", "Knowledge", "Persistence", "Data"], correct: 0, explanation: "الوسائط (Media) تُعرّف طبقاً للنص بأنها وسائط ونقل المعلومات وتوصيلها للناس." },
+            { id: 5, level: "Easy", levelLabel: "🟢 سهل", question: "Information obtained through direct personal experience or research and experiments is:", options: ["Secondary information", "Primary information", "Media literacy", "Expression media"], correct: 1, explanation: "المعلومات الأولية (Primary information) هي المعلومات التي نحصل عليها مباشرة من التجربة الشخصية أو البحوث والتجارب." },
+            { id: 6, level: "Easy", levelLabel: "🟢 سهل", question: "Information not obtained directly by oneself, but acquired through a third party, is:", options: ["Primary information", "Secondary information", "Raw data", "Knowledge"], correct: 1, explanation: "المعلومات الثانوية (Secondary information) هي المعلومات التي لا نحصل عليها مباشرة بأنفسنا بل نكتسبها عن طريق طرف ثالث." },
+            { id: 7, level: "Easy", levelLabel: "🟢 سهل", question: "Media used for recording and storing information is called:", options: ["Expression media", "Transmission media", "Recording media", "Mass media"], correct: 2, explanation: "وسائط التسجيل (Recording media) هي الوسائط المستخدمة لتسجيل وحفظ وتخزين المعلومات." },
+            { id: 8, level: "Easy", levelLabel: "🟢 سهل", question: "Media used as a means of expressing information is called:", options: ["Expression media", "Recording media", "Propagation media", "Storage media"], correct: 0, explanation: "وسائط التعبير (Expression media) هي الوسائط المستخدمة كطريقة وأداة للتعبير عن المعلومات." },
+            { id: 9, level: "Easy", levelLabel: "🟢 سهل", question: "The ability to accurately interpret information obtained from media is called:", options: ["Cross-checking", "Propagation", "Media literacy", "Persistence"], correct: 2, explanation: "الثقافة الإعلامية (Media literacy) هي القدرة على تفسير وفهم المعلومات المحصلة من وسائل الإعلام بدقة." },
+            { id: 10, level: "Easy", levelLabel: "🟢 سهل", question: "Comparing obtained information from multiple perspectives to determine accuracy is called:", options: ["Reproducibility", "Cross-checking", "Expression", "Systematization"], correct: 1, explanation: "الفحص والتحقق المتقاطع (Cross-checking) هو مقارنة المعلومات الواردة من وجهات نظر متعددة لضمان دقتها وموثوقيتها." },
+            { id: 11, level: "Medium", levelLabel: "🟡 متوسط", question: "Which of the following is an example of Primary Information?", options: ["Books", "Experimental reports", "Television", "Newspapers"], correct: 1, explanation: "تقارير التجارب (Experimental reports) تُعتبر معلومات أولية لأنها ناتجة عن تجربة وبحث مباشر." },
+            { id: 12, level: "Medium", levelLabel: "🟡 متوسط", question: "Which of the following is an example of Secondary Information?", options: ["Survey results", "Tabulations of questionnaire results", "Experimental reports", "Books"], correct: 3, explanation: "الكتب (Books) تُعد معلومات ثانوية لأن المعرفة فيها يتم نقلاها وتلقيها عبر طرف ثالث وليس تجربة مباشرة." },
+            { id: 13, level: "Medium", levelLabel: "🟡 متوسط", question: "Which characteristic states that 'Information, once created, cannot be completely erased'?", options: ["Reproducibility", "Persistence", "Propagation", "Media literacy"], correct: 1, explanation: "خاصية الاستمرارية (Persistence) تنص على أن المعلومات بمجرد إنشائها وتداولها لا يمكن مسحها نهائياً بالكامل." },
+            { id: 14, level: "Medium", levelLabel: "🟡 متوسط", question: "Which characteristic means that 'Information can be easily copied in large quantities'?", options: ["Persistence", "Reproducibility", "Cross-checking", "Expression"], correct: 1, explanation: "خاصية القابلية للنسخ والتكرار (Reproducibility) تعني أداء نسخ المعلومات بسهولة وبكميات ضخمة." },
+            { id: 15, level: "Medium", levelLabel: "🟡 متوسط", question: "Which characteristic means that 'Information is easy to convey and spread'?", options: ["Propagation", "Storage", "Reliability", "Persistence"], correct: 0, explanation: "خاصية الانتشار/التفشي (Propagation) تعني سهولة نقل المعلومات وتوصيلها واختراقها للآفاق." },
+            { id: 16, level: "Medium", levelLabel: "🟡 متوسط", question: "Text, images, audio, and video are examples of:", options: ["Recording media", "Transmission media", "Expression media", "Primary information"], correct: 2, explanation: "النصوص، الصور، الصوت، والفيديو هي التجسيد والتطبيقات لـ وسائط التعبير (Expression media)." },
+            { id: 17, level: "Medium", levelLabel: "🟡 متوسط", question: "Paper, USB drives, DVDs, and cloud storage are examples of:", options: ["Propagation / Transmission media", "Expression media", "Recording media", "Secondary information"], correct: 2, explanation: "الورق، وحدات الفلاش USB، أقراص DVD والتخزين السحابي هي وسائط تسجيل (Recording media)." },
+            { id: 18, level: "Medium", levelLabel: "🟡 متوسط", question: "Television, radio, newspapers, books, telephone, and internet are examples of:", options: ["Expression media", "Propagation / Transmission media", "Recording media", "Raw data"], correct: 1, explanation: "التلفزيون والراديو والجرائد والهاتف والإنترنت تندرج تحت وسائط النقل والاتصال (Propagation/Transmission media)." },
+            { id: 19, level: "Medium", levelLabel: "🟡 متوسط", question: "Mass media such as newspapers, television, and the internet are used to spread information through:", options: ["Persistence", "Propagation", "Storage", "Tabulation"], correct: 1, explanation: "وسائل الإعلام الجماهيرية (Mass media) تُستخدم لتسهيل عملية انتشار المعلومات (Propagation)." },
+            { id: 20, level: "Medium", levelLabel: "🟡 متوسط", question: "Unlike physical objects, what is a main property of information?", options: ["It has a heavy weight", "Information has no form", "It cannot be copied", "It has a physical shape"], correct: 1, explanation: "عكس الكائنات والأجسام المادية، فإن المعلومات ليس لها شكل مادي (Information has no form)." },
+            { id: 21, level: "Hard", levelLabel: "🔴 صعب", question: "Why is cross-checking necessary for secondary information?", options: ["Because secondary information is always 100% accurate", "Because secondary information can differ from original information or have interpretations added to it", "Because primary information is acquired through third parties", "Because secondary information cannot be copied"], correct: 1, explanation: "الفحص المتقاطع ضروري للمعلومات الثانوية لأنها قد تختلف عن الأصل أو يُضاف إليها تفسيرات وتأويلات شخصية." },
+            { id: 22, level: "Hard", levelLabel: "🔴 صعب", question: "What is the fundamental difference between Data and Knowledge according to the text?", options: ["Data is analyzed information, while Knowledge is raw numbers", "Data consists of facts represented by symbols/numbers, while Knowledge is information analyzed and systematized for problem-solving", "Data is acquired through third parties, while Knowledge is acquired through experiments", "Data has a physical form, but Knowledge has no form"], correct: 1, explanation: "البيانات هي مجرد حقائق ممثلة برموز وأرقام خام، بينما المعرفة هي معلومات تم تحليلها وتنظيمها لحل المشكلات." },
+            { id: 23, level: "Hard", levelLabel: "🔴 صعب", question: "Which media category is specifically defined as an 'intermediary for the transmission and communication of information'?", options: ["Expression media", "Propagation / Transmission media", "Recording media", "Primary media"], correct: 1, explanation: "تُعرف وسائط النقل والارسال (Transmission media) تحديداً بأنها وسيط لنقل وتوصيل المعلومات والاتصالات." },
+            { id: 24, level: "Hard", levelLabel: "🔴 صعب", question: "Which of the following statements is CORRECT regarding Primary and Secondary Information?", options: ["Books and television are primary information", "Survey results and experimental reports are secondary information", "Primary information is obtained directly, while secondary information is acquired through a third party", "Secondary information can never have interpretations added to it"], correct: 2, explanation: "العبارة الصحيحة هي أن المعلومات الأولية تؤخذ مباشرة، بينما الثانوية تؤخذ عن طريق طرف ثالث (Third party)." },
+            { id: 25, level: "Hard", levelLabel: "🔴 صعب", question: "Tabulations of questionnaire results are classified under:", options: ["Secondary information", "Primary information", "Raw Data", "Expression media"], correct: 1, explanation: "تفريغ وتجويب نتائج الاستبيانات يدخل ضمن المعلومات الأولية المباشرة للبحث." },
+            { id: 26, level: "Hard", levelLabel: "🔴 صعب", question: "Which characteristic allows digital content on the internet to remain accessible or traceable for a long time?", options: ["Media literacy", "Persistence", "Tabulation", "Cross-checking"], correct: 1, explanation: "خاصية الاستمرارية (Persistence) هي السبب في بقاء المحتوى الرقمي وتتبعه لفترات طويلة." },
+            { id: 27, level: "Hard", levelLabel: "🔴 صعب", question: "Media literacy includes the ability to do all of the following EXCEPT:", options: ["Critically evaluate sources", "Cross-check facts from multiple media", "Instantly erase inaccurate information from the internet", "Accurately interpret conveyed media contents"], correct: 2, explanation: "الثقافة الإعلامية تمكنك من التحليل والتأكد ولكن لا تمكنك من مسح البيانات فورياً من الإنترنت بسبب خاصية Persistence." },
+            { id: 28, level: "Hard", levelLabel: "🔴 صعب", question: "Why is information easy to duplicate compared to physical goods?", options: ["Because of its characteristic of Reproducibility", "Because of Primary storage", "Because it is heavy in weight", "Because it is recorded on paper only"], correct: 0, explanation: "سهولة نسخ وتكرار المعلومات تعود إلى خاصية Reproducibility." },
+            { id: 29, level: "Hard", levelLabel: "🔴 صعب", question: "Using a combination of text, images, and audio to build a presentation is an application of:", options: ["Recording media only", "Transmission media only", "Expression media", "Data collection"], correct: 2, explanation: "دمج النص، الصور، والصوت هو استخدام متكامل لـ وسائط التعبير (Expression media)." },
+            { id: 30, level: "Hard", levelLabel: "🔴 صعب", question: "What transforms raw Data into meaningful Information?", options: ["Storing it on a USB drive", "Contextual processing and recipient evaluation for decision-making", "Translating it to another language", "Printing it on physical paper"], correct: 1, explanation: "تحويل البيانات إلى معلومات معنوية يتطلب معالجة سياقية وإعطاء قيمة تفيد المستقبل في اتخاذ القرار." }
+        ];
+
+        // --- QUIZ APP STATE ---
+        let currentQuestionIndex = 0;
+        let userAnswers = {}; // { questionIndex: selectedOptionIndex }
+        let timerInterval = null;
+        let secondsElapsed = 0;
+        let studentName = "";
+
+        // Start Quiz
+        function startQuiz(e) {
+            e.preventDefault();
+            const nameInput = document.getElementById('student-name');
+            if (!nameInput.value.trim()) return;
+
+            studentName = nameInput.value.trim();
+            document.getElementById('registration-section').classList.add('hidden');
+            document.getElementById('quiz-section').classList.remove('hidden');
+            document.getElementById('quiz-header-status').classList.remove('hidden');
+
+            startTimer();
+            buildNavigator();
+            renderQuestion(0);
+        }
+
+        // Timer Logic
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+                const secs = String(secondsElapsed % 60).padStart(2, '0');
+                document.getElementById('timer').innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        // Build Navigator Grid
+        function buildNavigator() {
+            const container = document.getElementById('question-navigator');
+            container.innerHTML = '';
+            questionsData.forEach((_, idx) => {
+                const btn = document.createElement('button');
+                btn.id = `nav-btn-${idx}`;
+                btn.type = 'button';
+                btn.className = 'py-1.5 text-xs font-bold rounded-lg border border-slate-200 bg-slate-100 text-slate-600 hover:bg-slate-200 transition';
+                btn.innerText = idx + 1;
+                btn.onclick = () => jumpToQuestion(idx);
+                container.appendChild(btn);
+            });
+        }
+
+        // Render Current Question
+        function renderQuestion(index) {
+            currentQuestionIndex = index;
+            const q = questionsData[index];
+
+            document.getElementById('progress-text').innerText = `السؤال ${index + 1} من 30`;
+            document.getElementById('progress-bar').style.width = `${((index + 1) / 30) * 100}%`;
+            document.getElementById('difficulty-badge').innerText = q.levelLabel;
+
+            document.getElementById('q-number-title').innerText = `Question #${index + 1}`;
+            document.getElementById('q-level-label').innerText = `Level ${q.level === "Easy" ? 1 : q.level === "Medium" ? 2 : 3}: ${q.level}`;
+            document.getElementById('question-text').innerText = q.question;
+
+            // Render Options
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            q.options.forEach((opt, optIdx) => {
+                const isSelected = userAnswers[index] === optIdx;
+                const card = document.createElement('div');
+                card.className = `option-card cursor-pointer p-4 rounded-xl border text-left font-mono text-sm flex items-center gap-3 ${
+                    isSelected ? 'border-indigo-600 bg-indigo-50/80 text-indigo-950 font-bold shadow-sm' : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-white'
+                }`;
+                card.onclick = () => selectOption(optIdx);
+
+                card.innerHTML = `
+                    <div class="w-6 h-6 rounded-full border flex items-center justify-center ${isSelected ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-slate-300 bg-white'}">
+                        ${isSelected ? '<i class="fa-solid fa-check text-xs"></i>' : '<span class="text-xs text-slate-400">' + String.fromCharCode(65 + optIdx) + '</span>'}
+                    </div>
+                    <div class="flex-grow">${opt}</div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Update Navigation Buttons
+            document.getElementById('prev-btn').disabled = index === 0;
+
+            if (index === questionsData.length - 1) {
+                document.getElementById('next-btn').classList.add('hidden');
+                document.getElementById('submit-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('next-btn').classList.remove('hidden');
+                document.getElementById('submit-btn').classList.add('hidden');
+            }
+
+            updateNavigatorUI();
+        }
+
+        // Select Option
+        function selectOption(optionIdx) {
+            userAnswers[currentQuestionIndex] = optionIdx;
+            renderQuestion(currentQuestionIndex);
+            document.getElementById('answered-count').innerText = Object.keys(userAnswers).length;
+        }
+
+        // Navigator UI state update
+        function updateNavigatorUI() {
+            questionsData.forEach((_, idx) => {
+                const btn = document.getElementById(`nav-btn-${idx}`);
+                if (!btn) return;
+
+                if (idx === currentQuestionIndex) {
+                    btn.className = 'py-1.5 text-xs font-bold rounded-lg bg-indigo-600 text-white border border-indigo-600 shadow-md scale-105 transition';
+                } else if (userAnswers[idx] !== undefined) {
+                    btn.className = 'py-1.5 text-xs font-bold rounded-lg bg-emerald-500 text-white border border-emerald-500 transition';
+                } else {
+                    btn.className = 'py-1.5 text-xs font-bold rounded-lg border border-slate-200 bg-slate-100 text-slate-600 hover:bg-slate-200 transition';
+                }
+            });
+        }
+
+        function navigateQuestion(direction) {
+            const target = currentQuestionIndex + direction;
+            if (target >= 0 && target < questionsData.length) {
+                renderQuestion(target);
+            }
+        }
+
+        function jumpToQuestion(index) {
+            renderQuestion(index);
+        }
+
+        function confirmFinishQuiz() {
+            const answeredCount = Object.keys(userAnswers).length;
+            if (answeredCount < 30) {
+                if (!confirm(`لقد أجبت على ${answeredCount} من 30 سؤالاً. هل انت متأكد من تسليم الاختبار الآن؟`)) {
+                    return;
+                }
+            }
+            finishQuiz();
+        }
+
+        // Calculate and Finish Quiz
+        function finishQuiz() {
+            clearInterval(timerInterval);
+
+            let score = 0;
+            const wrongQs = [];
+
+            questionsData.forEach((q, idx) => {
+                if (userAnswers[idx] === q.correct) {
+                    score++;
+                } else {
+                    wrongQs.push(idx + 1);
+                }
+            });
+
+            const percent = Math.round((score / 30) * 100);
+
+            // Hide Active Quiz, Show Results
+            document.getElementById('quiz-section').classList.add('hidden');
+            document.getElementById('quiz-header-status').classList.add('hidden');
+            document.getElementById('results-section').classList.remove('hidden');
+
+            // Set result data
+            document.getElementById('student-result-name').innerText = `نتيجة الطالب: ${studentName}`;
+            document.getElementById('score-percent').innerText = `${percent}%`;
+            document.getElementById('score-text').innerText = `${score} / 30`;
+            document.getElementById('correct-count').innerText = score;
+            document.getElementById('wrong-count').innerText = 30 - score;
+
+            const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+            const secs = String(secondsElapsed % 60).padStart(2, '0');
+            document.getElementById('time-taken').innerText = `${mins}:${secs}`;
+
+            // Grade badge
+            const gradeBadge = document.getElementById('grade-badge');
+            if (percent >= 90) { gradeBadge.innerText = 'ممتاز جداً 🎉'; gradeBadge.className = 'inline-block px-4 py-1.5 rounded-full text-sm font-bold bg-emerald-100 text-emerald-800 mb-4'; }
+            else if (percent >= 75) { gradeBadge.innerText = 'جيد جداً 👍'; gradeBadge.className = 'inline-block px-4 py-1.5 rounded-full text-sm font-bold bg-blue-100 text-blue-800 mb-4'; }
+            else if (percent >= 50) { gradeBadge.innerText = 'مقبول ⚠️'; gradeBadge.className = 'inline-block px-4 py-1.5 rounded-full text-sm font-bold bg-amber-100 text-amber-800 mb-4'; }
+            else { gradeBadge.innerText = 'يعاد الاختبار ❌'; gradeBadge.className = 'inline-block px-4 py-1.5 rounded-full text-sm font-bold bg-rose-100 text-rose-800 mb-4'; }
+
+            // Wrong questions list
+            if (wrongQs.length > 0) {
+                document.getElementById('wrong-q-numbers').innerText = wrongQs.join(' ، ');
+            } else {
+                document.getElementById('wrong-q-numbers').innerText = 'لا توجد أخطاء! درجة كاملة 100%.';
+            }
+
+            // Render Explanations
+            renderExplanations();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Render Answers & Explanations
+        function renderExplanations() {
+            const container = document.getElementById('answers-list');
+            container.innerHTML = '';
+
+            questionsData.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.correct;
+
+                const card = document.createElement('div');
+                card.className = `p-5 rounded-xl border ${isCorrect ? 'border-emerald-200 bg-emerald-50/40' : 'border-rose-200 bg-rose-50/40'}`;
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="font-bold text-sm ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">
+                            سؤال #${q.id} (${q.levelLabel}) - ${isCorrect ? 'إجابة صحيحة ✅' : 'إجابة خاطئة ❌'}
+                        </span>
+                    </div>
+                    <p class="font-bold text-slate-800 text-left font-mono dir-ltr mb-3">${q.question}</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs font-mono mb-3">
+                        <div class="p-2.5 rounded-lg border ${userAns === undefined ? 'bg-amber-100 text-amber-800 border-amber-300' : isCorrect ? 'bg-emerald-100 text-emerald-900 border-emerald-300' : 'bg-rose-100 text-rose-900 border-rose-300'}">
+                            <strong>إجابتك:</strong> ${userAns !== undefined ? q.options[userAns] : 'لم تجب على هذا السؤال'}
+                        </div>
+                        <div class="p-2.5 rounded-lg border bg-emerald-100 text-emerald-900 border-emerald-300">
+                            <strong>الإجابة النموذجية:</strong> ${q.options[q.correct]}
+                        </div>
+                    </div>
+
+                    <div class="bg-white/80 border border-slate-200 rounded-lg p-3 text-xs text-slate-700 leading-relaxed">
+                        <strong class="text-indigo-900 block mb-1">💡 الشرح والتوضيح:</strong>
+                        ${q.explanation}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Send Results via WhatsApp to Teacher Phone
+        function sendToWhatsApp() {
+            const phone = "201224855509";
+            const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+            const secs = String(secondsElapsed % 60).padStart(2, '0');
+
+            let score = 0;
+            const wrongQs = [];
+            questionsData.forEach((q, idx) => {
+                if (userAnswers[idx] === q.correct) score++;
+                else wrongQs.push(idx + 1);
+            });
+
+            const percent = Math.round((score / 30) * 100);
+
+            let msg = `*تقرير نتيجة اختبار تكنولوجيا المعلومات*\n`;
+            msg += `------------------------------\n`;
+            msg += `👤 *اسم الطالب:* ${studentName}\n`;
+            msg += `📊 *النتيجة:* ${score} من 30 (${percent}%)\n`;
+            msg += `⏱️ *الوقت المستغرق:* ${mins}:${secs}\n`;
+            msg += `❌ *أسئلة الأخطاء:* ${wrongQs.length > 0 ? wrongQs.join(', ') : 'لا يوجد أخطاء'}\n`;
+            msg += `------------------------------\n`;
+            msg += `تمت الإجابة عبر المنظومة التفاعلية للاختبارات.`;
+
+            const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
