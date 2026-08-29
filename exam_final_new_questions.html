@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Information Ethics & Technology Quiz - 1st Sec</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            font-family: 'Cairo', sans-serif;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media print {
+            html, body {
+                display: none !important;
+            }
+        }
+
+        .option-card:hover {
+            transform: translateY(-2px);
+        }
+        .option-card {
+            transition: all 0.2s ease-in-out;
+        }
+
+        /* Mobile readability */
+        @media (max-width: 640px) {
+            #question-card {
+                padding: 16px !important;
+            }
+
+            #canvas-wrapper {
+                padding: 8px !important;
+                min-height: 130px;
+            }
+
+            #question-canvas {
+                min-height: 110px;
+            }
+
+            #options-container .option-card {
+                min-height: 58px;
+                padding: 14px !important;
+            }
+
+            #options-container .option-card span {
+                font-size: 17px !important;
+                line-height: 1.55 !important;
+            }
+
+            #q-number-title {
+                font-size: 14px !important;
+            }
+
+            #q-level-label {
+                font-size: 11px !important;
+            }
+
+            #progress-text {
+                font-size: 12px !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- Exam Access Password -->
+    <div id="exam-password-screen" class="fixed inset-0 bg-slate-900 z-[200] flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 md:p-8 max-w-md w-full text-center">
+            <div class="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-5 text-3xl">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <h2 class="text-2xl font-black text-slate-900 mb-2">Exam Locked</h2>
+            <p class="text-sm text-slate-500 mb-6">Enter the exam password to continue.</p>
+
+            <form onsubmit="checkExamPassword(event)" class="space-y-3">
+                <input
+                    id="exam-password-input"
+                    type="password"
+                    autocomplete="off"
+                    placeholder="Enter password"
+                    class="w-full text-center text-xl tracking-widest py-3 px-4 bg-slate-50 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
+                    required
+                >
+                <p id="exam-password-error" class="hidden text-sm text-rose-600 font-bold">
+                    ❌ Wrong password!
+                </p>
+                <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg transition">
+                    Unlock Exam
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Top Header -->
+    <header class="bg-slate-900 text-white shadow-xl sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-shield-halved text-white"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg md:text-xl leading-tight" id="main-title">IT & Information Ethics Quiz</h1>
+                    <p class="text-xs text-slate-400">1st Secondary - Final Review</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <!-- Language Switcher Button with Password -->
+                <button onclick="toggleLanguage()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs md:text-sm font-bold px-3 py-2 rounded-xl transition flex items-center gap-2 border border-indigo-500 shadow-md">
+                    <i class="fa-solid fa-language text-base"></i>
+                    <span id="lang-btn-text">English / عربي</span>
+                </button>
+
+                <div id="quiz-header-status" class="hidden flex items-center gap-4 bg-slate-800 px-3 py-2 rounded-xl border border-slate-700 text-sm">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-regular fa-clock text-indigo-400"></i>
+                        <span id="timer" class="font-mono font-bold text-indigo-300">00:00</span>
+                    </div>
+                    <div class="h-4 w-[1px] bg-slate-700"></div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-emerald-400"></i>
+                        <span>Answered: <strong id="answered-count" class="text-emerald-400">0</strong>/30</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-5xl mx-auto px-4 py-8 w-full flex-grow">
+
+        <!-- Registration -->
+        <section id="registration-section" class="max-w-xl mx-auto bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8 text-center my-6">
+            <div class="w-20 h-20 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl shadow-inner">
+                <i class="fa-solid fa-user-graduate"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-900 mb-2">Welcome to the Final Review Quiz</h2>
+            <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                This exam contains <span class="font-bold text-indigo-600">30 MCQs + 2 Essay Questions</span>. Please enter your name to start.
+            </p>
+
+            <form id="start-form" onsubmit="startQuiz(event)" class="space-y-4 text-left" dir="ltr">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Full Student Name <span class="text-rose-500">*</span></label>
+                    <div class="relative">
+                        <i class="fa-regular fa-user absolute left-3 top-3.5 text-slate-400"></i>
+                        <input type="text" id="student-name" required placeholder="Enter your full name..." class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none transition text-slate-800">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Teacher WhatsApp Number</label>
+                    <div class="relative">
+                        <i class="fa-brands fa-whatsapp absolute left-3 top-3.5 text-emerald-500 text-lg"></i>
+                        <input type="tel" id="teacher-phone" value="01224855509" readonly class="w-full pl-10 pr-4 py-3 bg-slate-100 border border-slate-200 rounded-xl outline-none text-slate-800 font-bold cursor-not-allowed">
+                    </div>
+                </div>
+
+                <div class="bg-rose-50 border border-rose-200 rounded-xl p-4 flex items-start gap-3 text-rose-800 text-xs mt-4">
+                    <i class="fa-solid fa-shield-halved text-rose-600 text-lg mt-0.5"></i>
+                    <div>
+                        <strong class="text-sm block mb-1">Strict Security Alert:</strong>
+                        Do not leave the exam screen. Leaving once will lock the exam, and a second time will <strong class="text-rose-700 underline">permanently ban you</strong>.
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 transition duration-200 flex items-center justify-center gap-2 text-lg">
+                    <span>Start Exam Now</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+        </section>
+
+        <!-- Active Quiz -->
+        <section id="quiz-section" class="hidden space-y-6">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex justify-between items-center text-xs font-bold text-slate-500 mb-2">
+                    <span id="progress-text">Question 1 of 30</span>
+                    <span id="difficulty-badge" class="px-2.5 py-1 rounded-full text-xs font-bold">Easy 🟢</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                    <div id="progress-bar" class="bg-indigo-600 h-full rounded-full transition-all duration-300" style="width: 2%;"></div>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div class="text-xs font-bold text-slate-500 mb-3 flex justify-between items-center">
+                    <span>Questions Map:</span>
+                </div>
+                <div id="question-navigator" class="grid grid-cols-5 sm:grid-cols-10 md:grid-cols-10 gap-1.5"></div>
+            </div>
+
+            <!-- MCQ Card -->
+            <div id="question-card" class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8 relative overflow-hidden">
+                <div class="flex justify-between items-start mb-4 border-b border-slate-100 pb-4">
+                    <span class="bg-indigo-100 text-indigo-800 text-sm font-bold px-3 py-1 rounded-lg" id="q-number-title">Question #1</span>
+                    <span class="text-xs font-semibold text-slate-400 bg-slate-100 px-3 py-1 rounded-md" id="q-level-label">Level 1: Easy</span>
+                </div>
+
+                <!-- Canvas Visual Question -->
+                <div id="canvas-wrapper" class="w-full mb-6 rounded-xl border border-slate-200 bg-slate-50 p-4 overflow-hidden flex justify-center items-center">
+                    <canvas id="question-canvas" class="w-full max-w-full block"></canvas>
+                </div>
+
+                <div id="options-container" class="space-y-3"></div>
+
+                <div class="flex justify-between items-center mt-8 pt-6 border-t border-slate-100">
+                    <button id="prev-btn" onclick="navigateQuestion(-1)" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition flex items-center gap-2 text-sm disabled:opacity-40">
+                        <i class="fa-solid fa-chevron-left"></i>
+                        <span>Previous</span>
+                    </button>
+
+                    <button id="next-btn" onclick="navigateQuestion(1)" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition flex items-center gap-2 text-sm">
+                        <span>Next</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+
+                    <button id="go-essay-btn" onclick="showEssaySection()" class="hidden px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-md transition flex items-center gap-2 text-sm">
+                        <span>Go to Essay Questions</span>
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Essay Card -->
+            <div id="essay-card" class="hidden bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8 relative overflow-hidden">
+                <div class="mb-4 border-b border-slate-100 pb-4">
+                    <span class="bg-amber-100 text-amber-800 text-sm font-bold px-3 py-1 rounded-lg"><i class="fa-solid fa-pen-nib"></i> Essay Section (الأسئلة المقالية)</span>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Essay 1 -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <label class="block text-sm font-bold text-slate-800 mb-2">Q31: Explain the difference between Primary Information and Secondary Information. Give one example of each.</label>
+                        <textarea id="essay-answer-1" rows="3" placeholder="Write your answer here..." class="w-full p-3 bg-white border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-amber-500 resize-none text-sm"></textarea>
+                    </div>
+
+                    <!-- Essay 2 -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <label class="block text-sm font-bold text-slate-800 mb-2">Q32: Explain three important rules for using or sharing information on the internet.</label>
+                        <textarea id="essay-answer-2" rows="3" placeholder="Write your answer here..." class="w-full p-3 bg-white border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-amber-500 resize-none text-sm"></textarea>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center mt-8 pt-6 border-t border-slate-100">
+                    <button onclick="backToMCQ()" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-chevron-left"></i>
+                        <span>Back to MCQs</span>
+                    </button>
+
+                    <button onclick="confirmFinishQuiz()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Finish & Submit</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Results -->
+        <section id="results-section" class="hidden space-y-8">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8 text-center relative overflow-hidden">
+                <div class="w-24 h-24 rounded-full bg-slate-50 border-4 border-indigo-500 flex flex-col items-center justify-center mx-auto mb-4 shadow-lg">
+                    <span id="score-percent" class="text-2xl font-black text-indigo-600">0%</span>
+                    <span class="text-[10px] font-bold text-slate-400">MCQ Score</span>
+                </div>
+
+                <h2 id="student-result-name" class="text-2xl font-black text-slate-900 mb-1">Student Result</h2>
+                <p id="grade-badge" class="inline-block px-4 py-1.5 rounded-full text-sm font-bold bg-emerald-100 text-emerald-800 mb-4">Completed 🎉</p>
+
+                <p class="text-xs text-emerald-600 font-bold mb-4 animate-pulse">
+                    🚀 Opening WhatsApp to send your MCQ score and Essay answers to the teacher...
+                </p>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto my-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span class="block text-xs text-slate-400 font-bold mb-1">Total MCQ</span>
+                        <span id="score-text" class="text-xl font-bold text-slate-800">0 / 30</span>
+                    </div>
+                    <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100">
+                        <span class="block text-xs text-emerald-600 font-bold mb-1">Correct</span>
+                        <span id="correct-count" class="text-xl font-bold text-emerald-700">0</span>
+                    </div>
+                    <div class="bg-amber-50 p-4 rounded-xl border border-amber-100">
+                        <span class="block text-xs text-amber-600 font-bold mb-1">Essays</span>
+                        <span class="text-xl font-bold text-amber-700">Sent</span>
+                    </div>
+                    <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                        <span class="block text-xs text-indigo-600 font-bold mb-1">Time Taken</span>
+                        <span id="time-taken" class="text-xl font-bold text-indigo-700">00:00</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-center gap-4 max-w-xl mx-auto">
+                    <button onclick="sendToWhatsApp()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg flex items-center gap-2 transition">
+                        <i class="fa-brands fa-whatsapp text-xl"></i>
+                        <span>Re-open WhatsApp</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="explanations-section" class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8">
+                <h3 class="text-xl font-bold text-slate-900 mb-6">Model Answers for MCQs</h3>
+                <div id="answers-list" class="space-y-6"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Lock & Ban Screen Modal -->
+    <div id="lock-screen-modal" class="fixed inset-0 bg-slate-900/95 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4">
+        
+        <div id="lock-normal-box" class="bg-white rounded-2xl shadow-2xl p-6 md:p-8 max-w-md w-full text-center space-y-4 border border-amber-100">
+            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto text-2xl shadow-inner">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900">Exam Locked!</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+                A security violation was detected. The exam is locked immediately. Enter the teacher passcode to continue.
+            </p>
+
+            <div class="space-y-3 pt-2 text-left">
+                <label class="block text-xs font-bold text-slate-700">Enter Teacher Passcode:</label>
+                <input type="password" id="unlock-passcode-input" placeholder="••••••••" class="w-full text-center text-xl tracking-widest py-3 bg-slate-50 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-amber-500 font-mono">
+                <p id="unlock-error-msg" class="text-xs text-rose-600 font-bold hidden text-center">❌ Wrong Passcode!</p>
+            </div>
+
+            <button onclick="unlockExam()" class="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-lg transition">
+                Unlock and Continue
+            </button>
+        </div>
+
+        <div id="lock-ban-box" class="hidden bg-white rounded-2xl shadow-2xl p-6 md:p-8 max-w-md w-full text-center space-y-4 border border-rose-200">
+            <div class="w-20 h-20 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner animate-bounce">
+                <i class="fa-solid fa-ban"></i>
+            </div>
+            <h3 class="text-2xl font-black text-rose-600">Permanently Banned!</h3>
+            <p id="ban-message-text" class="text-sm font-bold text-slate-700 leading-relaxed">
+                A second attempt to leave the screen was detected. The exam is cancelled and your current result has been recorded.
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        let currentLang = 'en'; 
+        let isExamActive = false;
+        let currentQuestionIndex = 0;
+        let studentAnswers = {};
+        let examQuestions = []; // randomized order for this attempt
+        let timerSeconds = 0;
+        let timerInterval = null;
+        let studentName = "";
+        let warningsCount = 0;
+        const TEACHER_PHONE = "01224855509";
+        const TEACHER_UNLOCK_CODE = "139200";
+        const EXAM_ACCESS_PASSWORD = "139200";
+        let examPasswordUnlocked = false;
+
+        function checkExamPassword(e) {
+            e.preventDefault();
+            const input = document.getElementById('exam-password-input').value;
+            const error = document.getElementById('exam-password-error');
+
+            if (input === EXAM_ACCESS_PASSWORD) {
+                examPasswordUnlocked = true;
+                document.getElementById('exam-password-screen').classList.add('hidden');
+                document.getElementById('exam-password-input').value = "";
+                error.classList.add('hidden');
+            } else {
+                error.classList.remove('hidden');
+                document.getElementById('exam-password-input').select();
+            }
+        }
+
+        // ==================== EXAM SECURITY ====================
+        // Browser-based security is best-effort: JavaScript cannot reliably
+        // detect OS-level screenshots or every browser translation implementation.
+        let securityLocked = false;
+        let lastViolationAt = 0;
+        let examStartedAt = 0;
+
+        document.addEventListener('contextmenu', e => {
+            if (isExamActive) e.preventDefault();
+        });
+
+        document.addEventListener('selectstart', e => {
+            if (isExamActive) e.preventDefault();
+        });
+
+        document.addEventListener('dragstart', e => {
+            if (isExamActive) e.preventDefault();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (!isExamActive) return;
+
+            const key = String(e.key || '').toLowerCase();
+            const blocked =
+                key === 'f12' ||
+                key === 'printscreen' ||
+                (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(key)) ||
+                (e.ctrlKey && ['u','c','x','s','p'].includes(key)) ||
+                (e.metaKey && ['c','x','s','p'].includes(key));
+
+            if (blocked) {
+                e.preventDefault();
+                e.stopPropagation();
+                handleViolation('blocked keyboard shortcut');
+            }
+        }, true);
+
+        // Switching to another tab/window or minimizing the browser.
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden && isExamActive) {
+                handleViolation('left exam tab');
+            }
+        });
+
+        // Clicking/focusing another application/window.
+        window.addEventListener('blur', () => {
+            if (isExamActive && !document.hidden) {
+                handleViolation('browser window lost focus');
+            }
+        });
+
+        // If fullscreen is used, leaving fullscreen while the exam is active locks it.
+        document.addEventListener('fullscreenchange', () => {
+            if (isExamActive && examStartedAt && !document.fullscreenElement) {
+                handleViolation('exited fullscreen');
+            }
+        });
+
+        // Chrome/browser translation hooks where supported.
+        document.addEventListener('beforetranslate', () => {
+            if (isExamActive) handleViolation('translation requested');
+        }, true);
+
+        // Some Chromium translation implementations expose translation-related
+        // DOM attributes. Watch for those without relying on them exclusively.
+        const securityObserver = new MutationObserver((mutations) => {
+            if (!isExamActive || securityLocked) return;
+
+            const translated =
+                document.documentElement.getAttribute('translated') === 'yes' ||
+                document.documentElement.classList.contains('translated-ltr') ||
+                document.documentElement.classList.contains('translated-rtl') ||
+                document.body.classList.contains('translated-ltr') ||
+                document.body.classList.contains('translated-rtl');
+
+            if (translated) handleViolation('browser translation detected');
+        });
+
+        securityObserver.observe(document.documentElement, {
+            subtree: true,
+            childList: true,
+            attributes: true,
+            attributeFilter: ['class', 'lang', 'translate', 'translated']
+        });
+
+        // A screenshot API is intentionally not claimed here: normal web pages
+        // do not receive a reliable OS screenshot event. PrintScreen is blocked
+        // when the browser exposes it, but external/OS screenshot tools cannot
+        // be detected by ordinary JavaScript.
+
+        function handleViolation(reason = 'security violation') {
+            if (!isExamActive || securityLocked) return;
+
+            // Prevent duplicate locks caused by blur + visibilitychange firing together.
+            const now = Date.now();
+            if (now - lastViolationAt < 1200) return;
+            lastViolationAt = now;
+
+            securityLocked = true;
+            warningsCount++;
+            isExamActive = false;
+            clearInterval(timerInterval);
+
+            const modal = document.getElementById('lock-screen-modal');
+            const normalBox = document.getElementById('lock-normal-box');
+            const banBox = document.getElementById('lock-ban-box');
+
+            modal.classList.remove('hidden');
+            normalBox.classList.remove('hidden');
+            banBox.classList.add('hidden');
+
+            const title = normalBox.querySelector('h3');
+            const message = normalBox.querySelector('p');
+            if (title) title.textContent = 'Exam Locked!';
+            if (message) {
+                message.innerHTML =
+                    'A security violation was detected. The exam is locked immediately. ' +
+                    'Enter the teacher passcode to continue.';
+            }
+
+            // Keep the student on the lock screen and do not submit/finish the exam.
+            // The existing unlock button will restore the exam after the correct code.
+        }
+
+        function unlockExam() {
+            const input = document.getElementById('unlock-passcode-input').value;
+            const errMsg = document.getElementById('unlock-error-msg');
+
+            if (input === TEACHER_UNLOCK_CODE) {
+                document.getElementById('lock-screen-modal').classList.add('hidden');
+                document.getElementById('unlock-passcode-input').value = "";
+                errMsg.classList.add('hidden');
+
+                securityLocked = false;
+                isExamActive = true;
+                lastViolationAt = Date.now();
+                startTimer();
+            } else {
+                errMsg.classList.remove('hidden');
+            }
+        }
+
+        // 30 MCQ Questions Data (Easy English + Arabic Translation)
+        const rawQuestionsData = [
+            { id: 1, levelLabel: "🟢 Easy", correct: 1,
+              questionEn: "What is Data?",
+              optionsEn: ["Information that has been analyzed", "Facts represented using numbers, characters, or symbols", "A type of social media", "A copyright license"],
+              questionAr: "ما هي البيانات؟",
+              optionsAr: ["معلومات تم تحليلها", "حقائق ممثلة باستخدام أرقام أو حروف أو رموز", "نوع من وسائل التواصل الاجتماعي", "ترخيص لحقوق النشر"],
+              explanation: "Correct answer: Facts represented using numbers, characters, or symbols" },
+            { id: 2, levelLabel: "🟢 Easy", correct: 0,
+              questionEn: "What is Information?",
+              optionsEn: ["Something that has meaning or value for the recipient", "A computer virus", "A password", "A USB drive"],
+              questionAr: "ما هي المعلومات؟",
+              optionsAr: ["شيء له معنى أو قيمة بالنسبة للمستلم", "فيروس كمبيوتر", "كلمة مرور", "وحدة USB"],
+              explanation: "Correct answer: Something that has meaning or value for the recipient" },
+            { id: 3, levelLabel: "🟢 Easy", correct: 1,
+              questionEn: "What is Knowledge?",
+              optionsEn: ["Raw facts", "Information that has been analyzed and systematized", "A type of media", "A social media account"],
+              questionAr: "ما هي المعرفة؟",
+              optionsAr: ["حقائق خام", "معلومات تم تحليلها وتنظيمها", "نوع من الوسائط", "حساب على وسائل التواصل الاجتماعي"],
+              explanation: "Correct answer: Information that has been analyzed and systematized" },
+            { id: 4, levelLabel: "🟢 Easy", correct: 1,
+              questionEn: "Information that cannot be completely erased after it is created has the characteristic of:",
+              optionsEn: ["Reproducibility", "Persistence", "Privacy", "Quotation"],
+              questionAr: "المعلومات التي لا يمكن محوها بالكامل بعد إنشائها تتميز بخاصية:",
+              optionsAr: ["قابلية إعادة الإنتاج", "الاستمرارية", "الخصوصية", "الاقتباس"],
+              explanation: "Correct answer: Persistence" },
+            { id: 5, levelLabel: "🟢 Easy", correct: 0,
+              questionEn: "Information that can be easily copied in large quantities has:",
+              optionsEn: ["Reproducibility", "Persistence", "Copyright", "Geotagging"],
+              questionAr: "المعلومات التي يمكن نسخها بسهولة وبكميات كبيرة تتميز بـ:",
+              optionsAr: ["قابلية إعادة الإنتاج", "الاستمرارية", "حقوق النشر", "الوسم الجغرافي"],
+              explanation: "Correct answer: Reproducibility" },
+            { id: 6, levelLabel: "🟢 Easy", correct: 0,
+              questionEn: "Which of the following is an example of mass media?",
+              optionsEn: ["Newspaper", "USB drive", "Keyboard", "Password"],
+              questionAr: "أي مما يلي مثال على وسائل الإعلام الجماهيري؟",
+              optionsAr: ["صحيفة", "وحدة USB", "لوحة مفاتيح", "كلمة مرور"],
+              explanation: "Correct answer: Newspaper" },
+            { id: 7, levelLabel: "🟢 Easy", correct: 1,
+              questionEn: "Which media is used to express information?",
+              optionsEn: ["Recording media", "Expression media", "Transmission media", "Social media"],
+              questionAr: "أي وسيلة تُستخدم للتعبير عن المعلومات؟",
+              optionsAr: ["وسائط التسجيل", "وسائط التعبير", "وسائط الإرسال", "وسائل التواصل الاجتماعي"],
+              explanation: "Correct answer: Expression media" },
+            { id: 8, levelLabel: "🟢 Easy", correct: 2,
+              questionEn: "Which of the following is recording media?",
+              optionsEn: ["Television", "Radio", "USB drive", "Telephone"],
+              questionAr: "أي مما يلي يُعد من وسائط التسجيل؟",
+              optionsAr: ["التلفاز", "الراديو", "وحدة USB", "الهاتف"],
+              explanation: "Correct answer: USB drive" },
+            { id: 9, levelLabel: "🟢 Easy", correct: 1,
+              questionEn: "What does privacy mean?",
+              optionsEn: ["Sharing everyone's information", "Protecting personal information", "Copying information", "Spreading rumors"],
+              questionAr: "ماذا تعني الخصوصية؟",
+              optionsAr: ["مشاركة معلومات الجميع", "حماية المعلومات الشخصية", "نسخ المعلومات", "نشر الشائعات"],
+              explanation: "Correct answer: Protecting personal information" },
+            { id: 10, levelLabel: "🟢 Easy", correct: 0,
+              questionEn: "What is social media?",
+              optionsEn: ["Services that help people connect with each other on the internet", "A type of USB drive", "A copyright symbol", "A computer screen"],
+              questionAr: "ما هي وسائل التواصل الاجتماعي؟",
+              optionsAr: ["خدمات تساعد الناس على التواصل مع بعضهم عبر الإنترنت", "نوع من وحدات USB", "رمز لحقوق النشر", "شاشة كمبيوتر"],
+              explanation: "Correct answer: Services that help people connect with each other on the internet" },
+            { id: 11, levelLabel: "🟡 Medium", correct: 2,
+              questionEn: "Which is an example of primary information?",
+              optionsEn: ["A book written by another person", "A newspaper article", "Results from your own experiment", "A television program"],
+              questionAr: "أي مما يلي مثال على المعلومات الأولية؟",
+              optionsAr: ["كتاب كتبه شخص آخر", "مقالة في صحيفة", "نتائج تجربتك الخاصة", "برنامج تلفزيوني"],
+              explanation: "Correct answer: Results from your own experiment" },
+            { id: 12, levelLabel: "🟡 Medium", correct: 3,
+              questionEn: "Which is an example of secondary information?",
+              optionsEn: ["Your own survey results", "Your own experiment", "A questionnaire you conducted", "Information obtained through a third party"],
+              questionAr: "أي مما يلي مثال على المعلومات الثانوية؟",
+              optionsAr: ["نتائج الاستبيان الخاص بك", "تجربتك الخاصة", "استبيان أجريته بنفسك", "معلومات تم الحصول عليها من خلال طرف ثالث"],
+              explanation: "Correct answer: Information obtained through a third party" },
+            { id: 13, levelLabel: "🟡 Medium", correct: 1,
+              questionEn: "What is cross-checking?",
+              optionsEn: ["Deleting information", "Comparing information from multiple perspectives to check accuracy and reliability", "Copying information", "Posting information online"],
+              questionAr: "ما هو التحقق المتقاطع؟",
+              optionsAr: ["حذف المعلومات", "مقارنة المعلومات من عدة وجهات نظر للتحقق من الدقة والموثوقية", "نسخ المعلومات", "نشر المعلومات على الإنترنت"],
+              explanation: "Correct answer: Comparing information from multiple perspectives to check accuracy and reliability" },
+            { id: 14, levelLabel: "🟡 Medium", correct: 2,
+              questionEn: "Which type of media is used as an intermediary for transmitting information?",
+              optionsEn: ["Expression media", "Recording media", "Propagation/Transmission media", "Primary media"],
+              questionAr: "أي نوع من الوسائط يُستخدم كوسيط لنقل المعلومات؟",
+              optionsAr: ["وسائط التعبير", "وسائط التسجيل", "وسائط الانتشار/الإرسال", "الوسائط الأولية"],
+              explanation: "Correct answer: Propagation/Transmission media" },
+            { id: 15, levelLabel: "🟡 Medium", correct: 2,
+              questionEn: "Which of the following is an example of propagation/transmission media?",
+              optionsEn: ["DVD", "USB drive", "Internet", "Paper"],
+              questionAr: "أي مما يلي مثال على وسائط الانتشار/الإرسال؟",
+              optionsAr: ["DVD", "وحدة USB", "الإنترنت", "الورق"],
+              explanation: "Correct answer: Internet" },
+            { id: 16, levelLabel: "🟡 Medium", correct: 1,
+              questionEn: "What is information ethics mainly concerned with?",
+              optionsEn: ["Playing games online", "Appropriate activities in the information society", "Buying smartphones", "Designing websites"],
+              questionAr: "بماذا تهتم أخلاقيات المعلومات بشكل أساسي؟",
+              optionsAr: ["لعب الألعاب عبر الإنترنت", "الأنشطة المناسبة في مجتمع المعلومات", "شراء الهواتف الذكية", "تصميم المواقع"],
+              explanation: "Correct answer: Appropriate activities in the information society" },
+            { id: 17, levelLabel: "🟡 Medium", correct: 2,
+              questionEn: "Which action violates another person's rights?",
+              optionsEn: ["Asking for permission before sharing a photo", "Protecting someone's personal information", "Sharing a copyrighted image without permission", "Checking information from different sources"],
+              questionAr: "أي تصرف ينتهك حقوق شخص آخر؟",
+              optionsAr: ["طلب الإذن قبل مشاركة صورة", "حماية المعلومات الشخصية لشخص ما", "مشاركة صورة محمية بحقوق النشر دون إذن", "التحقق من المعلومات من مصادر مختلفة"],
+              explanation: "Correct answer: Sharing a copyrighted image without permission" },
+            { id: 18, levelLabel: "🟡 Medium", correct: 0,
+              questionEn: "What is geotagging?",
+              optionsEn: ["Adding latitude and longitude information to photos or videos", "Encrypting a password", "Deleting a photo", "Copying a website"],
+              questionAr: "ما هو الوسم الجغرافي؟",
+              optionsAr: ["إضافة معلومات خط العرض وخط الطول إلى الصور أو الفيديوهات", "تشفير كلمة مرور", "حذف صورة", "نسخ موقع إلكتروني"],
+              explanation: "Correct answer: Adding latitude and longitude information to photos or videos" },
+            { id: 19, levelLabel: "🟡 Medium", correct: 1,
+              questionEn: "What is Internet addiction?",
+              optionsEn: ["Using the internet for a short time", "Becoming excessively immersed in the internet and interfering with daily life", "Using a computer for study", "Sending an email"],
+              questionAr: "ما هو إدمان الإنترنت؟",
+              optionsAr: ["استخدام الإنترنت لفترة قصيرة", "الانغماس المفرط في الإنترنت والتأثير في الحياة اليومية", "استخدام الكمبيوتر للدراسة", "إرسال بريد إلكتروني"],
+              explanation: "Correct answer: Becoming excessively immersed in the internet and interfering with daily life" },
+            { id: 20, levelLabel: "🟡 Medium", correct: 2,
+              questionEn: "What is identity theft?",
+              optionsEn: ["Protecting your identity", "Creating a new password", "Pretending to be another person or organization to steal IDs or passwords", "Checking information online"],
+              questionAr: "ما هي سرقة الهوية؟",
+              optionsAr: ["حماية هويتك", "إنشاء كلمة مرور جديدة", "التظاهر بأنك شخص أو مؤسسة أخرى لسرقة الهويات أو كلمات المرور", "التحقق من المعلومات عبر الإنترنت"],
+              explanation: "Correct answer: Pretending to be another person or organization to steal IDs or passwords" },
+            { id: 21, levelLabel: "🔴 Hard", correct: 1,
+              questionEn: "A student gets information from a book written by another person. What type of information is this?",
+              optionsEn: ["Primary information", "Secondary information", "Raw data", "Knowledge"],
+              questionAr: "يحصل طالب على معلومات من كتاب كتبه شخص آخر. ما نوع هذه المعلومات؟",
+              optionsAr: ["معلومات أولية", "معلومات ثانوية", "بيانات خام", "معرفة"],
+              explanation: "Correct answer: Secondary information" },
+            { id: 22, levelLabel: "🔴 Hard", correct: 1,
+              questionEn: "Why should secondary information sometimes be cross-checked?",
+              optionsEn: ["It can never be copied", "It may differ from the original information or contain different interpretations", "It is always false", "It cannot be used for research"],
+              questionAr: "لماذا يجب أحيانًا التحقق المتقاطع من المعلومات الثانوية؟",
+              optionsAr: ["لأنه لا يمكن نسخها أبدًا", "قد تختلف عن المعلومات الأصلية أو تحتوي على تفسيرات مختلفة", "لأنها خاطئة دائمًا", "لا يمكن استخدامها في البحث"],
+              explanation: "Correct answer: It may differ from the original information or contain different interpretations" },
+            { id: 23, levelLabel: "🔴 Hard", correct: 1,
+              questionEn: "A person posts a photo online with location information showing exactly where his house is. What risk is most related to this situation?",
+              optionsEn: ["Reproducibility", "Geotagging and identification risk", "Quotation", "Fair use"],
+              questionAr: "ينشر شخص صورة على الإنترنت تحتوي على معلومات عن الموقع وتُظهر مكان منزله بالضبط. ما الخطر الأكثر ارتباطًا بهذا الموقف؟",
+              optionsAr: ["قابلية إعادة الإنتاج", "الوسم الجغرافي وخطر تحديد الهوية", "الاقتباس", "الاستخدام العادل"],
+              explanation: "Correct answer: Geotagging and identification risk" },
+            { id: 24, levelLabel: "🔴 Hard", correct: 1,
+              questionEn: "Someone posts a false story online and intentionally spreads it to many people. This is called:",
+              optionsEn: ["Primary information", "Disinformation and rumors", "Knowledge", "Media literacy"],
+              questionAr: "ينشر شخص قصة كاذبة على الإنترنت ويتعمد نشرها لعدد كبير من الناس. ماذا يسمى ذلك؟",
+              optionsAr: ["معلومات أولية", "معلومات مضللة وشائعات", "معرفة", "الثقافة الإعلامية"],
+              explanation: "Correct answer: Disinformation and rumors" },
+            { id: 25, levelLabel: "🔴 Hard", correct: 2,
+              questionEn: "Which action is the BEST example of media literacy?",
+              optionsEn: ["Believing every post on social media", "Sharing information immediately", "Accurately interpreting information obtained from media", "Copying information without checking it"],
+              questionAr: "أي تصرف هو أفضل مثال على الثقافة الإعلامية؟",
+              optionsAr: ["تصديق كل منشور على وسائل التواصل الاجتماعي", "مشاركة المعلومات فورًا", "تفسير المعلومات التي تم الحصول عليها من وسائل الإعلام بدقة", "نسخ المعلومات دون التحقق منها"],
+              explanation: "Correct answer: Accurately interpreting information obtained from media" },
+            { id: 26, levelLabel: "🔴 Hard", correct: 1,
+              questionEn: "What is the main purpose of copyright?",
+              optionsEn: ["To stop all use of information", "To contribute to cultural development by ensuring fair use and protection of rights", "To allow everyone to copy anything", "To prevent people from using the internet"],
+              questionAr: "ما الهدف الرئيسي من حقوق النشر؟",
+              optionsAr: ["إيقاف كل استخدام للمعلومات", "المساهمة في التطور الثقافي من خلال ضمان الاستخدام العادل وحماية الحقوق", "السماح للجميع بنسخ أي شيء", "منع الناس من استخدام الإنترنت"],
+              explanation: "Correct answer: To contribute to cultural development by ensuring fair use and protection of rights" },
+            { id: 27, levelLabel: "🔴 Hard", correct: 1,
+              questionEn: "Which situation is an example of quotation?",
+              optionsEn: ["Copying another person's work and claiming it is your own", "Using a portion of another person's copyrighted work in your own copyrighted work under certain requirements", "Deleting another person's work", "Sharing private information"],
+              questionAr: "أي موقف هو مثال على الاقتباس؟",
+              optionsAr: ["نسخ عمل شخص آخر وادعاء أنه عملك", "استخدام جزء من عمل شخص آخر المحمي بحقوق النشر في عملك المحمي بحقوق النشر وفق متطلبات معينة", "حذف عمل شخص آخر", "مشاركة معلومات خاصة"],
+              explanation: "Correct answer: Using a portion of another person's copyrighted work in your own copyrighted work under certain requirements" },
+            { id: 28, levelLabel: "🔴 Hard", correct: 2,
+              questionEn: "Which statement is a correct rule of quotation?",
+              optionsEn: ["The quoted material should be changed", "The source does not need to be specified", "The quoted material should be clearly identifiable", "Your own work should be completely removed"],
+              questionAr: "أي عبارة تمثل قاعدة صحيحة للاقتباس؟",
+              optionsAr: ["يجب تغيير المادة المقتبسة", "لا يحتاج المصدر إلى التحديد", "يجب أن تكون المادة المقتبسة واضحة ومميزة", "يجب إزالة عملك بالكامل"],
+              explanation: "Correct answer: The quoted material should be clearly identifiable" },
+            { id: 29, levelLabel: "🔴 Hard", correct: 2,
+              questionEn: "A creator died in 2020. According to the lesson, when does the economic copyright protection expire?",
+              optionsEn: ["2030", "2050", "2070", "2100"],
+              questionAr: "توفي منشئ العمل في عام 2020. وفقًا للدرس، متى تنتهي حماية حقوق النشر الاقتصادية؟",
+              optionsAr: ["2030", "2050", "2070", "2100"],
+              explanation: "Correct answer: 2070" },
+            { id: 30, levelLabel: "🔴 Hard", correct: 3,
+              questionEn: "A Creative Commons license has the condition \"No derivatives (ND).\" What does this mean?",
+              optionsEn: ["You must pay the creator", "You can use it only commercially", "You must give credit to the creator", "You must not alter the original copyrighted work"],
+              questionAr: "يحتوي ترخيص Creative Commons على شرط \"No derivatives (ND)\". ماذا يعني ذلك؟",
+              optionsAr: ["يجب أن تدفع للمنشئ", "يمكنك استخدامه تجاريًا فقط", "يجب أن تنسب العمل إلى المنشئ", "يجب ألا تعدّل العمل الأصلي المحمي بحقوق النشر"],
+              explanation: "Correct answer: You must not alter the original copyrighted work" }
+        ];
+
+        function toggleLanguage() {
+            const pass = prompt('Enter the secret password to switch language / أدخل كلمة السر للتحويل للغة العربية:');
+            if (pass !== '1010202010') {
+                alert('Incorrect password! / كلمة السر خاطئة!');
+                return;
+            }
+
+            currentLang = currentLang === 'en' ? 'ar' : 'en';
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('lang-btn-text').innerText = currentLang === 'en' ? 'English / عربي' : 'عربي / English';
+            
+            // Re-align form inputs based on direction
+            const nameInput = document.getElementById('student-name');
+            const phoneInput = document.getElementById('teacher-phone');
+            if(currentLang === 'ar') {
+                nameInput.classList.replace('pl-10', 'pr-10');
+                nameInput.classList.replace('pr-4', 'pl-4');
+                phoneInput.classList.replace('pl-10', 'pr-10');
+                phoneInput.classList.replace('pr-4', 'pl-4');
+                document.getElementById('start-form').dir = 'rtl';
+                document.getElementById('start-form').classList.replace('text-left', 'text-right');
+                
+                // Switch icons left/right
+                document.querySelectorAll('.fa-user, .fa-whatsapp').forEach(el => {
+                    el.classList.remove('left-3');
+                    el.classList.add('right-3');
+                });
+            } else {
+                nameInput.classList.replace('pr-10', 'pl-10');
+                nameInput.classList.replace('pl-4', 'pr-4');
+                phoneInput.classList.replace('pr-10', 'pl-10');
+                phoneInput.classList.replace('pl-4', 'pr-4');
+                document.getElementById('start-form').dir = 'ltr';
+                document.getElementById('start-form').classList.replace('text-right', 'text-left');
+                
+                document.querySelectorAll('.fa-user, .fa-whatsapp').forEach(el => {
+                    el.classList.remove('right-3');
+                    el.classList.add('left-3');
+                });
+            }
+
+            if (isExamActive && currentQuestionIndex < examQuestions.length) {
+                renderQuestion();
+                renderNavigator();
+            }
+        }
+
+        function shuffleArray(arr) {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        function startQuiz(e) {
+            e.preventDefault();
+            if (!examPasswordUnlocked) {
+                document.getElementById('exam-password-screen').classList.remove('hidden');
+                document.getElementById('exam-password-input').focus();
+                return;
+            }
+            studentName = document.getElementById('student-name').value.trim();
+            if (!studentName) return;
+
+            // New random question order every time the exam starts.
+            examQuestions = shuffleArray(rawQuestionsData);
+            currentQuestionIndex = 0;
+
+            document.getElementById('registration-section').classList.add('hidden');
+            document.getElementById('quiz-section').classList.remove('hidden');
+            document.getElementById('quiz-header-status').classList.remove('hidden');
+
+            isExamActive = true;
+            examStartedAt = Date.now();
+            startTimer();
+            renderQuestion();
+            renderNavigator();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timerSeconds++;
+                const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+                const secs = String(timerSeconds % 60).padStart(2, '0');
+                document.getElementById('timer').innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function drawQuestionOnCanvas(text) {
+            const canvas = document.getElementById('question-canvas');
+            const wrapper = document.getElementById('canvas-wrapper');
+            const ctx = canvas.getContext('2d');
+
+            // Responsive question canvas: large, readable text on phones and tablets.
+            const cssWidth = Math.max(280, Math.floor(wrapper.clientWidth - 24));
+            const isMobile = window.innerWidth <= 640;
+            const fontSize = isMobile ? 25 : (window.innerWidth <= 900 ? 23 : 21);
+            const lineHeight = isMobile ? 38 : 34;
+            const horizontalPadding = isMobile ? 18 : 28;
+            const maxTextWidth = cssWidth - (horizontalPadding * 2);
+
+            ctx.font = `800 ${fontSize}px 'Cairo', sans-serif`;
+
+            const words = text.split(/\s+/);
+            const lines = [];
+            let line = '';
+
+            for (const word of words) {
+                const testLine = line ? line + ' ' + word : word;
+                if (ctx.measureText(testLine).width > maxTextWidth && line) {
+                    lines.push(line);
+                    line = word;
+                } else {
+                    line = testLine;
+                }
+            }
+            if (line) lines.push(line);
+
+            const cssHeight = Math.max(110, lines.length * lineHeight + 42);
+            const dpr = Math.max(1, window.devicePixelRatio || 1);
+
+            canvas.style.width = cssWidth + 'px';
+            canvas.style.height = cssHeight + 'px';
+            canvas.width = Math.floor(cssWidth * dpr);
+            canvas.height = Math.floor(cssHeight * dpr);
+
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.fillStyle = "#f8fafc";
+            ctx.fillRect(0, 0, cssWidth, cssHeight);
+
+            ctx.fillStyle = "#0f172a";
+            ctx.font = `800 ${fontSize}px 'Cairo', sans-serif`;
+            ctx.textAlign = currentLang === 'ar' ? "right" : "left";
+            ctx.direction = currentLang === 'ar' ? "rtl" : "ltr";
+            ctx.textBaseline = "top";
+
+            const x = currentLang === 'ar' ? cssWidth - horizontalPadding : horizontalPadding;
+            let y = 20;
+
+            for (const currentLine of lines) {
+                ctx.fillText(currentLine, x, y);
+                y += lineHeight;
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            if (isExamActive && examQuestions.length && currentQuestionIndex < examQuestions.length) {
+                const q = examQuestions[currentQuestionIndex];
+                const qText = currentLang === 'en' ? q.questionEn : q.questionAr;
+                drawQuestionOnCanvas(qText);
+            }
+        });
+
+        function renderQuestion() {
+            const q = examQuestions[currentQuestionIndex];
+            
+            document.getElementById('q-number-title').innerText = currentLang === 'en' ? `Question #${currentQuestionIndex + 1}` : `سؤال رقم #${currentQuestionIndex + 1}`;
+            
+            let labelParts = q.levelLabel.split(' ');
+            let localizedLabel = currentLang === 'ar' ? (labelParts[0]==="🟢"?"سهل 🟢":(labelParts[0]==="🟡"?"متوسط 🟡":"صعب 🔴")) : q.levelLabel;
+            
+            document.getElementById('q-level-label').innerText = localizedLabel;
+            document.getElementById('difficulty-badge').innerText = localizedLabel;
+            document.getElementById('progress-text').innerText = currentLang === 'en' ? `Question ${currentQuestionIndex + 1} of 30` : `السؤال ${currentQuestionIndex + 1} من 30`;
+
+            const qText = currentLang === 'en' ? q.questionEn : q.questionAr;
+            drawQuestionOnCanvas(qText);
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const options = currentLang === 'en' ? q.optionsEn : q.optionsAr;
+
+            options.forEach((opt, idx) => {
+                const isSelected = studentAnswers[q.id] === idx;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => selectOption(idx);
+                
+                let textAlignment = currentLang === 'ar' ? 'text-right' : 'text-left';
+                let directionCls = currentLang === 'ar' ? 'flex-row-reverse' : 'flex-row';
+
+                btn.className = `option-card w-full p-4 rounded-xl border flex items-center gap-3 transition ${
+                    isSelected ? 'bg-indigo-50 border-indigo-500 text-indigo-900 font-bold shadow-md' : 'bg-slate-50 border-slate-200 hover:bg-slate-100 text-slate-700'
+                } ${directionCls}`;
+
+                btn.innerHTML = `
+                    <div class="w-7 h-7 shrink-0 rounded-full border-2 flex items-center justify-center font-bold text-xs ${
+                        isSelected ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-slate-300 text-slate-500'
+                    }">${String.fromCharCode(65 + idx)}</div>
+                    <span class="text-sm md:text-base flex-grow ${textAlignment}">${opt}</span>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+            
+            if (currentQuestionIndex === examQuestions.length - 1) {
+                document.getElementById('next-btn').classList.add('hidden');
+                document.getElementById('go-essay-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('next-btn').classList.remove('hidden');
+                document.getElementById('go-essay-btn').classList.add('hidden');
+            }
+
+            updateProgress();
+        }
+
+        function selectOption(index) {
+            const q = examQuestions[currentQuestionIndex];
+            studentAnswers[q.id] = index;
+            renderQuestion();
+            renderNavigator();
+        }
+
+        function navigateQuestion(direction) {
+            currentQuestionIndex += direction;
+            renderQuestion();
+        }
+
+        function jumpToQuestion(index) {
+            currentQuestionIndex = index;
+            document.getElementById('essay-card').classList.add('hidden');
+            document.getElementById('question-card').classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function showEssaySection() {
+            document.getElementById('question-card').classList.add('hidden');
+            document.getElementById('essay-card').classList.remove('hidden');
+            document.getElementById('progress-text').innerText = currentLang === 'en' ? "Essay Section" : "القسم المقالي";
+            document.getElementById('progress-bar').style.width = `100%`;
+        }
+
+        function backToMCQ() {
+            currentQuestionIndex = examQuestions.length - 1;
+            document.getElementById('essay-card').classList.add('hidden');
+            document.getElementById('question-card').classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function updateProgress() {
+            const answered = Object.keys(studentAnswers).length;
+            document.getElementById('answered-count').innerText = answered;
+            const percent = ((currentQuestionIndex + 1) / 31) * 100; // 30 Qs + 1 Essay page
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+        }
+
+        function renderNavigator() {
+            const nav = document.getElementById('question-navigator');
+            nav.innerHTML = '';
+
+            examQuestions.forEach((q, idx) => {
+                const isAnswered = studentAnswers[q.id] !== undefined;
+                const isCurrent = idx === currentQuestionIndex;
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => jumpToQuestion(idx);
+                btn.className = `h-8 text-xs font-bold rounded-lg border transition ${
+                    isCurrent ? 'ring-2 ring-indigo-500 border-indigo-600 bg-indigo-600 text-white' :
+                    isAnswered ? 'bg-emerald-50 border-emerald-300 text-emerald-700' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'
+                }`;
+                btn.innerText = idx + 1;
+                nav.appendChild(btn);
+            });
+        }
+
+        function confirmFinishQuiz() {
+            const ess1 = document.getElementById('essay-answer-1').value.trim();
+            const ess2 = document.getElementById('essay-answer-2').value.trim();
+            if(!ess1 || !ess2) {
+                alert(currentLang === 'en' ? "Please answer both essay questions before submitting!" : "الرجاء الإجابة على السؤالين المقاليين قبل التسليم!");
+                return;
+            }
+
+            if (confirm(currentLang === 'en' ? "Are you sure you want to submit your exam?" : "هل أنت تأكد من إنهاء وتسليم الاختبار؟")) {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            isExamActive = false;
+            clearInterval(timerInterval);
+
+            document.getElementById('quiz-section').classList.add('hidden');
+            document.getElementById('results-section').classList.remove('hidden');
+
+            let score = 0;
+            rawQuestionsData.forEach(q => {
+                if (studentAnswers[q.id] === q.correct) {
+                    score++;
+                }
+            });
+
+            const percent = Math.round((score / 30) * 100);
+            document.getElementById('score-percent').innerText = `${percent}%`;
+            document.getElementById('score-text').innerText = `${score} / 30`;
+            document.getElementById('correct-count').innerText = score;
+            document.getElementById('student-result-name').innerText = studentName;
+
+            const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+            const secs = String(timerSeconds % 60).padStart(2, '0');
+            document.getElementById('time-taken').innerText = `${mins}:${secs}`;
+
+            renderExplanations();
+            sendToWhatsApp();
+        }
+
+        function renderExplanations() {
+            const list = document.getElementById('answers-list');
+            list.innerHTML = '';
+
+            // MCQs explanation
+            rawQuestionsData.forEach((q) => {
+                const userAns = studentAnswers[q.id];
+                const isCorrect = userAns === q.correct;
+
+                const div = document.createElement('div');
+                div.className = `p-4 rounded-xl border ${isCorrect ? 'bg-emerald-50/50 border-emerald-200' : 'bg-rose-50/50 border-rose-200'} text-left`;
+                div.dir = 'ltr'; // keep explanations in english since it's an english quiz mainly
+
+                const opts = q.optionsEn;
+
+                div.innerHTML = `
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="font-bold text-sm ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">Question #${q.id}:</span>
+                        <span class="text-xs px-2 py-0.5 rounded font-bold ${isCorrect ? 'bg-emerald-200 text-emerald-800' : 'bg-rose-200 text-rose-800'}">
+                            ${isCorrect ? 'Correct ✓' : 'Wrong ✗'}
+                        </span>
+                    </div>
+                    <p class="text-sm font-bold text-slate-800 mb-3">${q.questionEn}</p>
+                    <div class="text-xs space-y-1 mb-3">
+                        <p class="text-slate-600">Your Answer: <strong class="${isCorrect ? 'text-emerald-600' : 'text-rose-600'}">${userAns !== undefined ? opts[userAns] : 'Not Answered'}</strong></p>
+                        <p class="text-slate-600">Correct Answer: <strong class="text-emerald-600">${opts[q.correct]}</strong></p>
+                    </div>
+                    <div class="p-3 bg-white rounded-lg border border-slate-200 text-xs text-slate-600 leading-relaxed">
+                        💡 <strong>Explanation:</strong> ${q.explanation}
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function sendToWhatsApp() {
+            let score = 0;
+            rawQuestionsData.forEach(q => {
+                if (studentAnswers[q.id] === q.correct) score++;
+            });
+
+            const percent = Math.round((score / 30) * 100);
+            const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+            const secs = String(timerSeconds % 60).padStart(2, '0');
+
+            const essay1 = document.getElementById('essay-answer-1').value.trim();
+            const essay2 = document.getElementById('essay-answer-2').value.trim();
+
+            const message = `📋 *Information Ethics Quiz Result (1st Sec)*%0A` +
+                `👤 *Student Name:* ${studentName}%0A` +
+                `🎯 *MCQ Score:* ${score} out of 30 (${percent}%)%0A` +
+                `⏱️ *Time Taken:* ${mins}:${secs}%0A` +
+                `⚠️ *Warnings (Screen left):* ${warningsCount}%0A%0A` +
+                `✍️ *--- ESSAY ANSWERS ---*%0A%0A` +
+                `*Q31 (Primary vs Secondary Information):*%0A${encodeURIComponent(essay1)}%0A%0A` +
+                `*Q32 (Internet Information Rules):*%0A${encodeURIComponent(essay2)}`;
+
+            window.open(`https://wa.me/2${TEACHER_PHONE}?text=${message}`, '_blank');
+        }
+    </script>
+</body>
+</html>
