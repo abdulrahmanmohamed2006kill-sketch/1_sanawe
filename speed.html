@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أساسيات الكمبيوتر والسرعات - للمهندس عبد الرحمن محمد</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Tajawal & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        },
+                        tech: {
+                            dark: '#0b0f17',
+                            card: '#1e293b',
+                            accent: '#38bdf8',
+                            emerald: '#10b981',
+                            amber: '#f59e0b',
+                            rose: '#f43f5e'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #0b0f17;
+            color: #f1f5f9;
+            overflow-x: hidden;
+        }
+        .glow-effect {
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.2);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .bulb-on {
+            filter: drop-shadow(0px 0px 18px #facc15);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- Navbar Header -->
+    <header class="sticky top-0 z-50 glass-card border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-sky-500/30">
+                    <i class="fa-solid fa-microchip"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-black bg-gradient-to-r from-sky-400 via-teal-300 to-indigo-300 bg-clip-text text-transparent">
+                        أساسيات الكمبيوتر والذاكرة
+                    </h1>
+                    <p class="text-xs text-amber-400 font-bold flex items-center gap-1">
+                        <i class="fa-solid fa-user-graduate"></i> إعداد خصيصاً للمهندس: <span class="text-white underline decoration-sky-400">عبد الرحمن محمد</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Nav Links -->
+            <nav class="hidden md:flex items-center space-x-1 space-x-reverse bg-slate-900/80 p-1.5 rounded-xl border border-slate-800">
+                <button onclick="scrollToSection('units-section')" class="px-3 py-2 rounded-lg text-xs font-medium hover:bg-slate-800 hover:text-sky-400 transition-all">
+                    <i class="fa-solid fa-hard-drive ml-1 text-sky-400"></i> وحدات الذاكرة
+                </button>
+                <button onclick="scrollToSection('pyramid-section')" class="px-3 py-2 rounded-lg text-xs font-medium hover:bg-slate-800 hover:text-emerald-400 transition-all">
+                    <i class="fa-solid fa-layer-group ml-1 text-emerald-400"></i> هرم الذاكرة
+                </button>
+                <button onclick="scrollToSection('cpu-section')" class="px-3 py-2 rounded-lg text-xs font-medium hover:bg-slate-800 hover:text-amber-400 transition-all">
+                    <i class="fa-solid fa-bolt ml-1 text-amber-400"></i> سرعة المعالج
+                </button>
+                <button onclick="scrollToSection('arch-section')" class="px-3 py-2 rounded-lg text-xs font-medium hover:bg-slate-800 hover:text-purple-400 transition-all">
+                    <i class="fa-solid fa-cubes ml-1 text-purple-400"></i> 32-bit vs 64-bit
+                </button>
+                <button onclick="scrollToSection('games-section')" class="px-3 py-2 rounded-lg text-xs font-bold bg-gradient-to-r from-sky-500 to-indigo-600 text-white shadow-md hover:opacity-90 transition-all">
+                    <i class="fa-solid fa-gamepad ml-1"></i> الألعاب والتحديات
+                </button>
+            </nav>
+
+            <!-- Score Badge -->
+            <div class="flex items-center bg-slate-900 px-3.5 py-2 rounded-xl border border-slate-800">
+                <i class="fa-solid fa-trophy text-amber-400 ml-2 animate-bounce"></i>
+                <span class="text-xs text-slate-400 ml-1">نقاطك:</span>
+                <span id="global-score" class="text-base font-bold font-mono text-sky-400">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-16 flex-grow">
+
+        <!-- Hero Section -->
+        <section class="relative overflow-hidden rounded-3xl bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-950 border border-slate-800 p-8 md:p-12 shadow-2xl">
+            <div class="absolute -top-24 -left-24 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                <div class="md:col-span-8 space-y-6">
+                    <div class="inline-flex items-center space-x-2 space-x-reverse px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold">
+                        <i class="fa-solid fa-crown text-amber-400"></i>
+                        <span>مخصص للمهندس عبد الرحمن محمد</span>
+                    </div>
+                    <h2 class="text-3xl md:text-5xl font-black text-white leading-tight">
+                        إزاي الكمبيوتر بيفكر ويفهم؟ <br>
+                        <span class="bg-gradient-to-r from-sky-400 via-teal-300 to-indigo-400 bg-clip-text text-transparent">السرعات، الأحجام، والذكاء الرقمي</span>
+                    </h2>
+                    <p class="text-slate-300 text-base md:text-lg leading-relaxed">
+                        منور يا <strong class="text-sky-300">مهندس عبد الرحمن</strong>! 👋 هنا هنشرح لك كل حاجة في عالم الحوسبة والذاكرة <strong class="text-amber-300">بالعامية المصرية وعلى الهادي خالص</strong>. تحول كامل من النظريات للتجارب الحية، الألعاب، والتفاعلات البصرية عشان تثبت في دماغك للأبد!
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-2">
+                        <button onclick="scrollToSection('units-section')" class="px-6 py-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold transition-all shadow-lg shadow-sky-500/25 flex items-center">
+                            <span>يلّا نبدأ التجربة التفاعلية</span>
+                            <i class="fa-solid fa-arrow-left mr-2"></i>
+                        </button>
+                        <button onclick="scrollToSection('games-section')" class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold border border-slate-700 transition-all flex items-center">
+                            <i class="fa-solid fa-gamepad ml-2 text-indigo-400"></i>
+                            <span>روح على الألعاب فوراً</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="md:col-span-4 flex justify-center">
+                    <div class="relative w-64 h-64 rounded-2xl bg-gradient-to-tr from-sky-500/20 to-indigo-500/20 p-1 border border-slate-700/60 shadow-2xl flex items-center justify-center">
+                        <div class="w-full h-full bg-slate-900/90 rounded-xl p-6 flex flex-col justify-between items-center text-center">
+                            <div class="w-20 h-20 rounded-full bg-sky-500/20 flex items-center justify-center text-sky-400 text-3xl mb-2 animate-pulse">
+                                <i class="fa-solid fa-laptop-code"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-white">من "البت" لحد "اليوتابايت"</h3>
+                            <p class="text-xs text-slate-400">تعال اكتشف إزاي شوية كهرباء بتتحول لأحجام وألعاب وفيديوهات خرافية!</p>
+                            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden mt-3">
+                                <div class="bg-gradient-to-r from-sky-400 to-indigo-500 h-full w-4/5"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 1: MEMORY UNITS (وحدات الذاكرة) -->
+        <section id="units-section" class="space-y-8">
+            <div class="border-r-4 border-sky-500 pr-4">
+                <span class="text-sky-400 font-bold text-sm tracking-wider uppercase">الدرس الأول</span>
+                <h3 class="text-2xl md:text-3xl font-extrabold text-white">يعني إيه "وحدات قياس الذاكرة"؟ (Memory Units)</h3>
+                <p class="text-slate-400 text-sm mt-1">الكمبيوتر مش بيعرف لغة البشر، كل اللي يفهمه هو "الكهرباء شغال ولا مطفي"!</p>
+            </div>
+
+            <!-- DEFINITIONS CARDS - EGYPTIAN ARABIC -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div class="glass-card p-5 rounded-2xl border border-sky-500/30 space-y-2">
+                    <div class="flex items-center space-x-2 space-x-reverse text-sky-400 font-bold text-base">
+                        <i class="fa-solid fa-bolt"></i>
+                        <h4>1. البت (Bit) - "أصغر فتوة في الكمبيوتر"</h4>
+                    </div>
+                    <p class="text-slate-300 leading-relaxed">
+                        الـ <strong class="text-sky-300">Bit</strong> هو أصغر وحدة بناء في عالم الكمبيوتر. عبارة عن خانة واحدة بس، يا إما فيها كهرباء فتبقى <span class="text-amber-400 font-bold">(1)</span>، يا إما مفيهاش كهرباء فتبقى <span class="text-slate-400 font-bold">(0)</span>. زي كبس النور بالظبط: يا منوّر يا مطفي!
+                    </p>
+                </div>
+
+                <div class="glass-card p-5 rounded-2xl border border-emerald-500/30 space-y-2">
+                    <div class="flex items-center space-x-2 space-x-reverse text-emerald-400 font-bold text-base">
+                        <i class="fa-solid fa-cubes"></i>
+                        <h4>2. البايت (Byte) - "عصب الحروف والكلمات"</h4>
+                    </div>
+                    <p class="text-slate-300 leading-relaxed">
+                        الـ <strong class="text-emerald-300">Byte</strong> عبارة عن شلة مكونة من <strong class="text-white">8 بت (8 Bits)</strong> جنب بعض. البايت الواحد هو الحجم المطلوب عشان الكمبيوتر يخزن حرف واحد بس (زي حرف "أ" أو رقم "5" أو رمز "@").
+                    </p>
+                </div>
+            </div>
+
+            <!-- INTERACTIVE BIT & BYTE BULB SIMULATOR -->
+            <div class="glass-card rounded-2xl p-6 md:p-8 space-y-6 border border-slate-800">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-slate-800">
+                    <div>
+                        <h4 class="text-lg font-bold text-white flex items-center">
+                            <i class="fa-solid fa-lightbulb text-amber-400 ml-2"></i>
+                            لعبة ومحاكي البايت التفاعلي (Interactive Byte Simulator)
+                        </h4>
+                        <p class="text-xs text-slate-400 mt-1">جرب بنفسك يا م. عبد الرحمن: اضغط على اللمبات عشان تنورها (1) أو تطفيها (0) وشوف الرقم والحرف اللي بيتكون!</p>
+                    </div>
+                    <div class="flex items-center space-x-3 space-x-reverse bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 font-mono">
+                        <span class="text-xs text-slate-400">الرقم العشري:</span>
+                        <span id="byte-decimal-value" class="text-xl font-bold text-emerald-400">0</span>
+                        <span class="text-slate-600">|</span>
+                        <span class="text-xs text-slate-400">الحرف الناتج:</span>
+                        <span id="byte-char-value" class="text-xl font-bold text-sky-400">[فارغ]</span>
+                    </div>
+                </div>
+
+                <!-- 8 BULBS ARRAY -->
+                <div class="grid grid-cols-4 sm:grid-cols-8 gap-3 sm:gap-4 my-6">
+                    <template id="bulb-template">
+                        <div class="bulb-card flex flex-col items-center p-3 rounded-xl bg-slate-900 border border-slate-800 cursor-pointer transition-all hover:border-sky-500/50" onclick="toggleBit(this)">
+                            <span class="text-[10px] text-slate-500 font-mono mb-1">بت رقم <span class="bit-index">0</span></span>
+                            <i class="fa-solid fa-lightbulb text-3xl my-2 text-slate-700 transition-all duration-300 bulb-icon"></i>
+                            <span class="bit-val font-mono font-bold text-lg text-slate-400">0</span>
+                            <span class="text-[9px] text-slate-500 font-mono mt-1">2<sup><span class="pow-index">0</span></sup> = <span class="pow-val">1</span></span>
+                        </div>
+                    </template>
+                    <div id="bulbs-container" class="col-span-full grid grid-cols-4 sm:grid-cols-8 gap-3 sm:gap-4"></div>
+                </div>
+
+                <div class="bg-slate-900/80 rounded-xl p-4 border border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+                    <div class="flex items-center text-slate-300">
+                        <i class="fa-solid fa-circle-info text-sky-400 text-base ml-2"></i>
+                        <span>البايت الواحد (1 Byte) فيه <strong class="text-sky-300">256 تشكيلة مختلفة</strong> (من 0 لـ 255)، ودي السر في تمثيل كل الحروف والأرقام!</span>
+                    </div>
+                    <button onclick="resetBits()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium transition-all text-xs flex items-center gap-1">
+                        <i class="fa-solid fa-rotate-right"></i> نضف اللمبات
+                    </button>
+                </div>
+            </div>
+
+            <!-- MEMORY UNITS CONVERTER & SCALE -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Calculator -->
+                <div class="lg:col-span-5 glass-card rounded-2xl p-6 space-y-5 border border-slate-800">
+                    <h4 class="text-base font-bold text-white flex items-center">
+                        <i class="fa-solid fa-calculator text-sky-400 ml-2"></i>
+                        حاسبة التحويل السريعة بين الأحجام
+                    </h4>
+                    <p class="text-xs text-slate-400">اكتب الرقم واختار الوحدة وشوف هيطلع كام بالوحدات الثانية (كل خطوة بـ 1024):</p>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">الكمية والوحدة اللي معاك:</label>
+                            <div class="flex space-x-2 space-x-reverse">
+                                <input type="number" id="converter-input" value="1" min="0" oninput="calculateUnits()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 font-mono text-white focus:outline-none focus:border-sky-500">
+                                <select id="converter-unit" onchange="calculateUnits()" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sky-400 font-bold focus:outline-none focus:border-sky-500">
+                                    <option value="KB">كيلوبايت (KB)</option>
+                                    <option value="MB" selected>ميجابايت (MB)</option>
+                                    <option value="GB">جيجابايت (GB)</option>
+                                    <option value="TB">تيرابايت (TB)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Results List -->
+                        <div class="space-y-2 font-mono text-xs bg-slate-900/90 p-4 rounded-xl border border-slate-800/80">
+                            <div class="flex justify-between text-slate-300 py-1 border-b border-slate-800">
+                                <span>بالـ Bytes (بايت):</span>
+                                <span id="res-byte" class="text-sky-400 font-bold">1,048,576</span>
+                            </div>
+                            <div class="flex justify-between text-slate-300 py-1 border-b border-slate-800">
+                                <span>بالـ KB (كيلوبايت):</span>
+                                <span id="res-kb" class="text-sky-400 font-bold">1,024</span>
+                            </div>
+                            <div class="flex justify-between text-slate-300 py-1 border-b border-slate-800">
+                                <span>بالـ MB (ميجابايت):</span>
+                                <span id="res-mb" class="text-emerald-400 font-bold">1</span>
+                            </div>
+                            <div class="flex justify-between text-slate-300 py-1 border-b border-slate-800">
+                                <span>بالـ GB (جيجابايت):</span>
+                                <span id="res-gb" class="text-amber-400 font-bold">0.00097</span>
+                            </div>
+                            <div class="flex justify-between text-slate-300 py-1">
+                                <span>بالـ TB (تيرابايت):</span>
+                                <span id="res-tb" class="text-purple-400 font-bold">0.0000009</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Units Explained Cards -->
+                <div class="lg:col-span-7 glass-card rounded-2xl p-6 border border-slate-800 space-y-4">
+                    <h4 class="text-base font-bold text-white flex items-center">
+                        <i class="fa-solid fa-cubes-stacked text-emerald-400 ml-2"></i>
+                        شرح كل تعريف وأمثلة من حياتنا اليومية
+                    </h4>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 hover:border-sky-500/40 transition-all">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-sky-400 text-sm">Kilobyte (KB) - الكيلوبايت</span>
+                                <span class="text-slate-500 font-mono">1,024 بايت</span>
+                            </div>
+                            <p class="text-slate-400">شرح: بيشيل ملفات الكلام البسيطة. زي ملف وورد مكتوب فيه صفحة أو صفحتين.</p>
+                        </div>
+
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 hover:border-emerald-500/40 transition-all">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-emerald-400 text-sm">Megabyte (MB) - الميجابايت</span>
+                                <span class="text-slate-500 font-mono">1,024 KB</span>
+                            </div>
+                            <p class="text-slate-400">شرح: بيشيل الوسائط الصغيره. زي صورة حلوة متصورة بالموبايل أو أغنية MP3.</p>
+                        </div>
+
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 hover:border-amber-500/40 transition-all">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-amber-400 text-sm">Gigabyte (GB) - الجيجابايت</span>
+                                <span class="text-slate-500 font-mono">1,024 MB</span>
+                            </div>
+                            <p class="text-slate-400">شرح: الأحجام الكبيرة. زي فيلم HD كامل، أو كارت ميموري، أو باقة النت بتاعتك!</p>
+                        </div>
+
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 hover:border-purple-500/40 transition-all">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-purple-400 text-sm">Terabyte (TB) - التيرابايت</span>
+                                <span class="text-slate-500 font-mono">1,024 GB</span>
+                            </div>
+                            <p class="text-slate-400">شرح: وحدة التخزين الضخمة. زي الهارد ديسك الحديث اللي بيشيل مئات الألعاب والأفلام.</p>
+                        </div>
+                    </div>
+
+                    <!-- Giant Storage Units -->
+                    <div class="mt-4 p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+                        <span class="text-[11px] font-bold text-amber-400 uppercase tracking-wider block">الأحجام الخرافية والعملاقة (فوق التيرابايت):</span>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] font-mono">
+                            <div class="bg-slate-900 p-2 rounded border border-slate-800 text-center">
+                                <span class="text-sky-300 font-bold block">Petabyte (PB)</span>
+                                <span class="text-slate-400">بيتابايت</span>
+                                <span class="text-[10px] text-slate-500 block mt-1">سيرفرات فيسبوك وقوافل البيانات</span>
+                            </div>
+                            <div class="bg-slate-900 p-2 rounded border border-slate-800 text-center">
+                                <span class="text-emerald-300 font-bold block">Exabyte (EB)</span>
+                                <span class="text-slate-400">إكسابايت</span>
+                                <span class="text-[10px] text-slate-500 block mt-1">حجم بيانات حركة إنترنت العالم</span>
+                            </div>
+                            <div class="bg-slate-900 p-2 rounded border border-slate-800 text-center">
+                                <span class="text-amber-300 font-bold block">Zettabyte (ZB)</span>
+                                <span class="text-slate-400">زيتابايت</span>
+                                <span class="text-[10px] text-slate-500 block mt-1">إجمالي البيانات على كوكب الأرض</span>
+                            </div>
+                            <div class="bg-slate-900 p-2 rounded border border-slate-800 text-center">
+                                <span class="text-purple-300 font-bold block">Yottabyte (YB)</span>
+                                <span class="text-slate-400">يوتابايت</span>
+                                <span class="text-[10px] text-slate-500 block mt-1">أكبر حجم نظري معروف للآن</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 2: MEMORY PYRAMID (هرم الذاكرة) -->
+        <section id="pyramid-section" class="space-y-8">
+            <div class="border-r-4 border-emerald-500 pr-4">
+                <span class="text-emerald-400 font-bold text-sm tracking-wider uppercase">الدرس الثاني</span>
+                <h3 class="text-2xl md:text-3xl font-extrabold text-white">هرم الذاكرة (Memory Hierarchy)</h3>
+                <p class="text-slate-400 text-sm mt-1">القاعدة الذهبية: كل ما الذاكرة تقرب من مخ البروسيسور، تبقى أسرع جداً، أغلى في السعر، وحجمها أصغر!</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <!-- Interactive Pyramid Visualization -->
+                <div class="lg:col-span-6 flex flex-col items-center space-y-3">
+                    <p class="text-xs text-amber-300 text-center mb-2 font-bold"><i class="fa-solid fa-hand-pointer ml-1"></i> اضغط على أي طبقة من هرم الذاكرة عشان تقرأ الشرح بتاعها بالبلدي:</p>
+
+                    <!-- CPU Header -->
+                    <div class="w-32 bg-gradient-to-r from-sky-500 to-indigo-600 text-slate-950 font-black py-2 rounded-t-xl text-center text-xs tracking-wider shadow-lg flex items-center justify-center space-x-2 space-x-reverse">
+                        <i class="fa-solid fa-microchip"></i>
+                        <span>المعالج (CPU)</span>
+                    </div>
+
+                    <!-- Level 1: Registers -->
+                    <div onclick="selectPyramidLevel('registers')" id="pyr-registers" class="pyr-layer w-44 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold text-center rounded-lg cursor-pointer shadow-lg hover:scale-105 transition-all">
+                        <div class="text-xs">1. المسجلات (Registers)</div>
+                        <div class="text-[10px] opacity-90 font-mono">السرعة: فيمتو ثانية (لحظية)</div>
+                    </div>
+
+                    <!-- Level 2: Cache -->
+                    <div onclick="selectPyramidLevel('cache')" id="pyr-cache" class="pyr-layer w-64 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 font-bold text-center rounded-lg cursor-pointer shadow-lg hover:scale-105 transition-all">
+                        <div class="text-xs">2. الذاكرة المخبأة (Cache L1, L2, L3)</div>
+                        <div class="text-[10px] opacity-90 font-mono">السرعة: شبه فورية وقريبة جداً</div>
+                    </div>
+
+                    <!-- Level 3: RAM -->
+                    <div onclick="selectPyramidLevel('ram')" id="pyr-ram" class="pyr-layer w-80 py-3 bg-gradient-to-r from-sky-500 to-blue-600 text-slate-950 font-bold text-center rounded-lg cursor-pointer shadow-lg hover:scale-105 transition-all">
+                        <div class="text-xs">3. الذاكرة العشوائية (RAM)</div>
+                        <div class="text-[10px] opacity-90 font-mono">السرعة: سريعة بس تطفي مع النور</div>
+                    </div>
+
+                    <!-- Level 4: Secondary Storage -->
+                    <div onclick="selectPyramidLevel('disk')" id="pyr-disk" class="pyr-layer w-96 py-3 bg-gradient-to-r from-purple-600 to-indigo-700 text-white font-bold text-center rounded-b-xl cursor-pointer shadow-lg hover:scale-105 transition-all">
+                        <div class="text-xs">4. التخزين الثانوي (HDD / SSD)</div>
+                        <div class="text-[10px] text-purple-200 font-mono">السرعة: أبطأهم بس بتشيل كل حاجتك دايماً</div>
+                    </div>
+
+                    <div class="w-full flex justify-between items-center text-[11px] text-slate-400 px-4 pt-2">
+                        <span class="text-amber-400 font-bold"><i class="fa-solid fa-arrow-up ml-1"></i> أسرع وأغلى وحجم أصغر</span>
+                        <span class="text-purple-400 font-bold">أبطأ وأرخص وحجم ضخم جداً <i class="fa-solid fa-arrow-down mr-1"></i></span>
+                    </div>
+                </div>
+
+                <!-- Inspector Card -->
+                <div class="lg:col-span-6 glass-card rounded-2xl p-6 border border-slate-800 space-y-4">
+                    <div class="flex items-center space-x-3 space-x-reverse pb-3 border-b border-slate-800">
+                        <div id="pyr-detail-icon" class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <div>
+                            <h4 id="pyr-detail-title" class="text-lg font-bold text-white">المسجلات (Registers)</h4>
+                            <span id="pyr-detail-badge" class="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/20 text-amber-400">ذاكرة مؤقتة جداً</span>
+                        </div>
+                    </div>
+
+                    <div id="pyr-detail-body" class="space-y-3 text-xs text-slate-300 leading-relaxed">
+                        <p><strong>المكان:</strong> جوه قلب شريحة البروسيسور (CPU) نفسه!</p>
+                        <p><strong>السرعة:</strong> أسرع حاجة على كوكب الأرض، البيانات بتوصل لها فوراً بدون أي انتظار.</p>
+                        <p><strong>الوظيفة:</strong> بتشيل الأرقام والعمليات الحسابية اللي البروسيسور شغال بيحسبها في نفس اللحظة دي.</p>
+                    </div>
+
+                    <div class="p-3 bg-slate-900 rounded-xl border border-slate-800/80 flex items-center space-x-3 space-x-reverse">
+                        <i class="fa-solid fa-lightbulb text-amber-400 text-lg"></i>
+                        <p id="pyr-detail-analogy" class="text-[11px] text-slate-400">تشبيه بالبلدي: المسجلات دي زي الحسبة اللي بتعملها في مخك في ثانية وأنت بتفكر!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 3: CPU SPEED & CLOCK FREQUENCY (سرعة المعالج) -->
+        <section id="cpu-section" class="space-y-8">
+            <div class="border-r-4 border-amber-500 pr-4">
+                <span class="text-amber-400 font-bold text-sm tracking-wider uppercase">الدرس الثالث</span>
+                <h3 class="text-2xl md:text-3xl font-extrabold text-white">سرعة المعالج، التردد، والترانزستور</h3>
+                <p class="text-slate-400 text-sm mt-1">البروسيسور بيمشي بتكة زي تكة الساعة (Clock Speed)، وكل ما التكات تزيد، سرعة المعالجة تتضاعف!</p>
+            </div>
+
+            <!-- DEFINITION CARDS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div class="glass-card p-5 rounded-2xl border border-amber-500/30 space-y-2">
+                    <div class="flex items-center space-x-2 space-x-reverse text-amber-400 font-bold text-base">
+                        <i class="fa-solid fa-gauge-high"></i>
+                        <h4>1. تردد المعالج بالهيرتز (GHz / Clock Speed)</h4>
+                    </div>
+                    <p class="text-slate-300 leading-relaxed">
+                        الـ <strong class="text-amber-300">GHz (جيجاهيرتز)</strong> معناها البروسيسور بيقدر يعمل كام لفة أو دورة معالجة في الثانية الواحدة! لما تشتري بروسيسور <span class="text-sky-300 font-bold">3.0 GHz</span>، ده معناه إنه بيعمل <strong class="text-white">3 مليار لفة في الثانية الواحدة!</strong>
+                    </p>
+                </div>
+
+                <div class="glass-card p-5 rounded-2xl border border-purple-500/30 space-y-2">
+                    <div class="flex items-center space-x-2 space-x-reverse text-purple-400 font-bold text-base">
+                        <i class="fa-solid fa-toggle-on"></i>
+                        <h4>2. الترانزستور (Transistor) - "المفتاح السحري"</h4>
+                    </div>
+                    <p class="text-slate-300 leading-relaxed">
+                        البروسيسور جواه ملايين أو مليارات الترانزستورات الميكروسكوبية. الـ <strong class="text-purple-300">Transistor</strong> هو مفتاح كهربائي صغير جداً بيفتح الكهرباء أو يقفلها مليارات المرات عشان يعمل الـ (0 والـ 1).
+                    </p>
+                </div>
+            </div>
+
+            <!-- CPU INTERACTIVE SIMULATOR -->
+            <div class="glass-card rounded-2xl p-6 md:p-8 space-y-6 border border-slate-800">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <!-- Controls & Stats -->
+                    <div class="lg:col-span-5 space-y-5">
+                        <h4 class="text-lg font-bold text-white flex items-center">
+                            <i class="fa-solid fa-sliders text-amber-400 ml-2"></i>
+                            محاكي تردد الساعة للبروسيسور
+                        </h4>
+                        <p class="text-xs text-slate-400">حرك السلايدر ده يا م. عبد الرحمن وزود التردد وشوف سرعة الموجة الكهربائية وحالة الترانزستور:</p>
+
+                        <!-- GHz Slider -->
+                        <div class="space-y-2 bg-slate-900 p-4 rounded-xl border border-slate-800">
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-slate-400">تردد البروسيسور الحالي:</span>
+                                <span id="cpu-slider-val" class="text-lg font-bold font-mono text-amber-400">2.30 GHz</span>
+                            </div>
+                            <input type="range" id="cpu-speed-slider" min="0.5" max="4.5" step="0.1" value="2.3" oninput="updateCpuSim()" class="w-full accent-amber-500 cursor-pointer">
+                            <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+                                <span>0.5 GHz (بطيء)</span>
+                                <span>2.5 GHz (متوسط)</span>
+                                <span>4.5 GHz (صاروخ!)</span>
+                            </div>
+                        </div>
+
+                        <!-- Live Cycle Stats -->
+                        <div class="space-y-2 text-xs font-mono">
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 flex justify-between items-center">
+                                <span class="text-slate-400">عدد الدورات في الثانية:</span>
+                                <span id="cpu-cycles-sec" class="text-amber-400 font-bold">2,300,000,000 لفة/ثانية</span>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 flex justify-between items-center">
+                                <span class="text-slate-400">حالة الترانزستور اللحظية:</span>
+                                <span id="transistor-status" class="text-emerald-400 font-bold flex items-center">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400 ml-1.5 animate-ping"></span> يمرر الكهرباء (1)
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Canvas Signal -->
+                    <div class="lg:col-span-7 flex flex-col items-center space-y-4">
+                        <div class="w-full bg-slate-950 p-4 rounded-xl border border-slate-800 relative overflow-hidden">
+                            <div class="flex justify-between items-center mb-2 text-xs">
+                                <span class="text-slate-400 font-bold"><i class="fa-solid fa-wave-square text-amber-400 ml-1"></i> شكل التردد الكهربائي الحي (Clock Wave)</span>
+                                <span id="hz-indicator" class="text-amber-400 font-mono font-bold">2.3 GHz</span>
+                            </div>
+                            <canvas id="cpu-wave-canvas" class="w-full h-32 bg-slate-900/80 rounded-lg border border-slate-800"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 4: 32-BIT VS 64-BIT ARCHITECTURE -->
+        <section id="arch-section" class="space-y-8">
+            <div class="border-r-4 border-purple-500 pr-4">
+                <span class="text-purple-400 font-bold text-sm tracking-wider uppercase">الدرس الرابع</span>
+                <h3 class="text-2xl md:text-3xl font-extrabold text-white">معمارية 32-Bit مقايل 64-Bit بالبلدي</h3>
+                <p class="text-slate-400 text-sm mt-1">المعمارية بتحدد البروسيسور يقدر يتعامل مع بيانات أد إيه في النبضة الواحدة وأقصى حجم رامات يقدر يقراها.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- 32-Bit Card -->
+                <div class="lg:col-span-6 glass-card rounded-2xl p-6 border border-slate-800 space-y-4 hover:border-purple-500/30 transition-all">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                        <div>
+                            <h4 class="text-xl font-bold text-white">معمارية 32-Bit (x86)</h4>
+                            <span class="text-xs text-slate-400 font-mono">2<sup>32</sup> Bytes</span>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400">الأنظمة القديمة</span>
+                    </div>
+
+                    <div class="space-y-3 text-xs text-slate-300">
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 flex justify-between items-center">
+                            <span>أقصى حجم رام يقرأه:</span>
+                            <span class="text-rose-400 font-bold font-mono text-sm">4 GB فقط لا غير!</span>
+                        </div>
+                        <p class="text-slate-400 leading-relaxed">
+                            شرح: لو جهازك 32-bit وركبت فيه رامات 16 جيجا أو 32 جيجا، للأسف الشديد الكمبيوتر مش هيستفيد ولا هيشوف غير <strong class="text-rose-400">4 جيجا بس</strong> والتراكي الباقي يضيع عليك!
+                        </p>
+                    </div>
+
+                    <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5">
+                        <div class="flex justify-between text-[11px]">
+                            <span class="text-slate-400">حد استغلال الرامات:</span>
+                            <span class="text-rose-400 font-bold">مقفول عند 4GB</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                            <div class="bg-rose-500 h-full w-full"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 64-Bit Card -->
+                <div class="lg:col-span-6 glass-card rounded-2xl p-6 border border-slate-800 space-y-4 hover:border-emerald-500/30 transition-all">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                        <div>
+                            <h4 class="text-xl font-bold text-white">معمارية 64-Bit (x64)</h4>
+                            <span class="text-xs text-slate-400 font-mono">2<sup>64</sup> Bytes</span>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400">الأنظمة الحديثة والعملاقة</span>
+                    </div>
+
+                    <div class="space-y-3 text-xs text-slate-300">
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 flex justify-between items-center">
+                            <span>أقصى حجم رام يقرأه:</span>
+                            <span class="text-emerald-400 font-bold font-mono text-sm">18 مليـار جيجابايت!</span>
+                        </div>
+                        <p class="text-slate-400 leading-relaxed">
+                            شرح: النظام الحديث الوحش! يقدر يركب أي حجم رامات تحلم بيه (16GB, 64GB, 128GB) وبينفذ العمليات أسرع بكثير وبأمان عالي جداً.
+                        </p>
+                    </div>
+
+                    <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5">
+                        <div class="flex justify-between text-[11px]">
+                            <span class="text-slate-400">حد استغلال الرامات:</span>
+                            <span class="text-emerald-400 font-bold">مفتوح وبدون قيود</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-emerald-500 to-sky-400 h-full w-3/4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 5: GAMES & QUIZ HUB (مركز الألعاب التفاعلية) -->
+        <section id="games-section" class="space-y-8 pt-6">
+            <div class="border-r-4 border-indigo-500 pr-4">
+                <span class="text-indigo-400 font-bold text-sm tracking-wider uppercase">المركز التفاعلي</span>
+                <h3 class="text-2xl md:text-3xl font-extrabold text-white">منطقة الألعاب والتحديات التفاعلية 🎮</h3>
+                <p class="text-slate-400 text-sm mt-1">اختبر معلوماتك يا م. عبد الرحمن واجمع أعلى نقاط!</p>
+            </div>
+
+            <!-- Tab Navigation for Games -->
+            <div class="flex flex-wrap gap-2 border-b border-slate-800 pb-4">
+                <button onclick="switchGameTab('game1')" id="tab-game1" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-sky-500 text-slate-950 shadow-md transition-all">
+                    <i class="fa-solid fa-sort-amount-up ml-1"></i> 1. لعبة ترتيب وحدات الذاكرة
+                </button>
+                <button onclick="switchGameTab('game2')" id="tab-game2" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">
+                    <i class="fa-solid fa-bolt-lightning ml-1 text-amber-400"></i> 2. سباق جلب البيانات
+                </button>
+                <button onclick="switchGameTab('quiz')" id="tab-quiz" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">
+                    <i class="fa-solid fa-graduation-cap ml-1 text-emerald-400"></i> 3. الاختبار الشامل
+                </button>
+            </div>
+
+            <!-- GAME 1: UNIT SORTING PUZZLE -->
+            <div id="game1-container" class="glass-card rounded-2xl p-6 md:p-8 space-y-6 border border-slate-800">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h4 class="text-lg font-bold text-white"><i class="fa-solid fa-sort text-sky-400 ml-2"></i> تحدي ترتيب الوحدات من الأصغر للأكبر</h4>
+                        <p class="text-xs text-slate-400">اضغط على الكروت بالترتيب التصاعدي الصحيح (من أصغر وحدة لأكبر وحدة)!</p>
+                    </div>
+                    <div class="text-left">
+                        <span class="text-xs text-slate-400 block">المرحلة:</span>
+                        <span id="sort-stage" class="text-lg font-bold font-mono text-sky-400">1 / 3</span>
+                    </div>
+                </div>
+
+                <!-- Sorting Deck -->
+                <div id="sort-deck" class="flex flex-wrap gap-3 justify-center py-6 min-h-[100px] bg-slate-950/80 rounded-xl border border-slate-800 p-4"></div>
+
+                <div id="sort-feedback" class="hidden p-3 rounded-xl text-center text-xs font-bold"></div>
+
+                <div class="flex justify-between items-center pt-2">
+                    <button onclick="initSortGame()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-all">
+                        <i class="fa-solid fa-rotate-right ml-1"></i> إعادة اللعبة
+                    </button>
+                    <span class="text-xs text-slate-400">كل مرحلة صحيحة بـ <strong class="text-amber-400">+10 نقاط</strong></span>
+                </div>
+            </div>
+
+            <!-- GAME 2: SPEED FETCH RUSH -->
+            <div id="game2-container" class="hidden glass-card rounded-2xl p-6 md:p-8 space-y-6 border border-slate-800">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h4 class="text-lg font-bold text-white"><i class="fa-solid fa-bolt-lightning text-amber-400 ml-2"></i> لعبة سباق جلب البيانات (CPU Fetch Rush)</h4>
+                        <p class="text-xs text-slate-400">البروسيسور طالب بيانات معينة! اختار أسرع وأنسب مكان للذاكرة مخزونة فيه فورا!</p>
+                    </div>
+                    <div class="flex items-center space-x-4 space-x-reverse font-mono text-xs">
+                        <div class="bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">الوقت: <span id="fetch-timer" class="text-amber-400 font-bold">15s</span></div>
+                        <div class="bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">النقاط: <span id="fetch-score" class="text-emerald-400 font-bold">0</span></div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 text-center space-y-4">
+                    <span class="text-xs text-slate-400 font-mono">البيانات اللي البروسيسور عايزها دلوقت:</span>
+                    <div id="fetch-target" class="text-xl md:text-2xl font-black text-amber-400 bg-slate-900 py-4 px-6 rounded-xl border border-slate-800 inline-block shadow-lg">
+                        اضغط "ابدأ السباق" للبدء!
+                    </div>
+
+                    <div id="fetch-buttons" class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4">
+                        <button onclick="checkFetchChoice('registers')" class="p-4 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold text-xs hover:bg-amber-500 hover:text-slate-950 transition-all">
+                            المسجلات (Registers)
+                        </button>
+                        <button onclick="checkFetchChoice('cache')" class="p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold text-xs hover:bg-emerald-500 hover:text-slate-950 transition-all">
+                            الذاكرة المخبأة (Cache)
+                        </button>
+                        <button onclick="checkFetchChoice('ram')" class="p-4 rounded-xl bg-sky-500/20 border border-sky-500/40 text-sky-300 font-bold text-xs hover:bg-sky-500 hover:text-slate-950 transition-all">
+                            الرامة (RAM)
+                        </button>
+                        <button onclick="checkFetchChoice('disk')" class="p-4 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-300 font-bold text-xs hover:bg-purple-500 hover:text-white transition-all">
+                            الهارد ديسك (HDD / SSD)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex justify-center pt-2">
+                    <button onclick="startFetchGame()" class="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition-all shadow-lg shadow-amber-500/20">
+                        <i class="fa-solid fa-play ml-1"></i> ابدأ السباق السريع
+                    </button>
+                </div>
+            </div>
+
+            <!-- COMPREHENSIVE QUIZ MODULE -->
+            <div id="quiz-container" class="hidden glass-card rounded-2xl p-6 md:p-8 space-y-6 border border-slate-800">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                    <div>
+                        <h4 class="text-lg font-bold text-white"><i class="fa-solid fa-graduation-cap text-emerald-400 ml-2"></i> الاختبار المصري الشامل للمهندس عبد الرحمن</h4>
+                        <p class="text-xs text-slate-400">10 أسئلة خفيفة بالعامية تقيس مستوى استيعابك للموضوع كله!</p>
+                    </div>
+                    <span id="quiz-counter" class="text-xs font-mono font-bold px-3 py-1 bg-slate-900 text-emerald-400 rounded-lg border border-slate-800">سؤال 1 من 10</span>
+                </div>
+
+                <div id="quiz-box" class="space-y-6">
+                    <h5 id="quiz-question" class="text-base font-bold text-white leading-relaxed">جاري تحميل السؤال...</h5>
+
+                    <div id="quiz-options" class="grid grid-cols-1 gap-3"></div>
+                </div>
+
+                <div id="quiz-result" class="hidden text-center space-y-4 py-8">
+                    <div class="w-20 h-20 rounded-full bg-emerald-500/20 text-emerald-400 text-4xl flex items-center justify-center mx-auto animate-bounce">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <h5 class="text-2xl font-black text-white">الله ينور عليك يا مهندس عبد الرحمن! 🎉</h5>
+                    <p class="text-slate-300 text-sm">درجتك النهائية في الاختبار: <strong id="quiz-score-val" class="text-emerald-400 text-xl font-mono">0 / 100</strong></p>
+                    <button onclick="resetQuiz()" class="px-6 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition-all">
+                        <i class="fa-solid fa-rotate-right ml-1"></i> جاوب الاختبار تاني
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-800 bg-slate-950 py-8 text-center text-xs text-slate-500 space-y-2 mt-12">
+        <p class="text-slate-300 font-bold">تم إعداد وتصميم هذا المرجع الشامل والتفاعلي للمهندس <span class="text-amber-400">عبد الرحمن محمد</span> ✨</p>
+        <p class="font-mono text-[11px] text-slate-500">Computer Foundations Interactive Hub © 2026</p>
+    </footer>
+
+
+    <script>
+        let globalScore = 0;
+        
+        function addScore(pts) {
+            globalScore += pts;
+            document.getElementById('global-score').innerText = globalScore;
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /* ---------------------------------------------------------------------
+           SECTION 1: BIT & BYTE SIMULATOR LOGIC
+        --------------------------------------------------------------------- */
+        let bitArray = [0, 0, 0, 0, 0, 0, 0, 0];
+
+        function initBulbs() {
+            const container = document.getElementById('bulbs-container');
+            const template = document.getElementById('bulb-template');
+            if (!container || !template) return;
+            container.innerHTML = '';
+
+            for (let i = 7; i >= 0; i--) {
+                const clone = template.content.cloneNode(true);
+                const card = clone.querySelector('.bulb-card');
+                card.setAttribute('data-index', i);
+                clone.querySelector('.bit-index').textContent = i;
+                clone.querySelector('.pow-index').textContent = i;
+                clone.querySelector('.pow-val').textContent = Math.pow(2, i);
+                container.appendChild(clone);
+            }
+            updateByteDisplay();
+        }
+
+        function toggleBit(cardElem) {
+            const index = parseInt(cardElem.getAttribute('data-index'));
+            bitArray[index] = bitArray[index] === 0 ? 1 : 0;
+            
+            const bulbIcon = cardElem.querySelector('.bulb-icon');
+            const bitVal = cardElem.querySelector('.bit-val');
+
+            if (bitArray[index] === 1) {
+                bulbIcon.classList.remove('text-slate-700');
+                bulbIcon.classList.add('text-amber-400', 'bulb-on');
+                bitVal.textContent = '1';
+                bitVal.classList.remove('text-slate-400');
+                bitVal.classList.add('text-amber-400');
+            } else {
+                bulbIcon.classList.remove('text-amber-400', 'bulb-on');
+                bulbIcon.classList.add('text-slate-700');
+                bitVal.textContent = '0';
+                bitVal.classList.remove('text-amber-400');
+                bitVal.classList.add('text-slate-400');
+            }
+
+            updateByteDisplay();
+        }
+
+        function updateByteDisplay() {
+            let dec = 0;
+            for (let i = 0; i < 8; i++) {
+                if (bitArray[i] === 1) {
+                    dec += Math.pow(2, i);
+                }
+            }
+            document.getElementById('byte-decimal-value').innerText = dec;
+            
+            let charVal = '[غير معروف]';
+            if (dec >= 32 && dec <= 126) {
+                charVal = `'${String.fromCharCode(dec)}'`;
+            } else if (dec === 0) {
+                charVal = '[فاضي]';
+            } else {
+                charVal = `[رمز: ${dec}]`;
+            }
+            document.getElementById('byte-char-value').innerText = charVal;
+        }
+
+        function resetBits() {
+            bitArray = [0, 0, 0, 0, 0, 0, 0, 0];
+            initBulbs();
+        }
+
+        /* Unit Calculator */
+        function calculateUnits() {
+            const inputVal = parseFloat(document.getElementById('converter-input').value) || 0;
+            const unit = document.getElementById('converter-unit').value;
+
+            let bytes = 0;
+            if (unit === 'KB') bytes = inputVal * 1024;
+            else if (unit === 'MB') bytes = inputVal * 1024 * 1024;
+            else if (unit === 'GB') bytes = inputVal * 1024 * 1024 * 1024;
+            else if (unit === 'TB') bytes = inputVal * 1024 * 1024 * 1024 * 1024;
+
+            document.getElementById('res-byte').innerText = bytes.toLocaleString();
+            document.getElementById('res-kb').innerText = (bytes / 1024).toLocaleString(undefined, {maximumFractionDigits: 2});
+            document.getElementById('res-mb').innerText = (bytes / (1024 * 1024)).toLocaleString(undefined, {maximumFractionDigits: 2});
+            document.getElementById('res-gb').innerText = (bytes / (1024 * 1024 * 1024)).toLocaleString(undefined, {maximumFractionDigits: 6});
+            document.getElementById('res-tb').innerText = (bytes / (1024 * 1024 * 1024 * 1024)).toLocaleString(undefined, {maximumFractionDigits: 9});
+        }
+
+
+        /* ---------------------------------------------------------------------
+           SECTION 2: MEMORY PYRAMID INTERACTOR
+        --------------------------------------------------------------------- */
+        const pyrData = {
+            registers: {
+                title: "1. المسجلات (Registers)",
+                badge: "مؤقتة وفورية جداً",
+                icon: "fa-bolt",
+                color: "amber",
+                body: `<p><strong>المكان:</strong> جوه قلب شريحة المعالج (CPU) نفسه مباشرة!</p>
+                       <p><strong>السرعة:</strong> أسرع حاجة على الكوكب، البيانات جاهزة فوراً بدون أي تأخير.</p>
+                       <p><strong>السعة:</strong> صغيرة جداً (بضعة بايتات فقط).</p>
+                       <p><strong>الشرح بالبلدي:</strong> بتشيل الأرقام والعمليات اللي البروسيسور شغال بيحسبها في نفس اللحظة الحالية.</p>`,
+                analogy: "تشبيه بالبلدي: المسجلات دي زي الأرقام اللي بتحسبها في مخك مباشرة وأنت بتفكر!"
+            },
+            cache: {
+                title: "2. الذاكرة المخبأة (Cache L1, L2, L3)",
+                badge: "مؤقتة وسريعة جداً",
+                icon: "fa-memory",
+                color: "emerald",
+                body: `<p><strong>المكان:</strong> مدمجة جوه المعالج أو قريبة منه جداً.</p>
+                       <p><strong>السرعة:</strong> شبه فورية وسريعة للغاية.</p>
+                       <p><strong>السعة:</strong> صغيرة (من 8 ميجابايت لـ 64 ميجابايت).</p>
+                       <p><strong>الشرح بالبلدي:</strong> بتخزن نسخة من البيانات اللي البروسيسور بيطلبها كتير، عشان ما يضطرش يروح للرامة البطيئة.</p>`,
+                analogy: "تشبيه بالبلدي: الكاش زي أجندة ملخصات صغيرة حاطتها على مكتبك جنب إيدك على طول!"
+            },
+            ram: {
+                title: "3. الذاكرة العشوائية (RAM)",
+                badge: "مؤقتة (بتطفي مع الكهرباء)",
+                icon: "fa-microchip",
+                color: "sky",
+                body: `<p><strong>المكان:</strong> كروت محطوطة على المذربورد (Motherboard).</p>
+                       <p><strong>السرعة:</strong> سريعة جداً وبتخلي البرامج تشتغل بسلاسة.</p>
+                       <p><strong>السعة:</strong> متوسطة وكبيرة (8GB, 16GB, 32GB...).</p>
+                       <p><strong>تنبيه مهم:</strong> أول ما الجهاز يفصل كهرباء، كل البيانات اللي فيها بتمسح فوراً!</p>`,
+                analogy: "تشبيه بالبلدي: الرامة زي سطح المكتب اللي بتفتح عليه الكتب وأنت بتذاكر."
+            },
+            disk: {
+                title: "4. التخزين الثانوي (HDD / SSD)",
+                badge: "دائمة (مش بتتمسح)",
+                icon: "fa-hard-drive",
+                color: "purple",
+                body: `<p><strong>المكان:</strong> وحدة التخزين الرئيسية في الكمبيوتر.</p>
+                       <p><strong>السرعة:</strong> أبطأ واحدة فيهم مقارنة بالرامة والبروسيسور.</p>
+                       <p><strong>السعة:</strong> عملاقة جداً (512GB, 1TB, 2TB...).</p>
+                       <p><strong>الشرح بالبلدي:</strong> بتشيل الويندوز والألعاب والملفات بشكل دائم حتى لو النور قاطع شهر كامل!</p>`,
+                analogy: "تشبيه بالبلدي: الهارد زي دولاب الأرشيف الكبير اللي محطوط في الأوضة."
+            }
+        };
+
+        function selectPyramidLevel(levelKey) {
+            const data = pyrData[levelKey];
+            if (!data) return;
+
+            document.getElementById('pyr-detail-title').innerText = data.title;
+            document.getElementById('pyr-detail-badge').innerText = data.badge;
+            document.getElementById('pyr-detail-body').innerHTML = data.body;
+            document.getElementById('pyr-detail-analogy').innerText = data.analogy;
+
+            const iconContainer = document.getElementById('pyr-detail-icon');
+            iconContainer.innerHTML = `<i class="fa-solid ${data.icon}"></i>`;
+        }
+
+
+        /* ---------------------------------------------------------------------
+           SECTION 3: CPU SPEED & CLOCK WAVE CANVAS
+        --------------------------------------------------------------------- */
+        let waveCanvas, waveCtx;
+        let wavePhase = 0;
+        let currentGHz = 2.3;
+
+        function initCpuCanvas() {
+            waveCanvas = document.getElementById('cpu-wave-canvas');
+            if (!waveCanvas) return;
+            waveCtx = waveCanvas.getContext('2d');
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            requestAnimationFrame(drawWave);
+        }
+
+        function resizeCanvas() {
+            if (waveCanvas && waveCanvas.parentElement) {
+                waveCanvas.width = waveCanvas.parentElement.clientWidth - 32;
+                waveCanvas.height = 120;
+            }
+        }
+
+        function updateCpuSim() {
+            const slider = document.getElementById('cpu-speed-slider');
+            currentGHz = parseFloat(slider.value);
+            document.getElementById('cpu-slider-val').innerText = `${currentGHz.toFixed(2)} GHz`;
+            document.getElementById('hz-indicator').innerText = `${currentGHz.toFixed(2)} GHz`;
+
+            const cyclesSec = (currentGHz * 1000000000).toLocaleString();
+            document.getElementById('cpu-cycles-sec').innerText = `${cyclesSec} لفة/ثانية`;
+        }
+
+        function drawWave() {
+            if (!waveCtx || !waveCanvas) return;
+
+            waveCtx.clearRect(0, 0, waveCanvas.width, waveCanvas.height);
+            waveCtx.beginPath();
+            waveCtx.lineWidth = 3;
+            waveCtx.strokeStyle = '#f59e0b';
+
+            const width = waveCanvas.width;
+            const height = waveCanvas.height;
+            const midY = height / 2;
+            const freq = currentGHz * 0.08;
+
+            wavePhase += currentGHz * 0.15;
+
+            for (let x = 0; x < width; x++) {
+                const y = midY + Math.sin(x * freq + wavePhase) * (height * 0.35);
+                if (x === 0) waveCtx.moveTo(x, y);
+                else waveCtx.lineTo(x, y);
+            }
+            waveCtx.stroke();
+
+            const statusElem = document.getElementById('transistor-status');
+            if (Math.sin(wavePhase) > 0) {
+                statusElem.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 ml-1.5 animate-ping"></span> يمرر الكهرباء (1)`;
+                statusElem.className = "text-emerald-400 font-bold flex items-center";
+            } else {
+                statusElem.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 ml-1.5"></span> يحجب الكهرباء (0)`;
+                statusElem.className = "text-rose-400 font-bold flex items-center";
+            }
+
+            requestAnimationFrame(drawWave);
+        }
+
+
+        /* ---------------------------------------------------------------------
+           SECTION 5: MINI-GAMES & QUIZ ENGINE
+        --------------------------------------------------------------------- */
+        function switchGameTab(tabId) {
+            document.getElementById('game1-container').classList.add('hidden');
+            document.getElementById('game2-container').classList.add('hidden');
+            document.getElementById('quiz-container').classList.add('hidden');
+
+            document.getElementById('tab-game1').className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all";
+            document.getElementById('tab-game2').className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all";
+            document.getElementById('tab-quiz').className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all";
+
+            if (tabId === 'game1') {
+                document.getElementById('game1-container').classList.remove('hidden');
+                document.getElementById('tab-game1').className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-sky-500 text-slate-950 shadow-md transition-all";
+            } else if (tabId === 'game2') {
+                document.getElementById('game2-container').classList.remove('hidden');
+                document.getElementById('tab-game2').className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-amber-500 text-slate-950 shadow-md transition-all";
+            } else if (tabId === 'quiz') {
+                document.getElementById('quiz-container').classList.remove('hidden');
+                document.getElementById('tab-quiz').className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-emerald-500 text-slate-950 shadow-md transition-all";
+            }
+        }
+
+        /* GAME 1: UNIT SORTING PUZZLE */
+        const sortLevels = [
+            { units: ['بت (Bit)', 'بايت (Byte)', 'كيلوبايت (KB)', 'ميجابايت (MB)', 'جيجابايت (GB)', 'تيرابايت (TB)'], correctOrder: [0, 1, 2, 3, 4, 5] },
+            { units: ['بايت (Byte)', 'جيجابايت (GB)', 'كيلوبايت (KB)', 'بيتابايت (PB)', 'تيرابايت (TB)'], correctOrder: [0, 2, 1, 4, 3] },
+            { units: ['إكسابايت (EB)', 'جيجابايت (GB)', 'ميجابايت (MB)', 'يوتابايت (YB)', 'زيتابايت (ZB)'], correctOrder: [2, 1, 0, 4, 3] }
+        ];
+
+        let currentSortStage = 0;
+        let userSortSelection = [];
+
+        function initSortGame() {
+            currentSortStage = 0;
+            loadSortStage();
+        }
+
+        function loadSortStage() {
+            userSortSelection = [];
+            const stageData = sortLevels[currentSortStage];
+            document.getElementById('sort-stage').innerText = `${currentSortStage + 1} / ${sortLevels.length}`;
+            document.getElementById('sort-feedback').classList.add('hidden');
+
+            const deck = document.getElementById('sort-deck');
+            deck.innerHTML = '';
+
+            let items = stageData.units.map((u, idx) => ({ name: u, id: idx }));
+            items.sort(() => Math.random() - 0.5);
+
+            items.forEach(item => {
+                const btn = document.createElement('button');
+                btn.className = "px-4 py-2.5 bg-slate-900 border border-slate-700 hover:border-sky-500 text-white font-bold text-xs rounded-xl transition-all shadow-md flex items-center space-x-2 space-x-reverse";
+                btn.innerHTML = `<span>${item.name}</span>`;
+                btn.onclick = () => handleSortClick(btn, item.id);
+                deck.appendChild(btn);
+            });
+        }
+
+        function handleSortClick(btnElem, id) {
+            btnElem.disabled = true;
+            btnElem.classList.add('opacity-40', 'bg-sky-950', 'border-sky-500');
+            userSortSelection.push(id);
+
+            const stageData = sortLevels[currentSortStage];
+            const currentIndex = userSortSelection.length - 1;
+
+            if (userSortSelection[currentIndex] !== stageData.correctOrder[currentIndex]) {
+                const feedback = document.getElementById('sort-feedback');
+                feedback.className = "p-3 rounded-xl text-center text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30";
+                feedback.innerText = "❌ ترتيب مش مظبوط يا مهندس! حاول تاني من الأول.";
+                feedback.classList.remove('hidden');
+
+                setTimeout(() => loadSortStage(), 1500);
+            } else if (userSortSelection.length === stageData.correctOrder.length) {
+                addScore(10);
+                const feedback = document.getElementById('sort-feedback');
+                feedback.className = "p-3 rounded-xl text-center text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+                feedback.innerText = "🎉 الله ينور! الترتيب صح 100% (+10 نقاط)";
+                feedback.classList.remove('hidden');
+
+                currentSortStage++;
+                if (currentSortStage < sortLevels.length) {
+                    setTimeout(() => loadSortStage(), 1500);
+                } else {
+                    feedback.innerText = "🏆 عااش يا م. عبد الرحمن! خلصت كل مراحل لعبة الترتيب بامتياز!";
+                }
+            }
+        }
+
+
+        /* GAME 2: SPEED FETCH RUSH */
+        let fetchTimer, fetchTimeLeft = 15;
+        let fetchScore = 0;
+        let currentTargetLayer = '';
+
+        const targets = [
+            { text: "البروسيسور عايز يحسب العملية الحسابية الحالية في نفس الفيمتو ثانية!", correct: "registers" },
+            { text: "بيانات متكررة كتير والبروسيسور مش عايز يروح للرامة البطيئة", correct: "cache" },
+            { text: "متصفح الإنترنت والبرامج المفتوحة دلوقت على الشاشة", correct: "ram" },
+            { text: "ملف فيديو أو لعبة مخزنة مش هتتفتح غير بكرة", correct: "disk" }
+        ];
+
+        function startFetchGame() {
+            fetchTimeLeft = 15;
+            fetchScore = 0;
+            document.getElementById('fetch-score').innerText = fetchScore;
+            document.getElementById('fetch-timer').innerText = `${fetchTimeLeft}s`;
+
+            clearInterval(fetchTimer);
+            fetchTimer = setInterval(() => {
+                fetchTimeLeft--;
+                document.getElementById('fetch-timer').innerText = `${fetchTimeLeft}s`;
+                if (fetchTimeLeft <= 0) {
+                    clearInterval(fetchTimer);
+                    alert(`الوقت خلص يا م. عبد الرحمن! مجموع نقاطك في اللعبة: ${fetchScore}`);
+                }
+            }, 1000);
+
+            nextFetchTarget();
+        }
+
+        function nextFetchTarget() {
+            const rand = targets[Math.floor(Math.random() * targets.length)];
+            currentTargetLayer = rand.correct;
+            document.getElementById('fetch-target').innerText = rand.text;
+        }
+
+        function checkFetchChoice(chosen) {
+            if (fetchTimeLeft <= 0) return;
+
+            if (chosen === currentTargetLayer) {
+                fetchScore += 15;
+                addScore(15);
+                document.getElementById('fetch-score').innerText = fetchScore;
+                nextFetchTarget();
+            } else {
+                fetchTimeLeft = Math.max(0, fetchTimeLeft - 2);
+                document.getElementById('fetch-timer').innerText = `${fetchTimeLeft}s`;
+            }
+        }
+
+
+        /* COMPREHENSIVE QUIZ DATA IN EGYPTIAN ARABIC */
+        const quizQuestions = [
+            {
+                q: "البايت الواحد (1 Byte) جواه كام بت (Bit)؟",
+                opts: ["4 بت", "8 بت", "16 بت", "1024 بت"],
+                ans: 1
+            },
+            {
+                q: "إيه أسرع وحدة ذاكرة على الإطلاق وموجودة جوه شريحة البروسيسور نفسه؟",
+                opts: ["الرامة (RAM)", "الهارد ديسك (SSD)", "المسجلات (Registers)", "الذاكرة المخبأة (Cache L3)"],
+                ans: 2
+            },
+            {
+                q: "معالج سرعته 3.2 GHz ينفذ كام دورة تقريباً في الثانية الواحدة؟",
+                opts: ["3.2 مليون لفة", "320 ألف لفة", "3.2 مليار لفة", "3.2 تريليون لفة"],
+                ans: 2
+            },
+            {
+                q: "أقصى حجم رامات تقدر معمارية 32-Bit تقرأه هو كام؟",
+                opts: ["2 GB", "4 GB فقط", "16 GB", "مفتوح بدون حد"],
+                ans: 1
+            },
+            {
+                q: "إيه أكبر وحدة تخزين عملاقة في الاختيارات دي؟",
+                opts: ["Petabyte (PB)", "Terabyte (TB)", "Exabyte (EB)", "Yottabyte (YB)"],
+                ans: 3
+            },
+            {
+                q: "الترانزستور (Transistor) جوه البروسيسور وظيفته الأساسية إيه؟",
+                opts: ["شاشة صغيرة جداً", "مفتاح كهربائي بيفتح ويقفل التيار لعمل 0 و 1", "مكثف صور", "مروحة تبريد"],
+                ans: 1
+            },
+            {
+                q: "أول ما النور يقطع عن الكمبيوتر، إيه اللي بيحصل للبيانات اللي على الرامة (RAM)؟",
+                opts: ["بتتحفظ تلقائي", "بتمسح بالكامل لأنها ذاكرة مؤقتة", "بتتحول لملف وورد", "بتطير للهارد"],
+                ans: 1
+            },
+            {
+                q: "المعمارية الحديثة اللي تقدر تشغل رامات عملاقة وتستغل قوة الأجهزة الحديثة هي:",
+                opts: ["معمارية 32-bit", "معمارية 64-bit", "معمارية 8-bit", "الإثنين زي بعض"],
+                ans: 1
+            },
+            {
+                q: "الميجابايت الواحدة (1 MB) فيها كام كيلوبايت (KB)؟",
+                opts: ["100 KB", "1000 KB", "1024 KB", "512 KB"],
+                ans: 2
+            },
+            {
+                q: "معمارية الـ 32-bit بتتسمى x86، بينما معمارية الـ 64-bit بتتسمى إيه؟",
+                opts: ["x32", "x64 أو x86-64", "x128", "x512"],
+                ans: 1
+            }
+        ];
+
+        let currentQuizIdx = 0;
+        let quizScore = 0;
+
+        function loadQuizQuestion() {
+            if (currentQuizIdx >= quizQuestions.length) {
+                showQuizResult();
+                return;
+            }
+
+            document.getElementById('quiz-counter').innerText = `سؤال ${currentQuizIdx + 1} من ${quizQuestions.length}`;
+            const data = quizQuestions[currentQuizIdx];
+            document.getElementById('quiz-question').innerText = data.q;
+
+            const optsContainer = document.getElementById('quiz-options');
+            optsContainer.innerHTML = '';
+
+            data.opts.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-right p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-sky-500 text-xs font-bold text-slate-200 transition-all flex items-center justify-between";
+                btn.innerHTML = `<span>${opt}</span> <i class="fa-regular fa-circle text-slate-600"></i>`;
+                btn.onclick = () => answerQuiz(idx, btn);
+                optsContainer.appendChild(btn);
+            });
+        }
+
+        function answerQuiz(chosenIdx, btnElem) {
+            const data = quizQuestions[currentQuizIdx];
+            const allBtns = document.getElementById('quiz-options').children;
+
+            for (let b of allBtns) b.disabled = true;
+
+            if (chosenIdx === data.ans) {
+                btnElem.className = "w-full text-right p-4 rounded-xl bg-emerald-500/20 border border-emerald-500 text-xs font-bold text-emerald-300 transition-all flex items-center justify-between";
+                btnElem.querySelector('i').className = "fa-solid fa-circle-check text-emerald-400";
+                quizScore += 10;
+                addScore(10);
+            } else {
+                btnElem.className = "w-full text-right p-4 rounded-xl bg-rose-500/20 border border-rose-500 text-xs font-bold text-rose-300 transition-all flex items-center justify-between";
+                btnElem.querySelector('i').className = "fa-solid fa-circle-xmark text-rose-400";
+
+                allBtns[data.ans].className = "w-full text-right p-4 rounded-xl bg-emerald-500/20 border border-emerald-500 text-xs font-bold text-emerald-300 transition-all flex items-center justify-between";
+            }
+
+            setTimeout(() => {
+                currentQuizIdx++;
+                loadQuizQuestion();
+            }, 1200);
+        }
+
+        function showQuizResult() {
+            document.getElementById('quiz-box').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+            document.getElementById('quiz-score-val').innerText = `${quizScore} / 100`;
+        }
+
+        function resetQuiz() {
+            currentQuizIdx = 0;
+            quizScore = 0;
+            document.getElementById('quiz-box').classList.remove('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+            loadQuizQuestion();
+        }
+
+
+        window.onload = function() {
+            initBulbs();
+            calculateUnits();
+            initCpuCanvas();
+            initSortGame();
+            loadQuizQuestion();
+        }
+    </script>
+</body>
+</html>
