@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuard: Information Security Quiz Game</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        mono: ['Space Grotesk', 'monospace'],
+                    },
+                    colors: {
+                        cyber: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            800: '#115e59',
+                            900: '#134e4a',
+                            dark: '#0f172a',
+                            panel: '#1e293b',
+                            accent: '#6366f1',
+                            neon: '#06b6d4',
+                            warning: '#f59e0b',
+                            danger: '#ef4444',
+                            success: '#10b981'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: radial-gradient(circle at top center, #1e1b4b 0%, #0f172a 60%, #020617 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cyber-glow {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+        }
+
+        .cyber-glow-success {
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .cyber-glow-danger {
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+        }
+
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(0.98); }
+        }
+
+        .animate-pulse-subtle {
+            animation: pulse-subtle 3s infinite ease-in-out;
+        }
+
+        .option-btn {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            border-color: #06b6d4;
+            background-color: rgba(6, 182, 212, 0.1);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen font-sans selection:bg-cyber-neon selection:text-slate-900">
+
+    <header class="sticky top-0 z-50 border-b border-slate-800 bg-slate-900/80 backdrop-blur-md px-4 lg:px-8 py-3">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="game.showHome()">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-cyan-500/20">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight tracking-wide bg-gradient-to-r from-cyan-400 to-indigo-300 bg-clip-text text-transparent">CyberGuard</h1>
+                    <p class="text-xs text-slate-400 font-mono">InfoSec Mastery Game</p>
+                </div>
+            </div>
+
+            <!-- Stats Bar (Visible during gameplay) -->
+            <div id="nav-stats" class="hidden flex items-center space-x-4 md:space-x-6 text-sm font-mono">
+                <div class="flex items-center space-x-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+                    <i class="fa-solid fa-trophy text-yellow-400"></i>
+                    <span class="text-slate-400 hidden sm:inline">Score:</span>
+                    <span id="stat-score" class="font-bold text-cyan-400">0</span>
+                </div>
+                <div class="flex items-center space-x-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+                    <i class="fa-solid fa-fire text-orange-500"></i>
+                    <span class="text-slate-400 hidden sm:inline">Streak:</span>
+                    <span id="stat-streak" class="font-bold text-orange-400">0</span>
+                </div>
+                <div class="flex items-center space-x-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+                    <i class="fa-solid fa-[#10b981] fa-heart text-red-500"></i>
+                    <span id="stat-lives" class="font-bold text-slate-200">3/3</span>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <button id="sound-btn" onclick="game.toggleSound()" class="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 transition-colors" title="Toggle Sound">
+                    <i id="sound-icon" class="fa-solid fa-volume-high text-cyan-400"></i>
+                </button>
+                <button onclick="game.showHome()" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 transition-colors">
+                    <i class="fa-solid fa-house mr-1"></i> Home
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-5xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col justify-center">
+
+        <section id="view-home" class="space-y-8 animate-fadeIn">
+            <div class="text-center space-y-4 max-w-2xl mx-auto">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-mono">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                    <span>Interactive Security Assessment</span>
+                </div>
+                <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
+                    Master Information Security & Authentication
+                </h2>
+                <p class="text-slate-400 text-base sm:text-lg leading-relaxed">
+                    Test your knowledge with 40 interactive, progressive questions based on textbook lessons. Choose your challenge level or take on the full game!
+                </p>
+            </div>
+
+            <!-- Level Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+                <!-- Level 1 -->
+                <div onclick="game.startLevel(1)" class="glass-panel p-6 rounded-2xl border-slate-700 hover:border-cyan-500/50 hover:bg-slate-800/80 transition-all cursor-pointer group flex flex-col justify-between space-y-6 relative overflow-hidden">
+                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-emerald-500/10 rounded-full blur-xl group-hover:bg-emerald-500/20 transition-all"></div>
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-md bg-emerald-500/20 text-emerald-400 text-xs font-mono font-bold">LEVEL 1</span>
+                            <span class="text-xs text-slate-400 font-mono">14 Questions</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors flex items-center">
+                            Apprentice Security
+                            <i class="fa-solid fa-shield text-emerald-400 ml-2 text-sm opacity-80"></i>
+                        </h3>
+                        <p class="text-slate-400 text-sm mt-2 leading-relaxed">
+                            Easy difficulty. Core definitions, CIA triad (Confidentiality, Integrity, Availability), and fundamental security concepts.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-slate-700/50 text-xs font-mono text-slate-400 group-hover:text-slate-200">
+                        <span>Target: Basic Foundations</span>
+                        <i class="fa-solid fa-arrow-right text-emerald-400 transform group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+
+                <!-- Level 2 -->
+                <div onclick="game.startLevel(2)" class="glass-panel p-6 rounded-2xl border-slate-700 hover:border-cyan-500/50 hover:bg-slate-800/80 transition-all cursor-pointer group flex flex-col justify-between space-y-6 relative overflow-hidden">
+                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-yellow-500/10 rounded-full blur-xl group-hover:bg-yellow-500/20 transition-all"></div>
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-md bg-yellow-500/20 text-yellow-400 text-xs font-mono font-bold">LEVEL 2</span>
+                            <span class="text-xs text-slate-400 font-mono">14 Questions</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-yellow-400 transition-colors flex items-center">
+                            Cyber Defender
+                            <i class="fa-solid fa-user-shield text-yellow-400 ml-2 text-sm opacity-80"></i>
+                        </h3>
+                        <p class="text-slate-400 text-sm mt-2 leading-relaxed">
+                            Medium difficulty. Threats, malware types (Trojan, Worm, Spyware, Ransomware), passwords, and authentication methods.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-slate-700/50 text-xs font-mono text-slate-400 group-hover:text-slate-200">
+                        <span>Target: Threats & Auth</span>
+                        <i class="fa-solid fa-arrow-right text-yellow-400 transform group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+
+                <!-- Level 3 -->
+                <div onclick="game.startLevel(3)" class="glass-panel p-6 rounded-2xl border-slate-700 hover:border-cyan-500/50 hover:bg-slate-800/80 transition-all cursor-pointer group flex flex-col justify-between space-y-6 relative overflow-hidden">
+                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-rose-500/10 rounded-full blur-xl group-hover:bg-rose-500/20 transition-all"></div>
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-md bg-rose-500/20 text-rose-400 text-xs font-mono font-bold">LEVEL 3</span>
+                            <span class="text-xs text-slate-400 font-mono">12 Questions</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-rose-400 transition-colors flex items-center">
+                            Security Specialist
+                            <i class="fa-solid fa-lock text-rose-400 ml-2 text-sm opacity-80"></i>
+                        </h3>
+                        <p class="text-slate-400 text-sm mt-2 leading-relaxed">
+                            Hard difficulty. Real-world scenario analysis, 2FA vs Two-step distinctions, legal categories, and protective countermeasures.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-slate-700/50 text-xs font-mono text-slate-400 group-hover:text-slate-200">
+                        <span>Target: Practical Mastery</span>
+                        <i class="fa-solid fa-arrow-right text-rose-400 transform group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Full Game / Practice Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
+                <button onclick="game.startFullGame()" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-lg shadow-lg shadow-cyan-500/25 transition-all transform hover:-translate-y-0.5 flex items-center justify-center space-x-3">
+                    <i class="fa-solid fa-gamepad text-xl"></i>
+                    <span>Start Full 40-Question Challenge</span>
+                </button>
+                <button onclick="game.openStudyMode()" class="w-full sm:w-auto px-6 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold text-lg transition-all flex items-center justify-center space-x-3">
+                    <i class="fa-solid fa-book-open text-cyan-400"></i>
+                    <span>Study & Bank View</span>
+                </button>
+            </div>
+        </section>
+
+        <section id="view-game" class="hidden space-y-6">
+            <!-- Progress & Header Bar -->
+            <div class="glass-panel p-4 rounded-xl flex flex-col space-y-3">
+                <div class="flex justify-between items-center text-xs font-mono text-slate-400">
+                    <span id="game-difficulty-badge" class="px-2.5 py-1 rounded bg-slate-800 text-cyan-400 border border-slate-700 font-bold">LEVEL 1</span>
+                    <span id="question-tracker">Question 1 of 14</span>
+                </div>
+                <!-- Progress Bar -->
+                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden p-0.5 border border-slate-700">
+                    <div id="progress-bar" class="bg-gradient-to-r from-cyan-500 to-indigo-500 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div id="question-card" class="glass-panel p-6 sm:p-8 rounded-2xl border-slate-700 space-y-6 relative">
+                <!-- Category Tag -->
+                <div class="flex items-center justify-between">
+                    <span id="question-category" class="text-xs font-mono uppercase tracking-wider text-cyan-400 bg-cyan-950/60 border border-cyan-800/50 px-3 py-1 rounded-md">
+                        Information Security Basics
+                    </span>
+                    <div id="timer-badge" class="text-xs font-mono text-slate-400 flex items-center space-x-1">
+                        <i class="fa-regular fa-clock"></i>
+                        <span id="timer-text">00:00</span>
+                    </div>
+                </div>
+
+                <!-- Question Text -->
+                <h3 id="question-text" class="text-xl sm:text-2xl font-bold text-white leading-snug">
+                    Loading question text here...
+                </h3>
+
+                <!-- Options Grid -->
+                <div id="options-container" class="grid grid-cols-1 gap-3 pt-2">
+                    <!-- Dynamic option buttons inserted here -->
+                </div>
+
+                <!-- Explanation / Feedback Panel (Hidden by default) -->
+                <div id="explanation-box" class="hidden p-4 rounded-xl border space-y-2 animate-fadeIn">
+                    <div id="feedback-header" class="font-bold flex items-center text-sm">
+                        <!-- Icon and title -->
+                    </div>
+                    <p id="feedback-text" class="text-slate-300 text-sm leading-relaxed font-sans">
+                        <!-- Explanation text -->
+                    </p>
+                </div>
+
+                <!-- Next Button -->
+                <div class="flex justify-end pt-2">
+                    <button id="next-btn" onclick="game.nextQuestion()" class="hidden px-6 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition-all transform hover:scale-105 flex items-center space-x-2">
+                        <span>Next Question</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-results" class="hidden space-y-8 animate-fadeIn">
+            <div class="glass-panel p-8 rounded-3xl border-slate-700 text-center space-y-6 max-w-2xl mx-auto relative overflow-hidden">
+                <div class="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-4xl text-white shadow-xl shadow-cyan-500/20">
+                    <i id="result-icon" class="fa-solid fa-trophy text-yellow-300"></i>
+                </div>
+
+                <div>
+                    <h2 id="result-title" class="text-3xl font-extrabold text-white">Assessment Complete!</h2>
+                    <p id="result-subtitle" class="text-slate-400 text-sm mt-1">Great job applying cyber security principles!</p>
+                </div>
+
+                <!-- Score Grid -->
+                <div class="grid grid-cols-3 gap-4 bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                    <div class="p-2">
+                        <div class="text-xs text-slate-400 font-mono">Score</div>
+                        <div id="result-score" class="text-2xl font-bold text-cyan-400 mt-1">0</div>
+                    </div>
+                    <div class="p-2 border-x border-slate-800">
+                        <div class="text-xs text-slate-400 font-mono">Accuracy</div>
+                        <div id="result-accuracy" class="text-2xl font-bold text-emerald-400 mt-1">0%</div>
+                    </div>
+                    <div class="p-2">
+                        <div class="text-xs text-slate-400 font-mono">Max Streak</div>
+                        <div id="result-max-streak" class="text-2xl font-bold text-orange-400 mt-1">0</div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+                    <button onclick="game.showHome()" class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold text-sm transition-all">
+                        <i class="fa-solid fa-house mr-2"></i>Main Menu
+                    </button>
+                    <button onclick="game.openStudyMode()" class="px-6 py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-sm transition-all">
+                        <i class="fa-solid fa-list-check mr-2"></i>Review All Answers
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-study" class="hidden space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white flex items-center">
+                        <i class="fa-solid fa-book-open text-cyan-400 mr-3"></i>Question Bank & Study Mode
+                    </h2>
+                    <p class="text-slate-400 text-xs sm:text-sm mt-1">Explore all 40 questions with answers and textbook explanations.</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input id="study-search" oninput="game.filterStudyQuestions()" type="text" placeholder="Search concept or question..." class="px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-200 focus:outline-none focus:border-cyan-500 w-48 sm:w-64">
+                </div>
+            </div>
+
+            <!-- Level Filter Tabs -->
+            <div class="flex space-x-2 border-b border-slate-800 pb-2">
+                <button onclick="game.setStudyFilter('all')" id="filter-all" class="px-4 py-2 rounded-lg text-xs font-mono font-bold bg-cyan-500 text-slate-950 transition-colors">All (40)</button>
+                <button onclick="game.setStudyFilter(1)" id="filter-1" class="px-4 py-2 rounded-lg text-xs font-mono text-slate-400 hover:bg-slate-800 transition-colors">Level 1 (Easy)</button>
+                <button onclick="game.setStudyFilter(2)" id="filter-2" class="px-4 py-2 rounded-lg text-xs font-mono text-slate-400 hover:bg-slate-800 transition-colors">Level 2 (Medium)</button>
+                <button onclick="game.setStudyFilter(3)" id="filter-3" class="px-4 py-2 rounded-lg text-xs font-mono text-slate-400 hover:bg-slate-800 transition-colors">Level 3 (Hard)</button>
+            </div>
+
+            <!-- List Container -->
+            <div id="study-list" class="space-y-4 max-h-[65vh] overflow-y-auto pr-2">
+                <!-- Study cards rendered dynamically -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Password Modal for Study Mode -->
+    <div id="password-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-fadeIn">
+        <div class="glass-panel max-w-md w-full p-6 rounded-2xl border-slate-700 shadow-2xl space-y-4 relative">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-white">Protected Section</h3>
+                    <p class="text-xs text-slate-400">Enter passcode to access Study & Bank View</p>
+                </div>
+            </div>
+
+            <div>
+                <label for="study-pass-input" class="block text-xs font-mono text-slate-400 mb-1">Passcode</label>
+                <input id="study-pass-input" type="password" placeholder="Enter password..." class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white font-mono text-center tracking-widest text-lg focus:outline-none focus:border-cyan-500">
+                <p id="pass-error-msg" class="text-xs text-rose-400 mt-1 hidden"><i class="fa-solid fa-circle-exclamation mr-1"></i> Incorrect passcode. Please try again.</p>
+            </div>
+
+            <div class="flex items-center space-x-3 pt-2">
+                <button onclick="game.closePasswordModal()" class="w-1/2 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold text-sm transition-all">
+                    Cancel
+                </button>
+                <button onclick="game.verifyStudyPassword()" class="w-1/2 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition-all">
+                    Unlock
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="border-t border-slate-800 py-4 text-center text-xs text-slate-500 font-mono">
+        Information Security & Authentication Assessment Game &bull; Simple English Textbook Edition
+    </footer>
+
+    <script>
+        const QUESTION_DATABASE = [
+            // LEVEL 1: EASY (Questions 1-14)
+            {
+                id: 1,
+                level: 1,
+                category: "InfoSec Definition",
+                question: "What is the primary definition of Information Security?",
+                options: [
+                    "The act of properly managing information and keeping it safe.",
+                    "Creating passwords using uppercase and lowercase letters.",
+                    "Buying expensive antivirus software for office computers.",
+                    "Connecting computers together over the internet."
+                ],
+                correct: 0,
+                explanation: "According to the textbook: Information Security is defined as 'The act of properly managing information and keeping it safe.'"
+            },
+            {
+                id: 2,
+                level: 1,
+                category: "CIA Triad",
+                question: "Which essential element ensures that ONLY authorized individuals can access information?",
+                options: [
+                    "Integrity",
+                    "Confidentiality",
+                    "Availability",
+                    "Authenticity"
+                ],
+                correct: 1,
+                explanation: "Confidentiality is a state in which only authorized individuals can access the information."
+            },
+            {
+                id: 3,
+                level: 1,
+                category: "CIA Triad",
+                question: "Which essential element ensures information is NOT destroyed, tampered with, or erased?",
+                options: [
+                    "Confidentiality",
+                    "Availability",
+                    "Integrity",
+                    "Cracking"
+                ],
+                correct: 2,
+                explanation: "Integrity refers to keeping data accurate: 'A state in which the information is not destroyed, tampered with, or erased.'"
+            },
+            {
+                id: 4,
+                level: 1,
+                category: "CIA Triad",
+                question: "Which essential element ensures information can be accessed at ANY time when needed?",
+                options: [
+                    "Availability",
+                    "Confidentiality",
+                    "Integrity",
+                    "Authentication"
+                ],
+                correct: 0,
+                explanation: "Availability is 'A state in which information can be accessed at any time when needed.'"
+            },
+            {
+                id: 5,
+                level: 1,
+                category: "Threats",
+                question: "What term describes someone accessing a computer system WITHOUT permission?",
+                options: [
+                    "Access control",
+                    "Unauthorized access",
+                    "Biometric authentication",
+                    "Data backup"
+                ],
+                correct: 1,
+                explanation: "Unauthorized access is when someone without permission gains access to a computer system."
+            },
+            {
+                id: 6,
+                level: 1,
+                category: "Threats",
+                question: "What is the general term for malicious programs designed to harm computers?",
+                options: [
+                    "Firewall",
+                    "Malware",
+                    "Biometrics",
+                    "Token"
+                ],
+                correct: 1,
+                explanation: "Malware is a general term for malicious programs designed to harm computers."
+            },
+            {
+                id: 7,
+                level: 1,
+                category: "Passwords",
+                question: "What is a string of characters used to verify that a user is the legitimate account holder?",
+                options: [
+                    "User ID",
+                    "Password",
+                    "Firewall",
+                    "Backup"
+                ],
+                correct: 1,
+                explanation: "A Password is a string of characters used to verify that the user of a given user ID is the legitimate account holder."
+            },
+            {
+                id: 8,
+                level: 1,
+                category: "Authentication",
+                question: "What is the process of verifying the identity of a user on a computer or network?",
+                options: [
+                    "Cracking",
+                    "Authentication",
+                    "Defamation",
+                    "Infiltration"
+                ],
+                correct: 1,
+                explanation: "Authentication is defined as 'The process of verifying the identity of a user on a computer or network.'"
+            },
+            {
+                id: 9,
+                level: 1,
+                category: "Measures",
+                question: "Which security measure limits computer access so only verified users are allowed?",
+                options: [
+                    "Access control",
+                    "Keylogger",
+                    "Adware",
+                    "Spyware"
+                ],
+                correct: 0,
+                explanation: "Access control is a method of limiting access to computer systems or data so that only specific verified users are allowed to use them."
+            },
+            {
+                id: 10,
+                level: 1,
+                category: "Measures",
+                question: "What system is installed at network entry points to block unauthorized entry and stop data leaks?",
+                options: [
+                    "Trojan horse",
+                    "Firewall",
+                    "IC Card",
+                    "Vein pattern scanner"
+                ],
+                correct: 1,
+                explanation: "A Firewall is a system installed at network entry points to prevent unauthorized access from outside and stop data leaks from within."
+            },
+            {
+                id: 11,
+                level: 1,
+                category: "Measures",
+                question: "Why should you regularly create backups of your important data?",
+                options: [
+                    "To speed up your computer internet browsing.",
+                    "To allow data recovery if original files are damaged or lost.",
+                    "To prevent crackers from finding your IP address.",
+                    "To stop adware from opening pop-up banners."
+                ],
+                correct: 1,
+                explanation: "Creating backups ensures you have duplicate copies to restore data if files are damaged or lost."
+            },
+            {
+                id: 12,
+                level: 1,
+                category: "Threats",
+                question: "What do we call a person who commits cracking?",
+                options: [
+                    "Developer",
+                    "Cracker",
+                    "Administrator",
+                    "User"
+                ],
+                correct: 1,
+                explanation: "The textbook notes: 'A person who commits such acts is called a cracker.'"
+            },
+            {
+                id: 13,
+                level: 1,
+                category: "Passwords",
+                question: "Which of the following is recommended when creating a strong password?",
+                options: [
+                    "Use a short string for easy typing.",
+                    "Use your birthdate and email address.",
+                    "Make the string as long as possible.",
+                    "Reuse the same password for all websites."
+                ],
+                correct: 2,
+                explanation: "Password guideline 1: 'Use a string that is as long as possible.'"
+            },
+            {
+                id: 14,
+                level: 1,
+                category: "Cybercrime",
+                question: "Criminal acts committed over computer networks are broadly known as:",
+                options: [
+                    "Cybercrime",
+                    "Access control",
+                    "Authenticity",
+                    "Biometrics"
+                ],
+                correct: 0,
+                explanation: "Cybercrime refers to criminal acts committed over computer networks."
+            },
+
+            // LEVEL 2: MEDIUM (Questions 15-28)
+            {
+                id: 15,
+                level: 2,
+                category: "Malware Types",
+                question: "Which program is disguised as legitimate software but quietly initiates attacks?",
+                options: [
+                    "Worm",
+                    "Trojan horse",
+                    "Keylogger",
+                    "Adware"
+                ],
+                correct: 1,
+                explanation: "A Trojan horse is a program disguised as a legitimate one that infiltrates a system and quietly initiates attacks."
+            },
+            {
+                id: 16,
+                level: 2,
+                category: "Malware Types",
+                question: "Which program replicates itself and spreads across the internet on its own?",
+                options: [
+                    "Worm",
+                    "Ransomware",
+                    "Adware",
+                    "One-time password"
+                ],
+                correct: 0,
+                explanation: "A Worm is a program that replicates itself and spreads across the internet like a worm, expanding the infection."
+            },
+            {
+                id: 17,
+                level: 2,
+                category: "Malware Types",
+                question: "A user notices frequent unwanted advertisement banners pop up while browsing. Which malware is this?",
+                options: [
+                    "Ransomware",
+                    "Adware",
+                    "Keylogger",
+                    "Firewall"
+                ],
+                correct: 1,
+                explanation: "Adware is a program that displays unwanted advertisements without the user's consent."
+            },
+            {
+                id: 18,
+                level: 2,
+                category: "Malware Types",
+                question: "Which malware records all keystrokes entered on a keyboard without user consent?",
+                options: [
+                    "Keylogger",
+                    "Trojan horse",
+                    "Computer virus",
+                    "Worm"
+                ],
+                correct: 0,
+                explanation: "Keylogger software monitors and records keystrokes entered on a keyboard."
+            },
+            {
+                id: 19,
+                level: 2,
+                category: "Malware Types",
+                question: "A program locks files on a computer and demands payment to unlock them. What is it?",
+                options: [
+                    "Spyware",
+                    "Ransomware",
+                    "Adware",
+                    "Cracking"
+                ],
+                correct: 1,
+                explanation: "Ransomware renders data inaccessible and demands a ransom to restore access."
+            },
+            {
+                id: 20,
+                level: 2,
+                category: "Auth Types",
+                question: "User ID and password or PIN code authentication belong to which authentication category?",
+                options: [
+                    "Knowledge-based authentication",
+                    "Biometric authentication",
+                    "Possession-based authentication",
+                    "Two-step authentication"
+                ],
+                correct: 0,
+                explanation: "Knowledge-based authentication uses information known only to the individual (e.g., User ID, password, PIN code)."
+            },
+            {
+                id: 21,
+                level: 2,
+                category: "Auth Types",
+                question: "Which authentication method uses physical features like fingerprints, iris patterns, or vein patterns?",
+                options: [
+                    "Possession-based authentication",
+                    "Biometric authentication",
+                    "Knowledge-based authentication",
+                    "One-time password"
+                ],
+                correct: 1,
+                explanation: "Biometric authentication uses physical or behavioral characteristics of the individual."
+            },
+            {
+                id: 22,
+                level: 2,
+                category: "Auth Types",
+                question: "IC cards, One-Time Password tokens, and SMS verification belong to which category?",
+                options: [
+                    "Knowledge-based authentication",
+                    "Biometric authentication",
+                    "Possession-based authentication",
+                    "Cracking"
+                ],
+                correct: 2,
+                explanation: "Possession-based authentication uses an item that the individual possesses."
+            },
+            {
+                id: 23,
+                level: 2,
+                category: "Passwords",
+                question: "What type of password changes at regular intervals and can only be used ONCE?",
+                options: [
+                    "Biometric key",
+                    "One-time password",
+                    "PIN code",
+                    "Static password"
+                ],
+                correct: 1,
+                explanation: "A One-time password changes at regular intervals and can only be used once."
+            },
+            {
+                id: 24,
+                level: 2,
+                category: "Cybercrime",
+                question: "Illegally logging into a computer system using another person's User ID and password is a:",
+                options: [
+                    "Violation of the Unauthorized Computer Access Law",
+                    "Biometric authentication procedure",
+                    "Regular software updates process",
+                    "Network availability feature"
+                ],
+                correct: 0,
+                explanation: "Using someone else's credentials to gain illegal access violates the Unauthorized Computer Access Law."
+            },
+            {
+                id: 25,
+                level: 2,
+                category: "Software Updates",
+                question: "Why is it essential to keep your antivirus software virus definitions updated?",
+                options: [
+                    "To generate one-time passwords for email login.",
+                    "To allow software to detect and isolate newly discovered viruses.",
+                    "To avoid using upper and lower case letters in passwords.",
+                    "To change your IP address automatically."
+                ],
+                correct: 1,
+                explanation: "Antivirus software needs updated virus definitions to recognize and remove or isolate new viruses."
+            },
+            {
+                id: 26,
+                level: 2,
+                category: "Software Updates",
+                question: "Operating system (OS) updates patch weaknesses in software. What are these weaknesses called?",
+                options: [
+                    "Firewalls",
+                    "Security holes (vulnerabilities)",
+                    "Biometric traits",
+                    "Access controls"
+                ],
+                correct: 1,
+                explanation: "Weaknesses or flaws in software code are termed security holes or vulnerabilities."
+            },
+            {
+                id: 27,
+                level: 2,
+                category: "Password Guidelines",
+                question: "According to password guidelines, why should you avoid personal info like your birthday?",
+                options: [
+                    "Personal info makes passwords too long to type.",
+                    "Personal info can easily be guessed or found by unauthorized individuals.",
+                    "It causes errors in biometric scanners.",
+                    "It stops the operating system from performing updates."
+                ],
+                correct: 1,
+                explanation: "Personal details (birthdays, email address) are public or easy to guess, lowering password security."
+            },
+            {
+                id: 28,
+                level: 2,
+                category: "Malware Types",
+                question: "Software that silently gathers private information without consent and sends it to third parties is:",
+                options: [
+                    "Adware",
+                    "Spyware",
+                    "Firewall",
+                    "One-time token"
+                ],
+                correct: 1,
+                explanation: "Spyware collects personal information without the user's knowledge and sends it to third parties."
+            },
+
+            // LEVEL 3: HARD / SCENARIOS (Questions 29-40)
+            {
+                id: 29,
+                level: 3,
+                category: "2FA vs Two-Step",
+                question: "What is the key technical difference between Two-Factor Authentication (2FA) and Two-Step Authentication?",
+                options: [
+                    "2FA combines TWO DIFFERENT factor types; Two-step uses two pieces of info from the SAME factor type.",
+                    "2FA requires a fingerprint; Two-step requires an IC card only.",
+                    "2FA is only used on phones; Two-step is used on laptop computers.",
+                    "There is no technical difference between them."
+                ],
+                correct: 0,
+                explanation: "2FA combines 2 DIFFERENT categories (e.g. knowledge + possession), while Two-step uses 2 checks from the SAME category (e.g. password + PIN code)."
+            },
+            {
+                id: 30,
+                level: 3,
+                category: "Scenario Analysis",
+                question: "A hacker launches a DDoS attack crashing a hospital's server, preventing doctors from opening patient files. Which CIA element is directly lost?",
+                options: [
+                    "Confidentiality",
+                    "Availability",
+                    "Integrity",
+                    "Non-repudiation"
+                ],
+                correct: 1,
+                explanation: "When system access is blocked when needed, the Availability of the information is violated."
+            },
+            {
+                id: 31,
+                level: 3,
+                category: "Scenario Analysis",
+                question: "An employee secretly modifies financial figures in a database to hide stolen money. Which CIA element is breached?",
+                options: [
+                    "Availability",
+                    "Integrity",
+                    "Confidentiality",
+                    "Biometrics"
+                ],
+                correct: 1,
+                explanation: "Tampering with or altering data breaches Integrity (data is no longer authentic and uncorrupted)."
+            },
+            {
+                id: 32,
+                level: 3,
+                category: "Scenario Analysis",
+                question: "A hacker leaks confidential company merger documents onto a public forum. Which CIA element is breached?",
+                options: [
+                    "Confidentiality",
+                    "Integrity",
+                    "Availability",
+                    "Access control"
+                ],
+                correct: 0,
+                explanation: "When unauthorized individuals gain access to private data, Confidentiality is lost."
+            },
+            {
+                id: 33,
+                level: 3,
+                category: "Authentication Scenario",
+                question: "A user logs into a online banking site using a PIN code (Knowledge) AND an IC card (Possession). What type of authentication is this?",
+                options: [
+                    "Two-step authentication",
+                    "Two-factor authentication (2FA)",
+                    "Biometric authentication",
+                    "Single-factor authentication"
+                ],
+                correct: 1,
+                explanation: "PIN (Knowledge) + IC Card (Possession) uses two DIFFERENT factors, which is Two-Factor Authentication (2FA)."
+            },
+            {
+                id: 34,
+                level: 3,
+                category: "Authentication Scenario",
+                question: "A system asks for your account password, and then asks for a second security question secret answer. What is this?",
+                options: [
+                    "Two-factor authentication (2FA)",
+                    "Two-step authentication",
+                    "Biometric verification",
+                    "Firewall rule"
+                ],
+                correct: 1,
+                explanation: "Password (Knowledge) + Security Answer (Knowledge) uses two pieces of info from the SAME factor type, making it Two-step authentication."
+            },
+            {
+                id: 35,
+                level: 3,
+                category: "Legal Categories",
+                question: "Online fraud, defamation, and copyright infringement on the web fall under which cybercrime category?",
+                options: [
+                    "Crimes involving computer electronic records",
+                    "Network-based crimes",
+                    "Violation of the Unauthorized Computer Access Law",
+                    "Malware infection"
+                ],
+                correct: 1,
+                explanation: "Network-based crimes include fraud, defamation, or copyright infringement committed over networks."
+            },
+            {
+                id: 36,
+                level: 3,
+                category: "Legal Categories",
+                question: "Altering stored electronic data records without authorization belongs to which legal classification?",
+                options: [
+                    "Network-based crimes",
+                    "Crimes involving computer or electronic records",
+                    "Biometric tampering",
+                    "One-time password violation"
+                ],
+                correct: 1,
+                explanation: "Crimes involving computer or electronic records involve tampering with stored data or unauthorized device manipulation."
+            },
+            {
+                id: 37,
+                level: 3,
+                category: "Scenario Analysis",
+                question: "A utility program claims to speed up your PC, but silently deletes important system files upon running. What malware type is this?",
+                options: [
+                    "Worm",
+                    "Trojan horse",
+                    "Adware",
+                    "Keylogger"
+                ],
+                correct: 1,
+                explanation: "A program disguised as useful software that secretly causes damage is a Trojan horse."
+            },
+            {
+                id: 38,
+                level: 3,
+                category: "Security Best Practices",
+                question: "Why is reusing the exact same strong password across 10 different web accounts extremely risky?",
+                options: [
+                    "It consumes double the computer memory.",
+                    "If one account is breached, attackers gain access to all your other 9 accounts.",
+                    "It causes the firewall to stop scanning incoming traffic.",
+                    "It corrupts your biometric fingerprint files."
+                ],
+                correct: 1,
+                explanation: "Password reuse means a single compromise compromises all connected accounts (Credential Stuffing risk)."
+            },
+            {
+                id: 39,
+                level: 3,
+                category: "Threat Identification",
+                question: "How does a computer Worm differ fundamentally from a typical computer virus in spreading mechanism?",
+                options: [
+                    "A worm requires a human user to open an email, while viruses do not.",
+                    "A worm replicates and spreads automatically across networks without requiring user action.",
+                    "A worm only infects smartphones, while viruses target laptops.",
+                    "A worm displays pop-up ads, while a virus asks for ransom."
+                ],
+                correct: 1,
+                explanation: "A Worm automatically replicates itself and spreads across network connections to expand infection."
+            },
+            {
+                id: 40,
+                level: 3,
+                category: "Comprehensive Security",
+                question: "Which set of choices represents the STRONGEST password strategy according to textbook rules?",
+                options: [
+                    "Short, easy-to-remember password used on all websites.",
+                    "Your birthdate combined with your email address name.",
+                    "Long length, combining uppercase, lowercase, numbers, symbols, without personal info, and unique per site.",
+                    "A sequence of numbers like '1234567890'."
+                ],
+                correct: 2,
+                explanation: "Combines all key guidelines: as long as possible, mixed character types, no personal info, and no password reuse."
+            }
+        ];
+
+        // Arabic translations used only by Study & Bank View.
+        // Missing entries safely fall back to the original English text, so the game never breaks.
+        window.STUDY_AR_BY_ID = {"1":{"question":"ما هو التعريف الأساسي لأمن المعلومات؟","options":["إدارة المعلومات بشكل صحيح والحفاظ عليها آمنة.","إنشاء كلمات مرور باستخدام أحرف كبيرة وصغيرة.","شراء برنامج مكافحة فيروسات باهظ الثمن لأجهزة كمبيوتر المكتب.","ربط أجهزة الكمبيوتر معًا عبر الإنترنت."]},"2":{"question":"أي عنصر أساسي يضمن أن الأشخاص المصرح لهم فقط يمكنهم الوصول إلى المعلومات؟","options":["سلامة المعلومات","السرية","التوافر","الأصالة"]},"3":{"question":"أي عنصر أساسي يضمن عدم إتلاف المعلومات أو العبث بها أو محوها؟","options":["السرية","التوافر","سلامة المعلومات","اختراق كلمات المرور"]},"4":{"question":"أي عنصر أساسي يضمن إمكانية الوصول إلى المعلومات في أي وقت عند الحاجة؟","options":["التوافر","السرية","سلامة المعلومات","المصادقة"]},"5":{"question":"ما المصطلح الذي يصف قيام شخص بالدخول إلى نظام كمبيوتر دون إذن؟","options":["التحكم في الوصول","الوصول غير المصرح به","المصادقة باستخدام القياسات الحيوية","النسخ الاحتياطي للبيانات"]},"6":{"question":"ما المصطلح العام للبرامج الخبيثة المصممة لإلحاق الضرر بأجهزة الكمبيوتر؟","options":["جدار الحماية","البرمجيات الخبيثة","القياسات الحيوية","رمز مميز"]},"7":{"question":"ما اسم سلسلة الأحرف المستخدمة للتحقق من أن المستخدم هو صاحب الحساب الحقيقي؟","options":["معرّف المستخدم","كلمة المرور","جدار الحماية","النسخ الاحتياطي"]},"8":{"question":"ما العملية التي يتم من خلالها التحقق من هوية المستخدم على جهاز كمبيوتر أو شبكة؟","options":["اختراق كلمات المرور","المصادقة","التشهير","التسلل"]},"9":{"question":"أي إجراء أمني يحد من الوصول إلى الكمبيوتر بحيث يُسمح فقط للمستخدمين الذين تم التحقق منهم؟","options":["التحكم في الوصول","مسجل ضغطات المفاتيح","البرمجيات الإعلانية","برامج التجسس"]},"10":{"question":"ما النظام الذي يتم تثبيته عند نقاط دخول الشبكة لمنع الدخول غير المصرح به وإيقاف تسرب البيانات؟","options":["حصان طروادة","جدار الحماية","البطاقة الذكية (IC Card)","ماسح نمط الأوردة"]},"11":{"question":"لماذا يجب عليك إنشاء نسخ احتياطية من بياناتك المهمة بانتظام؟","options":["لتسريع تصفح الإنترنت على جهاز الكمبيوتر.","للسماح باستعادة البيانات إذا تعرضت الملفات الأصلية للتلف أو الفقدان.","لمنع مخترقي الأنظمة من معرفة عنوان IP الخاص بك.","لإيقاف البرامج الإعلانية من فتح الإعلانات المنبثقة."]},"12":{"question":"ماذا نُسمي الشخص الذي يقوم بعملية اختراق الأنظمة (Cracking)؟","options":["مطور","مخترق (Cracker)","مسؤول النظام","مستخدم"]},"13":{"question":"أي مما يلي يُنصح به عند إنشاء كلمة مرور قوية؟","options":["استخدام سلسلة قصيرة لسهولة الكتابة.","استخدام تاريخ ميلادك وعنوان بريدك الإلكتروني.","جعل كلمة المرور طويلة قدر الإمكان.","إعادة استخدام كلمة المرور نفسها لجميع المواقع."]},"14":{"question":"ماذا تُسمى الأفعال الإجرامية التي تُرتكب عبر شبكات الكمبيوتر بشكل عام؟","options":["الجرائم الإلكترونية","التحكم في الوصول","الأصالة","القياسات الحيوية"]},"15":{"question":"أي برنامج يتنكر في صورة برنامج شرعي لكنه يبدأ الهجمات في الخفاء؟","options":["دودة إلكترونية","حصان طروادة","مسجل ضغطات المفاتيح","البرمجيات الإعلانية"]},"16":{"question":"أي برنامج ينسخ نفسه وينتشر عبر الإنترنت من تلقاء نفسه؟","options":["دودة إلكترونية","برمجية الفدية","البرمجيات الإعلانية","كلمة مرور لمرة واحدة"]},"17":{"question":"لاحظ مستخدم ظهور لافتات إعلانية غير مرغوب فيها بشكل متكرر أثناء التصفح. ما نوع البرمجية الخبيثة هذه؟","options":["برمجية الفدية","البرمجيات الإعلانية","مسجل ضغطات المفاتيح","جدار الحماية"]},"18":{"question":"أي نوع من البرمجيات الخبيثة يسجل جميع ضغطات المفاتيح التي يتم إدخالها على لوحة المفاتيح دون موافقة المستخدم؟","options":["مسجل ضغطات المفاتيح","حصان طروادة","فيروس كمبيوتر","دودة إلكترونية"]},"19":{"question":"برنامج يقوم بقفل الملفات الموجودة على الكمبيوتر ويطلب دفع مبلغ مالي لفتحها. ما هذا البرنامج؟","options":["برامج التجسس","برمجية الفدية","البرمجيات الإعلانية","اختراق كلمات المرور"]},"20":{"question":"مصادقة معرّف المستخدم وكلمة المرور أو رمز PIN تنتمي إلى أي فئة من فئات المصادقة؟","options":["المصادقة المعتمدة على المعرفة","المصادقة باستخدام القياسات الحيوية","المصادقة المعتمدة على الحيازة","المصادقة بخطوتين"]},"21":{"question":"أي طريقة مصادقة تستخدم خصائص جسدية مثل بصمات الأصابع أو أنماط قزحية العين أو أنماط الأوردة؟","options":["المصادقة المعتمدة على الحيازة","المصادقة باستخدام القياسات الحيوية","المصادقة المعتمدة على المعرفة","كلمة مرور لمرة واحدة"]},"22":{"question":"البطاقات الذكية (IC Cards) ورموز كلمات المرور لمرة واحدة والتحقق عبر الرسائل النصية SMS تنتمي إلى أي فئة؟","options":["المصادقة المعتمدة على المعرفة","المصادقة باستخدام القياسات الحيوية","المصادقة المعتمدة على الحيازة","اختراق كلمات المرور"]},"23":{"question":"ما نوع كلمة المرور التي تتغير على فترات منتظمة ولا يمكن استخدامها إلا مرة واحدة؟","options":["مفتاح حيوي","كلمة مرور لمرة واحدة","رمز PIN","كلمة مرور ثابتة"]},"24":{"question":"تسجيل الدخول بشكل غير قانوني إلى نظام كمبيوتر باستخدام معرّف المستخدم وكلمة مرور شخص آخر يُعد:","options":["مخالفة لقانون الدخول غير المصرح به إلى أجهزة الكمبيوتر","إجراء مصادقة باستخدام القياسات الحيوية","عملية تحديث البرامج بانتظام","ميزة لتوافر الشبكة"]},"25":{"question":"لماذا من الضروري تحديث تعريفات الفيروسات في برنامج مكافحة الفيروسات باستمرار؟","options":["لإنشاء كلمات مرور لمرة واحدة لتسجيل الدخول إلى البريد الإلكتروني.","للسماح للبرنامج باكتشاف الفيروسات المكتشفة حديثًا وعزلها.","لتجنب استخدام الأحرف الكبيرة والصغيرة في كلمات المرور.","لتغيير عنوان IP الخاص بك تلقائيًا."]},"26":{"question":"تعمل تحديثات نظام التشغيل (OS) على إصلاح نقاط الضعف في البرامج. ماذا تُسمى هذه النقاط؟","options":["جدران الحماية","الثغرات الأمنية (نقاط الضعف)","الخصائص الحيوية","عناصر التحكم في الوصول"]},"27":{"question":"وفقًا لإرشادات كلمات المرور، لماذا يجب تجنب المعلومات الشخصية مثل تاريخ ميلادك؟","options":["المعلومات الشخصية تجعل كلمات المرور طويلة جدًا بحيث يصعب كتابتها.","يمكن تخمين المعلومات الشخصية أو العثور عليها بسهولة بواسطة أشخاص غير مصرح لهم.","تسبب أخطاء في أجهزة قراءة القياسات الحيوية.","تمنع نظام التشغيل من تنفيذ التحديثات."]},"28":{"question":"البرنامج الذي يجمع المعلومات الخاصة سرًا دون موافقة المستخدم ويرسلها إلى جهات خارجية هو:","options":["البرمجيات الإعلانية","برامج التجسس","جدار الحماية","رمز مميز لمرة واحدة"]},"29":{"question":"ما الفرق التقني الأساسي بين المصادقة متعددة العوامل (2FA) والمصادقة بخطوتين؟","options":["تجمع 2FA بين نوعين مختلفين من عوامل المصادقة؛ بينما تستخدم المصادقة بخطوتين معلومتين من النوع نفسه من العوامل.","تتطلب 2FA بصمة إصبع، بينما تتطلب المصادقة بخطوتين بطاقة IC فقط.","تُستخدم 2FA على الهواتف فقط، بينما تُستخدم المصادقة بخطوتين على أجهزة الكمبيوتر المحمولة.","لا يوجد فرق تقني بينهما."]},"30":{"question":"شنّ مخترق هجوم DDoS أدى إلى تعطيل خادم مستشفى ومنع الأطباء من فتح ملفات المرضى. أي عنصر من عناصر CIA فُقد بشكل مباشر؟","options":["السرية","التوافر","سلامة المعلومات","عدم التنصل"]},"31":{"question":"قام موظف سرًا بتعديل أرقام مالية في قاعدة بيانات لإخفاء أموال مسروقة. أي عنصر من عناصر CIA تم اختراقه؟","options":["التوافر","سلامة المعلومات","السرية","القياسات الحيوية"]},"32":{"question":"قام مخترق بتسريب مستندات سرية عن اندماج شركة إلى منتدى عام. أي عنصر من عناصر CIA تم اختراقه؟","options":["السرية","سلامة المعلومات","التوافر","التحكم في الوصول"]},"33":{"question":"سجّل مستخدم الدخول إلى موقع مصرفي باستخدام رمز PIN (المعرفة) وبطاقة IC (الحيازة). ما نوع المصادقة هذه؟","options":["المصادقة بخطوتين","المصادقة متعددة العوامل (2FA)","المصادقة باستخدام القياسات الحيوية","المصادقة بعامل واحد"]},"34":{"question":"يطلب النظام كلمة مرور حسابك، ثم يطلب إجابة سرية لسؤال أمان ثانٍ. ما نوع المصادقة هذه؟","options":["المصادقة متعددة العوامل (2FA)","المصادقة بخطوتين","التحقق باستخدام القياسات الحيوية","قاعدة جدار الحماية"]},"35":{"question":"الاحتيال عبر الإنترنت والتشهير وانتهاك حقوق الطبع والنشر على الويب تندرج تحت أي فئة من الجرائم الإلكترونية؟","options":["الجرائم التي تتعلق بالسجلات الحاسوبية أو الإلكترونية","الجرائم القائمة على الشبكات","مخالفة قانون الدخول غير المصرح به إلى أجهزة الكمبيوتر","الإصابة بالبرمجيات الخبيثة"]},"36":{"question":"تغيير سجلات البيانات الإلكترونية المخزنة دون تصريح يندرج تحت أي تصنيف قانوني؟","options":["الجرائم القائمة على الشبكات","الجرائم التي تتعلق بالسجلات الحاسوبية أو الإلكترونية","التلاعب بالقياسات الحيوية","مخالفة كلمة المرور لمرة واحدة"]},"37":{"question":"يدّعي برنامج مساعد أنه يسرّع جهاز الكمبيوتر، لكنه يحذف ملفات النظام المهمة سرًا عند تشغيله. ما نوع البرمجية الخبيثة هذه؟","options":["دودة إلكترونية","حصان طروادة","البرمجيات الإعلانية","مسجل ضغطات المفاتيح"]},"38":{"question":"لماذا تُعد إعادة استخدام كلمة المرور القوية نفسها تمامًا في 10 حسابات مختلفة على الويب أمرًا شديد الخطورة؟","options":["تستهلك ضعف ذاكرة الكمبيوتر.","إذا تم اختراق حساب واحد، فسيتمكن المهاجمون من الوصول إلى حساباتك التسعة الأخرى.","تتسبب في توقف جدار الحماية عن فحص حركة المرور الواردة.","تتسبب في تلف ملفات بصمة الإصبع الحيوية."]},"39":{"question":"كيف تختلف دودة الكمبيوتر بشكل أساسي عن فيروس الكمبيوتر التقليدي في آلية الانتشار؟","options":["تحتاج الدودة إلى أن يفتح المستخدم بريدًا إلكترونيًا، بينما لا تحتاج الفيروسات إلى ذلك.","تتكاثر الدودة وتنتشر تلقائيًا عبر الشبكات دون الحاجة إلى إجراء من المستخدم.","تصيب الدودة الهواتف الذكية فقط، بينما تستهدف الفيروسات أجهزة الكمبيوتر المحمولة.","تعرض الدودة إعلانات منبثقة، بينما يطلب الفيروس فدية."]},"40":{"question":"أي مجموعة من الاختيارات تمثل أقوى استراتيجية لكلمة المرور وفقًا لقواعد الكتاب؟","options":["كلمة مرور قصيرة وسهلة التذكر تُستخدم في جميع المواقع.","تاريخ ميلادك مدمجًا مع اسم عنوان بريدك الإلكتروني.","طول كبير، مع الجمع بين الأحرف الكبيرة والصغيرة والأرقام والرموز، دون معلومات شخصية، وكلمة مرور مختلفة لكل موقع.","سلسلة من الأرقام مثل '1234567890'."]}};
+
+        class CyberGuardGame {
+            constructor() {
+                this.questions = [...QUESTION_DATABASE];
+                this.currentQuestionIndex = 0;
+                this.activeQuestions = [];
+                this.score = 0;
+                this.streak = 0;
+                this.maxStreak = 0;
+                this.lives = 3;
+                this.timer = null;
+                this.secondsElapsed = 0;
+                this.soundEnabled = true;
+                this.studyFilter = 'all';
+                this.isStudyUnlocked = false;
+
+                // Audio Context for synthesized sound FX
+                this.audioCtx = null;
+            }
+
+            init() {
+                this.showHome();
+                this.initAudio();
+            }
+
+            initAudio() {
+                try {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (AudioContext) {
+                        this.audioCtx = new AudioContext();
+                    }
+                } catch(e) {
+                    console.log("Audio API not supported");
+                }
+            }
+
+            playSound(type) {
+                if (!this.soundEnabled || !this.audioCtx) return;
+
+                if (this.audioCtx.state === 'suspended') {
+                    this.audioCtx.resume();
+                }
+
+                const osc = this.audioCtx.createOscillator();
+                const gain = this.audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(this.audioCtx.destination);
+
+                const now = this.audioCtx.currentTime;
+
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.1); // E5
+                    osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.2); // G5
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now); // A3
+                    osc.frequency.exponentialRampToValueAtTime(130.81, now + 0.25); // C3
+                    gain.gain.setValueAtTime(0.25, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'click') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(440, now);
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                }
+            }
+
+            toggleSound() {
+                this.soundEnabled = !this.soundEnabled;
+                const icon = document.getElementById('sound-icon');
+                if (this.soundEnabled) {
+                    icon.className = "fa-solid fa-volume-high text-cyan-400";
+                } else {
+                    icon.className = "fa-solid fa-volume-xmark text-slate-500";
+                }
+            }
+
+            showView(viewId) {
+                ['view-home', 'view-game', 'view-results', 'view-study'].forEach(id => {
+                    document.getElementById(id).classList.add('hidden');
+                });
+                document.getElementById(viewId).classList.remove('hidden');
+
+                const navStats = document.getElementById('nav-stats');
+                if (viewId === 'view-game') {
+                    navStats.classList.remove('hidden');
+                    navStats.classList.add('flex');
+                } else {
+                    navStats.classList.add('hidden');
+                    navStats.classList.remove('flex');
+                }
+            }
+
+            showHome() {
+                this.stopTimer();
+                this.showView('view-home');
+            }
+
+            startLevel(levelNumber) {
+                this.playSound('click');
+                this.activeQuestions = this.questions.filter(q => q.level === levelNumber);
+                this.startSession(`LEVEL ${levelNumber}`);
+            }
+
+            startFullGame() {
+                this.playSound('click');
+                this.activeQuestions = [...this.questions];
+                this.startSession("FULL CHALLENGE");
+            }
+
+            startSession(label) {
+                this.score = 0;
+                this.streak = 0;
+                this.maxStreak = 0;
+                this.lives = 3;
+                this.currentQuestionIndex = 0;
+                this.secondsElapsed = 0;
+
+                document.getElementById('game-difficulty-badge').innerText = label;
+                this.updateStatsUI();
+                this.showView('view-game');
+                this.startTimer();
+                this.renderQuestion();
+            }
+
+            updateStatsUI() {
+                document.getElementById('stat-score').innerText = this.score;
+                document.getElementById('stat-streak').innerText = this.streak;
+                document.getElementById('stat-lives').innerText = `${this.lives}/3`;
+            }
+
+            startTimer() {
+                this.stopTimer();
+                this.timer = setInterval(() => {
+                    this.secondsElapsed++;
+                    const mins = String(Math.floor(this.secondsElapsed / 60)).padStart(2, '0');
+                    const secs = String(this.secondsElapsed % 60).padStart(2, '0');
+                    document.getElementById('timer-text').innerText = `${mins}:${secs}`;
+                }, 1000);
+            }
+
+            stopTimer() {
+                if (this.timer) {
+                    clearInterval(this.timer);
+                    this.timer = null;
+                }
+            }
+
+            renderQuestion() {
+                const q = this.activeQuestions[this.currentQuestionIndex];
+                const total = this.activeQuestions.length;
+
+                // Update Progress
+                document.getElementById('question-tracker').innerText = `Question ${this.currentQuestionIndex + 1} of ${total}`;
+                const pct = ((this.currentQuestionIndex) / total) * 100;
+                document.getElementById('progress-bar').style.width = `${pct}%`;
+
+                // Category & Text
+                document.getElementById('question-category').innerText = q.category;
+                document.getElementById('question-text').innerText = q.question;
+
+                // Options
+                const container = document.getElementById('options-container');
+                container.innerHTML = '';
+
+                q.options.forEach((optText, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = "option-btn w-full text-left p-4 rounded-xl glass-panel border-slate-700 hover:border-cyan-500 text-slate-200 text-sm sm:text-base flex items-start space-x-3 transition-all";
+                    btn.onclick = () => this.selectOption(idx);
+                    
+                    const label = String.fromCharCode(65 + idx); // A, B, C, D
+                    btn.innerHTML = `
+                        <span class="font-mono text-cyan-400 font-bold bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-0.5 text-xs flex-shrink-0 mt-0.5">${label}</span>
+                        <span class="flex-grow">${optText}</span>
+                    `;
+                    container.appendChild(btn);
+                });
+
+                // Hide Feedback & Next
+                document.getElementById('explanation-box').classList.add('hidden');
+                document.getElementById('next-btn').classList.add('hidden');
+            }
+
+            selectOption(selectedIndex) {
+                const q = this.activeQuestions[this.currentQuestionIndex];
+                const buttons = document.querySelectorAll('.option-btn');
+
+                // Disable all option buttons
+                buttons.forEach(btn => btn.disabled = true);
+
+                const isCorrect = (selectedIndex === q.correct);
+
+                if (isCorrect) {
+                    this.playSound('correct');
+                    this.streak++;
+                    if (this.streak > this.maxStreak) this.maxStreak = this.streak;
+                    
+                    // Bonus points for streaks
+                    const streakBonus = Math.min(this.streak * 10, 50);
+                    this.score += (100 + streakBonus);
+
+                    // Style selected button
+                    buttons[selectedIndex].classList.remove('glass-panel', 'border-slate-700');
+                    buttons[selectedIndex].classList.add('bg-emerald-950/80', 'border-emerald-500', 'text-emerald-200', 'cyber-glow-success');
+                    
+                    this.showFeedback(true, q.explanation);
+                } else {
+                    this.playSound('wrong');
+                    this.streak = 0;
+                    this.lives = Math.max(0, this.lives - 1);
+
+                    // Style wrong button
+                    buttons[selectedIndex].classList.remove('glass-panel', 'border-slate-700');
+                    buttons[selectedIndex].classList.add('bg-rose-950/80', 'border-rose-500', 'text-rose-200', 'cyber-glow-danger');
+
+                    // Highlight correct option
+                    buttons[q.correct].classList.remove('glass-panel', 'border-slate-700');
+                    buttons[q.correct].classList.add('bg-emerald-950/40', 'border-emerald-500/60', 'text-emerald-300');
+
+                    this.showFeedback(false, q.explanation);
+                }
+
+                this.updateStatsUI();
+                document.getElementById('next-btn').classList.remove('hidden');
+            }
+
+            showFeedback(isCorrect, explanation) {
+                const box = document.getElementById('explanation-box');
+                const header = document.getElementById('feedback-header');
+                const text = document.getElementById('feedback-text');
+
+                box.classList.remove('hidden', 'bg-emerald-950/30', 'border-emerald-800', 'bg-rose-950/30', 'border-rose-800');
+
+                if (isCorrect) {
+                    box.classList.add('bg-emerald-950/30', 'border-emerald-800');
+                    header.className = "font-bold flex items-center text-sm text-emerald-400";
+                    header.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i> Correct Answer! (+Streak Bonus)`;
+                } else {
+                    box.classList.add('bg-rose-950/30', 'border-rose-800');
+                    header.className = "font-bold flex items-center text-sm text-rose-400";
+                    header.innerHTML = `<i class="fa-solid fa-circle-xmark mr-2"></i> Incorrect Answer`;
+                }
+
+                text.innerText = explanation;
+            }
+
+            nextQuestion() {
+                this.playSound('click');
+                this.currentQuestionIndex++;
+
+                if (this.currentQuestionIndex < this.activeQuestions.length && this.lives > 0) {
+                    this.renderQuestion();
+                } else {
+                    this.finishGame();
+                }
+            }
+
+            finishGame() {
+                this.stopTimer();
+                this.showView('view-results');
+
+                const total = this.activeQuestions.length;
+                const correctCount = Math.round(this.score / 100); // Approximate
+                const accuracy = Math.round((this.score / (total * 100)) * 100);
+
+                document.getElementById('result-score').innerText = this.score;
+                document.getElementById('result-accuracy').innerText = `${Math.min(accuracy, 100)}%`;
+                document.getElementById('result-max-streak').innerText = this.maxStreak;
+
+                const icon = document.getElementById('result-icon');
+                const title = document.getElementById('result-title');
+                const subtitle = document.getElementById('result-subtitle');
+
+                if (accuracy >= 80) {
+                    icon.className = "fa-solid fa-award text-yellow-300";
+                    title.innerText = "Security Expert!";
+                    subtitle.innerText = "You demonstrated excellent knowledge of Information Security & Authentication.";
+                } else if (accuracy >= 50) {
+                    icon.className = "fa-solid fa-shield text-cyan-300";
+                    title.innerText = "Cyber Defender!";
+                    subtitle.innerText = "Good job! Review a few definitions to sharpen your skills even more.";
+                } else {
+                    icon.className = "fa-solid fa-triangle-exclamation text-rose-400";
+                    title.innerText = "Needs Review";
+                    subtitle.innerText = "Don't worry! Use the Study Mode to review textbook concepts.";
+                }
+            }
+
+            openStudyMode() {
+                if (!this.isStudyUnlocked) {
+                    this.showPasswordModal();
+                    return;
+                }
+                this.showView('view-study');
+                this.renderStudyList();
+            }
+
+            showPasswordModal() {
+                const modal = document.getElementById('password-modal');
+                const input = document.getElementById('study-pass-input');
+                const errMsg = document.getElementById('pass-error-msg');
+                
+                input.value = '';
+                errMsg.classList.add('hidden');
+                modal.classList.remove('hidden');
+                setTimeout(() => input.focus(), 100);
+
+                input.onkeydown = (e) => {
+                    if (e.key === 'Enter') this.verifyStudyPassword();
+                };
+            }
+
+            closePasswordModal() {
+                document.getElementById('password-modal').classList.add('hidden');
+            }
+
+            verifyStudyPassword() {
+                const input = document.getElementById('study-pass-input');
+                const errMsg = document.getElementById('pass-error-msg');
+
+                if (input.value.trim() === '55000') {
+                    this.playSound('correct');
+                    this.isStudyUnlocked = true;
+                    this.closePasswordModal();
+                    this.openStudyMode();
+                } else {
+                    this.playSound('wrong');
+                    errMsg.classList.remove('hidden');
+                    input.value = '';
+                    input.focus();
+                }
+            }
+
+            setStudyFilter(filter) {
+                this.studyFilter = filter;
+                
+                ['all', 1, 2, 3].forEach(f => {
+                    const btn = document.getElementById(`filter-${f}`);
+                    if (f === filter) {
+                        btn.className = "px-4 py-2 rounded-lg text-xs font-mono font-bold bg-cyan-500 text-slate-950 transition-colors";
+                    } else {
+                        btn.className = "px-4 py-2 rounded-lg text-xs font-mono text-slate-400 hover:bg-slate-800 transition-colors";
+                    }
+                });
+
+                this.renderStudyList();
+            }
+
+            filterStudyQuestions() {
+                this.renderStudyList();
+            }
+
+            renderStudyList() {
+                const searchTerm = document.getElementById('study-search').value.toLowerCase();
+                const listContainer = document.getElementById('study-list');
+                listContainer.innerHTML = '';
+
+                let filtered = this.questions;
+
+                if (this.studyFilter !== 'all') {
+                    filtered = filtered.filter(q => q.level === Number(this.studyFilter));
+                }
+
+                if (searchTerm.trim() !== '') {
+                    filtered = filtered.filter(q => 
+                        q.question.toLowerCase().includes(searchTerm) || 
+                        q.category.toLowerCase().includes(searchTerm) ||
+                        q.explanation.toLowerCase().includes(searchTerm)
+                    );
+                }
+
+                if (filtered.length === 0) {
+                    listContainer.innerHTML = `
+                        <div class="text-center py-12 text-slate-500 font-mono text-sm">
+                            No matching questions found.
+                        </div>
+                    `;
+                    return;
+                }
+
+                filtered.forEach(q => {
+                    const card = document.createElement('div');
+                    card.className = "glass-panel p-5 rounded-2xl border-slate-700/80 space-y-3";
+                    
+                    const levelBadgeColor = q.level === 1 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 
+                                            q.level === 2 ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' : 
+                                            'bg-rose-500/20 text-rose-400 border-rose-500/30';
+
+                    // IMPORTANT: Keep the original question database and game logic untouched.
+                    // Bilingual text is added ONLY to the Study & Bank View rendering.
+                    const ar = window.STUDY_AR_BY_ID[String(q.id)] || {question: '', options: []};
+
+                    let optionsHTML = q.options.map((opt, i) => {
+                        const isCorrect = i === q.correct;
+                        const arabicOpt = ar.options[i] || '';
+                        return `
+                            <div class="text-xs p-2.5 rounded-lg flex items-start space-x-2 ${isCorrect ? 'bg-emerald-950/50 border border-emerald-700 text-emerald-200 font-medium' : 'bg-slate-900/40 text-slate-400'}">
+                                <span class="font-mono font-bold flex-shrink-0">${String.fromCharCode(65 + i)}.</span>
+                                <span class="flex-grow">
+                                    <span class="block">${opt}</span>
+                                    <span class="block mt-1 text-slate-300 font-normal" dir="rtl">${arabicOpt}</span>
+                                </span>
+                                ${isCorrect ? '<i class="fa-solid fa-check text-emerald-400 ml-auto"></i>' : ''}
+                            </div>
+                        `;
+                    }).join('');
+
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between text-xs font-mono">
+                            <span class="px-2.5 py-0.5 rounded border ${levelBadgeColor}">Level ${q.level}</span>
+                            <span class="text-slate-400">${q.category}</span>
+                        </div>
+                        <h4 class="font-bold text-slate-100 text-base leading-snug">${q.id}. ${q.question}</h4>
+                        <div class="text-sm text-slate-300 -mt-2" dir="rtl">${ar.question}</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                            ${optionsHTML}
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-xs text-slate-300 mt-2">
+                            <span class="font-bold text-cyan-400">Textbook Note:</span> ${q.explanation}
+                        </div>
+                    `;
+                    listContainer.appendChild(card);
+                });
+            }
+        }
+
+        // Initialize Game Instance
+        let game;
+        window.onload = () => {
+            game = new CyberGuardGame();
+            game.init();
+        };
+    </script>
+</body>
+</html>
