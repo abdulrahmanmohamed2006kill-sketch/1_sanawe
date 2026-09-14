@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عالم الهكسا الأنيق - شرح النظام السادس عشر Hexadecimal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pinky: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                        },
+                        rose: {
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                        },
+                        lavender: {
+                            100: '#f3e8ff',
+                            200: '#e9d5ff',
+                            300: '#d8b4fe',
+                            400: '#c084fc',
+                            500: '#a855f7',
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        tajawal: ['Tajawal', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti for Game Wins -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #fff5f7 0%, #fef0f5 50%, #f3e8ff 100%);
+            min-height: 100vh;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 182, 193, 0.4);
+            box-shadow: 0 10px 30px rgba(244, 63, 94, 0.08);
+        }
+
+        .glass-card-pink {
+            background: linear-gradient(135deg, rgba(255, 241, 242, 0.9), rgba(253, 226, 236, 0.9));
+            border: 2px solid #fda4af;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #e11d48 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .sparkle-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sparkle-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 25px rgba(225, 29, 72, 0.25);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #ffe4e6;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f43f5e;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="text-gray-800 pb-16">
+
+    <!-- Top Decorative Header Bar -->
+    <header class="sticky top-0 z-50 glass-card border-b border-pink-200 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pink-500 to-purple-500 flex items-center justify-center text-white text-2xl shadow-lg floating">
+                    <i class="fa-solid fa-gem"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-xl md:text-2xl gradient-text">عالم الهكسا الأنيق ✨</h1>
+                    <p class="text-xs text-pink-600 font-bold">أساسيات البرمجة - Hexadecimal System</p>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="flex items-center gap-2 overflow-x-auto py-1">
+                <a href="#intro" class="px-3 py-1.5 rounded-xl bg-pink-100 text-pink-700 hover:bg-pink-200 font-bold text-sm transition">💖 الشرح الأساسي</a>
+                <a href="#table" class="px-3 py-1.5 rounded-xl bg-purple-100 text-purple-700 hover:bg-purple-200 font-bold text-sm transition">👑 جدول الحفظ</a>
+                <a href="#conversions" class="px-3 py-1.5 rounded-xl bg-pink-100 text-pink-700 hover:bg-pink-200 font-bold text-sm transition">🌸 طرق التحويل</a>
+                <a href="#homework" class="px-3 py-1.5 rounded-xl bg-purple-100 text-purple-700 hover:bg-purple-200 font-bold text-sm transition">📝 الواجب والحلول</a>
+                <a href="#calculator" class="px-3 py-1.5 rounded-xl bg-pink-100 text-pink-700 hover:bg-pink-200 font-bold text-sm transition">🧮 الحاسبة الذكية</a>
+                <a href="#games" class="px-4 py-1.5 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold text-sm shadow-md hover:opacity-90 transition">🎮 قسم الألعاب الممتعة</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="max-w-7xl mx-auto px-4 mt-6">
+        <div class="glass-card-pink rounded-3xl p-6 md:p-10 relative overflow-hidden shadow-xl border-2 border-pink-300">
+            <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-pink-300/30 rounded-full blur-2xl"></div>
+            <div class="absolute -right-10 -top-10 w-48 h-48 bg-purple-300/30 rounded-full blur-2xl"></div>
+            
+            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="space-y-4 text-center md:text-right max-w-2xl">
+                    <span class="px-4 py-1.5 rounded-full bg-white text-pink-600 font-extrabold text-xs inline-flex items-center gap-2 border border-pink-200 shadow-sm">
+                        <i class="fa-solid fa-crown text-amber-400"></i> مادة مجهزة خصيصاً للحفظ والشرح التفاعلي بدون أي اختصار
+                    </span>
+                    <h2 class="text-3xl md:text-5xl font-black text-gray-800 leading-tight">
+                        رحلتك اللطيفة لإتقان <span class="gradient-text">النظام السادس عشر</span> 💻✨
+                    </h2>
+                    <p class="text-gray-700 leading-relaxed text-base md:text-lg">
+                        مرحباً بكِ في هذا الدليل التفاعلي المبسط والممتع الشامل لكافة مفاهيم وقواعد وتحويلات الـ **Hexadecimal** المبنية على دورة المحاضر القدير <strong class="text-pink-700">م. عبد الرحمن محمد</strong>.
+                    </p>
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
+                        <a href="#games" class="sparkle-btn px-6 py-3 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-black shadow-lg flex items-center gap-2">
+                            <i class="fa-solid fa-gamepad text-lg"></i> ابدأ الألعاب التفاعلية فوراً
+                        </a>
+                        <a href="#intro" class="sparkle-btn px-6 py-3 rounded-2xl bg-white text-pink-600 font-bold border-2 border-pink-300 flex items-center gap-2">
+                            <i class="fa-solid fa-book-open"></i> استكشف الشرح الكامل
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Teacher Credit Card -->
+                <div class="glass-card p-5 rounded-2xl border-2 border-pink-200 text-center w-full md:w-80 shadow-md">
+                    <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-pink-400 to-purple-400 flex items-center justify-center text-white text-3xl mb-3 shadow-md border-2 border-white">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <h3 class="font-extrabold text-pink-700 text-lg">المهندس عبد الرحمن محمد</h3>
+                    <p class="text-xs text-purple-600 font-bold mt-1">أساسيات البرمجة وعلوم الحاسوب</p>
+                    <p class="text-xs text-gray-600 mt-2 bg-pink-50 py-1 px-3 rounded-lg border border-pink-100">
+                        شرح تفاعلي ومبسط لنظم العد والتطبيقات البرمجية 🎓
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 1: INTRODUCTION & WHY HEXADECIMAL -->
+    <section id="intro" class="max-w-7xl mx-auto px-4 mt-10 space-y-8">
+        
+        <div class="text-center space-y-2">
+            <span class="text-pink-500 font-black text-sm tracking-widest uppercase">الدرس الأول 🌸</span>
+            <h2 class="text-3xl font-black text-gray-800">ما هو النظام السادس عشر (Hexadecimal System)؟</h2>
+            <div class="w-24 h-1.5 bg-gradient-to-r from-pink-400 to-purple-400 mx-auto rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Card 1: Decimal -->
+            <div class="glass-card p-6 rounded-3xl border-2 border-pink-200 hover:border-pink-400 transition">
+                <div class="w-12 h-12 rounded-2xl bg-pink-100 text-pink-600 flex items-center justify-center text-xl font-bold mb-4">
+                    10
+                </div>
+                <h3 class="font-bold text-xl text-gray-800 mb-2">1. النظام العشري (Decimal)</h3>
+                <p class="text-xs font-semibold text-pink-600 mb-3">أساس النظام: Base 10</p>
+                <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                    هو النظام البشري الاعتيادي المستعمل يومياً، يتكون من 10 أرقام من 0 إلى 9.
+                </p>
+                <div class="bg-pink-50 p-3 rounded-xl border border-pink-200 font-mono text-center text-pink-700 font-bold">
+                    0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+                </div>
+            </div>
+
+            <!-- Card 2: Binary -->
+            <div class="glass-card p-6 rounded-3xl border-2 border-purple-200 hover:border-purple-400 transition">
+                <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl font-bold mb-4">
+                    01
+                </div>
+                <h3 class="font-bold text-xl text-gray-800 mb-2">2. النظام الثنائي (Binary)</h3>
+                <p class="text-xs font-semibold text-purple-600 mb-3">أساس النظام: Base 2</p>
+                <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                    هو لغة الحاسوب الأوليّة المكونة فقط من رقمين (الصفر والواحد) للتعبير عن حالات الإشارات الكهربائية.
+                </p>
+                <div class="bg-purple-50 p-3 rounded-xl border border-purple-200 font-mono text-center text-purple-700 font-bold">
+                    0 , 1
+                </div>
+            </div>
+
+            <!-- Card 3: Hexadecimal -->
+            <div class="glass-card-pink p-6 rounded-3xl border-2 border-pink-300 shadow-md hover:border-pink-500 transition">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pink-500 to-purple-500 text-white flex items-center justify-center text-xl font-bold mb-4 shadow-md">
+                    16
+                </div>
+                <h3 class="font-bold text-xl text-pink-800 mb-2">3. النظام السادس عشر (Hexadecimal)</h3>
+                <p class="text-xs font-bold text-pink-600 mb-3">أساس النظام: Base 16 ✨</p>
+                <p class="text-gray-700 text-sm leading-relaxed mb-4">
+                    نظام يحتوي على 16 رمزا (الأرقام من 0 إلى 9 ثم الحروف من A إلى F للتعبير عن الأعداد من 10 إلى 15).
+                </p>
+                <div class="bg-white p-3 rounded-xl border border-pink-300 font-mono text-center text-pink-600 font-extrabold text-xs shadow-inner">
+                    0 1 2 3 4 5 6 7 8 9 A B C D E F
+                </div>
+            </div>
+        </div>
+
+        <!-- Why Hexadecimal? Detailed Explanation -->
+        <div class="glass-card p-6 md:p-8 rounded-3xl border-2 border-pink-200 space-y-6">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-pink-500 text-white flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <h3 class="text-2xl font-black text-gray-800">لماذا نستخدم النظام السادس عشر (Why Hexadecimal)؟</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                <div class="space-y-4">
+                    <div class="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-sm">
+                        <strong class="font-bold block mb-1">❌ صعوبة قراءة الثنائي للبشر:</strong>
+                        من الصعب جداً على الإنسان قراءة وفهم السلاسل الطويلة جداً من الصفر والواحد!
+                        <div class="bg-white p-2 rounded-lg mt-2 font-mono text-xs overflow-x-auto text-gray-800 border border-red-200">
+                            01001001 00100000 01001100 01101111 01110110 01100101
+                        </div>
+                        <span class="text-xs text-red-500 mt-1 block font-bold">هذه السلسلة تعني: "I Love You!" ولكن قراءتها ثنائياً متعبة جداً للعين البشرية!</span>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm">
+                        <strong class="font-bold block mb-1">✨ الحل الذكي في النظام السادس عشر:</strong>
+                        يوفر تمثيلاً صديقاً للبشر <strong>(Human-Friendly Representation)</strong>!
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-xs">
+                            <li>كل <strong>Byte (8 bits)</strong> يُكتب فقط في <strong>حرفين/رقين اثنين (2 letters/digits)</strong>!</li>
+                            <li>مثال: السلسلة الثنائية <code class="bg-emerald-100 px-1 rounded">11010100</code> تُختصر ببساطة في السادس عشر إلى <code class="bg-emerald-200 px-1 rounded font-bold">D4</code>!</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Uses in Web and CSS Colors -->
+                <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 space-y-3">
+                    <h4 class="font-extrabold text-purple-800 text-base flex items-center gap-2">
+                        <i class="fa-solid fa-palette text-pink-500"></i> تطبيقات عملية: ألوان CSS ورموز الـ Hex
+                    </h4>
+                    <p class="text-xs text-gray-600">
+                        يُستخدم النظام السادس عشر بشكل واسع في برمجة الصفحات لتحديد درجات الألوان بدقة بحسب نسق RGB (Red, Green, Blue):
+                    </p>
+                    <div class="grid grid-cols-2 gap-2 text-xs font-mono">
+                        <div class="p-2 rounded-lg bg-white border border-pink-200 flex items-center justify-between">
+                            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#FF0000]"></span> أحمر Red</span>
+                            <span class="font-bold text-pink-600">#FF0000</span>
+                        </div>
+                        <div class="p-2 rounded-lg bg-white border border-pink-200 flex items-center justify-between">
+                            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#FFA500]"></span> برتقالي Orange</span>
+                            <span class="font-bold text-pink-600">#FFA500</span>
+                        </div>
+                        <div class="p-2 rounded-lg bg-white border border-pink-200 flex items-center justify-between">
+                            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#FFFF00]"></span> أصفر Yellow</span>
+                            <span class="font-bold text-pink-600">#FFFF00</span>
+                        </div>
+                        <div class="p-2 rounded-lg bg-white border border-pink-200 flex items-center justify-between">
+                            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#008000]"></span> أخضر Green</span>
+                            <span class="font-bold text-pink-600">#008000</span>
+                        </div>
+                        <div class="p-2 rounded-lg bg-white border border-pink-200 flex items-center justify-between">
+                            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#00FFFF]"></span> سماوي Cyan</span>
+                            <span class="font-bold text-pink-600">#00FFFF</span>
+                        </div>
+                        <div class="p-2 rounded-lg bg-white border border-pink-200 flex items-center justify-between">
+                            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#0000FF]"></span> أزرق Blue</span>
+                            <span class="font-bold text-pink-600">#0000FF</span>
+                        </div>
+                        <div class="p-2 rounded-lg bg-white border border-pink-200 flex items-center justify-between">
+                            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#800080]"></span> بنفسجي Purple</span>
+                            <span class="font-bold text-pink-600">#800080</span>
+                        </div>
+                        <div class="p-2 rounded-lg bg-white border border-pink-200 flex items-center justify-between">
+                            <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#FFCBDB]"></span> وردي Pink</span>
+                            <span class="font-bold text-pink-600">#FFCOCB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hexadecimal Prefixes Table -->
+            <div class="pt-4 border-t border-pink-200">
+                <h4 class="font-extrabold text-pink-700 text-lg mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-code"></i> بادئات النظام السادس عشر في اللغات المختلفة (Hexadecimal Prefixes)
+                </h4>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-right bg-white rounded-2xl overflow-hidden border border-pink-200 shadow-sm">
+                        <thead class="bg-pink-100 text-pink-800 font-extrabold">
+                            <tr>
+                                <th class="p-3 border-b border-pink-200">التقنية / لغة البرمجة (Technology / Language)</th>
+                                <th class="p-3 border-b border-pink-200">البادئة (Prefix)</th>
+                                <th class="p-3 border-b border-pink-200">مثال توضيحي (Example)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-pink-100 font-mono">
+                            <tr class="hover:bg-pink-50">
+                                <td class="p-3 font-sans font-semibold text-gray-800">HTML & CSS</td>
+                                <td class="p-3 font-bold text-pink-600">#Code</td>
+                                <td class="p-3 font-bold text-purple-600">#FFFFFF</td>
+                            </tr>
+                            <tr class="hover:bg-pink-50">
+                                <td class="p-3 font-sans font-semibold text-gray-800">C, C++, Java, C#...etc</td>
+                                <td class="p-3 font-bold text-pink-600">0xCode</td>
+                                <td class="p-3 font-bold text-purple-600">0xC2A4</td>
+                            </tr>
+                            <tr class="hover:bg-pink-50">
+                                <td class="p-3 font-sans font-semibold text-gray-800">XML</td>
+                                <td class="p-3 font-bold text-pink-600">&#Code</td>
+                                <td class="p-3 font-bold text-purple-600">&#C2A4</td>
+                            </tr>
+                            <tr class="hover:bg-pink-50">
+                                <td class="p-3 font-sans font-semibold text-gray-800">Unicode</td>
+                                <td class="p-3 font-bold text-pink-600">U+Code</td>
+                                <td class="p-3 font-bold text-purple-600">U+C2A4</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: THE FULL COMPARISON TABLE (0 to 15) -->
+    <section id="table" class="max-w-7xl mx-auto px-4 mt-12 space-y-6">
+        <div class="text-center space-y-2">
+            <span class="text-purple-500 font-black text-sm tracking-widest uppercase">الدرس الثاني 👑</span>
+            <h2 class="text-3xl font-black text-gray-800">جدول الحفظ الشامل (Decimal vs Binary vs Hexadecimal)</h2>
+            <p class="text-gray-600 text-sm">احفظي قيم الحروف الفائقة (A=10, B=11, C=12, D=13, E=14, F=15) فهي مفتاح الحل السريع!</p>
+            <div class="w-24 h-1.5 bg-gradient-to-r from-purple-400 to-pink-400 mx-auto rounded-full"></div>
+        </div>
+
+        <div class="glass-card rounded-3xl p-6 border-2 border-purple-200 shadow-xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-center border-collapse">
+                    <thead>
+                        <tr class="bg-gradient-to-r from-pink-500 to-purple-600 text-white font-extrabold text-base">
+                            <th class="p-4 rounded-r-2xl">العشري (Decimal)</th>
+                            <th class="p-4">الثنائي 4-Bit (Binary)</th>
+                            <th class="p-4 rounded-l-2xl">السادس عشر (Hexadecimal)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-pink-100 font-mono text-sm md:text-base">
+                        <tr class="hover:bg-pink-50/80 transition"><td class="p-3 font-bold text-gray-700">0</td><td class="p-3 text-purple-700 font-semibold">0000</td><td class="p-3 font-black text-pink-600">0</td></tr>
+                        <tr class="hover:bg-pink-50/80 transition"><td class="p-3 font-bold text-gray-700">1</td><td class="p-3 text-purple-700 font-semibold">0001</td><td class="p-3 font-black text-pink-600">1</td></tr>
+                        <tr class="hover:bg-pink-50/80 transition"><td class="p-3 font-bold text-gray-700">2</td><td class="p-3 text-purple-700 font-semibold">0010</td><td class="p-3 font-black text-pink-600">2</td></tr>
+                        <tr class="hover:bg-pink-50/80 transition"><td class="p-3 font-bold text-gray-700">3</td><td class="p-3 text-purple-700 font-semibold">0011</td><td class="p-3 font-black text-pink-600">3</td></tr>
+                        <tr class="hover:bg-pink-50/80 transition"><td class="p-3 font-bold text-gray-700">4</td><td class="p-3 text-purple-700 font-semibold">0100</td><td class="p-3 font-black text-pink-600">4</td></tr>
+                        <tr class="hover:bg-pink-50/80 transition"><td class="p-3 font-bold text-gray-700">5</td><td class="p-3 text-purple-700 font-semibold">0101</td><td class="p-3 font-black text-pink-600">5</td></tr>
+                        <tr class="hover:bg-pink-50/80 transition"><td class="p-3 font-bold text-gray-700">6</td><td class="p-3 text-purple-700 font-semibold">0110</td><td class="p-3 font-black text-pink-600">6</td></tr>
+                        <tr class="hover:bg-pink-50/80 transition"><td class="p-3 font-bold text-gray-700">7</td><td class="p-3 text-purple-700 font-semibold">0111</td><td class="p-3 font-black text-pink-600">7</td></tr>
+                        <tr class="hover:bg-pink-50/80 transition"><td class="p-3 font-bold text-gray-700">8</td><td class="p-3 text-purple-700 font-semibold">1000</td><td class="p-3 font-black text-pink-600">8</td></tr>
+                        <tr class="hover:bg-pink-50/80 transition"><td class="p-3 font-bold text-gray-700">9</td><td class="p-3 text-purple-700 font-semibold">1001</td><td class="p-3 font-black text-pink-600">9</td></tr>
+                        <!-- Highlight Letters -->
+                        <tr class="bg-pink-100/70 hover:bg-pink-200/80 transition font-black"><td class="p-3 text-pink-800">10</td><td class="p-3 text-purple-800">1010</td><td class="p-3 text-2xl text-pink-600">A</td></tr>
+                        <tr class="bg-pink-100/70 hover:bg-pink-200/80 transition font-black"><td class="p-3 text-pink-800">11</td><td class="p-3 text-purple-800">1011</td><td class="p-3 text-2xl text-pink-600">B</td></tr>
+                        <tr class="bg-pink-100/70 hover:bg-pink-200/80 transition font-black"><td class="p-3 text-pink-800">12</td><td class="p-3 text-purple-800">1100</td><td class="p-3 text-2xl text-pink-600">C</td></tr>
+                        <tr class="bg-pink-100/70 hover:bg-pink-200/80 transition font-black"><td class="p-3 text-pink-800">13</td><td class="p-3 text-purple-800">1101</td><td class="p-3 text-2xl text-pink-600">D</td></tr>
+                        <tr class="bg-pink-100/70 hover:bg-pink-200/80 transition font-black"><td class="p-3 text-pink-800">14</td><td class="p-3 text-purple-800">1110</td><td class="p-3 text-2xl text-pink-600">E</td></tr>
+                        <tr class="bg-pink-100/70 hover:bg-pink-200/80 transition font-black"><td class="p-3 text-pink-800">15</td><td class="p-3 text-purple-800">1111</td><td class="p-3 text-2xl text-pink-600">F</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: CONVERSIONS & STEP-BY-STEP ALGORITHMS -->
+    <section id="conversions" class="max-w-7xl mx-auto px-4 mt-12 space-y-10">
+        <div class="text-center space-y-2">
+            <span class="text-pink-500 font-black text-sm tracking-widest uppercase">الدرس الثالث 🌸</span>
+            <h2 class="text-3xl font-black text-gray-800">طرق التحويل والتطبيقات العملية الشاملة</h2>
+            <p class="text-gray-600 text-sm">أوزان الخانات وقوى العدد 16 وحل جميع الأمثلة خطوة بخطوة</p>
+            <div class="w-24 h-1.5 bg-gradient-to-r from-pink-400 to-purple-400 mx-auto rounded-full"></div>
+        </div>
+
+        <!-- Powers of 16 vs Powers of 2 -->
+        <div class="glass-card p-6 md:p-8 rounded-3xl border-2 border-pink-200 space-y-4">
+            <h3 class="text-xl font-extrabold text-gray-800 flex items-center gap-2">
+                <i class="fa-solid fa-calculator text-pink-500"></i> أوزان الخانات والقوى (Base Weights)
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Base 2 Table -->
+                <div class="bg-purple-50 p-4 rounded-2xl border border-purple-200">
+                    <h4 class="font-bold text-purple-800 mb-2 text-sm">أوزان النظام الثنائي (Base 2 Doubling)</h4>
+                    <div class="grid grid-cols-8 gap-1 text-center font-mono text-xs">
+                        <div class="bg-white p-1 rounded border">2⁷</div>
+                        <div class="bg-white p-1 rounded border">2⁶</div>
+                        <div class="bg-white p-1 rounded border">2⁵</div>
+                        <div class="bg-white p-1 rounded border">2⁴</div>
+                        <div class="bg-white p-1 rounded border">2³</div>
+                        <div class="bg-white p-1 rounded border">2²</div>
+                        <div class="bg-white p-1 rounded border">2¹</div>
+                        <div class="bg-white p-1 rounded border">2⁰</div>
+                        <div class="bg-purple-200 p-1 rounded font-bold">128</div>
+                        <div class="bg-purple-200 p-1 rounded font-bold">64</div>
+                        <div class="bg-purple-200 p-1 rounded font-bold">32</div>
+                        <div class="bg-purple-200 p-1 rounded font-bold">16</div>
+                        <div class="bg-purple-200 p-1 rounded font-bold">8</div>
+                        <div class="bg-purple-200 p-1 rounded font-bold">4</div>
+                        <div class="bg-purple-200 p-1 rounded font-bold">2</div>
+                        <div class="bg-purple-200 p-1 rounded font-bold">1</div>
+                    </div>
+                </div>
+
+                <!-- Base 16 Table -->
+                <div class="bg-pink-50 p-4 rounded-2xl border border-pink-200">
+                    <h4 class="font-bold text-pink-800 mb-2 text-sm">أوزان النظام السادس عشر (Base 16 Powers)</h4>
+                    <div class="grid grid-cols-5 gap-1 text-center font-mono text-xs">
+                        <div class="bg-white p-1.5 rounded border">16⁴</div>
+                        <div class="bg-white p-1.5 rounded border">16³</div>
+                        <div class="bg-white p-1.5 rounded border">16²</div>
+                        <div class="bg-white p-1.5 rounded border">16¹</div>
+                        <div class="bg-white p-1.5 rounded border">16⁰</div>
+                        <div class="bg-pink-200 p-1.5 rounded font-bold">65,536</div>
+                        <div class="bg-pink-200 p-1.5 rounded font-bold">4,096</div>
+                        <div class="bg-pink-200 p-1.5 rounded font-bold">256</div>
+                        <div class="bg-pink-200 p-1.5 rounded font-bold">16</div>
+                        <div class="bg-pink-200 p-1.5 rounded font-bold">1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conversion 1: Decimal to Hex -->
+        <div class="glass-card-pink p-6 md:p-8 rounded-3xl border-2 border-pink-300 space-y-6">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+                <h3 class="text-2xl font-black text-pink-800 flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-right-left"></i> أولاً: التحويل من عشري إلى سادس عشر (Decimal to Hex)
+                </h3>
+                <span class="px-3 py-1 rounded-full bg-pink-200 text-pink-800 font-bold text-xs">قسمة متكررة على 16</span>
+            </div>
+
+            <p class="text-gray-700 text-sm leading-relaxed">
+                <strong>القاعدة:</strong> نقسم العدد العشري على 16، نأخذ الجزء الصحيح ونضربه بالقسمة التالية، بينما نضرب الكسر (Fraction) في 16 ليُعطينا الباقي (Remainder). نحول الباقي إلى رمز Hex ثم نقرأ النتيجة من الأسفل إلى الأعلى.
+            </p>
+
+            <!-- Solved Examples Tabs/Cards -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Example 1: 469 -> 1D5 -->
+                <div class="bg-white p-5 rounded-2xl border border-pink-200 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between border-b border-pink-100 pb-2">
+                        <span class="font-black text-pink-600">مثال 1: تحويل 469₁₀</span>
+                        <span class="font-mono text-xs bg-pink-100 text-pink-700 px-2 py-0.5 rounded">الناتج: 1D5₁₆</span>
+                    </div>
+                    <div class="space-y-2 text-xs font-mono">
+                        <div class="p-2 bg-pink-50 rounded">
+                            469 / 16 = 29.3125<br>
+                            الباقي = 16 × 0.3125 = <strong>5</strong>
+                        </div>
+                        <div class="p-2 bg-pink-50 rounded">
+                            29 / 16 = 1.8125<br>
+                            الباقي = 16 × 0.8125 = 13 ➔ <strong class="text-pink-600">D</strong>
+                        </div>
+                        <div class="p-2 bg-pink-50 rounded">
+                            1 / 16 = 0.0625<br>
+                            الباقي = 16 × 0.0625 = <strong>1</strong>
+                        </div>
+                    </div>
+                    <div class="text-center bg-pink-600 text-white font-extrabold py-1.5 rounded-xl font-mono text-sm">
+                        469₁₀ = 1D5₁₆
+                    </div>
+                </div>
+
+                <!-- Example 2: 1513 -> 5E9 -->
+                <div class="bg-white p-5 rounded-2xl border border-pink-200 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between border-b border-pink-100 pb-2">
+                        <span class="font-black text-pink-600">مثال 2: تحويل 1513₁₀</span>
+                        <span class="font-mono text-xs bg-pink-100 text-pink-700 px-2 py-0.5 rounded">الناتج: 5E9₁₆</span>
+                    </div>
+                    <div class="space-y-2 text-xs font-mono">
+                        <div class="p-2 bg-pink-50 rounded">
+                            1513 / 16 = 94.5625<br>
+                            الباقي = 16 × 0.5625 = <strong>9</strong>
+                        </div>
+                        <div class="p-2 bg-pink-50 rounded">
+                            94 / 16 = 5.875<br>
+                            الباقي = 16 × 0.875 = 14 ➔ <strong class="text-pink-600">E</strong>
+                        </div>
+                        <div class="p-2 bg-pink-50 rounded">
+                            5 / 16 = 0.3125<br>
+                            الباقي = 16 × 0.3125 = <strong>5</strong>
+                        </div>
+                    </div>
+                    <div class="text-center bg-pink-600 text-white font-extrabold py-1.5 rounded-xl font-mono text-sm">
+                        1513₁₀ = 5E9₁₆
+                    </div>
+                </div>
+
+                <!-- Example 3: 479 -> 1DF -->
+                <div class="bg-white p-5 rounded-2xl border border-pink-200 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between border-b border-pink-100 pb-2">
+                        <span class="font-black text-pink-600">مثال 3: تحويل 479₁₀</span>
+                        <span class="font-mono text-xs bg-pink-100 text-pink-700 px-2 py-0.5 rounded">الناتج: 1DF₁₆</span>
+                    </div>
+                    <div class="space-y-2 text-xs font-mono">
+                        <div class="p-2 bg-pink-50 rounded">
+                            479 / 16 = 29.9375<br>
+                            الباقي = 16 × 0.9375 = 15 ➔ <strong class="text-pink-600">F</strong>
+                        </div>
+                        <div class="p-2 bg-pink-50 rounded">
+                            29 / 16 = 1.8125<br>
+                            الباقي = 16 × 0.8125 = 13 ➔ <strong class="text-pink-600">D</strong>
+                        </div>
+                        <div class="p-2 bg-pink-50 rounded">
+                            1 / 16 = 0.0625<br>
+                            الباقي = 16 × 0.0625 = <strong>1</strong>
+                        </div>
+                    </div>
+                    <div class="text-center bg-pink-600 text-white font-extrabold py-1.5 rounded-xl font-mono text-sm">
+                        479₁₀ = 1DF₁₆
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conversion 2: Hex to Decimal -->
+        <div class="glass-card p-6 md:p-8 rounded-3xl border-2 border-purple-200 space-y-6">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+                <h3 class="text-2xl font-black text-purple-800 flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-right-left"></i> ثانياً: التحويل من سادس عشر إلى عشري (Hex to Decimal)
+                </h3>
+                <span class="px-3 py-1 rounded-full bg-purple-200 text-purple-800 font-bold text-xs">الضرب في أوزان 16ⁿ</span>
+            </div>
+
+            <p class="text-gray-700 text-sm leading-relaxed">
+                <strong>القاعدة:</strong> نضرب كل خانة في قيمة وزنها (16⁰, 16¹, 16²...) ثم نجمع النتائج.
+            </p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Example 1: 1D5 -> 469 -->
+                <div class="bg-purple-50/50 p-5 rounded-2xl border border-purple-200 space-y-2 font-mono text-xs">
+                    <h4 class="font-sans font-bold text-purple-700 border-b border-purple-200 pb-2 text-sm">تحويل 1D5₁₆</h4>
+                    <p>5 × 16⁰ = 5 × 1 = 5</p>
+                    <p>D × 16¹ = 13 × 16 = 208</p>
+                    <p>1 × 16² = 1 × 256 = 256</p>
+                    <div class="bg-purple-600 text-white font-bold p-2 rounded-xl text-center text-sm font-sans mt-2">
+                        المجموع = 5 + 208 + 256 = 469₁₀
+                    </div>
+                </div>
+
+                <!-- Example 2: 5E9 -> 1513 -->
+                <div class="bg-purple-50/50 p-5 rounded-2xl border border-purple-200 space-y-2 font-mono text-xs">
+                    <h4 class="font-sans font-bold text-purple-700 border-b border-purple-200 pb-2 text-sm">تحويل 5E9₁₆</h4>
+                    <p>9 × 16⁰ = 9 × 1 = 9</p>
+                    <p>E × 16¹ = 14 × 16 = 224</p>
+                    <p>5 × 16² = 5 × 256 = 1280</p>
+                    <div class="bg-purple-600 text-white font-bold p-2 rounded-xl text-center text-sm font-sans mt-2">
+                        المجموع = 9 + 224 + 1280 = 1513₁₀
+                    </div>
+                </div>
+
+                <!-- Example 3: 1DF -> 479 -->
+                <div class="bg-purple-50/50 p-5 rounded-2xl border border-purple-200 space-y-2 font-mono text-xs">
+                    <h4 class="font-sans font-bold text-purple-700 border-b border-purple-200 pb-2 text-sm">تحويل 1DF₁₆</h4>
+                    <p>F × 16⁰ = 15 × 1 = 15</p>
+                    <p>D × 16¹ = 13 × 16 = 208</p>
+                    <p>1 × 16² = 1 × 256 = 256</p>
+                    <div class="bg-purple-600 text-white font-bold p-2 rounded-xl text-center text-sm font-sans mt-2">
+                        المجموع = 15 + 208 + 256 = 479₁₀
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conversion 3 & 4: Hex <-> Binary -->
+        <!-- STREAMING_CHUNK:Rendering Conversion 3 & 4: Hex <-> Binary... -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Hex to Binary -->
+            <div class="glass-card p-6 rounded-3xl border-2 border-pink-200 space-y-4">
+                <h3 class="text-xl font-extrabold text-pink-700 flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> ثالثاً: تحويل Hex إلى ثنائي Binary
+                </h3>
+                <p class="text-xs text-gray-600 leading-relaxed">
+                    يتطلب خطوتين بسيطتين:<br>
+                    1. تحويل العدد الـ Hex إلى عشري (Decimal).<br>
+                    2. تحويل الناتج العشري إلى ثنائي (Binary).
+                </p>
+                <div class="bg-pink-50 p-4 rounded-2xl border border-pink-200 text-xs font-mono space-y-2">
+                    <span class="font-bold text-pink-700 block font-sans">مثال: تحويل 1D5₁₆ إلى ثنائي</span>
+                    <p>الخطوة 1: 1D5₁₆ = 469₁₀</p>
+                    <p>الخطوة 2: 469₁₀ = 111010101₂</p>
+                    <div class="p-2 bg-white rounded border border-pink-300 font-bold text-pink-600 text-center text-sm">
+                        1D5₁₆ ➔ 0001 1101 0101₂
+                    </div>
+                </div>
+            </div>
+
+            <!-- Binary to Hex -->
+            <div class="glass-card p-6 rounded-3xl border-2 border-purple-200 space-y-4">
+                <h3 class="text-xl font-extrabold text-purple-700 flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> رابعاً: تحويل ثنائي Binary إلى Hex
+                </h3>
+                <p class="text-xs text-gray-600 leading-relaxed">
+                    يتطلب خطوتين بسيطتين:<br>
+                    1. تحويل العدد الثنائي إلى عشري (Decimal).<br>
+                    2. تحويل الناتج العشري إلى سادس عشر (Hex).
+                </p>
+                <div class="bg-purple-50 p-4 rounded-2xl border border-purple-200 text-xs font-mono space-y-2">
+                    <span class="font-bold text-purple-700 block font-sans">الطريقة السريعة: تجميع كل 4 بت (4-bit chunks)</span>
+                    <p>111010101 ➔ [0001] [1101] [0101]</p>
+                    <p>0001₂ = 1 | 1101₂ = D | 0101₂ = 5</p>
+                    <div class="p-2 bg-white rounded border border-purple-300 font-bold text-purple-600 text-center text-sm">
+                        النتيجة = 1D5₁₆ ✨
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- SECTION 4: HOMEWORK & FULL SOLUTIONS -->
+    <section id="homework" class="max-w-7xl mx-auto px-4 mt-12 space-y-6">
+        <div class="text-center space-y-2">
+            <span class="text-purple-500 font-black text-sm tracking-widest uppercase">الدرس الرابع 📝</span>
+            <h2 class="text-3xl font-black text-gray-800">التمارين والواجبات المنزلية (Homework & Solutions)</h2>
+            <p class="text-gray-600 text-sm">حل تمارين الملف كاملة للتأكد من فهمك التام للدرس</p>
+            <div class="w-24 h-1.5 bg-gradient-to-r from-purple-400 to-pink-400 mx-auto rounded-full"></div>
+        </div>
+
+        <div class="glass-card p-6 md:p-8 rounded-3xl border-2 border-purple-200 space-y-6">
+            
+            <!-- Part 1: Hex to Dec -->
+            <div class="space-y-4">
+                <h3 class="font-extrabold text-pink-700 text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-square-check"></i> 1. تحويل الأعداد التالية من Hexadecimal إلى Decimal:
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs font-mono">
+                    <div class="bg-pink-50 p-4 rounded-2xl border border-pink-200 space-y-1">
+                        <span class="font-bold text-pink-700 text-sm block">12A4₁₆</span>
+                        <p>4×16⁰ = 4</p>
+                        <p>A(10)×16¹ = 160</p>
+                        <p>2×16² = 512</p>
+                        <p>1×16³ = 4096</p>
+                        <div class="bg-pink-600 text-white font-bold p-1.5 rounded text-center mt-2 text-sm">
+                            = 4772₁₀
+                        </div>
+                    </div>
+
+                    <div class="bg-pink-50 p-4 rounded-2xl border border-pink-200 space-y-1">
+                        <span class="font-bold text-pink-700 text-sm block">1C35₁₆</span>
+                        <p>5×16⁰ = 5</p>
+                        <p>3×16¹ = 48</p>
+                        <p>C(12)×16² = 3072</p>
+                        <p>1×16³ = 4096</p>
+                        <div class="bg-pink-600 text-white font-bold p-1.5 rounded text-center mt-2 text-sm">
+                            = 7221₁₀
+                        </div>
+                    </div>
+
+                    <div class="bg-pink-50 p-4 rounded-2xl border border-pink-200 space-y-1">
+                        <span class="font-bold text-pink-700 text-sm block">100₁₆</span>
+                        <p>0×16⁰ = 0</p>
+                        <p>0×16¹ = 0</p>
+                        <p>1×16² = 256</p>
+                        <div class="bg-pink-600 text-white font-bold p-1.5 rounded text-center mt-2 text-sm">
+                            = 256₁₀
+                        </div>
+                    </div>
+
+                    <div class="bg-pink-50 p-4 rounded-2xl border border-pink-200 space-y-1">
+                        <span class="font-bold text-pink-700 text-sm block">115C₁₆</span>
+                        <p>C(12)×16⁰ = 12</p>
+                        <p>5×16¹ = 80</p>
+                        <p>1×16² = 256</p>
+                        <p>1×16³ = 4096</p>
+                        <div class="bg-pink-600 text-white font-bold p-1.5 rounded text-center mt-2 text-sm">
+                            = 4444₁₀
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Part 2: Dec to Hex -->
+            <div class="space-y-4 pt-4 border-t border-purple-200">
+                <h3 class="font-extrabold text-purple-700 text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-square-check"></i> 2. تحويل الأعداد التالية من Decimal إلى Hexadecimal:
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs font-mono">
+                    <div class="bg-purple-50 p-4 rounded-2xl border border-purple-200 text-center">
+                        <span class="font-bold text-purple-800 text-sm block">4772₁₀</span>
+                        <p class="text-gray-600 my-2">القسمة المتكررة على 16</p>
+                        <div class="bg-purple-600 text-white font-bold p-1.5 rounded text-sm">
+                            = 12A4₁₆
+                        </div>
+                    </div>
+
+                    <div class="bg-purple-50 p-4 rounded-2xl border border-purple-200 text-center">
+                        <span class="font-bold text-purple-800 text-sm block">7221₁₀</span>
+                        <p class="text-gray-600 my-2">القسمة المتكررة على 16</p>
+                        <div class="bg-purple-600 text-white font-bold p-1.5 rounded text-sm">
+                            = 1C35₁₆
+                        </div>
+                    </div>
+
+                    <div class="bg-purple-50 p-4 rounded-2xl border border-purple-200 text-center">
+                        <span class="font-bold text-purple-800 text-sm block">256₁₀</span>
+                        <p class="text-gray-600 my-2">256 / 16 = 16 (Rem 0)</p>
+                        <div class="bg-purple-600 text-white font-bold p-1.5 rounded text-sm">
+                            = 100₁₆
+                        </div>
+                    </div>
+
+                    <div class="bg-purple-50 p-4 rounded-2xl border border-purple-200 text-center">
+                        <span class="font-bold text-purple-800 text-sm block">4444₁₀</span>
+                        <p class="text-gray-600 my-2">القسمة المتكررة على 16</p>
+                        <div class="bg-purple-600 text-white font-bold p-1.5 rounded text-sm">
+                            = 115C₁₆
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Part 3: Hex to Binary -->
+            <div class="space-y-4 pt-4 border-t border-purple-200">
+                <h3 class="font-extrabold text-pink-700 text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-square-check"></i> 3. تحويل Hexadecimal إلى Binary:
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+                    <div class="bg-pink-50 p-4 rounded-2xl border border-pink-200 flex items-center justify-between">
+                        <div>
+                            <span class="font-bold text-pink-700 text-sm block">13B4₁₆</span>
+                            <span class="text-gray-600 font-sans">1 (0001) | 3 (0011) | B (1011) | 4 (0100)</span>
+                        </div>
+                        <div class="bg-pink-600 text-white font-bold p-2 rounded-xl text-xs">
+                            0001001110110100₂
+                        </div>
+                    </div>
+
+                    <div class="bg-pink-50 p-4 rounded-2xl border border-pink-200 flex items-center justify-between">
+                        <div>
+                            <span class="font-bold text-pink-700 text-sm block">A5₁₆</span>
+                            <span class="text-gray-600 font-sans">A=10 (1010) | 5 (0101)</span>
+                        </div>
+                        <div class="bg-pink-600 text-white font-bold p-2 rounded-xl text-xs">
+                            10100101₂
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ending Hex Easter Egg from PDF Page 39 -->
+            <div class="bg-gradient-to-r from-pink-500 to-purple-600 p-4 rounded-2xl text-white text-center font-mono text-sm shadow-md">
+                <span class="block font-bold mb-1 font-sans text-xs text-pink-100">رسالة الشكر المفرغة بسداسي عشر من نهاية الشريحة رقم 39 💌</span>
+                54 68 61 6E 6B 20 59 6F 75 20 3A 29 ➔ <strong class="text-amber-300 font-sans">"Thank You :)"</strong>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- INTERACTIVE CALCULATOR TOOL -->
+    <section id="calculator" class="max-w-7xl mx-auto px-4 mt-12 space-y-6">
+        <div class="text-center space-y-2">
+            <span class="text-pink-500 font-black text-sm tracking-widest uppercase">أداة تفاعلية 🧮</span>
+            <h2 class="text-3xl font-black text-gray-800">حاسبة التحويل الفورية الشاملة</h2>
+            <p class="text-gray-600 text-sm">ادخلي أي قيمة للتحويل بين النظم الثلاثة تلقائياً مع خطوات الحل!</p>
+            <div class="w-24 h-1.5 bg-gradient-to-r from-pink-400 to-purple-400 mx-auto rounded-full"></div>
+        </div>
+
+        <div class="glass-card p-6 md:p-8 rounded-3xl border-2 border-pink-300 space-y-6 max-w-3xl mx-auto shadow-xl">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">العشري (Decimal)</label>
+                    <input type="number" id="calcDec" placeholder="مثال: 469" oninput="convertFromDec()" class="w-full p-3 rounded-2xl border-2 border-pink-200 focus:border-pink-500 focus:outline-none font-mono text-center text-pink-600 font-bold bg-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">السادس عشر (Hex)</label>
+                    <input type="text" id="calcHex" placeholder="مثال: 1D5" oninput="convertFromHex()" class="w-full p-3 rounded-2xl border-2 border-purple-200 focus:border-purple-500 focus:outline-none font-mono text-center text-purple-600 font-bold uppercase bg-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">الثنائي (Binary)</label>
+                    <input type="text" id="calcBin" placeholder="مثال: 111010101" oninput="convertFromBin()" class="w-full p-3 rounded-2xl border-2 border-pink-200 focus:border-pink-500 focus:outline-none font-mono text-center text-pink-600 font-bold bg-white">
+                </div>
+            </div>
+
+            <!-- Steps Box -->
+            <div id="calcSteps" class="p-4 rounded-2xl bg-pink-50 border border-pink-200 text-xs font-mono text-gray-700 min-h-[60px] flex items-center justify-center text-center">
+                أدخلي ركماً في أي من الخانات أعلاه لرؤية التحويل وخطوات التفبيك الفورية! ✨
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: GAMES SECTION FOR FUN & MEMORIZATION -->
+    <section id="games" class="max-w-7xl mx-auto px-4 mt-16 space-y-8">
+        <div class="text-center space-y-2">
+            <span class="px-4 py-1.5 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-extrabold text-xs shadow-md">
+                🎮 قسم الترفيه والمرح
+            </span>
+            <h2 class="text-4xl font-black text-gray-800">ألعاب عالم الهكسا الممتعة للحفظ والتمارين 🎉</h2>
+            <p class="text-gray-600 text-sm">العيبي واجمعي النقاط والنجوم لترسيخ كافة القواعد في الذاكرة بدون عناء!</p>
+            <div class="w-24 h-1.5 bg-gradient-to-r from-pink-500 to-purple-500 mx-auto rounded-full"></div>
+        </div>
+
+        <!-- Game Select Tabs -->
+        <div class="flex justify-center flex-wrap gap-3">
+            <button onclick="switchGame('game1')" id="tab-game1" class="px-5 py-2.5 rounded-2xl bg-pink-600 text-white font-extrabold text-sm shadow-md transition">
+                🎴 1. لعبة تطابق كروت الهكسا السحرية
+            </button>
+            <button onclick="switchGame('game2')" id="tab-game2" class="px-5 py-2.5 rounded-2xl bg-white text-pink-600 font-extrabold text-sm border-2 border-pink-200 shadow-sm transition">
+                ⭐ 2. تحدي التحويل السريع وجمع النجوم
+            </button>
+            <button onclick="switchGame('game3')" id="tab-game3" class="px-5 py-2.5 rounded-2xl bg-white text-purple-600 font-extrabold text-sm border-2 border-purple-200 shadow-sm transition">
+                💅 3. استوديو ألوان الموضة (CSS Hex Colors)
+            </button>
+        </div>
+
+        <!-- GAME 1: MEMORY CARD MATCHING -->
+        <div id="game1-container" class="glass-card-pink p-6 md:p-8 rounded-3xl border-2 border-pink-300 shadow-xl space-y-6">
+            <div class="flex items-center justify-between flex-wrap gap-4 border-b border-pink-200 pb-4">
+                <div>
+                    <h3 class="text-2xl font-black text-pink-800">🎴 لعبة تطابق كروت الهكسا السحرية</h3>
+                    <p class="text-xs text-pink-600 mt-1">طابقي رموز السادس عشر (A..F) بما يقابلها في النظام العشري (10..15)</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-xs font-bold bg-white px-3 py-1.5 rounded-xl border border-pink-200 text-pink-700">
+                        النقاط: <strong id="g1-score" class="text-base text-pink-600">0</strong>
+                    </span>
+                    <button onclick="initGame1()" class="sparkle-btn px-4 py-2 rounded-xl bg-pink-500 text-white font-bold text-xs shadow">
+                        <i class="fa-solid fa-rotate-right"></i> إعادة اللعبة
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cards Grid -->
+            <div id="g1-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+        <!-- GAME 2: SPEED CONVERSION QUIZ -->
+        <div id="game2-container" class="hidden glass-card p-6 md:p-8 rounded-3xl border-2 border-purple-300 shadow-xl space-y-6">
+            <div class="flex items-center justify-between flex-wrap gap-4 border-b border-purple-200 pb-4">
+                <div>
+                    <h3 class="text-2xl font-black text-purple-800">⭐ تحدي التحويل السريع وجمع النجوم</h3>
+                    <p class="text-xs text-purple-600 mt-1">اختبري سرعتكِ ودقتكِ في التحويل بين النظم!</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs font-bold bg-purple-50 px-3 py-1.5 rounded-xl border border-purple-200 text-purple-700">
+                        النتيجة: <strong id="g2-score" class="text-base text-purple-600">0</strong> ⭐
+                    </span>
+                </div>
+            </div>
+
+            <div class="max-w-xl mx-auto space-y-6 text-center">
+                <div class="bg-gradient-to-r from-pink-500 to-purple-600 text-white p-6 rounded-3xl shadow-lg space-y-2">
+                    <span class="text-xs text-pink-100 font-bold block">السؤال التفاعلي الحالي:</span>
+                    <div id="g2-question" class="text-2xl md:text-3xl font-black font-mono">
+                        ما قيمة A₁₆ بالنظام العشري؟
+                    </div>
+                </div>
+
+                <div id="g2-options" class="grid grid-cols-2 gap-4">
+                    <!-- Injected via JS -->
+                </div>
+
+                <div id="g2-feedback" class="min-h-[30px] text-sm font-bold text-pink-600"></div>
+            </div>
+        </div>
+
+        <!-- GAME 3: CSS HEX COLOR FASHION STUDIO -->
+        <div id="game3-container" class="hidden glass-card-pink p-6 md:p-8 rounded-3xl border-2 border-pink-300 shadow-xl space-y-6">
+            <div class="flex items-center justify-between flex-wrap gap-4 border-b border-pink-200 pb-4">
+                <div>
+                    <h3 class="text-2xl font-black text-pink-800">💅 استوديو مصممة الألوان (CSS Hex Color Studio)</h3>
+                    <p class="text-xs text-pink-600 mt-1">اختاري وابتكري كود ألوان الـ Hex لتزيين الفستان السحري!</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <!-- Color Mixer Inputs -->
+                <div class="space-y-4 bg-white p-6 rounded-3xl border border-pink-200 shadow-sm">
+                    <h4 class="font-black text-gray-800 text-base">مزج الألوان بقيم الـ Hex:</h4>
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-red-500 mb-1">Red (الأحمر) (00 to FF):</label>
+                        <input type="range" id="hexR" min="0" max="255" value="255" oninput="updateFashionColor()" class="w-full accent-pink-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-green-600 mb-1">Green (الأخضر) (00 to FF):</label>
+                        <input type="range" id="hexG" min="0" max="255" value="105" oninput="updateFashionColor()" class="w-full accent-pink-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-blue-600 mb-1">Blue (الأزرق) (00 to FF):</label>
+                        <input type="range" id="hexB" min="0" max="255" value="180" oninput="updateFashionColor()" class="w-full accent-pink-500">
+                    </div>
+
+                    <div class="pt-2 border-t border-pink-100 flex items-center justify-between">
+                        <span class="text-xs font-bold text-gray-600">كود الـ Hex الناتج:</span>
+                        <span id="fashionHexCode" class="font-mono font-black text-xl text-pink-600 bg-pink-50 px-3 py-1 rounded-xl border border-pink-200">#FF69B4</span>
+                    </div>
+                </div>
+
+                <!-- Preview Canvas Dress -->
+                <div class="text-center space-y-4">
+                    <div id="fashionPreviewBox" class="w-48 h-48 mx-auto rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 border-4 border-white floating" style="background-color: #FF69B4;">
+                        <i class="fa-solid fa-wand-magic-sparkles text-6xl text-white drop-shadow-md"></i>
+                    </div>
+                    <p class="text-xs text-gray-600 font-bold">هذه الدرجة ممثلة بـ Hexadecimal RGB في صفحات الويب!</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="mt-20 border-t border-pink-200 bg-white/60 py-8 text-center text-xs text-gray-600 space-y-2">
+        <p class="font-bold text-pink-700">تم إعداد هذا الموقع التفاعلي استناداً إلى مادة المهندس عبد الرحمن محمد 🌸</p>
+    </footer>
+
+    <!-- JAVASCRIPT INTERACTIVITY & LOGIC -->
+    <script>
+        // --- 1. LIVE CONVERTER CALCULATOR LOGIC ---
+        function convertFromDec() {
+            const decVal = parseInt(document.getElementById('calcDec').value);
+            if (isNaN(decVal)) {
+                resetCalc();
+                return;
+            }
+            const hexVal = decVal.toString(16).toUpperCase();
+            const binVal = decVal.toString(2);
+
+            document.getElementById('calcHex').value = hexVal;
+            document.getElementById('calcBin').value = binVal;
+
+            document.getElementById('calcSteps').innerHTML = `
+                <div class="space-y-1">
+                    <span class="font-bold text-pink-700">خطوات التحويل:</span><br>
+                    1. القسمة على 16 للـ Hex: الناتج يساوي <strong class="text-purple-600">${hexVal}₁₆</strong><br>
+                    2. التحويل للثنائي: <strong class="text-pink-600">${binVal}₂</strong>
+                </div>
+            `;
+        }
+
+        function convertFromHex() {
+            const hexVal = document.getElementById('calcHex').value.trim();
+            if (!hexVal) {
+                resetCalc();
+                return;
+            }
+            const decVal = parseInt(hexVal, 16);
+            if (isNaN(decVal)) {
+                document.getElementById('calcSteps').innerText = "❌ الرجاء إدخال رقم سادس عشر صحيح (0-9 أو A-F)";
+                return;
+            }
+            const binVal = decVal.toString(2);
+            document.getElementById('calcDec').value = decVal;
+            document.getElementById('calcBin').value = binVal;
+
+            document.getElementById('calcSteps').innerHTML = `
+                <div class="space-y-1">
+                    <span class="font-bold text-purple-700">خطوات التحويل:</span><br>
+                    ضرب كل خانة في قوى 16 ➔ الناتج العشري = <strong class="text-pink-600">${decVal}₁₀</strong><br>
+                    الناتج الثنائي = <strong class="text-purple-600">${binVal}₂</strong>
+                </div>
+            `;
+        }
+
+        function convertFromBin() {
+            const binVal = document.getElementById('calcBin').value.trim();
+            if (!binVal) {
+                resetCalc();
+                return;
+            }
+            const decVal = parseInt(binVal, 2);
+            if (isNaN(decVal)) {
+                document.getElementById('calcSteps').innerText = "❌ الرجاء إدخال رقم ثنائي صحيح (أصفار وآحاد فقط)";
+                return;
+            }
+            const hexVal = decVal.toString(16).toUpperCase();
+            document.getElementById('calcDec').value = decVal;
+            document.getElementById('calcHex').value = hexVal;
+
+            document.getElementById('calcSteps').innerHTML = `
+                <div class="space-y-1">
+                    <span class="font-bold text-pink-700">خطوات التحويل:</span><br>
+                    تجميع كل 4 بت ➔ الناتج السداسي عشر = <strong class="text-pink-600">${hexVal}₁₆</strong><br>
+                    الناتج العشري = <strong class="text-purple-600">${decVal}₁₀</strong>
+                </div>
+            `;
+        }
+
+        function resetCalc() {
+            document.getElementById('calcDec').value = '';
+            document.getElementById('calcHex').value = '';
+            document.getElementById('calcBin').value = '';
+            document.getElementById('calcSteps').innerText = "أدخلي ركماً في أي من الخانات أعلاه لرؤية التحويل وخطوات التفبيك الفورية! ✨";
+        }
+
+        // --- 2. GAME SWITCHING LOGIC ---
+        function switchGame(gameId) {
+            document.getElementById('game1-container').classList.add('hidden');
+            document.getElementById('game2-container').classList.add('hidden');
+            document.getElementById('game3-container').classList.add('hidden');
+
+            document.getElementById('tab-game1').className = "px-5 py-2.5 rounded-2xl bg-white text-pink-600 font-extrabold text-sm border-2 border-pink-200 shadow-sm transition";
+            document.getElementById('tab-game2').className = "px-5 py-2.5 rounded-2xl bg-white text-pink-600 font-extrabold text-sm border-2 border-pink-200 shadow-sm transition";
+            document.getElementById('tab-game3').className = "px-5 py-2.5 rounded-2xl bg-white text-purple-600 font-extrabold text-sm border-2 border-purple-200 shadow-sm transition";
+
+            if(gameId === 'game1') {
+                document.getElementById('game1-container').classList.remove('hidden');
+                document.getElementById('tab-game1').className = "px-5 py-2.5 rounded-2xl bg-pink-600 text-white font-extrabold text-sm shadow-md transition";
+            } else if(gameId === 'game2') {
+                document.getElementById('game2-container').classList.remove('hidden');
+                document.getElementById('tab-game2').className = "px-5 py-2.5 rounded-2xl bg-purple-600 text-white font-extrabold text-sm shadow-md transition";
+                initGame2();
+            } else if(gameId === 'game3') {
+                document.getElementById('game3-container').classList.remove('hidden');
+                document.getElementById('tab-game3').className = "px-5 py-2.5 rounded-2xl bg-pink-600 text-white font-extrabold text-sm shadow-md transition";
+            }
+        }
+
+        // --- 3. GAME 1: MEMORY CARDS LOGIC ---
+        const g1Pairs = [
+            { hex: 'A', dec: '10' },
+            { hex: 'B', dec: '11' },
+            { hex: 'C', dec: '12' },
+            { hex: 'D', dec: '13' },
+            { hex: 'E', dec: '14' },
+            { hex: 'F', dec: '15' }
+        ];
+
+        let g1Cards = [];
+        let flippedCards = [];
+        let g1Score = 0;
+
+        function initGame1() {
+            g1Score = 0;
+            document.getElementById('g1-score').innerText = g1Score;
+            flippedCards = [];
+            
+            // Build pairs array
+            let cardData = [];
+            g1Pairs.forEach((item, index) => {
+                cardData.push({ id: index, val: item.hex, type: 'hex' });
+                cardData.push({ id: index, val: item.dec, type: 'dec' });
+            });
+
+            // Shuffle
+            cardData.sort(() => Math.random() - 0.5);
+
+            const grid = document.getElementById('g1-grid');
+            grid.innerHTML = '';
+
+            cardData.forEach((c, idx) => {
+                const cardEl = document.createElement('button');
+                cardEl.className = "h-24 rounded-2xl bg-white border-2 border-pink-300 font-mono font-black text-xl text-pink-600 shadow flex items-center justify-center transition hover:scale-105 active:scale-95";
+                cardEl.dataset.id = c.id;
+                cardEl.dataset.val = c.val;
+                cardEl.innerText = "❓";
+                cardEl.onclick = () => flipG1Card(cardEl);
+                grid.appendChild(cardEl);
+            });
+        }
+
+        function flipG1Card(cardEl) {
+            if (flippedCards.length >= 2 || cardEl.classList.contains('matched') || flippedCards.includes(cardEl)) return;
+
+            cardEl.innerText = cardEl.dataset.val;
+            cardEl.classList.add('bg-pink-100', 'border-pink-500');
+            flippedCards.push(cardEl);
+
+            if (flippedCards.length === 2) {
+                if (flippedCards[0].dataset.id === flippedCards[1].dataset.id) {
+                    // Match!
+                    flippedCards.forEach(c => {
+                        c.classList.add('matched', 'bg-emerald-100', 'border-emerald-400', 'text-emerald-700');
+                    });
+                    flippedCards = [];
+                    g1Score += 10;
+                    document.getElementById('g1-score').innerText = g1Score;
+
+                    if (g1Score === 60) {
+                        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                    }
+                } else {
+                    // No match
+                    setTimeout(() => {
+                        flippedCards.forEach(c => {
+                            c.innerText = "❓";
+                            c.classList.remove('bg-pink-100', 'border-pink-500');
+                        });
+                        flippedCards = [];
+                    }, 800);
+                }
+            }
+        }
+
+        // --- 4. GAME 2: SPEED CONVERSION QUIZ LOGIC ---
+        const g2Questions = [
+            { q: "ما قيمة الحرف A₁₆ بالنظام العشري؟", options: ["10", "12", "15", "9"], correct: "10" },
+            { q: "ما قيمة الحرف F₁₆ بالنظام العشري؟", options: ["14", "15", "16", "10"], correct: "15" },
+            { q: "ما المكافئ لـ 100₁₆ بالنظام العشري؟", options: ["100", "256", "16", "512"], correct: "256" },
+            { q: "كم بت (Bits) يمثل كل حرف في النظام السادس عشر؟", options: ["2 Bits", "4 Bits", "8 Bits", "16 Bits"], correct: "4 Bits" },
+            { q: "ما هي البادئة المستخدمة في HTML & CSS للألوان؟", options: ["0x", "#", "U+", "&#"], correct: "#" },
+            { q: "ما هو ناتج تحويل العدد 1D5₁₆ للعشري؟", options: ["469", "512", "479", "1513"], correct: "469" }
+        ];
+
+        let g2Index = 0;
+        let g2Score = 0;
+
+        function initGame2() {
+            g2Index = 0;
+            g2Score = 0;
+            document.getElementById('g2-score').innerText = g2Score;
+            loadG2Question();
+        }
+
+        function loadG2Question() {
+            if (g2Index >= g2Questions.length) {
+                document.getElementById('g2-question').innerText = "🎉 أحسنتِ! أنهيتِ كافة أسئلة التحدي بنجاح!";
+                document.getElementById('g2-options').innerHTML = '';
+                document.getElementById('g2-feedback').innerText = '';
+                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+                return;
+            }
+
+            const current = g2Questions[g2Index];
+            document.getElementById('g2-question').innerText = current.q;
+            document.getElementById('g2-feedback').innerText = '';
+
+            const optsBox = document.getElementById('g2-options');
+            optsBox.innerHTML = '';
+
+            current.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "p-4 rounded-2xl bg-white border-2 border-purple-200 hover:border-purple-500 font-bold text-gray-800 shadow-sm transition hover:scale-102";
+                btn.innerText = opt;
+                btn.onclick = () => checkG2Answer(opt, current.correct);
+                optsBox.appendChild(btn);
+            });
+        }
+
+        function checkG2Answer(chosen, correct) {
+            const fb = document.getElementById('g2-feedback');
+            if (chosen === correct) {
+                fb.innerText = "✨ إجابة صحيحة ورائعة!";
+                g2Score += 20;
+                document.getElementById('g2-score').innerText = g2Score;
+                g2Index++;
+                setTimeout(loadG2Question, 1000);
+            } else {
+                fb.innerText = "❌ حاول مرة أخرى!";
+            }
+        }
+
+        // --- 5. GAME 3: FASHION COLOR LOGIC ---
+        function updateFashionColor() {
+            const r = parseInt(document.getElementById('hexR').value);
+            const g = parseInt(document.getElementById('hexG').value);
+            const b = parseInt(document.getElementById('hexB').value);
+
+            const hexR = r.toString(16).padStart(2, '0').toUpperCase();
+            const hexG = g.toString(16).padStart(2, '0').toUpperCase();
+            const hexB = b.toString(16).padStart(2, '0').toUpperCase();
+
+            const fullHex = `#${hexR}${hexG}${hexB}`;
+
+            document.getElementById('fashionHexCode').innerText = fullHex;
+            document.getElementById('fashionPreviewBox').style.backgroundColor = fullHex;
+        }
+
+        // Window onload initialization
+        window.onload = function() {
+            initGame1();
+        };
+    </script>
+</body>
+</html>
