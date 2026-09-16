@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أكاديمية البرمجة الوردية | إهداء للبشمهندس عبدالرحمن محمد 🌸🎀</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pinky: {
+                            50: '#fdf2f8',
+                            100: '#fce7f3',
+                            200: '#fbcfe8',
+                            300: '#f472b6',
+                            400: '#e879f9',
+                            500: '#ec4899',
+                            600: '#db2777',
+                            700: '#be185d',
+                            800: '#9d174d',
+                            900: '#831843'
+                        },
+                        roseGold: '#e0a96d'
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #fff5f8 0%, #fce7f3 50%, #fae8ff 100%);
+            min-height: 100vh;
+            color: #4a154b;
+            overflow-x: hidden;
+        }
+
+        /* Cute Animations */
+        @keyframes bounceSoft {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes floatBg {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+            50% { transform: translateY(-20px) rotate(10deg); opacity: 1; }
+            100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+        }
+
+        .bounce-soft { animation: bounceSoft 2.5s infinite ease-in-out; }
+        .float-icon { animation: floatBg 4s infinite ease-in-out; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fce7f3;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f472b6;
+            border-radius: 10px;
+        }
+
+        .pink-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 2px solid #fbcfe8;
+            box-shadow: 0 10px 25px -5px rgba(236, 72, 153, 0.15);
+            border-radius: 24px;
+        }
+
+        .bow-badge {
+            position: relative;
+            background: linear-gradient(135deg, #ec4899, #db2777);
+            color: white;
+            box-shadow: 0 4px 12px rgba(219, 39, 119, 0.3);
+        }
+
+        .bit-switch {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .bit-switch:hover {
+            transform: scale(1.08);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #ec4899, #be185d);
+            color: white;
+            box-shadow: 0 6px 16px rgba(236, 72, 153, 0.35);
+        }
+    </style>
+</head>
+<body class="p-2 md:p-6 relative">
+
+    <!-- Floating Background Decorative Elements -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="float-icon absolute top-10 right-10 text-pinky-300 text-4xl opacity-50">🎀</div>
+        <div class="float-icon absolute top-1/4 left-10 text-pinky-400 text-3xl opacity-40" style="animation-delay: 1s;">🌸</div>
+        <div class="float-icon absolute bottom-20 right-20 text-pinky-300 text-5xl opacity-40" style="animation-delay: 2s;">🌺</div>
+        <div class="float-icon absolute bottom-1/3 left-1/4 text-pinky-300 text-4xl opacity-50" style="animation-delay: 1.5s;">✨</div>
+        <div class="float-icon absolute top-1/2 right-12 text-pinky-400 text-3xl opacity-30" style="animation-delay: 0.5s;">🌷</div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="max-w-6xl mx-auto relative z-10 space-y-6">
+
+        <!-- Top Dedicated Header Banner -->
+        <header class="pink-card p-6 md:p-8 text-center relative overflow-hidden">
+            <div class="absolute -top-6 -left-6 text-7xl opacity-20">🎀</div>
+            <div class="absolute -bottom-6 -right-6 text-7xl opacity-20">🌸</div>
+            
+            <div class="inline-flex items-center gap-2 bg-pinky-100 text-pinky-700 px-4 py-1.5 rounded-full text-sm font-bold mb-3 border border-pinky-300">
+                <span class="text-base">🎀</span> منصة تعليمية تفاعلية
+            </div>
+
+            <h1 class="text-3xl md:text-5xl font-extrabold text-pinky-800 tracking-wide mb-2">
+                أساسيات علوم الحاسوب للمبرمجين ✨
+            </h1>
+            
+            <p class="text-lg md:text-xl font-bold text-pinky-600 bg-clip-text">
+                إهداء خاص جداً للـبشمهنـدس الرائع: 
+                <span class="bg-pinky-500 text-white px-3 py-1 rounded-xl shadow-sm inline-block transform hover:rotate-2 transition-transform">
+                    👨‍💻 عبدالرحمن محمد
+                </span>
+            </p>
+
+            <p class="text-sm md:text-base text-gray-600 mt-3 max-w-2xl mx-auto">
+                شرح أجزاء البايت (Byte Parts) وتحويلات النظام السادس عشر (Hexadecimal) بالعامية المصرية السهلة الممتنعة مع ألعاب وتحديات وردية ممتعة! 🌸
+            </p>
+
+            <!-- Navigation Tabs -->
+            <nav class="flex flex-wrap justify-center gap-2 md:gap-3 mt-6 bg-pinky-100/80 p-2 rounded-2xl border border-pinky-200">
+                <button onclick="switchTab('byte-parts')" id="tab-byte-parts" class="tab-btn active px-4 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2">
+                    <span>🧁</span> أجزاء البايت (Byte Parts)
+                </button>
+                <button onclick="switchTab('hex-convert')" id="tab-hex-convert" class="tab-btn px-4 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 text-pinky-700 hover:bg-pinky-200">
+                    <span>🔄</span> تحويلات الهكسا والباينري
+                </button>
+                <button onclick="switchTab('games')" id="tab-games" class="tab-btn px-4 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 text-pinky-700 hover:bg-pinky-200">
+                    <span>🎮</span> منطقة الألعاب والفلنكات
+                </button>
+                <button onclick="switchTab('homework')" id="tab-homework" class="tab-btn px-4 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 text-pinky-700 hover:bg-pinky-200">
+                    <span>📝</span> حل الواجب والاختبارات
+                </button>
+                <button onclick="switchTab('ascii-secret')" id="tab-ascii-secret" class="tab-btn px-4 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 text-pinky-700 hover:bg-pinky-200">
+                    <span>🔑</span> فك الشفرة السرية
+                </button>
+            </nav>
+        </header>
+
+        <!-- SECTION 1: BYTE PARTS -->
+        <section id="sec-byte-parts" class="space-y-6">
+            
+            <!-- Cards Grid: Explanation in Egyptian Arabic -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="pink-card p-5 border-r-4 border-r-pinky-500 hover:shadow-lg transition-shadow">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-3xl">🍬</span>
+                        <h3 class="text-xl font-bold text-pinky-800">1. Bit (البيت)</h3>
+                    </div>
+                    <p class="text-sm text-gray-700 leading-relaxed">
+                        أصغر فتفوتة معلومة في الكمبيوتر! قيمتها يا إما <span class="bg-pinky-200 font-bold px-1.5 py-0.5 rounded text-pinky-800">0</span> (مطفية) أو <span class="bg-pinky-500 text-white font-bold px-1.5 py-0.5 rounded">1</span> (منورة).
+                    </p>
+                </div>
+
+                <div class="pink-card p-5 border-r-4 border-r-pinky-500 hover:shadow-lg transition-shadow">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-3xl">🍰</span>
+                        <h3 class="text-xl font-bold text-pinky-800">2. Crumb (الكرمب)</h3>
+                    </div>
+                    <p class="text-sm text-gray-700 leading-relaxed">
+                        تجمع <span class="font-bold text-pinky-600">2 bits</span> مع بعض! زي قطعة كيك صغننة. البايت الكامل فيه كام Crumb؟ فيه 4 Crumbs!
+                    </p>
+                </div>
+
+                <div class="pink-card p-5 border-r-4 border-r-pinky-500 hover:shadow-lg transition-shadow">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-3xl">🧁</span>
+                        <h3 class="text-xl font-bold text-pinky-800">3. Nibble (النيبل)</h3>
+                    </div>
+                    <p class="text-sm text-gray-700 leading-relaxed">
+                        تجمع <span class="font-bold text-pinky-600">4 bits</span> مع بعض! يعني نص بايت. بيتكون من:
+                        <br>• <strong class="text-pinky-700">Lower Nibble:</strong> الأربعة بيتس اللي على اليمين.
+                        <br>• <strong class="text-pinky-700">Upper Nibble:</strong> الأربعة بيتس اللي على الشمال.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Byte Explanation Card -->
+            <div class="pink-card p-6 bg-gradient-to-r from-pink-50 to-white">
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-pinky-800 flex items-center gap-2">
+                            <span>🎁</span> البايت الكامل (Byte) ورؤساء الخانات (MSB & LSB)
+                        </h2>
+                        <p class="text-sm text-gray-600 mt-1">
+                            البايت = <span class="font-bold text-pinky-600">8 Bits</span> = <span class="font-bold text-pinky-600">2 Nibbles</span> = <span class="font-bold text-pinky-600">4 Crumbs</span>.
+                        </p>
+                    </div>
+                    <div class="flex gap-2">
+                        <span class="px-3 py-1 bg-pinky-200 text-pinky-800 text-xs font-bold rounded-full">LSB = الخانة اليمين (وزنها 1)</span>
+                        <span class="px-3 py-1 bg-pinky-600 text-white text-xs font-bold rounded-full">MSB = الخانة الشمال (وزنها 128)</span>
+                    </div>
+                </div>
+
+                <!-- Interactive Byte Visualizer Simulator -->
+                <div class="bg-white p-6 rounded-2xl border-2 border-pinky-200 shadow-inner space-y-6">
+                    <div class="text-center">
+                        <span class="bg-pinky-100 text-pinky-700 font-bold px-4 py-1.5 rounded-full text-sm inline-block mb-3 border border-pinky-300">
+                            ✨ اضغطي على أي بت لتغيير قيمتها (0 أو 1) وشوفي التفكيك التفاعلي فوراً!
+                        </span>
+                    </div>
+
+                    <!-- Bit Switches Row -->
+                    <div class="grid grid-cols-8 gap-1 md:gap-3 text-center">
+                        <!-- Bit 7 (MSB) to Bit 0 (LSB) -->
+                        <template id="bit-template">
+                            <!-- Bit Button Container -->
+                        </template>
+                        <div id="bit-switches-container" class="col-span-8 grid grid-cols-8 gap-2">
+                            <!-- JS Will Render Switches Here -->
+                        </div>
+                    </div>
+
+                    <!-- Visual Breakdown Banner -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-pinky-100">
+                        
+                        <!-- Upper Nibble -->
+                        <div class="bg-pinky-50 p-4 rounded-xl border border-pinky-200 text-center">
+                            <span class="text-xs font-bold bg-pinky-600 text-white px-2 py-0.5 rounded-full">Upper Nibble (الجهة الشمال)</span>
+                            <div id="upper-nibble-display" class="text-2xl font-black text-pinky-800 my-2 tracking-widest">0000</div>
+                            <span id="upper-nibble-hex" class="text-sm font-bold text-pinky-600">Hex: 0</span>
+                        </div>
+
+                        <!-- Lower Nibble -->
+                        <div class="bg-pinky-50 p-4 rounded-xl border border-pinky-200 text-center">
+                            <span class="text-xs font-bold bg-pinky-300 text-pinky-900 px-2 py-0.5 rounded-full">Lower Nibble (الجهة اليمين)</span>
+                            <div id="lower-nibble-display" class="text-2xl font-black text-pinky-800 my-2 tracking-widest">0000</div>
+                            <span id="lower-nibble-hex" class="text-sm font-bold text-pinky-600">Hex: 0</span>
+                        </div>
+                    </div>
+
+                    <!-- Summary Computed Live Bar -->
+                    <div class="flex flex-wrap justify-around items-center bg-gradient-to-r from-pinky-500 to-pinky-600 text-white p-4 rounded-xl shadow-md gap-3">
+                        <div class="text-center">
+                            <span class="text-xs block opacity-80">القيمة العشرية (Decimal)</span>
+                            <span id="byte-dec-val" class="text-2xl font-black">0</span>
+                        </div>
+                        <div class="h-8 w-px bg-pinky-300 opacity-50 hidden md:block"></div>
+                        <div class="text-center">
+                            <span class="text-xs block opacity-80">النظام السادس عشر (Hex)</span>
+                            <span id="byte-hex-val" class="text-2xl font-black">0x00</span>
+                        </div>
+                        <div class="h-8 w-px bg-pinky-300 opacity-50 hidden md:block"></div>
+                        <div class="text-center">
+                            <span class="text-xs block opacity-80">أعلى بت (MSB)</span>
+                            <span id="msb-val" class="text-2xl font-black">0</span>
+                        </div>
+                        <div class="h-8 w-px bg-pinky-300 opacity-50 hidden md:block"></div>
+                        <div class="text-center">
+                            <span class="text-xs block opacity-80">أقل بت (LSB)</span>
+                            <span id="lsb-val" class="text-2xl font-black">0</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Quick FAQ Accordion in Egyptian Arabic -->
+            <div class="pink-card p-6">
+                <h3 class="text-xl font-bold text-pinky-800 mb-4 flex items-center gap-2">
+                    <span>🌸</span> أسئلة سريعة للإتقان (س و ج بالعامية)
+                </h3>
+                <div class="space-y-3">
+                    <details class="bg-white p-3.5 rounded-xl border border-pinky-200 cursor-pointer transition-all">
+                        <summary class="font-bold text-pinky-700 hover:text-pinky-900">ليه بنسمي LSB بالاسم ده؟ وقيمتها كام؟</summary>
+                        <p class="mt-2 text-sm text-gray-700 bg-pinky-50 p-3 rounded-lg">
+                            عشان هي <strong class="text-pinky-600">Least Significant Bit</strong> (البت الأقل أهمية) ومكانها على أقصى اليمين، والوزن بتاعها في النظام الثنائي هو <strong class="text-pinky-600">2⁰ = 1</strong>، يعني لو اتغيرت بتغير القيمة بمقدار 1 بس!
+                        </p>
+                    </details>
+                    <details class="bg-white p-3.5 rounded-xl border border-pinky-200 cursor-pointer transition-all">
+                        <summary class="font-bold text-pinky-700 hover:text-pinky-900">ليه بنسمي MSB بالاسم ده؟ وقيمتها كام؟</summary>
+                        <p class="mt-2 text-sm text-gray-700 bg-pinky-50 p-3 rounded-lg">
+                            عشان هي <strong class="text-pinky-600">Most Significant Bit</strong> (البت الأعلى أهمية) ومكانها على أقصى الشمال، والوزن بتاعها في البايت هو <strong class="text-pinky-600">2⁷ = 128</strong>، فلو اتغيرت بتغير قيمة الرقم بمقدار 128 مرة واحدة!
+                        </p>
+                    </details>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- SECTION 2: HEXADECIMAL CONVERSION -->
+        <section id="sec-hex-convert" class="space-y-6 hidden">
+
+            <!-- Intro Header Card -->
+            <div class="pink-card p-6 bg-gradient-to-br from-white to-pink-50">
+                <h2 class="text-2xl font-bold text-pinky-800 mb-2 flex items-center gap-2">
+                    <span>🔄</span> أسرار التحويل بين الهكسا (Hex) والباينري (Binary)
+                </h2>
+                <p class="text-gray-700 text-sm leading-relaxed">
+                    يا بشمهندس عبدالرحمن، فيه طريقتين للتحويل بين النظام السادس عشر (Hex) والنظام الثنائي (Binary):
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-white p-4 rounded-xl border border-pinky-200 shadow-sm">
+                        <span class="bow-badge px-3 py-1 rounded-full text-xs font-bold inline-block mb-2">الطريقة الأولى 🐢</span>
+                        <h4 class="font-bold text-pinky-800">التحويل غير المباشر (عبر العشري)</h4>
+                        <p class="text-xs text-gray-600 mt-1">
+                            نحول الهكسا لأولاً رقم عشري (Decimal)، وبعد كده نحول العشري لباينري. (طريقة صح بس بتاخد وقت أطول).
+                        </p>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-xl border border-pinky-300 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 left-0 bg-pinky-500 text-white text-[10px] px-2 py-0.5 rounded-br-lg font-bold">الأسرع 🚀</div>
+                        <span class="bow-badge px-3 py-1 rounded-full text-xs font-bold inline-block mb-2">الطريقة الثانية 🎀</span>
+                        <h4 class="font-bold text-pinky-800">التحويل المباشر (طريقة الفلنكات السريعة)</h4>
+                        <p class="text-xs text-gray-600 mt-1">
+                            كل رقم هكسا <strong class="text-pinky-600">بيتفك فوراً في 4 بيتس باينري (Nibble)</strong>! والعكس صحيح، كل 4 بيتس باينري بنجمعهم يدينا رقم هكسا واحد!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solved Examples from PDF 07 -->
+            <div class="pink-card p-6">
+                <h3 class="text-xl font-bold text-pinky-800 mb-4 flex items-center gap-2">
+                    <span>📚</span> الأمثلة المحلولة خطوة بخطوة من ملف الكورس
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    
+                    <!-- Example 1: 1D5 -->
+                    <div class="bg-white p-5 rounded-2xl border-2 border-pinky-200 text-center hover:scale-105 transition-transform">
+                        <span class="text-xs font-bold text-pinky-500 uppercase tracking-widest block mb-1">مثال 1</span>
+                        <h4 class="text-2xl font-black text-pinky-800 mb-3">1D5 ➔ Binary</h4>
+                        <div class="space-y-2 text-xs font-bold text-gray-700">
+                            <div class="bg-pinky-50 p-1.5 rounded">5 = <span class="text-pinky-600">0101</span></div>
+                            <div class="bg-pinky-50 p-1.5 rounded">D (13) = <span class="text-pinky-600">1101</span></div>
+                            <div class="bg-pinky-50 p-1.5 rounded">1 = <span class="text-pinky-600">0001</span></div>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-pinky-100 text-pinky-700 font-extrabold text-sm">
+                            النتيجة: <span class="font-mono text-pinky-900 block bg-pinky-100 rounded py-1 mt-1">0001 1101 0101</span>
+                        </div>
+                    </div>
+
+                    <!-- Example 2: 5E9 -->
+                    <div class="bg-white p-5 rounded-2xl border-2 border-pinky-200 text-center hover:scale-105 transition-transform">
+                        <span class="text-xs font-bold text-pinky-500 uppercase tracking-widest block mb-1">مثال 2</span>
+                        <h4 class="text-2xl font-black text-pinky-800 mb-3">5E9 ➔ Binary</h4>
+                        <div class="space-y-2 text-xs font-bold text-gray-700">
+                            <div class="bg-pinky-50 p-1.5 rounded">9 = <span class="text-pinky-600">1001</span></div>
+                            <div class="bg-pinky-50 p-1.5 rounded">E (14) = <span class="text-pinky-600">1110</span></div>
+                            <div class="bg-pinky-50 p-1.5 rounded">5 = <span class="text-pinky-600">0101</span></div>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-pinky-100 text-pinky-700 font-extrabold text-sm">
+                            النتيجة: <span class="font-mono text-pinky-900 block bg-pinky-100 rounded py-1 mt-1">0101 1110 1001</span>
+                        </div>
+                    </div>
+
+                    <!-- Example 3: 1DF -->
+                    <div class="bg-white p-5 rounded-2xl border-2 border-pinky-200 text-center hover:scale-105 transition-transform">
+                        <span class="text-xs font-bold text-pinky-500 uppercase tracking-widest block mb-1">مثال 3</span>
+                        <h4 class="text-2xl font-black text-pinky-800 mb-3">1DF ➔ Binary</h4>
+                        <div class="space-y-2 text-xs font-bold text-gray-700">
+                            <div class="bg-pinky-50 p-1.5 rounded">F (15) = <span class="text-pinky-600">1111</span></div>
+                            <div class="bg-pinky-50 p-1.5 rounded">D (13) = <span class="text-pinky-600">1101</span></div>
+                            <div class="bg-pinky-50 p-1.5 rounded">1 = <span class="text-pinky-600">0001</span></div>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-pinky-100 text-pinky-700 font-extrabold text-sm">
+                            النتيجة: <span class="font-mono text-pinky-900 block bg-pinky-100 rounded py-1 mt-1">0001 1101 1111</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Live Interactive Converter Tool -->
+            <div class="pink-card p-6">
+                <h3 class="text-xl font-bold text-pinky-800 mb-2 flex items-center gap-2">
+                    <span>🪄</span> المحول السحري اللحظي (Hex ⟷ Binary Converter)
+                </h3>
+                <p class="text-xs text-gray-600 mb-4">اكتب أي رقم هكسا أو باينري وشوف التفكيك اللحظي للـ Nibbles!</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Hex to Binary Input -->
+                    <div class="bg-white p-4 rounded-xl border border-pinky-200">
+                        <label class="block text-xs font-bold text-pinky-700 mb-1">أدخل قيم الهكسا (مثال: 1A4F):</label>
+                        <input type="text" id="converter-hex-input" placeholder="مثال: 1C35" value="1C35" oninput="convertHexToBinLive()"
+                            class="w-full px-4 py-2.5 rounded-xl border-2 border-pinky-200 focus:border-pinky-500 focus:outline-none uppercase font-mono font-bold text-lg text-pinky-900">
+                        
+                        <div class="mt-3">
+                            <span class="text-xs font-bold text-gray-500 block mb-1">التفكيك التفاعلي للـ Nibbles:</span>
+                            <div id="hex-to-bin-result-chunks" class="flex flex-wrap gap-2">
+                                <!-- Chunks rendered dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Binary to Hex Input -->
+                    <div class="bg-white p-4 rounded-xl border border-pinky-200">
+                        <label class="block text-xs font-bold text-pinky-700 mb-1">أدخل باينري (أصفار وحوايد):</label>
+                        <input type="text" id="converter-bin-input" placeholder="مثال: 0001 1100 0011 0101" value="0001110000110101" oninput="convertBinToHexLive()"
+                            class="w-full px-4 py-2.5 rounded-xl border-2 border-pinky-200 focus:border-pinky-500 focus:outline-none font-mono font-bold text-lg text-pinky-900">
+                        
+                        <div class="mt-3">
+                            <span class="text-xs font-bold text-gray-500 block mb-1">الرقم الهكسا الناتج:</span>
+                            <div id="bin-to-hex-result-display" class="bg-pinky-100 p-3 rounded-xl text-center font-mono text-2xl font-black text-pinky-900 border border-pinky-300">
+                                1C35
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- SECTION 3: GAMES & PLAYGROUND -->
+        <section id="sec-games" class="space-y-6 hidden">
+            
+            <div class="pink-card p-6 text-center">
+                <span class="text-4xl inline-block bounce-soft mb-2">🎮🎀</span>
+                <h2 class="text-2xl font-bold text-pinky-800">منطقة الألعاب والتحديات الوردية</h2>
+                <p class="text-sm text-gray-600 mt-1">اختبر مهاراتك وسرعتك يا بشمهندس عبدالرحمن واجمع الأوسمة!</p>
+            </div>
+
+            <!-- Game 1: Byte Parts Quiz Challenge -->
+            <div class="pink-card p-6 bg-white">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-pinky-800 flex items-center gap-2">
+                        <span>🧁</span> اللعبة الأولى: تحدي تجميع الفلنكات والبايتات
+                    </h3>
+                    <div id="game1-score-badge" class="bg-pinky-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">
+                        النقاط: 0 ✨
+                    </div>
+                </div>
+
+                <div id="game1-box" class="space-y-4">
+                    <p id="game1-question" class="text-base font-bold text-gray-800 bg-pinky-50 p-4 rounded-xl border border-pinky-200">
+                        جارٍ تحميل السؤال...
+                    </p>
+                    <div id="game1-options" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <!-- Dynamic options buttons -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game 2: Hex-Binary Speed Matcher -->
+            <div class="pink-card p-6 bg-white">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-pinky-800 flex items-center gap-2">
+                        <span>🌸</span> اللعبة الثانية: مطابقة الهكسا السريعة (Hex Speed Matcher)
+                    </h3>
+                    <div class="flex items-center gap-2">
+                        <span id="game2-timer" class="bg-pinky-100 text-pinky-800 text-xs font-bold px-3 py-1 rounded-full">الوقت: 30s ⏱️</span>
+                        <span id="game2-score" class="bg-pinky-600 text-white text-xs font-bold px-3 py-1 rounded-full">النقاط: 0 🏆</span>
+                    </div>
+                </div>
+
+                <div id="game2-container" class="text-center space-y-4">
+                    <div class="bg-gradient-to-r from-pinky-100 to-pink-50 p-6 rounded-2xl border-2 border-pinky-200 inline-block min-w-[200px]">
+                        <span class="text-xs text-pinky-600 font-bold block mb-1">الرقم الهكسا المستهدف:</span>
+                        <div id="game2-target-hex" class="text-4xl font-black text-pinky-900 tracking-wider">5E</div>
+                    </div>
+
+                    <p class="text-xs text-gray-600">اختر القيمة الباينري الصحيحة المقابلة له بسرعة!</p>
+
+                    <div id="game2-options-grid" class="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-xl mx-auto">
+                        <!-- Dynamic buttons -->
+                    </div>
+
+                    <button id="start-game2-btn" onclick="startGame2()" class="mt-4 px-6 py-2.5 bg-pinky-600 text-white font-bold rounded-xl shadow-md hover:bg-pinky-700 transition-all">
+                        ابدأ لعبة السرعة الآن 🚀
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- SECTION 4: HOMEWORK SOLVER & EXERCISES -->
+        <section id="sec-homework" class="space-y-6 hidden">
+
+            <!-- Homework Header -->
+            <div class="pink-card p-6">
+                <h2 class="text-2xl font-bold text-pinky-800 mb-2 flex items-center gap-2">
+                    <span>📝</span> قسم حل واجبات المحاضرة والتأكد الفوري
+                </h2>
+                <p class="text-sm text-gray-600">
+                    هنا هتلاقي كل المسائل المطلوبة في الملفات (PDF 06 & PDF 07) مع إمكانية تجربة إجابتك والتأكد منها لحظياً بالخطوات!
+                </p>
+            </div>
+
+            <!-- PDF 06 Homework: 12 Questions on Byte Parts -->
+            <div class="pink-card p-6">
+                <h3 class="text-lg font-bold text-pinky-800 mb-3 flex items-center gap-2">
+                    <span>🧁</span> 1. أسئلة أجزاء البايت (Byte Parts - PDF 06)
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="byte-questions-list">
+                    <!-- JS renders the 12 questions with toggle answer buttons -->
+                </div>
+            </div>
+
+            <!-- PDF 07 Homework 1: Hex to Binary Conversion -->
+            <div class="pink-card p-6">
+                <h3 class="text-lg font-bold text-pinky-800 mb-3 flex items-center gap-2">
+                    <span>1️⃣</span> 2. واجب تحويل الهكسا إلى باينري (Hex ➔ Binary Direct)
+                </h3>
+
+                <div class="space-y-3">
+                    <div class="bg-white p-4 rounded-xl border border-pinky-200 flex flex-wrap items-center justify-between gap-2">
+                        <span class="font-bold text-pinky-800 font-mono text-lg">1) 12A4</span>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="hw1-1" placeholder="أدخل الناتج بالباينري" class="px-3 py-1.5 border border-pinky-300 rounded-lg font-mono text-sm">
+                            <button onclick="checkHw('hw1-1', '0001001010100100', '0001 0010 1010 0100')" class="px-3 py-1.5 bg-pinky-500 text-white font-bold rounded-lg text-xs">تحقق</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-xl border border-pinky-200 flex flex-wrap items-center justify-between gap-2">
+                        <span class="font-bold text-pinky-800 font-mono text-lg">2) 1C35</span>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="hw1-2" placeholder="أدخل الناتج بالباينري" class="px-3 py-1.5 border border-pinky-300 rounded-lg font-mono text-sm">
+                            <button onclick="checkHw('hw1-2', '0001110000110101', '0001 1100 0011 0101')" class="px-3 py-1.5 bg-pinky-500 text-white font-bold rounded-lg text-xs">تحقق</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-xl border border-pinky-200 flex flex-wrap items-center justify-between gap-2">
+                        <span class="font-bold text-pinky-800 font-mono text-lg">3) 100</span>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="hw1-3" placeholder="أدخل الناتج بالباينري" class="px-3 py-1.5 border border-pinky-300 rounded-lg font-mono text-sm">
+                            <button onclick="checkHw('hw1-3', '000100000000', '0001 0000 0000')" class="px-3 py-1.5 bg-pinky-500 text-white font-bold rounded-lg text-xs">تحقق</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-xl border border-pinky-200 flex flex-wrap items-center justify-between gap-2">
+                        <span class="font-bold text-pinky-800 font-mono text-lg">4) 115C</span>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="hw1-4" placeholder="أدخل الناتج بالباينري" class="px-3 py-1.5 border border-pinky-300 rounded-lg font-mono text-sm">
+                            <button onclick="checkHw('hw1-4', '0001000101011100', '0001 0001 0101 1100')" class="px-3 py-1.5 bg-pinky-500 text-white font-bold rounded-lg text-xs">تحقق</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PDF 07 Homework 2: Binary to Hex Conversion -->
+            <div class="pink-card p-6">
+                <h3 class="text-lg font-bold text-pinky-800 mb-3 flex items-center gap-2">
+                    <span>2️⃣</span> 3. واجب تحويل الباينري إلى هكسا (Binary ➔ Hex Direct)
+                </h3>
+
+                <div class="space-y-3">
+                    <div class="bg-white p-4 rounded-xl border border-pinky-200 flex flex-wrap items-center justify-between gap-2">
+                        <span class="font-bold text-pinky-800 font-mono text-sm">1) 0001 0010 1010 0100</span>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="hw2-1" placeholder="أدخل الناتج بالهكسا" class="px-3 py-1.5 border border-pinky-300 rounded-lg font-mono text-sm uppercase">
+                            <button onclick="checkHw('hw2-1', '12A4', '12A4')" class="px-3 py-1.5 bg-pinky-600 text-white font-bold rounded-lg text-xs">تحقق</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-xl border border-pinky-200 flex flex-wrap items-center justify-between gap-2">
+                        <span class="font-bold text-pinky-800 font-mono text-sm">2) 0001 1100 0011 0101</span>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="hw2-2" placeholder="أدخل الناتج بالهكسا" class="px-3 py-1.5 border border-pinky-300 rounded-lg font-mono text-sm uppercase">
+                            <button onclick="checkHw('hw2-2', '1C35', '1C35')" class="px-3 py-1.5 bg-pinky-600 text-white font-bold rounded-lg text-xs">تحقق</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-xl border border-pinky-200 flex flex-wrap items-center justify-between gap-2">
+                        <span class="font-bold text-pinky-800 font-mono text-sm">3) 0001 0000 0000</span>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="hw2-3" placeholder="أدخل الناتج بالهكسا" class="px-3 py-1.5 border border-pinky-300 rounded-lg font-mono text-sm uppercase">
+                            <button onclick="checkHw('hw2-3', '100', '100')" class="px-3 py-1.5 bg-pinky-600 text-white font-bold rounded-lg text-xs">تحقق</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-xl border border-pinky-200 flex flex-wrap items-center justify-between gap-2">
+                        <span class="font-bold text-pinky-800 font-mono text-sm">4) 0001 0001 0101 1100</span>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="hw2-4" placeholder="أدخل الناتج بالهكسا" class="px-3 py-1.5 border border-pinky-300 rounded-lg font-mono text-sm uppercase">
+                            <button onclick="checkHw('hw2-4', '115C', '115C')" class="px-3 py-1.5 bg-pinky-600 text-white font-bold rounded-lg text-xs">تحقق</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- SECTION 5: SECRET ASCII DECODER -->
+        <section id="sec-ascii-secret" class="space-y-6 hidden">
+
+            <div class="pink-card p-6 text-center space-y-4">
+                <span class="text-5xl inline-block bounce-soft">💌🔑</span>
+                <h2 class="text-2xl font-bold text-pinky-800">الشفرة السرية الموجودة بنهاية الملف!</h2>
+                <p class="text-sm text-gray-700 max-w-xl mx-auto leading-relaxed">
+                    في الصفحة الأخيرة من ملف الهكسا، فيه كود هكسا مشفر بالـ ASCII:
+                    <br>
+                    <span class="font-mono font-black text-pinky-600 bg-pinky-100 px-3 py-1 rounded-lg text-base inline-block mt-2">
+                        54 68 61 6E 6B 20 59 6F 75 20 3A 29
+                    </span>
+                </p>
+
+                <button onclick="decodeSecretAscii()" class="px-8 py-3 bg-gradient-to-r from-pinky-500 to-pinky-600 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all text-base">
+                    اضغطي هنا لفك الشفرة السرية حرفاً بحرف! ✨
+                </button>
+
+                <!-- Step-by-Step Animation Box -->
+                <div id="ascii-decoded-container" class="mt-6 space-y-4 hidden">
+                    <div class="bg-white p-6 rounded-2xl border-2 border-pinky-300 shadow-inner">
+                        <span class="text-xs text-gray-500 font-bold block mb-2">التفكيك من الهكسا ➔ الرمز ASCII:</span>
+                        <div id="ascii-steps-grid" class="flex flex-wrap justify-center gap-2 font-mono text-sm">
+                            <!-- Dynamic steps -->
+                        </div>
+
+                        <div class="mt-6 pt-4 border-t border-pinky-100">
+                            <span class="text-xs font-bold text-pinky-600 uppercase tracking-widest block mb-1">الرسالة النهائية المتشفرة:</span>
+                            <div id="final-ascii-msg" class="text-4xl font-black text-pinky-800 tracking-wider">
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pink-card p-6 bg-gradient-to-r from-pinky-500 to-pinky-700 text-white text-center rounded-2xl shadow-xl">
+                        <p class="text-lg font-bold mb-1">💖 شكراً جداً للبشمهندس عبدالرحمن محمد! 💖</p>
+                        <p class="text-xs opacity-90">نتمنى لك كل التوفيق والنجاح الدائم في رحلتك في عالم البرمجة ورؤيتك أعظم مهندس دائماً! ✨🌸</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center py-4 text-xs text-pinky-700 font-bold">
+            صُنع بحب وفرحة للـبشمهندس عبدالرحمن محمد 🎀 2026
+        </footer>
+
+    </div>
+
+    <!-- Toast Notification Box -->
+    <div id="toast" class="fixed bottom-5 left-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-pinky-800 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-sm font-bold">
+        <span id="toast-icon">✨</span>
+        <span id="toast-msg">إشعار</span>
+    </div>
+
+    <script>
+        // State variables
+        let byteBits = [0, 0, 0, 0, 0, 0, 0, 0]; // bit 7 to bit 0
+        let game1Score = 0;
+        let game1Index = 0;
+        let game2Score = 0;
+        let game2Timer = null;
+        let game2TimeLeft = 30;
+
+        // Byte Parts Quiz Questions
+        const game1Questions = [
+            {
+                q: "كم عدد البتات (Bits) الموجودة في البايت الواحد (Byte)؟",
+                opts: ["4 Bits", "8 Bits", "2 Bits", "16 Bits"],
+                ans: 1
+            },
+            {
+                q: "ما هو الـ Crumb في علم الحاسوب؟",
+                opts: ["مجموعة من 4 بيتس", "مجموعة من 8 بيتس", "مجموعة من 2 بيتس مع بعض", "بت واحدة فقط"],
+                ans: 2
+            },
+            {
+                q: "ماذا يُسمى الـ Nibble العليوي (الأيسر) في البايت؟",
+                opts: ["Lower Nibble", "Upper Nibble", "LSB", "Crumb"],
+                ans: 1
+            },
+            {
+                q: "أين تقع الخانة LSB (Least Significant Bit) في البايت؟",
+                opts: ["أقصى اليسار ووزنها 128", "أقصى اليمين ووزنها 1", "في المنتصف تماماً", "تغير مكانها باستمرار"],
+                ans: 1
+            },
+            {
+                q: "كم رقم هكسا (Hex) نحتاجه لتمثيل 1 Nibble كامل؟",
+                opts: ["رقم هكسا واحد فقط", "ركمان هكسا", "4 أرقام هكسا", "8 أرقام هكسا"],
+                ans: 0
+            }
+        ];
+
+        // Homework 12 Byte Questions List
+        const byte12Questions = [
+            { q: "1. What is Bit?", a: "أصغر خانة في التخزين وتأخذ قيمة 0 أو 1." },
+            { q: "2. What is Crumb?", a: "تجمع 2 bits مع بعضهما البعض." },
+            { q: "3. What is Nibble?", a: "تجمع 4 bits مع بعضهما البعض (يعادل نصف بايت)." },
+            { q: "4. What is Byte?", a: "تجمع 8 bits مع بعضهما البعض." },
+            { q: "5. How many bits in a byte?", a: "8 Bits." },
+            { q: "6. How many crumbs in a byte?", a: "4 Crumbs (لأن 8 ÷ 2 = 4)." },
+            { q: "7. How many nibbles in a byte?", a: "2 Nibbles (Upper & Lower)." },
+            { q: "8. How many crumbs in a nibble?", a: "2 Crumbs (لأن 4 ÷ 2 = 2)." },
+            { q: "9. What is lower nibble?", a: "الأربعة بيتس السفلى (جهة اليمين)." },
+            { q: "10. What is upper nibble?", a: "الأربعة بيتس العليا (جهة الشمال)." },
+            { q: "11. What is LSB and why called so?", a: "Least Significant Bit (البت الأقل أهمية) على أقصى اليمين، ووزنه 1." },
+            { q: "12. What is MSB and why called so?", a: "Most Significant Bit (البت الأعلى أهمية) على أقصى الشمال، ووزنه 128." }
+        ];
+
+        // Window onload initialization
+        window.onload = function () {
+            renderByteSwitches();
+            renderByte12Questions();
+            convertHexToBinLive();
+            convertBinToHexLive();
+            loadGame1Question();
+        };
+
+        // Tab switching function
+        function switchTab(tabId) {
+            const sections = ['byte-parts', 'hex-convert', 'games', 'homework', 'ascii-secret'];
+            sections.forEach(s => {
+                document.getElementById(`sec-${s}`).classList.add('hidden');
+                document.getElementById(`tab-${s}`).classList.remove('active');
+            });
+
+            document.getElementById(`sec-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+        }
+
+        // Render Byte Switches
+        function renderByteSwitches() {
+            const container = document.getElementById('bit-switches-container');
+            container.innerHTML = '';
+
+            for (let i = 7; i >= 0; i--) {
+                const bitVal = byteBits[i];
+                const weight = Math.pow(2, i);
+                const isMsb = (i === 7);
+                const isLsb = (i === 0);
+
+                const div = document.createElement('div');
+                div.className = `bit-switch p-2 md:p-3 rounded-2xl cursor-pointer text-center border-2 transition-all ${
+                    bitVal === 1 
+                        ? 'bg-pinky-500 text-white border-pinky-600 shadow-md' 
+                        : 'bg-white text-gray-700 border-pinky-200 hover:bg-pinky-50'
+                }`;
+                div.onclick = () => toggleBit(i);
+
+                div.innerHTML = `
+                    <div class="text-[10px] font-bold opacity-80 ${isMsb || isLsb ? 'underline font-black' : ''}">
+                        ${isMsb ? 'MSB (Bit 7)' : isLsb ? 'LSB (Bit 0)' : `Bit ${i}`}
+                    </div>
+                    <div class="text-xl md:text-3xl font-black my-1 font-mono">${bitVal}</div>
+                    <div class="text-[9px] bg-pinky-100 text-pinky-800 rounded px-1 py-0.5 inline-block font-bold">
+                        وزنها: ${weight}
+                    </div>
+                `;
+                container.appendChild(div);
+            }
+
+            updateByteComputedValues();
+        }
+
+        function toggleBit(index) {
+            byteBits[index] = byteBits[index] === 0 ? 1 : 0;
+            renderByteSwitches();
+        }
+
+        function updateByteComputedValues() {
+            const upperStr = byteBits.slice(4, 8).reverse().join('');
+            const lowerStr = byteBits.slice(0, 4).reverse().join('');
+
+            document.getElementById('upper-nibble-display').innerText = upperStr;
+            document.getElementById('lower-nibble-display').innerText = lowerStr;
+
+            const upperHex = parseInt(upperStr, 2).toString(16).toUpperCase();
+            const lowerHex = parseInt(lowerStr, 2).toString(16).toUpperCase();
+
+            document.getElementById('upper-nibble-hex').innerText = `Hex: ${upperHex} (${parseInt(upperStr, 2)})`;
+            document.getElementById('lower-nibble-hex').innerText = `Hex: ${lowerHex} (${parseInt(lowerStr, 2)})`;
+
+            const fullBin = byteBits.slice().reverse().join('');
+            const decVal = parseInt(fullBin, 2);
+            const hexVal = decVal.toString(16).toUpperCase().padStart(2, '0');
+
+            document.getElementById('byte-dec-val').innerText = decVal;
+            document.getElementById('byte-hex-val').innerText = '0x' + hexVal;
+            document.getElementById('msb-val').innerText = byteBits[7];
+            document.getElementById('lsb-val').innerText = byteBits[0];
+        }
+
+        // Live Hex to Binary Converter
+        function convertHexToBinLive() {
+            const hexInput = document.getElementById('converter-hex-input').value.trim().toUpperCase();
+            const chunksContainer = document.getElementById('hex-to-bin-result-chunks');
+            chunksContainer.innerHTML = '';
+
+            if (!hexInput) return;
+
+            for (let char of hexInput) {
+                const dec = parseInt(char, 16);
+                if (isNaN(dec)) continue;
+
+                const bin4 = dec.toString(2).padStart(4, '0');
+
+                const chip = document.createElement('div');
+                chip.className = 'bg-pinky-100 border border-pinky-300 p-2 rounded-xl text-center flex-1 min-w-[70px]';
+                chip.innerHTML = `
+                    <span class="text-xs font-bold text-pinky-800 block">${char} (${dec})</span>
+                    <span class="font-mono font-black text-pinky-600 text-sm">${bin4}</span>
+                `;
+                chunksContainer.appendChild(chip);
+            }
+        }
+
+        // Live Binary to Hex Converter
+        function convertBinToHexLive() {
+            const binInput = document.getElementById('converter-bin-input').value.replace(/\s+/g, '');
+            const display = document.getElementById('bin-to-hex-result-display');
+
+            if (!binInput || !/^[01]+$/.test(binInput)) {
+                display.innerText = 'أدخل أرقام باينري صحيحة (0 و 1)';
+                return;
+            }
+
+            // Pad leading zeros to make length multiple of 4
+            let paddedBin = binInput;
+            while (paddedBin.length % 4 !== 0) {
+                paddedBin = '0' + paddedBin;
+            }
+
+            let hexResult = '';
+            for (let i = 0; i < paddedBin.length; i += 4) {
+                const chunk = paddedBin.substring(i, i + 4);
+                const dec = parseInt(chunk, 2);
+                hexResult += dec.toString(16).toUpperCase();
+            }
+
+            display.innerText = hexResult;
+        }
+
+        // Game 1 Logic
+        function loadGame1Question() {
+            const q = game1Questions[game1Index];
+            document.getElementById('game1-question').innerText = `سؤال ${game1Index + 1}: ${q.q}`;
+            const optsContainer = document.getElementById('game1-options');
+            optsContainer.innerHTML = '';
+
+            q.opts.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'p-3 bg-pinky-50 hover:bg-pinky-200 border-2 border-pinky-200 rounded-xl text-right font-bold text-pinky-800 transition-all text-sm';
+                btn.innerText = opt;
+                btn.onclick = () => answerGame1(idx);
+                optsContainer.appendChild(btn);
+            });
+        }
+
+        function answerGame1(selectedIdx) {
+            const q = game1Questions[game1Index];
+            if (selectedIdx === q.ans) {
+                game1Score += 20;
+                showToast('إجابة صحيحة يا بطلة! 🎉 +20 نقطة', '🌸');
+            } else {
+                showToast('إجابة خاطئة! جربي تاني 🎀', '❌');
+            }
+
+            document.getElementById('game1-score-badge').innerText = `النقاط: ${game1Score} ✨`;
+            game1Index = (game1Index + 1) % game1Questions.length;
+            loadGame1Question();
+        }
+
+        // Game 2 Logic: Speed Matcher
+        function startGame2() {
+            game2Score = 0;
+            game2TimeLeft = 30;
+            document.getElementById('game2-score').innerText = `النقاط: 0 🏆`;
+            document.getElementById('start-game2-btn').classList.add('hidden');
+
+            if (game2Timer) clearInterval(game2Timer);
+
+            game2Timer = setInterval(() => {
+                game2TimeLeft--;
+                document.getElementById('game2-timer').innerText = `الوقت: ${game2TimeLeft}s ⏱️`;
+
+                if (game2TimeLeft <= 0) {
+                    clearInterval(game2Timer);
+                    showToast(`انتهى الوقت! مجموع نقاطك: ${game2Score} 🌟`, '🏆');
+                    document.getElementById('start-game2-btn').classList.remove('hidden');
+                }
+            }, 1000);
+
+            nextGame2Round();
+        }
+
+        function nextGame2Round() {
+            const randomHexVal = Math.floor(Math.random() * 255);
+            const hexStr = randomHexVal.toString(16).toUpperCase().padStart(2, '0');
+            const correctBin = randomHexVal.toString(2).padStart(8, '0');
+
+            document.getElementById('game2-target-hex').innerText = hexStr;
+
+            const grid = document.getElementById('game2-options-grid');
+            grid.innerHTML = '';
+
+            // Generate 4 options (1 correct, 3 wrong)
+            const options = [correctBin];
+            while (options.length < 4) {
+                const randVal = Math.floor(Math.random() * 255);
+                const randBin = randVal.toString(2).padStart(8, '0');
+                if (!options.includes(randBin)) options.push(randBin);
+            }
+
+            // Shuffle
+            options.sort(() => Math.random() - 0.5);
+
+            options.forEach(optBin => {
+                const btn = document.createElement('button');
+                btn.className = 'p-3 bg-pinky-100 hover:bg-pinky-500 hover:text-white border-2 border-pinky-300 rounded-xl font-mono font-bold text-xs text-pinky-900 transition-all';
+                btn.innerText = optBin;
+                btn.onclick = () => {
+                    if (optBin === correctBin) {
+                        game2Score += 10;
+                        document.getElementById('game2-score').innerText = `النقاط: ${game2Score} 🏆`;
+                        showToast('ممتاز! تحويل سريع صحيح ⚡', '✨');
+                        nextGame2Round();
+                    } else {
+                        showToast('خطأ! ركز واختار الصح 🌸', '⚠️');
+                    }
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        // Render Homework 12 Byte Questions
+        function renderByte12Questions() {
+            const container = document.getElementById('byte-questions-list');
+            container.innerHTML = '';
+
+            byte12Questions.forEach((item, idx) => {
+                const div = document.createElement('div');
+                div.className = 'bg-white p-3.5 rounded-xl border border-pinky-200 text-sm space-y-2';
+                div.innerHTML = `
+                    <div class="font-bold text-pinky-800">${item.q}</div>
+                    <button onclick="toggleHwAns(${idx})" class="text-xs bg-pinky-100 text-pinky-700 px-2.5 py-1 rounded-md font-bold hover:bg-pinky-200">
+                        اكتشف الإجابة الوردية ✨
+                    </button>
+                    <div id="hw-ans-${idx}" class="hidden text-xs text-pinky-900 bg-pinky-50 p-2.5 rounded-lg border border-pinky-200 font-bold">
+                        ${item.a}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function toggleHwAns(idx) {
+            const el = document.getElementById(`hw-ans-${idx}`);
+            el.classList.toggle('hidden');
+        }
+
+        // Homework check function
+        function checkHw(inputId, correctRaw, formatted) {
+            const inputVal = document.getElementById(inputId).value.replace(/\s+/g, '').toUpperCase();
+            if (inputVal === correctRaw.replace(/\s+/g, '').toUpperCase()) {
+                showToast(`إجابة صحيحة 100%! الناتج: ${formatted} 🎉`, '✅');
+            } else {
+                showToast(`إجابة غير دقيقة! الناتج الصحيح هو: ${formatted}`, '❌');
+            }
+        }
+
+        // Secret ASCII Decoder Animation
+        function decodeSecretAscii() {
+            const hexCodes = ["54", "68", "61", "6E", "6B", "20", "59", "6F", "75", "20", "3A", "29"];
+            const container = document.getElementById('ascii-decoded-container');
+            const stepsGrid = document.getElementById('ascii-steps-grid');
+            const finalMsg = document.getElementById('final-ascii-msg');
+
+            container.classList.remove('hidden');
+            stepsGrid.innerHTML = '';
+            finalMsg.innerText = '';
+
+            let accumulatedText = '';
+
+            hexCodes.forEach((hex, idx) => {
+                setTimeout(() => {
+                    const charCode = parseInt(hex, 16);
+                    const char = String.fromCharCode(charCode);
+                    accumulatedText += char;
+
+                    const chip = document.createElement('div');
+                    chip.className = 'bg-pinky-100 border border-pinky-300 px-3 py-2 rounded-xl text-center bounce-soft';
+                    chip.innerHTML = `
+                        <div class="text-[10px] text-pinky-600 font-bold">0x${hex}</div>
+                        <div class="text-lg font-black text-pinky-900 my-0.5">'${char === ' ' ? 'SPACE' : char}'</div>
+                    `;
+                    stepsGrid.appendChild(chip);
+
+                    finalMsg.innerText = accumulatedText;
+                }, idx * 250);
+            });
+        }
+
+        // Toast Helper
+        function showToast(msg, icon = '✨') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            document.getElementById('toast-icon').innerText = icon;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
