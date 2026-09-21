@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار لغات البرمجة ومستوياتها (30 سؤالاً) 🎀 إجابات موزعة</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'pink-cute': '#FFB6C1',
+                        'pink-deep': '#FF69B4',
+                        'pink-soft': '#FFF0F5',
+                        'pink-accent': '#DB2777',
+                        'pink-light': '#FFF5F8',
+                    },
+                    fontFamily: {
+                        'arabic': ['Cairo', 'Tajawal', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'girly': '0 10px 25px -5px rgba(255, 182, 193, 0.4), 0 8px 10px -6px rgba(255, 105, 180, 0.2)',
+                        'girly-lg': '0 20px 35px -10px rgba(255, 105, 180, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+            background-color: #FFF5F8;
+            background-image: radial-gradient(#FFC0CB 0.75px, transparent 0.75px), radial-gradient(#FFC0CB 0.75px, #FFF5F8 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            overflow-x: hidden;
+        }
+
+        .bow-icon {
+            display: inline-block;
+            filter: drop-shadow(0px 2px 4px rgba(219, 39, 119, 0.3));
+            animation: bowWiggle 3s ease-in-out infinite;
+        }
+
+        @keyframes bowWiggle {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(-6deg) scale(1.05); }
+            75% { transform: rotate(6deg) scale(1.05); }
+        }
+
+        .sparkle-float {
+            animation: sparkleFloat 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes sparkleFloat {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+            100% { transform: translateY(-12px) rotate(15deg); opacity: 1; }
+        }
+
+        .pink-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 2px solid #FFD1DC;
+            box-shadow: 0 10px 30px -5px rgba(255, 182, 193, 0.3);
+            border-radius: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-pink {
+            background: linear-gradient(135deg, #FF69B4 0%, #DB2777 100%);
+            box-shadow: 0 4px 15px rgba(219, 39, 119, 0.35);
+            transition: all 0.2s ease;
+        }
+
+        .btn-pink:hover {
+            background: linear-gradient(135deg, #FF1493 0%, #BE185D 100%);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 20px rgba(219, 39, 119, 0.45);
+        }
+
+        .flip-card {
+            perspective: 1000px;
+        }
+
+        .flip-card-inner {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #FFF0F5; }
+        ::-webkit-scrollbar-thumb { background: #FFB6C1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #FF69B4; }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b-2 border-pink-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3 space-x-reverse cursor-pointer" onclick="switchMode('home')">
+                <span class="text-3xl bow-icon">🎀</span>
+                <div>
+                    <h1 class="text-lg font-black text-slate-800 leading-none">اختبار لغات البرمجة (30 سؤالاً)</h1>
+                    <p class="text-xs text-pink-600 font-bold">Programming Advices • التقييم الشامل</p>
+                </div>
+            </div>
+
+            <!-- Mode Controls -->
+            <div class="flex items-center space-x-2 space-x-reverse font-bold text-xs sm:text-sm">
+                <button onclick="switchMode('exam')" id="navExamBtn" class="px-3 sm:px-4 py-2 rounded-full bg-pink-500 text-white shadow hover:bg-pink-600 transition flex items-center gap-1.5">
+                    <i class="fas fa-file-signature"></i>
+                    <span>وضع الاختبار</span>
+                </button>
+                <button onclick="switchMode('practice')" id="navPracticeBtn" class="px-3 sm:px-4 py-2 rounded-full bg-pink-100 text-pink-700 hover:bg-pink-200 transition flex items-center gap-1.5">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>وضع التدريب</span>
+                </button>
+                <button onclick="switchMode('flashcards')" id="navFlashBtn" class="px-3 sm:px-4 py-2 rounded-full bg-pink-100 text-pink-700 hover:bg-pink-200 transition flex items-center gap-1.5 hidden sm:flex">
+                    <i class="fas fa-clone"></i>
+                    <span>البطاقات</span>
+                </button>
+
+                <button id="soundToggleBtn" onclick="toggleAudio()" class="p-2 rounded-full bg-pink-100 text-pink-600 hover:bg-pink-200 transition">
+                    <i class="fas fa-volume-up text-base"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow">
+
+        <!-- VIEW 1: HOME DASHBOARD -->
+        <div id="viewHome" class="space-y-8">
+            <div class="text-center max-w-3xl mx-auto py-6">
+                <span class="px-4 py-1.5 bg-pink-100 text-pink-700 font-bold text-xs rounded-full border border-pink-300 shadow-sm inline-block mb-3">
+                    🎀 30 سؤالاً متكاملاً تغطي كافة المستويات والمفاهيم 🎀
+                </span>
+                <h2 class="text-3xl sm:text-5xl font-black text-slate-800 leading-tight mb-4">
+                    اختبري حصيلتكِ في <span class="text-pink-600 underline decoration-pink-300 decoration-wavy">لغات البرمجة</span>! ✨
+                </h2>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    مرحباً بكِ في الاختبار الشامل المكون من 30 سؤالاً تغطي: تعريف لغة البرمجة، الكود المصدري وكود الهدف، لغة الآلة، لغة التجميع، المترجم والمفسر، ومستويات الأداء والتجريب.
+                </p>
+            </div>
+
+            <!-- Features Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Exam Mode Card -->
+                <div class="pink-card p-6 flex flex-col justify-between hover:-translate-y-1 transition">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-pink-500 text-white flex items-center justify-center text-xl mb-4 shadow">
+                            📝
+                        </div>
+                        <h3 class="text-xl font-bold text-pink-700 mb-2">وضع الاختبار الشامل (Exam)</h3>
+                        <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
+                            اختبار حقيقي مكون من 30 سؤالاً مع عداد زمني، تنقل حر بين الأسئلة، وتقييم شامل مع شهادة عند النهاية!
+                        </p>
+                    </div>
+                    <button onclick="switchMode('exam')" class="w-full btn-pink text-white font-bold py-3 rounded-xl text-sm shadow">
+                        ابدأي الاختبار الآن (30 سؤالاً) ✨
+                    </button>
+                </div>
+
+                <!-- Practice Mode Card -->
+                <div class="pink-card p-6 flex flex-col justify-between hover:-translate-y-1 transition">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-purple-500 text-white flex items-center justify-center text-xl mb-4 shadow">
+                            💡
+                        </div>
+                        <h3 class="text-xl font-bold text-purple-700 mb-2">وضع التمارين الفورية (Practice)</h3>
+                        <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
+                            حل الأسئلة واحداً تلو الآخر مع إظهار الشرح الفوري وتوضيح الإجابة الصحيحة مع الصوت المشجع.
+                        </p>
+                    </div>
+                    <button onclick="switchMode('practice')" class="w-full bg-purple-600 text-white hover:bg-purple-700 font-bold py-3 rounded-xl text-sm shadow transition">
+                        ابدأي وضع التدريب 🌸
+                    </button>
+                </div>
+
+                <!-- Flashcards Mode Card -->
+                <div class="pink-card p-6 flex flex-col justify-between hover:-translate-y-1 transition">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-rose-500 text-white flex items-center justify-center text-xl mb-4 shadow">
+                            🎴
+                        </div>
+                        <h3 class="text-xl font-bold text-rose-700 mb-2">بطاقات الاستذكار (Flashcards)</h3>
+                        <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
+                            طريقة تفاعلية لطيفة للحفظ والتذكر من خلال تقليب 30 بطاقة تعليمية تحوي السؤال وإجابته.
+                        </p>
+                    </div>
+                    <button onclick="switchMode('flashcards')" class="w-full bg-rose-500 text-white hover:bg-rose-600 font-bold py-3 rounded-xl text-sm shadow transition">
+                        تصفحي البطاقات 🎀
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Stats Overview -->
+            <div class="pink-card p-6 bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-girly-lg">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+                    <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-sm">
+                        <span class="block text-2xl font-black">30</span>
+                        <span class="text-xs text-pink-100">سؤالاً كاملاً</span>
+                    </div>
+                    <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-sm">
+                        <span class="block text-2xl font-black">100%</span>
+                        <span class="text-xs text-pink-100">تغطية للمنهج</span>
+                    </div>
+                    <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-sm">
+                        <span class="block text-2xl font-black">30 د</span>
+                        <span class="text-xs text-pink-100">وقت مقترح</span>
+                    </div>
+                    <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-sm">
+                        <span class="block text-2xl font-black">70%</span>
+                        <span class="text-xs text-pink-100">درجة النجاح</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 2: EXAM MODE -->
+        <div id="viewExam" class="hidden space-y-6">
+            
+            <!-- Exam Status Bar -->
+            <div class="pink-card p-4 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center space-x-3 space-x-reverse">
+                    <span class="text-xs font-bold bg-pink-100 text-pink-700 px-3 py-1 rounded-full border border-pink-300">
+                        السؤال <span id="examQNum">1</span> من 30
+                    </span>
+                    <span id="examTimer" class="text-xs font-mono font-bold bg-slate-800 text-emerald-400 px-3 py-1 rounded-full">
+                        ⏱️ 30:00
+                    </span>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full sm:w-1/3 bg-pink-100 h-2.5 rounded-full overflow-hidden">
+                    <div id="examProgress" class="bg-pink-500 h-full rounded-full transition-all duration-300" style="width: 3.33%;"></div>
+                </div>
+
+                <button onclick="submitExamPrompt()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow">
+                    إنهاء وتصحيح الاختبار 🏁
+                </button>
+            </div>
+
+            <!-- Question Card & Grid Navigation Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                <!-- Main Question Box -->
+                <div class="lg:col-span-8 pink-card p-6 sm:p-8 bg-white shadow-girly">
+                    <h3 id="examQuestionTitle" class="text-lg sm:text-xl font-bold text-slate-800 mb-6 leading-relaxed">
+                        جاري تحميل السؤال...
+                    </h3>
+
+                    <div id="examOptionsContainer" class="space-y-3 mb-6">
+                        <!-- Options injected dynamically -->
+                    </div>
+
+                    <!-- Question Bottom Nav -->
+                    <div class="flex items-center justify-between pt-4 border-t border-pink-100">
+                        <button id="examPrevBtn" onclick="prevExamQ()" disabled class="px-5 py-2.5 rounded-xl border border-pink-200 text-slate-400 font-bold text-xs sm:text-sm disabled:opacity-50">
+                            <i class="fas fa-arrow-right ml-1"></i> السؤال السابق
+                        </button>
+                        <button id="examNextBtn" onclick="nextExamQ()" class="btn-pink text-white font-bold px-6 py-2.5 rounded-xl text-xs sm:text-sm flex items-center gap-2 shadow">
+                            <span>السؤال التالي</span>
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Question Grid Drawer -->
+                <div class="lg:col-span-4 pink-card p-5 bg-white">
+                    <h4 class="font-bold text-slate-800 text-sm mb-3 flex items-center justify-between">
+                        <span>خريطة الأسئلة (30)</span>
+                        <span id="answeredCounterBadge" class="text-xs bg-pink-100 text-pink-700 px-2 py-0.5 rounded-full font-mono">0/30 متم</span>
+                    </h4>
+
+                    <div id="questionGridNav" class="grid grid-cols-5 gap-2 max-h-[320px] overflow-y-auto p-1">
+                        <!-- 30 buttons created dynamically -->
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-pink-100 flex items-center justify-around text-xs text-slate-500">
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-pink-500"></span> مُجاب</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-pink-100 border border-pink-300"></span> حالي</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-slate-100 border"></span> متبقي</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- VIEW 3: PRACTICE MODE -->
+        <div id="viewPractice" class="hidden space-y-6">
+            <div class="pink-card p-4 flex items-center justify-between">
+                <span class="text-xs font-bold bg-purple-100 text-purple-700 px-3 py-1 rounded-full border border-purple-300">
+                    وضع التدريب والتعليم • السؤال <span id="pracQNum">1</span> من 30 🌸
+                </span>
+                <span class="text-xs font-bold text-slate-600">
+                    النقاط الحالية: <span id="pracScore" class="text-pink-600 font-extrabold text-sm">0</span>
+                </span>
+            </div>
+
+            <div class="pink-card p-6 sm:p-8 bg-white shadow-girly max-w-4xl mx-auto">
+                <h3 id="pracQuestionTitle" class="text-lg sm:text-xl font-bold text-slate-800 mb-6 leading-relaxed">
+                    جاري تحميل السؤال...
+                </h3>
+
+                <div id="pracOptionsContainer" class="space-y-3 mb-6">
+                    <!-- Options -->
+                </div>
+
+                <!-- Explanation Box -->
+                <div id="pracFeedback" class="hidden p-4 rounded-2xl mb-6 text-sm border font-medium"></div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-pink-100">
+                    <button id="pracPrevBtn" onclick="prevPracQ()" disabled class="px-5 py-2.5 rounded-xl border border-pink-200 text-slate-400 font-bold text-xs disabled:opacity-50">
+                        السابق
+                    </button>
+                    <button id="pracNextBtn" onclick="nextPracQ()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-6 py-2.5 rounded-xl text-xs sm:text-sm flex items-center gap-2 shadow">
+                        <span>السؤال التالي</span>
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 4: FLASHCARDS MODE -->
+        <div id="viewFlashcards" class="hidden space-y-6">
+            <div class="text-center max-w-xl mx-auto">
+                <h3 class="text-2xl font-black text-slate-800 mb-2">بطاقات المراجعة السريعة 🎴</h3>
+                <p class="text-xs text-slate-500">اضغطي على البطاقة لرؤية الإجابة الصحيحة والتأكد من فهمكِ للمفهوم!</p>
+            </div>
+
+            <div class="max-w-2xl mx-auto">
+                <div class="flip-card min-h-[260px] cursor-pointer" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner relative w-full h-full text-center rounded-3xl shadow-girly border-2 border-pink-200">
+                        <div class="flip-card-front absolute w-full h-full bg-white rounded-3xl p-8 flex flex-col items-center justify-between">
+                            <span class="text-xs font-bold text-pink-500 bg-pink-100 px-3 py-1 rounded-full">بطاقة <span id="flashCardNum">1</span> / 30</span>
+                            <h4 id="flashCardQuestion" class="text-lg font-bold text-slate-800 my-auto">
+                                جاري تحميل السؤال...
+                            </h4>
+                            <span class="text-xs text-pink-400 font-bold">انقري للقلب ورؤية الإجابة 🔄</span>
+                        </div>
+                        <div class="flip-card-back absolute w-full h-full bg-gradient-to-br from-pink-500 to-rose-600 text-white rounded-3xl p-8 flex flex-col items-center justify-between">
+                            <span class="text-xs font-bold bg-white/20 px-3 py-1 rounded-full">الإجابة النموذجية 💡</span>
+                            <p id="flashCardAnswer" class="text-base font-bold my-auto leading-relaxed">
+                                الإجابة تجدها هنا...
+                            </p>
+                            <span class="text-xs text-pink-100">انقري للعودة للسؤال ✨</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between mt-6">
+                    <button onclick="prevFlashCard()" class="px-5 py-2.5 rounded-xl bg-white border border-pink-200 text-pink-700 font-bold text-xs shadow-sm hover:bg-pink-50">
+                        <i class="fas fa-arrow-right ml-1"></i> البطاقة السابقة
+                    </button>
+                    <button onclick="nextFlashCard()" class="btn-pink text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow">
+                        البطاقة التالية <i class="fas fa-arrow-left mr-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 5: RESULTS & REVIEW -->
+        <div id="viewResults" class="hidden space-y-8">
+            <div class="pink-card p-8 bg-white text-center shadow-girly-lg max-w-3xl mx-auto relative overflow-hidden">
+                <div class="text-6xl bow-icon mb-4">👑</div>
+                <h3 class="text-3xl font-black text-slate-800 mb-2">نتيجة الاختبار الشامل 🎀</h3>
+                
+                <div class="my-6">
+                    <span id="scorePercentBadge" class="text-4xl sm:text-5xl font-black text-pink-600 bg-pink-100 px-6 py-2 rounded-full border-2 border-pink-300 inline-block shadow-inner">
+                        0%
+                    </span>
+                </div>
+
+                <p id="resultSummaryText" class="text-slate-600 font-bold text-sm sm:text-base max-w-md mx-auto mb-6">
+                    جاري احتساب النتيجة...
+                </p>
+
+                <div class="grid grid-cols-3 gap-4 max-w-md mx-auto mb-8 text-center text-xs sm:text-sm font-bold">
+                    <div class="p-3 bg-emerald-50 text-emerald-700 rounded-2xl border border-emerald-200">
+                        <span class="block text-xl font-black" id="resCorrectCount">0</span>
+                        <span>إجابات صحيحة</span>
+                    </div>
+                    <div class="p-3 bg-rose-50 text-rose-700 rounded-2xl border border-rose-200">
+                        <span class="block text-xl font-black" id="resWrongCount">0</span>
+                        <span>إجابات خاطئة</span>
+                    </div>
+                    <div class="p-3 bg-slate-50 text-slate-700 rounded-2xl border border-slate-200">
+                        <span class="block text-xl font-black" id="resSkippedCount">0</span>
+                        <span>غير مُجاب</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-center gap-4">
+                    <button onclick="switchMode('exam'); restartExam();" class="btn-pink text-white font-bold px-6 py-3 rounded-full text-xs sm:text-sm shadow">
+                        إعادة الاختبار 🔄
+                    </button>
+                    <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-6 py-3 rounded-full text-xs sm:text-sm shadow transition">
+                        طباعة / حفظ النتيجة 🖨️
+                    </button>
+                </div>
+            </div>
+
+            <!-- Detailed Answers Review Table -->
+            <div class="pink-card p-6 bg-white shadow-girly">
+                <h4 class="text-xl font-bold text-slate-800 mb-6 flex items-center justify-between">
+                    <span>جدول مراجعة جميع الإجابات (30 سؤالاً) 🔍</span>
+                </h4>
+
+                <div id="fullAnswersReviewList" class="space-y-4">
+                    <!-- Dynamic review list -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-pink-100/80 border-t border-pink-200 py-6 text-center text-xs text-slate-600">
+        <p class="font-bold text-pink-700">Programming Advices • اختبار لغات البرمجة ومستوياتها (30 سؤالاً) 🎀</p>
+        <p class="text-slate-500 mt-1">تصميم وتطوير تفاعلي شامل لتسهيل المراجعة والتفوق ✨</p>
+    </footer>
+
+    <script>
+        // --- 30 COMPLETE QUESTIONS DATASET ---
+        const quizData = [
+            {
+                question: "1. ما هو التعريف الأساسي للغة البرمجة (Programming Language)؟ 🎀",
+                options: [
+                    "أداة مساعدة لكتابة أوامر ينفذها الحاسوب لتأدية غرض معين",
+                    "برنامج مخصص لمسح الفيروسات من القرص الصلب",
+                    "شاشة العرض واللوحة الأم في الجهاز",
+                    "لغة طبيعية مثل العربية والإنجليزية يتحدث بها البشر"
+                ],
+                correct: 0,
+                explanation: "لغة البرمجة هي وسيلة أو أداة مساعدة نستخدمها لكتابة تعليمات تفهمها الآلة لتنفيذ غرض محدد."
+            },
+            {
+                question: "2. ماذا يُقصد بمصطلح \"الكود\" (Code) في عالم البرمجة؟ 📜",
+                options: [
+                    "مجموعة التعليمات والأوامر المكتوبة بلغة البرمجة",
+                    "كلمة المرور المشفرة لشبكات الواي فاي",
+                    "سعة ذاكرة الوصول العشوائي RAM",
+                    "الرقم التسلسلي لقطع العتاد"
+                ],
+                correct: 0,
+                explanation: "الكود أو الشفرة البرمجية هو مجموعة التعليمات والتوجيهات التي يكتبها المبرمج بلغة برمجية."
+            },
+            {
+                question: "3. ما هي لغة الآلة (Machine Language)؟ ⚡",
+                options: [
+                    "اللغة الوحيدة التي يفهمها المعالج مباشرة وتتكون من أصفار وآحاد",
+                    "لغة نصوص سهلة القراءة تشبه اللغة الإنجليزية",
+                    "لغة تُستخدم فقط لتصميم صفحات الإنترنت",
+                    "نظام تشغيل ذكي يُدار بالصوت"
+                ],
+                correct: 0,
+                explanation: "لغة الآلة هي اللغة البدائية التي يتكون منها كود الآلة المباشر من أصفار وآحاد (Binary)."
+            },
+            {
+                question: "4. كيف يتفاعل المعالج (CPU) مع لغة الآلة (Machine Code)؟ ⚙️",
+                options: [
+                    "ينفذ تعليماتها مباشرة دون الحاجة لأي عمليات ترجمة",
+                    "يحتاج إلى برنامج مترجم خارجي لتفسيرها أولاً",
+                    "يحولها إلى لغة Python ليفهمها",
+                    "يتجاهلها وينفذ أوامر الإدخال فقط"
+                ],
+                correct: 0,
+                explanation: "المعالج مصمم فيزيائياً ليفهم وينفذ كود لغة الآلة مباشرة بدون وسيط."
+            },
+            {
+                question: "5. ما الذي يميز لغة التجميع (Assembly Language) عن لغة الآلة؟ 🛠️",
+                options: [
+                    "تستبدل الأصفار والآحاد باختصارات نصية معبرة مثل `MOV` و `ADD`",
+                    "أنها لغة عالية المستوى جداً ومطابقة للبايثون",
+                    "تستعمل الأشكال والرسومات بدلاً من النصوص",
+                    "تنفذ تلقائياً بدون محول Assembly"
+                ],
+                correct: 0,
+                explanation: "تستخدم Assembly اختصارات نصية (Mnemonics) لتسهيل قراءة أوامر المعالج المباشرة."
+            },
+            {
+                question: "6. ما المقصود بالكود المصدري (Source Code)؟ 📄",
+                options: [
+                    "الكود المكتوب بواسطة المبرمج بلغة برمجية عالية المستوى",
+                    "الكود النهائي المصنوع من أصفار وآحاد",
+                    "شفرة المصنع المسجلة على المعالج",
+                    "الملفات المؤقتة الصادرة من متصفح الويب"
+                ],
+                correct: 0,
+                explanation: "الكود المصدري هو النص الذي يكتبه المبرمج بلغة برمجة قبل مرحلة الترجمة."
+            },
+            {
+                question: "7. ما هو كود الهدف (Object Code)؟ 🎯",
+                options: [
+                    "الكود الناتج عن تحويل الكود المصدري إلى لغة يفهمها المعالج",
+                    "الكود الذي يفكر المبرمج في كتابته مستقبلاً",
+                    "التصميم الخارجي لواجهة المستخدم",
+                    "ملف يحتوي على أخطاء برمجية فقط"
+                ],
+                correct: 0,
+                explanation: "Object Code هو النتيجة النهائية بعد تحويل المترجم للكود المصدري ليكون جاهزاً للتنفيذ."
+            },
+            {
+                question: "8. لماذا نحتاج إلى أدوات الترجمة (Translators) في البرمجة؟ 🔮",
+                options: [
+                    "لأن الحاسوب لا يفهم سوى لغة الآلة، بينما يكتب الإنسان بلغات أعلى",
+                    "لتسريع طباعة الأوراق من المطبعة",
+                    "لأن البرامج لا تعمل إلا بالاتصال بالإنترنت",
+                    "لحماية الحاسوب من الارتفاع الزائد للحرارة"
+                ],
+                correct: 0,
+                explanation: "المترجم هو الجسر الوصل بين لغة الإنسان العالية المستوى ولغة الحاسوب الثنائية."
+            },
+            {
+                question: "9. كيف يعمل المترجم (Compiler) عند تحويل البرنامج؟ 📦",
+                options: [
+                    "يترجم الكود المصدري بالكامل دفعة واحدة قبل بدء التنفيذ",
+                    "ينفذ سطرًا واحدًا ثم يتوقف وينتظر المبرمج",
+                    "يترجم الملفات أثناء الضغط على لوحة المفاتيح فوراً",
+                    "يمسح الأكواد الخاطئة تلقائياً بدون تنبيه"
+                ],
+                correct: 0,
+                explanation: "الـ Compiler يفحص ويترجم كافة أسطر البرنامج دفعة واحدة وينتج ملف قابل للتنفيذ (Executable)."
+            },
+            {
+                question: "10. كيف يعمل المفسر (Interpreter) في معالجة الكود؟ 🐍",
+                options: [
+                    "ينفذ الكود المصدري سطرًا بسطر في وقت التشغيل (Runtime)",
+                    "يحول الملف بالكامل إلى صيغة EXE قبل البدء",
+                    "يعمل فقط عند إيقاف تشغيل الجهاز",
+                    "يترجم لغة الآلة إلى لغة إنجليزية"
+                ],
+                correct: 0,
+                explanation: "الـ Interpreter يقرأ السطر المصدري، يترجمه وينفذه فوراً ثم ينتقل للسطر التالي."
+            },
+            {
+                question: "11. ما هي العلاقة العامة بين مستوى لغة البرمجة وسرعة تنفيذها؟ 🚀",
+                options: [
+                    "كلما قل مستوى اللغة وقربت من العتاد، زادت سرعة التنفيذ",
+                    "كلما ارتفع مستوى اللغة، أصبحت أسرع آلاف المرات",
+                    "لا توجد أي علاقة بين المستوى والسرعة",
+                    "اللغات العالية دائماً أسرع من لغة الآلة"
+                ],
+                correct: 0,
+                explanation: "اللغات القريبة من العتاد (Low-Level) تنفذ أسرع لأنها لا تحتاج لطبقات تجريد وترجمة معقدة."
+            },
+            {
+                question: "12. ما هي العلاقة بين مستوى لغة البرمجة وسهولة قراءتها للبشر (Readability)؟ 📖",
+                options: [
+                    "كلما ارتفع مستوى اللغة، أصبحت أسهل في القراءة والفهم للبشر",
+                    "كلما ارتفع مستوى اللغة، أصبحت صعبة ومجهدة للبشر",
+                    "لغة الآلة هي الأسهل قراءةً لجميع البشر",
+                    "مستوى اللغة لا يؤثر إطلاقاً على القراءة"
+                ],
+                correct: 0,
+                explanation: "اللغات العالية صُممت لتشبه الجمل الإنجليزية مما يجعل قراءتها سهلة جداً للمبرمج."
+            },
+            {
+                question: "13. أي من اللغات التالية تُعد مثالاً على اللغات عالية المستوى (High-Level)؟ 💻",
+                options: [
+                    "Python و C#",
+                    "Machine Code و Binary",
+                    "Assembly Language",
+                    "Hexadecimal Direct Commands"
+                ],
+                correct: 0,
+                explanation: "Python و C# هي لغات عالية المستوى تتميز بإنتاجية وسهولة عالية."
+            },
+            {
+                question: "14. لماذا تُصنف لغتا C و C++ أحيانًا كـ \"لغات متوسطة المستوى\" (Middle-Level)؟ ⚙️",
+                options: [
+                    "لأنها تجمع بين سهولة اللغات العالية وقدرة التحكم المباشر بالذاكرة",
+                    "لأنها صعبة جداً ولا تعمل على الأجهزة الحديثة",
+                    "لأنها تعمل فقط بدون مترجمات",
+                    "لأن سعر شراء برامجها متوسط"
+                ],
+                correct: 0,
+                explanation: "تمنح C/C++ المبرمج قوة التحكم بالذاكرة والعتاد كالـ Low-level مع بناء نصي عالي المستوى."
+            },
+            {
+                question: "15. ما هو النظام العددي المستعمل بجانب النظام الثنائي لعرض شفرات الآلة بأسلوب أقصر؟ 🔢",
+                options: [
+                    "النظام السداسي عشر (Hexadecimal)",
+                    "النظام العشراني التقليدي فقط",
+                    "النظام الروماني القديم",
+                    "نظام الأبجدية اللاتينية"
+                ],
+                correct: 0,
+                explanation: "يُستخدم Hexadecimal اختصاراً لعرض عناوين الذاكرة وشفرات الآلة بصورة أقصر من الباينري."
+            },
+            {
+                question: "16. ما المكانة التي تحتلها لغات السكربت (Scripting Languages) على سلم مستويات البرمجة؟ 👑",
+                options: [
+                    "تعد في أعلى سلم المستويات من حيث سهولة القراءة والمرونة",
+                    "تعد في أدنى سلم المستويات بجانب لغة الآلة",
+                    "تعتبر أبطأ من لغة التجميع ولكن أصعب منها",
+                    "تستعمل فقط للعتاد الصلب بدون شاشات"
+                ],
+                correct: 0,
+                explanation: "لغات السكربت مثل Python و JS في قمة سلم اللغات العالية من حيث التجريد والسهولة."
+            },
+            {
+                question: "17. ما الفرق الرئيسي عند حدوث خطأ برمجي بين لغة مترجمة (Compiled) ولغة مفسرة (Interpreted)؟ ⚠️",
+                options: [
+                    "المترجم يكتشف أخطاء بناء التعبير قبل التجميع، والمفسر يتوقف عند السطر الخاطئ أثناء التشغيل",
+                    "المترجم يصلح الخطأ تلقائياً بينما المفسر يلغي الملف",
+                    "المفسر يكتشف الخطأ قبل تشغيل البرنامج نهائياً",
+                    "لا يتوقف أي منهما عند حدوث الأخطاء"
+                ],
+                correct: 0,
+                explanation: "الـ Compiler يكشف الأخطاء التجميعية Syntax Errors مسبقاً، بينما الـ Interpreter يكتشفها عند الوصول للسطر."
+            },
+            {
+                question: "18. أي الخيارات التالية يوضح الترتيب الصحيح لمراحل تحويل الكود المصدري العالي إلى تنفيذه؟ 🔄",
+                options: [
+                    "الكود المصدري -> المترجم/المفسر -> كود الهدف (لغة الآلة) -> التنفيذ بواسطة المعالج",
+                    "المعالج -> كود الهدف -> المترجم -> الكود المصدري",
+                    "الكود المصدري -> المعالج -> كود الهدف -> المترجم",
+                    "كود الهدف -> الكود المصدري -> المترجم -> المعالج"
+                ],
+                correct: 0,
+                explanation: "المسار الصحيح: يكتب المبرمج Source Code، يترجمه Translator إلى Object Code، ثم ينفذه الـ CPU."
+            },
+            {
+                question: "19. ما هي الفائدة الأساسية من استخدام لغات البرمجة عالية المستوى برغم أنها أبطأ نسبيًا؟ 🌟",
+                options: [
+                    "زيادة إنتاجية المبرمج وسهولة التطوير وتتبع الأخطاء",
+                    "تقليل حجم الشاشة المطلوبة لكتابة البرنامج",
+                    "الاستغناء الكامل عن وجود معالج في الكمبيوتر",
+                    "تسريع أداء القطع الصلبة بشكل مباشر"
+                ],
+                correct: 0,
+                explanation: "اللغات العالية توفر وقتاً هائلاً على المبرمجين وتسرع عملية بناء المشاريع وتتبع الأخطاء."
+            },
+            {
+                question: "20. أي اللغات التالية تُعد الأكثر قُربًا للعتاد الصلب (Hardware)؟ 🔌",
+                options: [
+                    "Assembly Language",
+                    "Python",
+                    "JavaScript",
+                    "PHP"
+                ],
+                correct: 0,
+                explanation: "لغة التجميع Assembly هي الأقرب للعتاد مقارنة بباقي اللغات العالية المذكورة."
+            },
+            {
+                question: "21. ما معنى المصطلح \"Human Readable\" عند وصف لغة برمجة؟ 💬",
+                options: [
+                    "قابليتها للقراءة والفهم بواسطة الإنسان بسهولة لاقترابها من لغته",
+                    "قدرة البرنامج على القراءة بصوت مرتفع عبر السماعات",
+                    "أن البرنامج مخصص للأطفال فقط",
+                    "أن الشفرة مطبوعة على ورق مقوى"
+                ],
+                correct: 0,
+                explanation: "Human Readable تعني أن الشفرة مصممة بكلمات يفهمها العقل البشري المبرمج بسهولة."
+            },
+            {
+                question: "22. لماذا لا يستطيع المعالج تنفيذ شفرة مكتوبة بلغة Python مباشرة؟ 🤖",
+                options: [
+                    "لأن بايثون تتكون من نصوص عالية المستوى لا يفهم المعالج سوى لغة الآلة المباشرة لها",
+                    "لأن بايثون لغة قديمة جداً توقف دعمها",
+                    "لأن المعالجات مخصصة للغة C++ فقط",
+                    "لأن بايثون تحتاج ذاكرة عشوائية بحجم 1000 جيجابايت"
+                ],
+                correct: 0,
+                explanation: "المعالج لا يملك دوائر الكترونية تفهم نصوص بايثون؛ يجب تحويلها لـ Machine Code أولاً."
+            },
+            {
+                question: "23. أي مما يلي يُعد وظيفة رئيسية لبرنامج المترجم (Compiler)؟ 🛠️",
+                options: [
+                    "تحويل الكود المصدري كاملاً إلى كود هدف قابل للتنفيذ",
+                    "تنسيق الصور وزيادة دقتها في الملف",
+                    "الاتصال بالسيرفرات لجلب البيانات",
+                    "تنظيف القرص الصلب من الملفات المكررة"
+                ],
+                correct: 0,
+                explanation: "الوظيفة الجوهرية للـ Compiler هي تحويل كامل الكود المصدري إلى كود آلة."
+            },
+            {
+                question: "24. ما هي النتيجة النهائية المباشرة الناتجة عن عملية الترجمة الناجحة للبرنامج؟ 🎁",
+                options: [
+                    "كود هدف (Object Code) بلغة الآلة",
+                    "ملف نصي عادي بخط العناوين",
+                    "حذف الكود المصدري نهائياً",
+                    "زيادة سرعة معالج الكمبيوتر"
+                ],
+                correct: 0,
+                explanation: "ينتج عن الترجمة الناجحة كود هدف (Object Code) جاهز لتنفيذ المعالج."
+            },
+            {
+                question: "25. أي مما يلي يُعبر عن عيب في اللغات منخفضة المستوى (Low-Level Languages)؟ ⏳",
+                options: [
+                    "صعوبة الكتابة والقراءة وتستغرق وقتًا أطول في التطوير",
+                    "بطء تنفيذها المفرط على الحاسوب",
+                    "عدم قدرتها على التحكم بالذاكرة",
+                    "استهلاكها لجميع مساحة الهاردسك"
+                ],
+                correct: 0,
+                explanation: "من أبرز عيوب Low-level صعوبة تعلمها وقراءتها واستغراق وقت طويل لبناء أسطر بسيطة."
+            },
+            {
+                question: "26. ما هو المفهوم الذي يُعبر عن الأوامر `MOV` و `PUSH` في لغة التجميع؟ 📝",
+                options: [
+                    "رموز اختصارية (Mnemonics) تمثل عمليات محددة في المعالج",
+                    "أسماء متغيرة يختارها المبرمج بحرية",
+                    "كلمات سر لمنع سرقة البرامج",
+                    "رموز خاصة لتصفح الإنترنت"
+                ],
+                correct: 0,
+                explanation: "الأوامر مثل MOV و PUSH هي Mnemonics (رموز تجميعية اختصارية لأوامر الآلة)."
+            },
+            {
+                question: "27. ما فائدة استخدام اللغات عالية المستوى للمشاريع الضخمة؟ 🏢",
+                options: [
+                    "تسهيل تنظيم الكود وإدارته وصيانته بواسطة فرق العمل",
+                    "جعل البرنامج يشتغل بدون كهرباء",
+                    "إلغاء الحاجة لاختبار البرنامج قبل النشر",
+                    "تقليل عدد الموظفين إلى مبرمج واحد فقط"
+                ],
+                correct: 0,
+                explanation: "تتيح اللغات العالية كتابة كود منظم ونظيف يسهل تطويره وصيانته في فرق العمل الكبيرة."
+            },
+            {
+                question: "28. ماذا يسمى المفهوم الذي يُعنى بمقدار بُعد لغة البرمجة عن التفاصيل العتادية للحاسوب؟ 🎨",
+                options: [
+                    "مستوى التجريد (Level of Abstraction)",
+                    "معامل الضغط الرقمي",
+                    "نسبة السرعة إلى الذاكرة",
+                    "معدل تحديث الشاشة"
+                ],
+                correct: 0,
+                explanation: "مستوى التجريد (Abstraction Level) يعبر عن مدى إخفاء التفاصيل المعقدة للعتاد عن المبرمج."
+            },
+            {
+                question: "29. أي الجمل التالية توضح الفرق بين لغة C ولغة Python من حيث طريقة الترجمة؟ ⚖️",
+                options: [
+                    "تعتمد C على المترجم (Compiler) بينما تعتمد Python غالباً على المفسر (Interpreter)",
+                    "تعتمد C على المفسر فقط بينما بايثون لا تحتاج لترجمة",
+                    "اللغتان تعتمدان على نفس المترجم تماماً",
+                    "بايثون لغة آلة مباشرة بينما C لغة سكربت"
+                ],
+                correct: 0,
+                explanation: "لغة C لغة مترجمة Compiled تنتج ملفاً روحياً، بينما Python لغة مفسرة Interpreted."
+            },
+            {
+                question: "30. ما هي الخلاصة الأساسية لاختيار لغة البرمجة المناسبة لأي مشروع؟ 💎",
+                options: [
+                    "اختيار اللغة بناءً على متطلبات المشروع من حيث السرعة وسهولة التطوير",
+                    "اختيار أحدث لغة نزلت في السوق دائماً بصرف النظر عن المشروع",
+                    "استخدام لغة التجميع Assembly لكافة المشاريع بلا استثناء",
+                    "اختيار أسهل لغة فقط حتى لو كانت غير مناسبة للعتاد"
+                ],
+                correct: 0,
+                explanation: "القاعدة الذهبية: نختار اللغة المناسبة بناءً على نوع المشروع، المتطلبات، الأداء المطلوب وسرعة الإنجاز."
+            }
+        ];
+
+        // --- SHUFFLE ANSWER POSITIONS ---
+        // Distribute the correct answers across A/B/C/D instead of making them all A.
+        // The correct position is balanced across the 30 questions (A, B, C, D repeated).
+        function shuffleAnswerPositions() {
+            quizData.forEach((q, questionIndex) => {
+                const correctAnswer = q.options[q.correct];
+
+                // Shuffle only the distractors.
+                let distractors = q.options.filter((_, idx) => idx !== q.correct);
+                for (let i = distractors.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [distractors[i], distractors[j]] = [distractors[j], distractors[i]];
+                }
+
+                // Balance the correct answer position: A, B, C, D, A, B, C, D...
+                const targetPosition = questionIndex % 4;
+                const newOptions = [];
+                let d = 0;
+
+                for (let i = 0; i < 4; i++) {
+                    if (i === targetPosition) {
+                        newOptions.push(correctAnswer);
+                    } else {
+                        newOptions.push(distractors[d++]);
+                    }
+                }
+
+                q.options = newOptions;
+                q.correct = targetPosition;
+            });
+        }
+
+        shuffleAnswerPositions();
+
+        // --- APP STATE VARIABLES ---
+        let userExamAnswers = new Array(30).fill(null);
+        let userPracAnswers = new Array(30).fill(null);
+        let currentExamIndex = 0;
+        let currentPracIndex = 0;
+        let currentFlashIndex = 0;
+        let examTimeSeconds = 30 * 60; // 30 minutes
+        let examTimerInterval = null;
+        let pracScoreValue = 0;
+        let audioEnabled = true;
+
+        // Audio Synth
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function playSound(type) {
+            if (!audioEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new AudioCtx();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.08);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'success') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(587.33, now);
+                    osc.frequency.setValueAtTime(880, now + 0.12);
+                    gain.gain.setValueAtTime(0.18, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.setValueAtTime(170, now + 0.15);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                }
+            } catch(e){}
+        }
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const btn = document.getElementById('soundToggleBtn');
+            if (audioEnabled) {
+                btn.innerHTML = `<i class="fas fa-volume-up text-base"></i>`;
+                playSound('click');
+            } else {
+                btn.innerHTML = `<i class="fas fa-volume-mute text-base text-rose-500"></i>`;
+            }
+        }
+
+        // --- NAVIGATION BETWEEN MODES ---
+        function switchMode(mode) {
+            playSound('click');
+            
+            // Hide all views
+            ['viewHome', 'viewExam', 'viewPractice', 'viewFlashcards', 'viewResults'].forEach(v => {
+                document.getElementById(v).classList.add('hidden');
+            });
+
+            // Update Nav Buttons Styles
+            const btnMap = {
+                exam: 'navExamBtn',
+                practice: 'navPracticeBtn',
+                flashcards: 'navFlashBtn'
+            };
+
+            Object.keys(btnMap).forEach(key => {
+                const el = document.getElementById(btnMap[key]);
+                if (el) {
+                    if (key === mode) {
+                        el.className = "px-3 sm:px-4 py-2 rounded-full bg-pink-500 text-white shadow transition flex items-center gap-1.5";
+                    } else {
+                        el.className = "px-3 sm:px-4 py-2 rounded-full bg-pink-100 text-pink-700 hover:bg-pink-200 transition flex items-center gap-1.5";
+                    }
+                }
+            });
+
+            if (mode === 'home') {
+                document.getElementById('viewHome').classList.remove('hidden');
+            } else if (mode === 'exam') {
+                document.getElementById('viewExam').classList.remove('hidden');
+                startExamTimer();
+                renderExamQuestion();
+                renderExamGridNav();
+            } else if (mode === 'practice') {
+                document.getElementById('viewPractice').classList.remove('hidden');
+                renderPracQuestion();
+            } else if (mode === 'flashcards') {
+                document.getElementById('viewFlashcards').classList.remove('hidden');
+                renderFlashCard();
+            } else if (mode === 'results') {
+                document.getElementById('viewResults').classList.remove('hidden');
+            }
+        }
+
+        // --- EXAM MODE LOGIC ---
+        function startExamTimer() {
+            if (examTimerInterval) return;
+            examTimerInterval = setInterval(() => {
+                if (examTimeSeconds > 0) {
+                    examTimeSeconds--;
+                    const mins = Math.floor(examTimeSeconds / 60);
+                    const secs = examTimeSeconds % 60;
+                    document.getElementById('examTimer').textContent = `⏱️ ${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                } else {
+                    clearInterval(examTimerInterval);
+                    finishExam();
+                }
+            }, 1000);
+        }
+
+        function renderExamQuestion() {
+            const q = quizData[currentExamIndex];
+            document.getElementById('examQNum').textContent = currentExamIndex + 1;
+            document.getElementById('examQuestionTitle').textContent = q.question;
+
+            // Progress Bar
+            const pct = ((currentExamIndex + 1) / 30) * 100;
+            document.getElementById('examProgress').style.width = `${pct}%`;
+
+            // Options
+            const container = document.getElementById('examOptionsContainer');
+            container.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const isSelected = userExamAnswers[currentExamIndex] === idx;
+                const btn = document.createElement('button');
+                btn.className = `w-full text-right p-4 rounded-2xl border-2 transition font-medium text-xs sm:text-sm flex items-center justify-between ${
+                    isSelected ? 'border-pink-500 bg-pink-100 text-pink-900 font-bold shadow-sm' : 'border-pink-100 bg-pink-50/30 text-slate-700 hover:bg-pink-50 hover:border-pink-300'
+                }`;
+                btn.onclick = () => selectExamOption(idx);
+                const optionLetter = String.fromCharCode(65 + idx);
+                btn.innerHTML = `
+                    <span class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-full border-2 border-pink-300 bg-white flex items-center justify-center text-xs font-black text-pink-600 shrink-0">${optionLetter}</span>
+                        <span>${opt}</span>
+                    </span>
+                    <span class="w-5 h-5 rounded-full border-2 border-pink-300 flex items-center justify-center text-xs ${isSelected ? 'bg-pink-500 text-white border-pink-500' : 'bg-white'}">
+                        ${isSelected ? '✓' : ''}
+                    </span>
+                `;
+                container.appendChild(btn);
+            });
+
+            // Prev/Next buttons
+            document.getElementById('examPrevBtn').disabled = currentExamIndex === 0;
+            renderExamGridNav();
+        }
+
+        function selectExamOption(optIndex) {
+            playSound('click');
+            userExamAnswers[currentExamIndex] = optIndex;
+            renderExamQuestion();
+        }
+
+        function nextExamQ() {
+            playSound('click');
+            if (currentExamIndex < 29) {
+                currentExamIndex++;
+                renderExamQuestion();
+            } else {
+                submitExamPrompt();
+            }
+        }
+
+        function prevExamQ() {
+            playSound('click');
+            if (currentExamIndex > 0) {
+                currentExamIndex--;
+                renderExamQuestion();
+            }
+        }
+
+        function renderExamGridNav() {
+            const grid = document.getElementById('questionGridNav');
+            grid.innerHTML = '';
+
+            let answeredCount = 0;
+
+            for (let i = 0; i < 30; i++) {
+                const isAnswered = userExamAnswers[i] !== null;
+                const isCurrent = i === currentExamIndex;
+
+                if (isAnswered) answeredCount++;
+
+                const btn = document.createElement('button');
+                btn.className = `h-9 rounded-xl font-bold text-xs flex items-center justify-center border transition ${
+                    isCurrent ? 'bg-pink-100 border-pink-500 text-pink-700 font-black ring-2 ring-pink-300' :
+                    isAnswered ? 'bg-pink-500 border-pink-500 text-white' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-pink-50'
+                }`;
+                btn.textContent = i + 1;
+                btn.onclick = () => {
+                    playSound('click');
+                    currentExamIndex = i;
+                    renderExamQuestion();
+                };
+                grid.appendChild(btn);
+            }
+
+            document.getElementById('answeredCounterBadge').textContent = `${answeredCount}/30 متم`;
+        }
+
+        function submitExamPrompt() {
+            const answeredCount = userExamAnswers.filter(a => a !== null).length;
+            if (answeredCount < 30) {
+                if (confirm(`لقد قمتِ بإجابة ${answeredCount} من أصل 30 سؤالاً. هل ترغبين في إنهاء وتصحيح الاختبار الآن؟`)) {
+                    finishExam();
+                }
+            } else {
+                finishExam();
+            }
+        }
+
+        function finishExam() {
+            clearInterval(examTimerInterval);
+            playSound('success');
+
+            // Calculate Score
+            let correct = 0;
+            let wrong = 0;
+            let skipped = 0;
+
+            quizData.forEach((q, idx) => {
+                const userAns = userExamAnswers[idx];
+                if (userAns === null) {
+                    skipped++;
+                } else if (userAns === q.correct) {
+                    correct++;
+                } else {
+                    wrong++;
+                }
+            });
+
+            const scorePct = Math.round((correct / 30) * 100);
+
+            document.getElementById('scorePercentBadge').textContent = `${scorePct}%`;
+            document.getElementById('resCorrectCount').textContent = correct;
+            document.getElementById('resWrongCount').textContent = wrong;
+            document.getElementById('resSkippedCount').textContent = skipped;
+
+            const summaryEl = document.getElementById('resultSummaryText');
+            if (scorePct >= 85) {
+                summaryEl.textContent = "ممتازة جداً! أنتِ مبرمجة متفوقة واستوعبتِ مفاهيم لغات البرمجة ومستوياتها بامتياز ✨🎀";
+            } else if (scorePct >= 70) {
+                summaryEl.textContent = "أداء رائع ونتيجة طيبة! لقد اجتزتِ الاختبار بنجاح مع فهم مميز 🌸";
+            } else {
+                summaryEl.textContent = "أداء جيد! يُفضل إعادة مراجعة البطاقات ثم إعادة الاختبار لتحقيق نصر جديد ✨";
+            }
+
+            // Render Full Review List
+            renderAnswersReviewList();
+
+            // Launch Confetti
+            try {
+                confetti({
+                    particleCount: 150,
+                    spread: 80,
+                    origin: { y: 0.6 },
+                    colors: ['#FF69B4', '#FFB6C1', '#DB2777', '#3B82F6']
+                });
+            } catch(e){}
+
+            switchMode('results');
+        }
+
+        function restartExam() {
+            userExamAnswers.fill(null);
+            currentExamIndex = 0;
+            examTimeSeconds = 30 * 60;
+            examTimerInterval = null;
+            startExamTimer();
+            renderExamQuestion();
+        }
+
+        // --- PRACTICE MODE LOGIC ---
+        function renderPracQuestion() {
+            const q = quizData[currentPracIndex];
+            document.getElementById('pracQNum').textContent = currentPracIndex + 1;
+            document.getElementById('pracQuestionTitle').textContent = q.question;
+
+            const container = document.getElementById('pracOptionsContainer');
+            container.innerHTML = '';
+
+            const feedback = document.getElementById('pracFeedback');
+            feedback.classList.add('hidden');
+
+            const hasAnswered = userPracAnswers[currentPracIndex] !== null;
+
+            q.options.forEach((opt, idx) => {
+                const isUserChoice = userPracAnswers[currentPracIndex] === idx;
+                const isCorrect = idx === q.correct;
+
+                let styleClasses = "border-pink-100 bg-pink-50/30 text-slate-700 hover:bg-pink-50 hover:border-pink-300";
+
+                if (hasAnswered) {
+                    if (isCorrect) {
+                        styleClasses = "border-emerald-500 bg-emerald-100 text-emerald-900 font-bold";
+                    } else if (isUserChoice) {
+                        styleClasses = "border-rose-500 bg-rose-100 text-rose-900 font-bold";
+                    }
+                }
+
+                const btn = document.createElement('button');
+                btn.className = `w-full text-right p-4 rounded-2xl border-2 transition font-medium text-xs sm:text-sm flex items-center justify-between ${styleClasses}`;
+                btn.onclick = () => selectPracOption(idx);
+                const optionLetter = String.fromCharCode(65 + idx);
+                btn.innerHTML = `
+                    <span class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-full border-2 border-pink-300 bg-white flex items-center justify-center text-xs font-black text-pink-600 shrink-0">${optionLetter}</span>
+                        <span>${opt}</span>
+                    </span>
+                    <span class="w-5 h-5 rounded-full border-2 border-pink-300 flex items-center justify-center text-xs bg-white">
+                        ${hasAnswered && isCorrect ? '✓' : hasAnswered && isUserChoice ? '✗' : ''}
+                    </span>
+                `;
+                container.appendChild(btn);
+            });
+
+            document.getElementById('pracPrevBtn').disabled = currentPracIndex === 0;
+
+            if (hasAnswered) {
+                showPracFeedback();
+            }
+        }
+
+        function selectPracOption(optIndex) {
+            if (userPracAnswers[currentPracIndex] !== null) return; // already answered
+            userPracAnswers[currentPracIndex] = optIndex;
+
+            if (optIndex === quizData[currentPracIndex].correct) {
+                pracScoreValue += 10;
+                playSound('success');
+            } else {
+                playSound('wrong');
+            }
+
+            document.getElementById('pracScore').textContent = pracScoreValue;
+            renderPracQuestion();
+        }
+
+        function showPracFeedback() {
+            const q = quizData[currentPracIndex];
+            const userAns = userPracAnswers[currentPracIndex];
+            const feedback = document.getElementById('pracFeedback');
+            feedback.classList.remove('hidden');
+
+            if (userAns === q.correct) {
+                feedback.className = "p-4 rounded-2xl mb-6 text-xs sm:text-sm border font-medium bg-emerald-50 border-emerald-300 text-emerald-800";
+                feedback.innerHTML = `
+                    <div class="font-bold mb-1">✨ إجابة صحيحة بامتياز!</div>
+                    <div>${q.explanation}</div>
+                `;
+            } else {
+                feedback.className = "p-4 rounded-2xl mb-6 text-xs sm:text-sm border font-medium bg-rose-50 border-rose-300 text-rose-800";
+                feedback.innerHTML = `
+                    <div class="font-bold mb-1">❌ إجابة خاطئة! الإجابة الصحيحة هي: (${q.options[q.correct]})</div>
+                    <div>${q.explanation}</div>
+                `;
+            }
+        }
+
+        function nextPracQ() {
+            playSound('click');
+            if (currentPracIndex < 29) {
+                currentPracIndex++;
+                renderPracQuestion();
+            } else {
+                switchMode('results');
+            }
+        }
+
+        function prevPracQ() {
+            playSound('click');
+            if (currentPracIndex > 0) {
+                currentPracIndex--;
+                renderPracQuestion();
+            }
+        }
+
+        // --- FLASHCARDS LOGIC ---
+        function renderFlashCard() {
+            const q = quizData[currentFlashIndex];
+            document.getElementById('flashCardNum').textContent = currentFlashIndex + 1;
+            document.getElementById('flashCardQuestion').textContent = q.question;
+            document.getElementById('flashCardAnswer').textContent = q.options[q.correct];
+
+            // Remove flipped state when switching
+            const flipCard = document.querySelector('.flip-card');
+            if (flipCard) flipCard.classList.remove('flipped');
+        }
+
+        function nextFlashCard() {
+            playSound('click');
+            if (currentFlashIndex < 29) {
+                currentFlashIndex++;
+            } else {
+                currentFlashIndex = 0;
+            }
+            renderFlashCard();
+        }
+
+        function prevFlashCard() {
+            playSound('click');
+            if (currentFlashIndex > 0) {
+                currentFlashIndex--;
+            } else {
+                currentFlashIndex = 29;
+            }
+            renderFlashCard();
+        }
+
+        // --- FULL ANSWERS REVIEW LIST ---
+        function renderAnswersReviewList() {
+            const container = document.getElementById('fullAnswersReviewList');
+            container.innerHTML = '';
+
+            quizData.forEach((q, idx) => {
+                const userAns = userExamAnswers[idx];
+                const isCorrect = userAns === q.correct;
+                const isSkipped = userAns === null;
+
+                const item = document.createElement('div');
+                item.className = `p-4 rounded-2xl border text-xs sm:text-sm ${
+                    isCorrect ? 'bg-emerald-50/50 border-emerald-200' :
+                    isSkipped ? 'bg-slate-50 border-slate-200' : 'bg-rose-50/50 border-rose-200'
+                }`;
+
+                item.innerHTML = `
+                    <div class="flex items-start justify-between gap-2 mb-2">
+                        <h5 class="font-bold text-slate-800">${q.question}</h5>
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold shrink-0 ${
+                            isCorrect ? 'bg-emerald-200 text-emerald-800' :
+                            isSkipped ? 'bg-slate-200 text-slate-700' : 'bg-rose-200 text-rose-800'
+                        }">
+                            ${isCorrect ? 'صحيحة ✓' : isSkipped ? 'غير مُجاب ➖' : 'خاطئة ✗'}
+                        </span>
+                    </div>
+
+                    <div class="space-y-1 text-xs text-slate-600 font-medium">
+                        <div><span class="font-bold">إجابتكِ:</span> ${isSkipped ? 'لم تحلي هذا السؤال' : q.options[userAns]}</div>
+                        <div class="text-emerald-700 font-bold"><span>الإجابة الصحيحة:</span> ${q.options[q.correct]}</div>
+                        <div class="text-slate-500 italic mt-1">📌 ${q.explanation}</div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // INITIALIZER
+        window.onload = function() {
+            switchMode('home');
+        };
+    </script>
+</body>
+</html>
