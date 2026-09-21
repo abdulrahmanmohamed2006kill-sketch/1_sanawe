@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أساسيات الشبكات - Networks Part I</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pinky: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                            bg: '#fff5f8',
+                            card: '#ffffff',
+                            accent: '#ff85a2',
+                            dark: '#68132b'
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        cute: ['Fredoka', 'Cairo', 'sans-serif'],
+                        en: ['Quicksand', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'girly': '0 10px 25px -5px rgba(251, 113, 133, 0.25), 0 8px 10px -6px rgba(251, 113, 133, 0.1)',
+                        'girly-lg': '0 20px 35px -10px rgba(244, 63, 94, 0.3)',
+                        'glow': '0 0 20px rgba(255, 133, 162, 0.6)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #fff5f8;
+            background-image: radial-gradient(#fecdd3 1.5px, transparent 1.5px), radial-gradient(#fecdd3 1.5px, #fff5f8 1.5px);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            color: #4a1525;
+            overflow-x: hidden;
+        }
+
+        .floating-bow {
+            animation: floatBow 4s ease-in-out infinite;
+        }
+        @keyframes floatBow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(4deg); }
+        }
+
+        .sparkle-anim {
+            animation: pulseGlow 2s infinite alternate;
+        }
+        @keyframes pulseGlow {
+            0% { opacity: 0.6; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1.05); }
+        }
+
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fff1f2;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f43f5e;
+            border-radius: 10px;
+            border: 3px solid #fff1f2;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #be123c;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-pinky-300 selection:text-pinky-dark">
+
+    <!-- Top Ribbon Banner -->
+    <div class="bg-gradient-to-r from-pinky-400 via-pinky-300 to-pinky-500 text-white text-xs md:text-sm py-2 px-4 text-center font-bold shadow-sm flex items-center justify-center gap-2">
+        <span>🎀</span>
+        <span>Programming Foundations - Networks Part I | م. محمد أبو هدهود (Programming Advices)</span>
+        <span>🎀</span>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b-2 border-pinky-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+            
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pinky-400 to-pinky-300 flex items-center justify-center text-white shadow-girly">
+                    <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12,10.5 C10.5,8 6,4 3.5,6.5 C1,9 5,13 8.5,12 C5,14 1,18 3.5,20.5 C6,23 10.5,19 12,16.5 C13.5,19 18,23 20.5,20.5 C23,18 19,14 15.5,12 C19,13 23,9 20.5,6.5 C18,4 13.5,8 12,10.5 Z M12,11.5 C12.8284271,11.5 13.5,12.1715729 13.5,13 C13.5,12.1715729 12.8284271,14.5 12,14.5 C11.1715729,14.5 10.5,13.8284271 10.5,13 C10.5,12.1715729 11.1715729,11.5 12,11.5 Z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-xl text-pinky-700 tracking-tight flex items-center gap-2">
+                        أساسيات الشبكات - Networks Part I
+                    </h1>
+                    <p class="text-xs text-gray-500 font-semibold">Computer Foundations</p>
+                </div>
+            </div>
+
+            <div class="hidden md:flex items-center gap-4 text-sm font-bold text-pinky-700">
+                <a href="#intro" class="hover:text-pinky-500 transition-colors">المقدمة</a>
+                <a href="#what-is-network" class="hover:text-pinky-500 transition-colors">ما هي الشبكة؟</a>
+                <a href="#types" class="hover:text-pinky-500 transition-colors">LAN & WAN</a>
+                <a href="#communication" class="hover:text-pinky-500 transition-colors">طرق الاتصال</a>
+                <a href="#homework" class="bg-pinky-400 text-white px-4 py-2 rounded-full hover:bg-pinky-500 transition-all shadow-md">الأسئلة والواجب</a>
+            </div>
+
+            <button onclick="toggleLanguage()" id="langBtn" class="bg-pinky-100 text-pinky-700 font-bold px-3 py-1.5 rounded-xl border border-pinky-300 text-xs hover:bg-pinky-200 transition-colors flex items-center gap-1">
+                <i class="fa-solid fa-globe"></i>
+                <span id="langLabel">English Mode</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+
+        <!-- Course Header Information -->
+        <section id="intro" class="relative bg-white rounded-3xl p-6 md:p-10 shadow-girly border-2 border-pinky-200 overflow-hidden">
+            <div class="absolute top-4 left-6 text-pinky-300 text-4xl floating-bow opacity-40">🎀</div>
+            <div class="absolute bottom-4 right-8 text-pinky-300 text-3xl sparkle-anim opacity-40">✨</div>
+
+            <div class="space-y-4 relative z-10">
+                <div class="inline-flex items-center gap-2 bg-pinky-100 text-pinky-700 px-4 py-1 rounded-full text-xs font-bold border border-pinky-300">
+                    <span>ProgrammingAdvices.com</span>
+                </div>
+
+                <h2 class="text-3xl md:text-4xl font-extrabold text-pinky-dark leading-tight">
+                    أساسيات الشبكات (Networks Part I)
+                </h2>
+
+                <p class="text-gray-700 text-sm md:text-base leading-relaxed font-semibold">
+                    ملخص الشرح العلمي لمادة أساسيات الشبكات، ويغطي هذا الجزء المفاهيم الأساسية للشبكة، دواعي استخدامها، أنواع الشبكات (LAN و WAN)، طرق الاتصال السلكية واللاسلكية، مفهوم البروتوكولات، الإيثرنت، والـ Wi-Fi.
+                </p>
+
+                <div class="bg-pinky-50 p-4 rounded-2xl border border-pinky-200 space-y-2">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-pinky-400 text-white flex items-center justify-center font-bold text-lg">
+                            👨‍🏫
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-pinky-700 text-sm">المحاضر: المهندس محمد أبو هدهود (Mohammed Abu-Hadhoud)</h3>
+                            <p class="text-xs text-gray-500 font-semibold">26+ Years of Experience</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5 pt-1 text-[11px] font-bold text-pinky-600">
+                        <span class="bg-white px-2 py-0.5 rounded-md border border-pinky-200">MBA</span>
+                        <span class="bg-white px-2 py-0.5 rounded-md border border-pinky-200">PMOC</span>
+                        <span class="bg-white px-2 py-0.5 rounded-md border border-pinky-200">PgMP</span>
+                        <span class="bg-white px-2 py-0.5 rounded-md border border-pinky-200">PMP</span>
+                        <span class="bg-white px-2 py-0.5 rounded-md border border-pinky-200">PMI-RMP</span>
+                        <span class="bg-white px-2 py-0.5 rounded-md border border-pinky-200">CM</span>
+                        <span class="bg-white px-2 py-0.5 rounded-md border border-pinky-200">ITILF</span>
+                        <span class="bg-white px-2 py-0.5 rounded-md border border-pinky-200">MCPD</span>
+                        <span class="bg-white px-2 py-0.5 rounded-md border border-pinky-200">MCSD</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1: What is Network & Why do we need it? -->
+        <section id="what-is-network" class="space-y-6">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-pinky-400 text-white flex items-center justify-center font-bold shadow-sm">
+                    1
+                </div>
+                <h2 class="text-2xl font-bold text-pinky-700">
+                    What is Network? (ما هي الشبكة ولماذا نحتاجها؟)
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- What is Network -->
+                <div class="bg-white rounded-3xl p-6 shadow-girly border-2 border-pinky-200 relative">
+                    <div class="w-12 h-12 bg-pinky-100 text-pinky-600 rounded-2xl flex items-center justify-center mb-4 font-bold text-xl">
+                        💻
+                    </div>
+                    <h3 class="text-lg font-bold text-pinky-700 mb-2 border-b-2 border-pinky-100 pb-2 flex justify-between items-center">
+                        <span>What is Network?</span>
+                        <span class="text-xs text-pinky-400 font-normal">Page 5</span>
+                    </h3>
+                    <div class="space-y-3 text-sm text-gray-700 leading-relaxed">
+                        <p class="font-bold text-pinky-600 bg-pinky-50 p-3 rounded-xl border border-pinky-200">
+                            Network: is a group of connected computers and devices.
+                            <br>
+                            <span class="text-gray-700 font-normal block mt-1">الشبكة هي مجموعة من أجهزة الكمبيوتر والأجهزة الإلكترونية المتصلة ببعضها.</span>
+                        </p>
+                        <div class="bg-pinky-50/50 p-3 rounded-xl border border-pinky-100 space-y-1">
+                            <h4 class="font-bold text-xs text-pinky-700">Example:</h4>
+                            <p class="text-xs">
+                                The computers, phones, and other devices that your family owns are all part of your home computer network.
+                            </p>
+                            <p class="text-xs text-pinky-600 font-semibold pt-1">
+                                When you get a new tablet and enter in the Wi-Fi password, you're joining that tablet to your home computer network.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Why do we need Network -->
+                <div class="bg-white rounded-3xl p-6 shadow-girly border-2 border-pinky-200 relative">
+                    <div class="w-12 h-12 bg-pinky-100 text-pinky-600 rounded-2xl flex items-center justify-center mb-4 font-bold text-xl">
+                        🔗
+                    </div>
+                    <h3 class="text-lg font-bold text-pinky-700 mb-2 border-b-2 border-pinky-100 pb-2 flex justify-between items-center">
+                        <span>Why do we need Network?</span>
+                        <span class="text-xs text-pinky-400 font-normal">Page 5</span>
+                    </h3>
+                    <div class="space-y-3 text-sm text-gray-700 leading-relaxed">
+                        <p class="font-bold text-pinky-600 bg-pinky-50 p-3 rounded-xl border border-pinky-200">
+                            Devices in the same network can easily communicate and share resources with each other.
+                            <br>
+                            <span class="text-gray-700 font-normal block mt-1">الأجهزة في نفس الشبكة تستطيع التواصل بسهولة ومشاركة الموارد مع بعضها.</span>
+                        </p>
+                        <div class="bg-pinky-50/50 p-3 rounded-xl border border-pinky-100 space-y-2">
+                            <h4 class="font-bold text-xs text-pinky-700">For example:</h4>
+                            <ul class="text-xs space-y-1 list-disc list-inside text-gray-700">
+                                <li>You can control your TV with your mobile.</li>
+                                <li>You can stream videos from your mobile to your TV.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Network Types -->
+        <section id="types" class="space-y-6">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-pinky-400 text-white flex items-center justify-center font-bold shadow-sm">
+                    2
+                </div>
+                <h2 class="text-2xl font-bold text-pinky-700">
+                    Network Types (أنواع الشبكات)
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- LAN Card -->
+                <div class="bg-white rounded-3xl p-6 shadow-girly border-2 border-pinky-300 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-pinky-400 text-white text-xs font-bold px-4 py-1 rounded-bl-2xl">
+                        Type 1
+                    </div>
+                    <div class="flex items-center gap-3 mb-4 mt-2">
+                        <div class="w-12 h-12 rounded-2xl bg-pinky-100 text-pinky-600 flex items-center justify-center font-bold text-xl">
+                            🏠
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-extrabold text-pinky-700">1- LAN</h3>
+                            <p class="text-xs text-pinky-500 font-bold">Local Area Network</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 text-sm text-gray-700">
+                        <div class="bg-pinky-50 p-3 rounded-xl border border-pinky-200">
+                            <p class="font-bold text-pinky-700">LAN Definition (PDF Page 9):</p>
+                            <p class="text-xs text-gray-700 mt-1">
+                                Local Area Network that has a group of connected devices. LAN is a type of network made up of nearby computers.
+                            </p>
+                        </div>
+
+                        <div class="space-y-2 text-xs">
+                            <h4 class="font-bold text-pinky-700">Key Features:</h4>
+                            <ul class="space-y-1.5 text-gray-700 list-disc list-inside">
+                                <li>A LAN can have anywhere from a few devices (like a home network) to hundreds of devices (like a school or hospital).</li>
+                                <li>Large organizations like colleges can have multiple LANs - maybe one per building.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WAN Card -->
+                <div class="bg-white rounded-3xl p-6 shadow-girly border-2 border-pinky-300 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-pinky-500 text-white text-xs font-bold px-4 py-1 rounded-bl-2xl">
+                        Type 2
+                    </div>
+                    <div class="flex items-center gap-3 mb-4 mt-2">
+                        <div class="w-12 h-12 rounded-2xl bg-pinky-100 text-pinky-600 flex items-center justify-center font-bold text-xl">
+                            🌍
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-extrabold text-pinky-700">2- WAN</h3>
+                            <p class="text-xs text-pinky-500 font-bold">Wide Area Network</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 text-sm text-gray-700">
+                        <div class="bg-pinky-50 p-3 rounded-xl border border-pinky-200">
+                            <p class="font-bold text-pinky-700">WAN Definition (PDF Page 14):</p>
+                            <p class="text-xs text-gray-700 mt-1">
+                                WAN is made of connected LANs that are far from each other (like in different parts of the country or world).
+                            </p>
+                        </div>
+
+                        <div class="space-y-2 text-xs">
+                            <h4 class="font-bold text-pinky-700">Key Features:</h4>
+                            <ul class="space-y-1.5 text-gray-700 list-disc list-inside">
+                                <li>WANs connect thousands or even millions of devices.</li>
+                                <li>Connects multiple separate LANs over long distances (PDF Page 15 diagram).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Diagram Box -->
+            <div class="bg-gradient-to-br from-white to-pinky-50 rounded-3xl p-6 shadow-girly border-2 border-pinky-200 text-center">
+                <h3 class="font-bold text-pinky-700 mb-2">
+                    مخطط اتصال LAN و WAN (PDF Page 15)
+                </h3>
+                
+                <div class="flex flex-col md:flex-row items-center justify-around gap-6 py-6 relative">
+                    <div onclick="highlightDiagram('lan1')" id="lan1" class="cursor-pointer bg-white p-4 rounded-2xl border-2 border-pinky-300 shadow-md hover:scale-105 transition-transform w-48 text-center">
+                        <div class="text-2xl mb-1">💻 🖥️</div>
+                        <span class="font-extrabold text-xs text-pinky-700">LAN 1</span>
+                    </div>
+
+                    <div class="hidden md:block text-pinky-400 text-xl font-bold">⚡━━━━━⚡</div>
+
+                    <div onclick="highlightDiagram('wan')" id="wan" class="cursor-pointer bg-pinky-400 text-white p-6 rounded-3xl shadow-glow hover:scale-105 transition-transform w-56 text-center">
+                        <div class="text-3xl mb-1">🌐</div>
+                        <span class="font-black text-sm block">WAN Network</span>
+                    </div>
+
+                    <div class="hidden md:block text-pinky-400 text-xl font-bold">⚡━━━━━⚡</div>
+
+                    <div onclick="highlightDiagram('lan2')" id="lan2" class="cursor-pointer bg-white p-4 rounded-2xl border-2 border-pinky-300 shadow-md hover:scale-105 transition-transform w-48 text-center">
+                        <div class="text-2xl mb-1">💻 🖨️</div>
+                        <span class="font-extrabold text-xs text-pinky-700">LAN 2</span>
+                    </div>
+                </div>
+
+                <div id="diagramInfo" class="mt-2 bg-white p-3 rounded-xl border border-pinky-200 text-xs font-bold text-pinky-700 min-h-[40px] flex items-center justify-center">
+                    اضغط على أي شبكة بالمخطط لعرض التفاصيل
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Communicating on LAN -->
+        <section id="communication" class="space-y-6">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-pinky-400 text-white flex items-center justify-center font-bold shadow-sm">
+                    3
+                </div>
+                <h2 class="text-2xl font-bold text-pinky-700">
+                    Communicating on LAN (طرق التواصل في الشبكة المحلية)
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Wired -->
+                <div class="bg-white rounded-3xl p-6 shadow-girly border-2 border-pinky-200 relative">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-pinky-100 text-pinky-600 rounded-2xl flex items-center justify-center text-xl font-bold">
+                            🔌
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-lg text-pinky-700">1- Wired Connection</h3>
+                            <p class="text-xs text-gray-500 font-semibold">Using wires or cables with Ethernet</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 text-xs text-gray-700">
+                        <div class="bg-pinky-50 p-3 rounded-xl border border-pinky-200 space-y-1">
+                            <span class="font-bold text-pinky-700 text-sm">Ethernet Definition:</span>
+                            <p class="text-gray-700">
+                                Ethernet: Rules that computers follow for communicating on a wired network.
+                            </p>
+                        </div>
+
+                        <div class="space-y-2 pt-2">
+                            <h4 class="font-bold text-pinky-700 text-xs">Devices in Wired Networks (Page 12):</h4>
+                            <div class="grid grid-cols-2 gap-2 text-center">
+                                <div class="bg-pinky-100/60 p-2.5 rounded-xl border border-pinky-200">
+                                    <span class="font-bold text-pinky-700 block">Switch</span>
+                                    <span class="text-[10px] text-gray-600">Connects devices inside LAN</span>
+                                </div>
+                                <div class="bg-pinky-100/60 p-2.5 rounded-xl border border-pinky-200">
+                                    <span class="font-bold text-pinky-700 block">Router</span>
+                                    <span class="text-[10px] text-gray-600">Connects networks to Internet</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wireless -->
+                <div class="bg-white rounded-3xl p-6 shadow-girly border-2 border-pinky-200 relative">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-pinky-100 text-pinky-600 rounded-2xl flex items-center justify-center text-xl font-bold">
+                            📶
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-lg text-pinky-700">2- Wireless Connection</h3>
+                            <p class="text-xs text-gray-500 font-semibold">Without wires using Wi-Fi</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 text-xs text-gray-700">
+                        <div class="bg-pinky-50 p-3 rounded-xl border border-pinky-200 space-y-1">
+                            <span class="font-bold text-pinky-700 text-sm">Wireless Rules:</span>
+                            <p class="text-gray-700">
+                                Rules that computers follow for communicating through radio signals.
+                            </p>
+                        </div>
+
+                        <div class="bg-pinky-100/50 p-3 rounded-xl border border-pinky-200 space-y-1">
+                            <span class="font-bold text-pinky-700">Wi-Fi:</span>
+                            <p class="text-gray-700">
+                                Wi-Fi is a popular way to connect wirelessly to a network.
+                            </p>
+                            <p class="text-pinky-600 font-bold text-xs underline">
+                                Wi-Fi stands for: Wireless Fidelity
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Protocol Box -->
+            <div class="bg-gradient-to-r from-pinky-400 via-pinky-300 to-pinky-500 text-white rounded-3xl p-6 shadow-girly-lg text-center relative overflow-hidden">
+                <h3 class="text-xl font-black mb-2">
+                    What is Protocol? (PDF Page 12)
+                </h3>
+                <p class="text-sm md:text-base font-bold bg-white/20 backdrop-blur-sm p-4 rounded-2xl max-w-3xl mx-auto border border-white/30 leading-relaxed">
+                    Protocol: is a standard set of rules for how devices communicate through wires or wireless.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: Homework Questions -->
+        <section id="homework" class="space-y-6 pt-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-pinky-400 text-white flex items-center justify-center font-bold shadow-sm">
+                        4
+                    </div>
+                    <h2 class="text-2xl font-bold text-pinky-700">
+                        Homework Questions (PDF Page 17)
+                    </h2>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-girly border-2 border-pinky-300 space-y-6">
+                
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-4 border-b border-pinky-100">
+                    <div>
+                        <h3 class="font-bold text-pinky-700 text-lg">Answer the following questions:</h3>
+                        <p class="text-xs text-gray-500">اضغط على أي سؤال لعرض الإجابة النموذجية من PDF</p>
+                    </div>
+                    <button onclick="revealAllAnswers()" class="text-xs bg-pinky-100 text-pinky-700 hover:bg-pinky-200 px-4 py-2 rounded-xl font-bold transition-colors">
+                        إظهار جميع الإجابات
+                    </button>
+                </div>
+
+                <div class="space-y-3" id="questionsAccordion">
+                    
+                    <!-- Q1 -->
+                    <div class="border-2 border-pinky-100 rounded-2xl overflow-hidden transition-all">
+                        <button onclick="toggleAccordion('q1')" class="w-full bg-pinky-50/60 hover:bg-pinky-100 p-4 text-right font-bold text-pinky-700 text-sm flex justify-between items-center">
+                            <span>1. What is network?</span>
+                            <i id="icon-q1" class="fa-solid fa-chevron-down text-pinky-400 transition-transform"></i>
+                        </button>
+                        <div id="q1" class="hidden p-4 bg-white text-xs space-y-2 border-t border-pinky-100">
+                            <p class="font-bold text-pinky-600">Answer:</p>
+                            <p class="text-gray-700">Network: is a group of connected computers and devices.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="border-2 border-pinky-100 rounded-2xl overflow-hidden transition-all">
+                        <button onclick="toggleAccordion('q2')" class="w-full bg-pinky-50/60 hover:bg-pinky-100 p-4 text-right font-bold text-pinky-700 text-sm flex justify-between items-center">
+                            <span>2. Why do we need network?</span>
+                            <i id="icon-q2" class="fa-solid fa-chevron-down text-pinky-400 transition-transform"></i>
+                        </button>
+                        <div id="q2" class="hidden p-4 bg-white text-xs space-y-2 border-t border-pinky-100">
+                            <p class="font-bold text-pinky-600">Answer:</p>
+                            <p class="text-gray-700">Devices in the same network can easily communicate and share resources with each other (for example: control TV with mobile or stream videos).</p>
+                        </div>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="border-2 border-pinky-100 rounded-2xl overflow-hidden transition-all">
+                        <button onclick="toggleAccordion('q3')" class="w-full bg-pinky-50/60 hover:bg-pinky-100 p-4 text-right font-bold text-pinky-700 text-sm flex justify-between items-center">
+                            <span>3. What is LAN vs WAN?</span>
+                            <i id="icon-q3" class="fa-solid fa-chevron-down text-pinky-400 transition-transform"></i>
+                        </button>
+                        <div id="q3" class="hidden p-4 bg-white text-xs space-y-2 border-t border-pinky-100">
+                            <p class="font-bold text-pinky-600">Answer:</p>
+                            <ul class="list-disc list-inside space-y-1 text-gray-700">
+                                <li><strong>LAN (Local Area Network):</strong> A network made up of nearby computers (home, school, hospital).</li>
+                                <li><strong>WAN (Wide Area Network):</strong> Made of connected LANs that are far from each other (in different parts of the country or world).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="border-2 border-pinky-100 rounded-2xl overflow-hidden transition-all">
+                        <button onclick="toggleAccordion('q4')" class="w-full bg-pinky-50/60 hover:bg-pinky-100 p-4 text-right font-bold text-pinky-700 text-sm flex justify-between items-center">
+                            <span>4. How computers communicate together?</span>
+                            <i id="icon-q4" class="fa-solid fa-chevron-down text-pinky-400 transition-transform"></i>
+                        </button>
+                        <div id="q4" class="hidden p-4 bg-white text-xs space-y-2 border-t border-pinky-100">
+                            <p class="font-bold text-pinky-600">Answer:</p>
+                            <p class="text-gray-700">Computers communicate either Wired (using wires or cables with Ethernet, Switches, and Routers) or Wireless (without wires using Wi-Fi radio signals) following Protocols.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q5 -->
+                    <div class="border-2 border-pinky-100 rounded-2xl overflow-hidden transition-all">
+                        <button onclick="toggleAccordion('q5')" class="w-full bg-pinky-50/60 hover:bg-pinky-100 p-4 text-right font-bold text-pinky-700 text-sm flex justify-between items-center">
+                            <span>5. What is Ethernet?</span>
+                            <i id="icon-q5" class="fa-solid fa-chevron-down text-pinky-400 transition-transform"></i>
+                        </button>
+                        <div id="q5" class="hidden p-4 bg-white text-xs space-y-2 border-t border-pinky-100">
+                            <p class="font-bold text-pinky-600">Answer:</p>
+                            <p class="text-gray-700">Ethernet: Rules that computers follow for communicating on a wired network.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q6 -->
+                    <div class="border-2 border-pinky-100 rounded-2xl overflow-hidden transition-all">
+                        <button onclick="toggleAccordion('q6')" class="w-full bg-pinky-50/60 hover:bg-pinky-100 p-4 text-right font-bold text-pinky-700 text-sm flex justify-between items-center">
+                            <span>6. What is Wireless?</span>
+                            <i id="icon-q6" class="fa-solid fa-chevron-down text-pinky-400 transition-transform"></i>
+                        </button>
+                        <div id="q6" class="hidden p-4 bg-white text-xs space-y-2 border-t border-pinky-100">
+                            <p class="font-bold text-pinky-600">Answer:</p>
+                            <p class="text-gray-700">Wireless: Communicating without wires using radio signals.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q7 -->
+                    <div class="border-2 border-pinky-100 rounded-2xl overflow-hidden transition-all">
+                        <button onclick="toggleAccordion('q7')" class="w-full bg-pinky-50/60 hover:bg-pinky-100 p-4 text-right font-bold text-pinky-700 text-sm flex justify-between items-center">
+                            <span>7. What is Protocol?</span>
+                            <i id="icon-q7" class="fa-solid fa-chevron-down text-pinky-400 transition-transform"></i>
+                        </button>
+                        <div id="q7" class="hidden p-4 bg-white text-xs space-y-2 border-t border-pinky-100">
+                            <p class="font-bold text-pinky-600">Answer:</p>
+                            <p class="text-gray-700">Protocol: is a standard set of rules for how devices communicate through wires or wireless.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q8 & Q9 -->
+                    <div class="border-2 border-pinky-100 rounded-2xl overflow-hidden transition-all">
+                        <button onclick="toggleAccordion('q8')" class="w-full bg-pinky-50/60 hover:bg-pinky-100 p-4 text-right font-bold text-pinky-700 text-sm flex justify-between items-center">
+                            <span>8 & 9. What is Wi-Fi? And Wi-Fi stands for what?</span>
+                            <i id="icon-q8" class="fa-solid fa-chevron-down text-pinky-400 transition-transform"></i>
+                        </button>
+                        <div id="q8" class="hidden p-4 bg-white text-xs space-y-2 border-t border-pinky-100">
+                            <p class="font-bold text-pinky-600">Answer:</p>
+                            <p class="text-gray-700">Wi-Fi is a popular way to connect wirelessly to a network.</p>
+                            <p class="text-pinky-600 font-extrabold text-sm">Wi-Fi stands for: Wireless Fidelity</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t-2 border-pinky-200 mt-12 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p class="text-sm font-bold text-pinky-700">
+                ProgrammingAdvices.com © 2022 | Mohammed Abu-Hadhoud
+            </p>
+            <p class="text-xs text-gray-500">
+                Programming Foundations - Networks Part I
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleAccordion(id) {
+            const el = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                if (icon) icon.style.transform = 'rotate(180deg)';
+            } else {
+                el.classList.add('hidden');
+                if (icon) icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function revealAllAnswers() {
+            const allIds = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
+            allIds.forEach(id => {
+                const el = document.getElementById(id);
+                const icon = document.getElementById('icon-' + id);
+                if (el) el.classList.remove('hidden');
+                if (icon) icon.style.transform = 'rotate(180deg)';
+            });
+        }
+
+        function highlightDiagram(type) {
+            const info = document.getElementById('diagramInfo');
+            const lan1 = document.getElementById('lan1');
+            const lan2 = document.getElementById('lan2');
+            const wan = document.getElementById('wan');
+
+            lan1.classList.remove('border-pinky-600', 'bg-pinky-100');
+            lan2.classList.remove('border-pinky-600', 'bg-pinky-100');
+            wan.classList.remove('ring-4', 'ring-pinky-300');
+
+            if (type === 'lan1') {
+                lan1.classList.add('border-pinky-600', 'bg-pinky-100');
+                info.innerHTML = "LAN 1: Local Area Network connecting nearby devices.";
+            } else if (type === 'lan2') {
+                lan2.classList.add('border-pinky-600', 'bg-pinky-100');
+                info.innerHTML = "LAN 2: Another Local Area Network in a separate location.";
+            } else if (type === 'wan') {
+                wan.classList.add('ring-4', 'ring-pinky-300');
+                info.innerHTML = "WAN: Wide Area Network connecting LAN 1 and LAN 2 across long distances.";
+            }
+        }
+
+        let isEnglishMode = false;
+        function toggleLanguage() {
+            isEnglishMode = !isEnglishMode;
+            const btnLabel = document.getElementById('langLabel');
+            if (isEnglishMode) {
+                btnLabel.innerText = "الوضع العربي";
+                document.documentElement.dir = "ltr";
+            } else {
+                btnLabel.innerText = "English Mode";
+                document.documentElement.dir = "rtl";
+            }
+        }
+    </script>
+</body>
+</html>
