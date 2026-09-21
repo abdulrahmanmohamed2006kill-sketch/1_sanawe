@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لغات البرمجة ومستوياتها 🎀 الدليل التفاعلي</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'pink-cute': '#FFB6C1',
+                        'pink-deep': '#FF69B4',
+                        'pink-soft': '#FFF0F5',
+                        'pink-accent': '#DB2777',
+                        'pink-light': '#FFF5F8',
+                        'rose-glow': '#F43F5E',
+                    },
+                    fontFamily: {
+                        'arabic': ['Cairo', 'Tajawal', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'girly': '0 10px 25px -5px rgba(255, 182, 193, 0.4), 0 8px 10px -6px rgba(255, 105, 180, 0.2)',
+                        'girly-lg': '0 20px 35px -10px rgba(255, 105, 180, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Confetti JS -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+            background-color: #FFF5F8;
+            background-image: radial-gradient(#FFC0CB 0.75px, transparent 0.75px), radial-gradient(#FFC0CB 0.75px, #FFF5F8 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            overflow-x: hidden;
+        }
+
+        .bow-icon {
+            display: inline-block;
+            filter: drop-shadow(0px 2px 4px rgba(219, 39, 119, 0.3));
+            animation: bowWiggle 3s ease-in-out infinite;
+        }
+
+        @keyframes bowWiggle {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(-6deg) scale(1.05); }
+            75% { transform: rotate(6deg) scale(1.05); }
+        }
+
+        .sparkle-float {
+            animation: sparkleFloat 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes sparkleFloat {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+            100% { transform: translateY(-12px) rotate(15deg); opacity: 1; }
+        }
+
+        .pink-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            border: 2px solid #FFD1DC;
+            box-shadow: 0 10px 30px -5px rgba(255, 182, 193, 0.3);
+            border-radius: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .pink-card:hover {
+            transform: translateY(-5px);
+            border-color: #FF69B4;
+            box-shadow: 0 15px 35px -5px rgba(255, 105, 180, 0.4);
+        }
+
+        .btn-pink {
+            background: linear-gradient(135deg, #FF69B4 0%, #DB2777 100%);
+            box-shadow: 0 4px 15px rgba(219, 39, 119, 0.35);
+            transition: all 0.2s ease;
+        }
+
+        .btn-pink:hover {
+            background: linear-gradient(135deg, #FF1493 0%, #BE185D 100%);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 20px rgba(219, 39, 119, 0.45);
+        }
+
+        .btn-pink:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        /* Ribbon Ribbon Banner CSS */
+        .ribbon-banner {
+            position: relative;
+            background: #DB2777;
+            color: white;
+            padding: 8px 24px;
+            font-weight: bold;
+            border-radius: 20px;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(219, 39, 119, 0.3);
+        }
+
+        .ribbon-banner::before, .ribbon-banner::after {
+            content: "🎀";
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .ribbon-banner::before { right: -15px; }
+        .ribbon-banner::after { left: -15px; }
+
+        .flip-card {
+            perspective: 1000px;
+        }
+
+        .flip-card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFF0F5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FFB6C1;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF69B4;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col">
+
+    <!-- Top Header Navigation -->
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b-2 border-pink-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <span class="text-3xl bow-icon">🎀</span>
+                <div>
+                    <p class="text-xs text-pink-500 font-bold">شرح تفاعلي: لغات البرمجة ومستوياتها 🎀</p>
+                </div>
+            </div>
+
+            <!-- Quick Nav Badges -->
+            <nav class="hidden md:flex items-center space-x-2 space-x-reverse font-bold text-sm text-pink-700">
+                <a href="#overview" class="px-3 py-1.5 rounded-full hover:bg-pink-100 transition duration-200">✨ المفاهيم</a>
+                <a href="#lab" class="px-3 py-1.5 rounded-full hover:bg-pink-100 transition duration-200">🧪 معمل المترجم</a>
+                <a href="#levels" class="px-3 py-1.5 rounded-full hover:bg-pink-100 transition duration-200">📊 المستويات</a>
+                <a href="#converter" class="px-3 py-1.5 rounded-full hover:bg-pink-100 transition duration-200">💻 محول الآلة</a>
+                <a href="#quiz" class="px-3 py-1.5 rounded-full bg-pink-500 text-white shadow-md hover:bg-pink-600 transition duration-200">📝 الواجب التفاعلي</a>
+            </nav>
+
+            <button id="soundToggleBtn" onclick="toggleAudio()" class="p-2.5 rounded-full bg-pink-100 text-pink-600 hover:bg-pink-200 transition shadow-sm text-sm font-bold flex items-center gap-2">
+                <i class="fas fa-volume-up text-lg"></i>
+                <span class="hidden sm:inline">الصوت: مفعل</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Banner Section -->
+    <section class="relative py-12 px-4 overflow-hidden">
+        <!-- Floating Decorative Bows -->
+        <div class="absolute top-6 right-10 text-4xl opacity-40 sparkle-float">🎀</div>
+        <div class="absolute bottom-4 left-12 text-5xl opacity-30 sparkle-float" style="animation-delay: 1.5s;">✨</div>
+        <div class="absolute top-1/2 left-1/4 text-3xl opacity-30 sparkle-float" style="animation-delay: 2.5s;">👑</div>
+
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <div class="inline-block mb-3 px-4 py-1.5 bg-pink-100 text-pink-700 font-bold text-sm rounded-full border border-pink-300 shadow-sm">
+                <span>🎀 ملخص كورس البشمهندس عبدالرحمن محمد (Programming Advices) 🎀</span>
+            </div>
+            
+            <h2 class="text-3xl sm:text-5xl font-extrabold text-slate-800 leading-tight mb-4">
+                تعلمي لغات البرمجة <span class="text-pink-600 underline decoration-pink-300 decoration-wavy">الطريقة الصحيحة!</span> ✨
+            </h2>
+
+            <p class="text-slate-600 text-base sm:text-lg max-w-2xl mx-auto mb-8 font-medium">
+                موقع ممتع وتفاعلي مصمم خصيصاً ليأخذكِ في رحلة لطيفة بين أكواد الحاسوب، لغة الآلة، المترجمات، ومستويات لغات البرمجة مع تجارب تطبيقية واختبارات رائعة!
+            </p>
+
+            <div class="flex flex-wrap items-center justify-center gap-4">
+                <a href="#lab" class="btn-pink text-white font-bold px-8 py-3.5 rounded-full text-base flex items-center gap-2 shadow-lg">
+                    <span>ابدأي التجربة السحرية</span>
+                    <i class="fas fa-magic"></i>
+                </a>
+                <a href="#quiz" class="bg-white text-pink-600 hover:bg-pink-50 border-2 border-pink-300 font-bold px-8 py-3.5 rounded-full text-base flex items-center gap-2 shadow-sm transition">
+                    <span>حل الواجب والتمارين</span>
+                    <i class="fas fa-heart text-pink-400"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Concepts Section -->
+    <section id="overview" class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10">
+            <span class="ribbon-banner text-lg">المفاهيم الأساسية لكل مبرمجة 🌸</span>
+            <h3 class="text-2xl sm:text-3xl font-bold text-slate-800 mt-4">ماذا نتعلم من هذا الدرس؟</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Card 1: What is Programming Language? -->
+            <div class="pink-card p-6 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-2xl bg-pink-100 flex items-center justify-center text-pink-600 text-2xl mb-4 border border-pink-200">
+                        🔨
+                    </div>
+                    <h4 class="text-xl font-bold text-pink-700 mb-2 flex items-center gap-2">
+                        <span>لغة البرمجة هي مجرد أداة</span>
+                        <span class="text-xs px-2 py-0.5 bg-pink-100 text-pink-600 rounded-full font-normal">TOOL</span>
+                    </h4>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        لغة البرمجة ليست سحراً، بل هي **أداة (TOOL)** تساعدكِ في كتابة تعليمات وأوامر للحاسوب لتنفيذ مهمة معينة. التعليمات التي تكتبينها تُسمى **Code**!
+                    </p>
+                </div>
+                <div class="bg-pink-50 p-3 rounded-xl border border-pink-200 text-xs text-pink-800 flex items-center justify-between">
+                    <span>📌 النتيجة: الحاسوب يُنفذ الأوامر</span>
+                    <span class="text-base">💻</span>
+                </div>
+            </div>
+
+            <!-- Card 2: Binary & Machine Language -->
+            <div class="pink-card p-6 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-2xl bg-purple-100 flex items-center justify-center text-purple-600 text-2xl mb-4 border border-purple-200">
+                        ⚡
+                    </div>
+                    <h4 class="text-xl font-bold text-pink-700 mb-2 flex items-center gap-2">
+                        <span>لغة الآلة (Machine Language)</span>
+                    </h4>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        هي اللغة الوحيدة التي يفهمها المعالج مباشرة بدون وسيط! تتكون من أرقام ثنائية **Binary (0s & 1s)** أو سداسية عشرية **Hexadecimal** مثل `0x55 0x89`.
+                    </p>
+                </div>
+                <div class="bg-purple-50 p-3 rounded-xl border border-purple-200 text-xs text-purple-800 flex items-center justify-between">
+                    <span>01001000 01100101 01111001</span>
+                    <span class="font-mono font-bold">1 & 0</span>
+                </div>
+            </div>
+
+            <!-- Card 3: Assembly Language -->
+            <div class="pink-card p-6 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-2xl bg-rose-100 flex items-center justify-center text-rose-600 text-2xl mb-4 border border-rose-200">
+                        ⚙️
+                    </div>
+                    <h4 class="text-xl font-bold text-pink-700 mb-2 flex items-center gap-2">
+                        <span>لغة التجميع (Assembly)</span>
+                    </h4>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        لغة منخفضة المستوى تستخدم اختصارات نصية قصيرة (مثل `MOV`, `PUSH`, `ADD`) لتسهيل القراءة مقارنة بالأصفار والآحاد المباشرة.
+                    </p>
+                </div>
+                <div class="bg-rose-50 p-3 rounded-xl border border-rose-200 text-xs font-mono text-rose-800 flex items-center justify-between">
+                    <span>push %ebp | mov %esp</span>
+                    <span>🎀</span>
+                </div>
+            </div>
+
+            <!-- Card 4: High Level Languages -->
+            <div class="pink-card p-6 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-2xl bg-pink-100 flex items-center justify-center text-pink-600 text-2xl mb-4 border border-pink-200">
+                        👑
+                    </div>
+                    <h4 class="text-xl font-bold text-pink-700 mb-2 flex items-center gap-2">
+                        <span>اللغات عالية المستوى</span>
+                    </h4>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        مثل Python, C++, Java, JS, C#. قريبة جداً من لغة البشر وسهلة القراءة والكتابة مثل: <code class="bg-pink-100 px-1 py-0.5 rounded text-pink-700 font-mono">PRINT "Hello World"</code>!
+                    </p>
+                </div>
+                <div class="bg-pink-50 p-3 rounded-xl border border-pink-200 text-xs text-pink-800 flex items-center justify-between">
+                    <span>سهلة للبشر ، تحتاج مترجم للآلة</span>
+                    <span>✨</span>
+                </div>
+            </div>
+
+            <!-- Card 5: Source Code vs Object Code -->
+            <div class="pink-card p-6 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-2xl bg-fuchsia-100 flex items-center justify-center text-fuchsia-600 text-2xl mb-4 border border-fuchsia-200">
+                        📜
+                    </div>
+                    <h4 class="text-xl font-bold text-pink-700 mb-2 flex items-center gap-2">
+                        <span>Source Code vs Object Code</span>
+                    </h4>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        • **Source Code:** الكود الذي تكتبينه بلغة عالية المستوى.<br>
+                        • **Object Code:** الكود المترجم إلى لغة الآلة جاهز للتنفيذ!
+                    </p>
+                </div>
+                <div class="bg-fuchsia-50 p-3 rounded-xl border border-fuchsia-200 text-xs text-fuchsia-800 flex items-center justify-between">
+                    <span>Source (بشري) ➔ Object (آلة)</span>
+                    <span>🔄</span>
+                </div>
+            </div>
+
+            <!-- Card 6: Translator (Compiler vs Interpreter) -->
+            <div class="pink-card p-6 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-2xl bg-pink-100 flex items-center justify-center text-pink-600 text-2xl mb-4 border border-pink-200">
+                        🔮
+                    </div>
+                    <h4 class="text-xl font-bold text-pink-700 mb-2 flex items-center gap-2">
+                        <span>المترجم والمفسر Translator</span>
+                    </h4>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        الحاسوب لا يفهم لغتك المباشرة! لذا نحتاج برامج ترجمة **(Compiler أو Interpreter)** تحول الكود المصدر (Source) إلى كود آلة (Object).
+                    </p>
+                </div>
+                <div class="bg-pink-50 p-3 rounded-xl border border-pink-200 text-xs text-pink-800 flex items-center justify-between">
+                    <span>Compiler / Interpreter</span>
+                    <span>🎀</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Interactive Translator Simulator Lab -->
+    <section id="lab" class="py-12 bg-white/60 border-y-2 border-pink-200 my-8 backdrop-blur-md">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <span class="ribbon-banner text-lg">🧪 معمل المترجم السحري T-Lab 🎀</span>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mt-3">كيف يتحول كودكِ اللطيف إلى لغة الآلة؟</h3>
+                <p class="text-slate-600 text-sm mt-1">اختر لغة البرمجة، واضغطي زر الترجمة لرؤية مراحل تحول الكود خطوة بخطوة!</p>
+            </div>
+
+            <!-- Simulator UI Card -->
+            <div class="pink-card p-6 sm:p-8 bg-white shadow-girly-lg">
+                <!-- Controls -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-bold text-pink-700 mb-2">1. اختاري اللغة العالية المستوى 🎀</label>
+                        <select id="langSelect" onchange="updateLabCode()" class="w-full p-3 rounded-xl border-2 border-pink-300 bg-pink-50 text-slate-800 font-bold focus:outline-none focus:border-pink-500 transition">
+                            <option value="basic">BASIC Language</option>
+                            <option value="cpp">C++ Language</option>
+                            <option value="python">Python Language</option>
+                            <option value="js">JavaScript</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-pink-700 mb-2">2. أداة الترجمة المستعملة 🔮</label>
+                        <select id="translatorType" class="w-full p-3 rounded-xl border-2 border-pink-300 bg-pink-50 text-slate-800 font-bold focus:outline-none focus:border-pink-500 transition">
+                            <option value="compiler">Compiler (مترجم كامل مرة واحدة)</option>
+                            <option value="interpreter">Interpreter (مفسر سطر بسطر)</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-end">
+                        <button onclick="runTranslationLab()" class="w-full btn-pink text-white font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 text-base shadow-md">
+                            <span>ابدأي الترجمة الآن!</span>
+                            <span class="text-xl">✨</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pipeline Stages Display -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+                    
+                    <!-- Stage 1: High Level Source Code -->
+                    <div class="border-2 border-pink-200 bg-pink-50/50 p-4 rounded-2xl relative">
+                        <div class="absolute -top-3 right-4 px-3 py-0.5 bg-pink-500 text-white text-xs font-bold rounded-full shadow">
+                            المرحلة 1: Source Code 🌸
+                        </div>
+                        <h5 class="font-bold text-slate-800 text-sm mt-2 mb-2 flex justify-between">
+                            <span>كود عالي المستوى (بشري)</span>
+                            <span class="text-pink-600 font-mono text-xs">High-Level</span>
+                        </h5>
+                        <pre id="sourceCodeDisplay" class="bg-slate-900 text-pink-300 p-4 rounded-xl text-sm font-mono overflow-x-auto min-h-[140px] border border-pink-300">PRINT "Hello, World!"</pre>
+                    </div>
+
+                    <!-- Stage 2: Assembly Translation -->
+                    <div id="assemblyBox" class="border-2 border-purple-200 bg-purple-50/50 p-4 rounded-2xl relative transition duration-500">
+                        <div class="absolute -top-3 right-4 px-3 py-0.5 bg-purple-500 text-white text-xs font-bold rounded-full shadow">
+                            المرحلة 2: Assembly Code ⚙️
+                        </div>
+                        <h5 class="font-bold text-slate-800 text-sm mt-2 mb-2 flex justify-between">
+                            <span>لغة التجميع (وسيطة)</span>
+                            <span class="text-purple-600 font-mono text-xs">Low-Level</span>
+                        </h5>
+                        <pre id="assemblyDisplay" class="bg-slate-900 text-purple-300 p-4 rounded-xl text-xs font-mono overflow-x-auto min-h-[140px] border border-purple-300">اضغطي زر الترجمة للمعالجة...</pre>
+                    </div>
+
+                    <!-- Stage 3: Machine Code (Object Code) -->
+                    <div id="machineBox" class="border-2 border-rose-200 bg-rose-50/50 p-4 rounded-2xl relative transition duration-500">
+                        <div class="absolute -top-3 right-4 px-3 py-0.5 bg-rose-500 text-white text-xs font-bold rounded-full shadow">
+                            المرحلة 3: Object Code / Machine ⚡
+                        </div>
+                        <h5 class="font-bold text-slate-800 text-sm mt-2 mb-2 flex justify-between">
+                            <span>لغة الآلة (Binary & Hex)</span>
+                            <span class="text-rose-600 font-mono text-xs">0s & 1s</span>
+                        </h5>
+                        <pre id="machineDisplay" class="bg-slate-900 text-emerald-400 p-4 rounded-xl text-xs font-mono overflow-x-auto min-h-[140px] border border-rose-300">01001000 01100101 01111001...</pre>
+                    </div>
+
+                </div>
+
+                <!-- Live Status Alert Bar -->
+                <div id="labStatus" class="mt-6 p-4 rounded-xl bg-pink-100 border border-pink-300 text-pink-800 text-sm font-bold flex items-center justify-between">
+                    <span class="flex items-center gap-2">
+                        <span class="animate-ping rounded-full h-3 w-3 bg-pink-500"></span>
+                        <span id="labStatusText">جاهز لتجربة الترجمة السحرية! اختر لغتكِ واضغطي الترجمة.</span>
+                    </span>
+                    <span class="text-xl">👑</span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Language Levels Spectrum Visualizer -->
+    <section id="levels" class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10">
+            <span class="ribbon-banner text-lg">📊 مصفوفة مستويات لغات البرمجة 🎀</span>
+            <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mt-3">المفاضلة بين سهولة القراءة وسرعة التنفيذ</h3>
+            <p class="text-slate-600 text-sm mt-1">اضغطي على المستوى لرؤية خصائصه وموقعه على سلم الأداء والقراءة!</p>
+        </div>
+
+        <!-- Levels Matrix Tabs -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left Side Buttons/Levels -->
+            <div class="lg:col-span-5 space-y-3">
+                
+                <!-- Level 05: Scripting -->
+                <button onclick="selectLevel(5)" id="lvlBtn-5" class="w-full text-right p-4 rounded-2xl border-2 border-pink-300 bg-white hover:bg-pink-50 transition shadow-sm flex items-center justify-between level-btn">
+                    <div class="flex items-center space-x-3 space-x-reverse">
+                        <span class="w-8 h-8 rounded-full bg-pink-500 text-white font-bold flex items-center justify-center text-sm shadow">05</span>
+                        <div>
+                            <h5 class="font-bold text-slate-800 text-base">Scripting / Interpreted</h5>
+                            <p class="text-xs text-slate-500">Python, JavaScript</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold text-pink-600 bg-pink-100 px-2.5 py-1 rounded-full">أعلى سهولة 🎀</span>
+                </button>
+
+                <!-- Level 04: High Level -->
+                <button onclick="selectLevel(4)" id="lvlBtn-4" class="w-full text-right p-4 rounded-2xl border-2 border-pink-200 bg-white hover:bg-pink-50 transition shadow-sm flex items-center justify-between level-btn">
+                    <div class="flex items-center space-x-3 space-x-reverse">
+                        <span class="w-8 h-8 rounded-full bg-pink-400 text-white font-bold flex items-center justify-center text-sm shadow">04</span>
+                        <div>
+                            <h5 class="font-bold text-slate-800 text-base">High Level Languages</h5>
+                            <p class="text-xs text-slate-500">Java, C#, VB.NET</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold text-pink-600 bg-pink-100 px-2.5 py-1 rounded-full">عالية المستوى</span>
+                </button>
+
+                <!-- Level 03: Middle Level -->
+                <button onclick="selectLevel(3)" id="lvlBtn-3" class="w-full text-right p-4 rounded-2xl border-2 border-pink-200 bg-white hover:bg-pink-50 transition shadow-sm flex items-center justify-between level-btn">
+                    <div class="flex items-center space-x-3 space-x-reverse">
+                        <span class="w-8 h-8 rounded-full bg-purple-500 text-white font-bold flex items-center justify-center text-sm shadow">03</span>
+                        <div>
+                            <h5 class="font-bold text-slate-800 text-base">Middle Level Languages</h5>
+                            <p class="text-xs text-slate-500">C & C++</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold text-purple-600 bg-purple-100 px-2.5 py-1 rounded-full">توازن وقوة</span>
+                </button>
+
+                <!-- Level 02: Low Level -->
+                <button onclick="selectLevel(2)" id="lvlBtn-2" class="w-full text-right p-4 rounded-2xl border-2 border-pink-200 bg-white hover:bg-pink-50 transition shadow-sm flex items-center justify-between level-btn">
+                    <div class="flex items-center space-x-3 space-x-reverse">
+                        <span class="w-8 h-8 rounded-full bg-rose-500 text-white font-bold flex items-center justify-center text-sm shadow">02</span>
+                        <div>
+                            <h5 class="font-bold text-slate-800 text-base">Low Level Languages</h5>
+                            <p class="text-xs text-slate-500">Assembly Language</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold text-rose-600 bg-rose-100 px-2.5 py-1 rounded-full">قريبة للعتاد</span>
+                </button>
+
+                <!-- Level 01: Lowest Level -->
+                <button onclick="selectLevel(1)" id="lvlBtn-1" class="w-full text-right p-4 rounded-2xl border-2 border-pink-200 bg-white hover:bg-pink-50 transition shadow-sm flex items-center justify-between level-btn">
+                    <div class="flex items-center space-x-3 space-x-reverse">
+                        <span class="w-8 h-8 rounded-full bg-slate-800 text-white font-bold flex items-center justify-center text-sm shadow">01</span>
+                        <div>
+                            <h5 class="font-bold text-slate-800 text-base">Lowest Level (Machine)</h5>
+                            <p class="text-xs text-slate-500">Binary / Hexadecimal Instructions</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold text-slate-700 bg-slate-200 px-2.5 py-1 rounded-full">أسرع تنفيذ ⚡</span>
+                </button>
+
+            </div>
+
+            <!-- Right Side Details Panel -->
+            <div class="lg:col-span-7">
+                <div class="pink-card p-6 sm:p-8 bg-white shadow-girly relative overflow-hidden min-h-[420px] flex flex-col justify-between">
+                    <div class="absolute -left-6 -bottom-6 text-9xl opacity-5 pointer-events-none select-none">👑</div>
+
+                    <div>
+                        <div class="flex items-center justify-between border-b-2 border-pink-100 pb-4 mb-4">
+                            <div>
+                                <span id="levelBadge" class="px-3 py-1 bg-pink-100 text-pink-700 text-xs font-extrabold rounded-full">
+                                    المستوى المحدد
+                                </span>
+                                <h4 id="levelTitle" class="text-2xl font-black text-slate-800 mt-2">Scripting / Interpreted Languages</h4>
+                            </div>
+                            <span id="levelIcon" class="text-4xl">🐍</span>
+                        </div>
+
+                        <p id="levelDesc" class="text-slate-600 leading-relaxed text-sm mb-6">
+                            لغات مثل بايثون وجافاسكريبت سهلة جداً للقراءة للبشر ومرنة. لكنها تعتمد على Interpreter ينفذ السطور واحداً تلو الآخر مما يجعلها أبطأ في التنفيذ مقارنة باللغات الأدنى.
+                        </p>
+
+                        <!-- Gauges Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
+                            <!-- Readability Gauge -->
+                            <div class="bg-pink-50 p-4 rounded-2xl border border-pink-200">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-xs font-bold text-pink-700">سهولة القراءة للبشر (Readability) 📖</span>
+                                    <span id="readabilityValue" class="text-xs font-extrabold text-pink-600">عالية جداً (95%)</span>
+                                </div>
+                                <div class="w-full bg-pink-200 h-3 rounded-full overflow-hidden">
+                                    <div id="readabilityBar" class="bg-pink-500 h-full rounded-full transition-all duration-500" style="width: 95%;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Execution Speed Gauge -->
+                            <div class="bg-purple-50 p-4 rounded-2xl border border-purple-200">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-xs font-bold text-purple-700">سرعة التنفيذ (Execution Speed) ⚡</span>
+                                    <span id="speedValue" class="text-xs font-extrabold text-purple-600">بطيئة نسبياً (30%)</span>
+                                </div>
+                                <div class="w-full bg-purple-200 h-3 rounded-full overflow-hidden">
+                                    <div id="speedBar" class="bg-purple-600 h-full rounded-full transition-all duration-500" style="width: 30%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs text-amber-800 flex items-center gap-2">
+                            <span>💡 **قاعدة ذهبية:** كلما ارتفعت لغة البرمجة (High Level)، زادت سهولة قراءتها وقلت سرعة تنفيذها، والعكس صحيح!</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-pink-100 flex items-center justify-between text-xs text-slate-500">
+                        <span>العتاد المباشر (Hardware)</span>
+                        <span>🎀 لغات عالية جداً</span>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Machine Code Live Converter Section -->
+    <section id="converter" class="py-12 bg-pink-50/70 border-y border-pink-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-8">
+                <span class="ribbon-banner text-lg">💻 محول الآلة اللطيف (Text ➔ Binary) 🎀</span>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mt-3">كيف يرى الحاسوب أفكاركِ ونصوصكِ؟</h3>
+                <p class="text-slate-600 text-sm mt-1">اكتبي أي كلمة أو جملة باللغة الإنجليزية ورؤية تحولها الفوري إلى أصفار وآحاد (Binary Code)!</p>
+            </div>
+
+            <div class="pink-card p-6 bg-white shadow-girly">
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-pink-700 mb-2">اكتبي النص هنا (مثلاً: Hello):</label>
+                    <input type="text" id="userInputText" value="Hello, World!" oninput="convertTextToBinary()" class="w-full p-4 rounded-2xl border-2 border-pink-300 focus:outline-none focus:border-pink-500 font-bold text-slate-800 transition shadow-inner">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Binary Box -->
+                    <div class="bg-slate-900 p-4 rounded-2xl border border-pink-300">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold text-pink-400">الترميز الثنائي Binary (0s & 1s)</span>
+                            <button onclick="copyToClipboard('binaryResult')" class="text-xs bg-pink-500 text-white px-2 py-1 rounded hover:bg-pink-600 transition">نسخ 📋</button>
+                        </div>
+                        <p id="binaryResult" class="font-mono text-xs text-emerald-400 break-all leading-relaxed min-h-[80px]">
+                            01001000 01100101 01101100 01101100 01101111 00101100 00100000 01010111 01101111 01110010 01101100 01100100 00100001
+                        </p>
+                    </div>
+
+                    <!-- Hexadecimal Box -->
+                    <div class="bg-slate-900 p-4 rounded-2xl border border-purple-300">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold text-purple-400">الترميز السداسي عشر Hexadecimal</span>
+                            <button onclick="copyToClipboard('hexResult')" class="text-xs bg-purple-500 text-white px-2 py-1 rounded hover:bg-purple-600 transition">نسخ 📋</button>
+                        </div>
+                        <p id="hexResult" class="font-mono text-xs text-purple-300 break-all leading-relaxed min-h-[80px]">
+                            48 65 6C 6C 6F 2C 20 57 6F 72 6C 64 21
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <span class="text-xs text-pink-600 font-bold bg-pink-100 px-3 py-1 rounded-full">
+                        ✨ هذه هي الطريقة التي يُخزن بها المعالج النوايا والأرقام والرموز في الذاكرة!
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Flashcards Section -->
+    <section class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-8">
+            <span class="ribbon-banner text-lg">🎴 بطاقات المراجعة السريعة 🎀</span>
+            <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mt-3">اضغطي على البطاقة لاكتشاف التعريف والمفهوم!</h3>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- Flashcard 1 -->
+            <div class="flip-card h-48 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                <div class="flip-card-inner relative w-full h-full text-center rounded-2xl shadow-girly border-2 border-pink-200">
+                    <div class="flip-card-front absolute w-full h-full bg-white rounded-2xl p-6 flex flex-col items-center justify-center">
+                        <span class="text-3xl mb-2">📜</span>
+                        <h5 class="font-bold text-pink-700 text-lg">ما هو الـ Source Code؟</h5>
+                        <p class="text-xs text-pink-400 mt-2">اضغطي للقلب ✨</p>
+                    </div>
+                    <div class="flip-card-back absolute w-full h-full bg-pink-500 text-white rounded-2xl p-6 flex flex-col items-center justify-center">
+                        <h5 class="font-bold text-base mb-2">الكود المصدر</h5>
+                        <p class="text-xs leading-relaxed">هو الكود البرمجي المكتوب بلغة عالية المستوى بواسطة المبرمج قبل ترجمته للآلة.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flashcard 2 -->
+            <div class="flip-card h-48 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                <div class="flip-card-inner relative w-full h-full text-center rounded-2xl shadow-girly border-2 border-purple-200">
+                    <div class="flip-card-front absolute w-full h-full bg-white rounded-2xl p-6 flex flex-col items-center justify-center">
+                        <span class="text-3xl mb-2">🎯</span>
+                        <h5 class="font-bold text-purple-700 text-lg">ما هو الـ Object Code؟</h5>
+                        <p class="text-xs text-purple-400 mt-2">اضغطي للقلب ✨</p>
+                    </div>
+                    <div class="flip-card-back absolute w-full h-full bg-purple-600 text-white rounded-2xl p-6 flex flex-col items-center justify-center">
+                        <h5 class="font-bold text-base mb-2">كود الهدف / الآلة</h5>
+                        <p class="text-xs leading-relaxed">هو الناتج المترجم عن طريق Compiler أو Interpreter بحيث يفهمه المعالج مباشرة.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flashcard 3 -->
+            <div class="flip-card h-48 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                <div class="flip-card-inner relative w-full h-full text-center rounded-2xl shadow-girly border-2 border-rose-200">
+                    <div class="flip-card-front absolute w-full h-full bg-white rounded-2xl p-6 flex flex-col items-center justify-center">
+                        <span class="text-3xl mb-2">⚡</span>
+                        <h5 class="font-bold text-rose-700 text-lg">متى تكون اللغة سريعة؟</h5>
+                        <p class="text-xs text-rose-400 mt-2">اضغطي للقلب ✨</p>
+                    </div>
+                    <div class="flip-card-back absolute w-full h-full bg-rose-500 text-white rounded-2xl p-6 flex flex-col items-center justify-center">
+                        <h5 class="font-bold text-base mb-2">السرعة المباشرة</h5>
+                        <p class="text-xs leading-relaxed">عندما تكون قريبة جداً من العتاد (Low Level) ولا تحتاج لترجمة معقدة أثناء وقت التشغيل (Runtime).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flashcard 4 -->
+            <div class="flip-card h-48 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                <div class="flip-card-inner relative w-full h-full text-center rounded-2xl shadow-girly border-2 border-pink-200">
+                    <div class="flip-card-front absolute w-full h-full bg-white rounded-2xl p-6 flex flex-col items-center justify-center">
+                        <span class="text-3xl mb-2">🎀</span>
+                        <h5 class="font-bold text-pink-700 text-lg">لماذا نحتاج Compiler؟</h5>
+                        <p class="text-xs text-pink-400 mt-2">اضغطي للقلب ✨</p>
+                    </div>
+                    <div class="flip-card-back absolute w-full h-full bg-pink-600 text-white rounded-2xl p-6 flex flex-col items-center justify-center">
+                        <h5 class="font-bold text-base mb-2">أداة المترجم</h5>
+                        <p class="text-xs leading-relaxed">لأن المعالج لا يفهم لغة البشر العالية المستوى مباشرة، فيقوم المترجم بالتحويل إلى Binary!</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Interactive Homework Quiz Section -->
+    <section id="quiz" class="py-12 bg-white/80 border-t-2 border-pink-200 my-8">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <span class="ribbon-banner text-lg">📝 اختبار الواجب التفاعلي (Homework Quiz) 🎀</span>
+                <h3 class="text-2xl sm:text-3xl font-black text-slate-800 mt-3">اختبري معلوماتكِ واحصلي على وسام التفوق!</h3>
+                <p class="text-slate-600 text-sm mt-1">أسئلة متطابقة مع صفحة الواجب المرفقة في ملف الدرس 🎀</p>
+            </div>
+
+            <!-- Quiz Container Card -->
+            <div class="pink-card p-6 sm:p-8 bg-white shadow-girly relative">
+                
+                <!-- Progress Header -->
+                <div class="flex items-center justify-between mb-6 pb-4 border-b border-pink-100">
+                    <div>
+                        <span class="text-xs font-bold text-pink-600 bg-pink-100 px-3 py-1 rounded-full">
+                            السؤال <span id="currentQuestionNum">1</span> من <span id="totalQuestionsNum">10</span>
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm font-bold text-slate-700">النقاط:</span>
+                        <span id="quizScore" class="text-lg font-black text-pink-600 bg-pink-50 px-3 py-0.5 rounded-full border border-pink-200">0</span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full bg-pink-100 h-2 rounded-full mb-8 overflow-hidden">
+                    <div id="quizProgressBar" class="bg-pink-500 h-full rounded-full transition-all duration-300" style="width: 10%;"></div>
+                </div>
+
+                <!-- Question Title & Options Box -->
+                <div id="quizCardContent">
+                    <h4 id="questionText" class="text-xl font-bold text-slate-800 mb-6 leading-snug">
+                        جاري تحميل السؤال...
+                    </h4>
+
+                    <!-- Options Container -->
+                    <div id="optionsContainer" class="space-y-3 mb-6">
+                        <!-- Options injected dynamically by JS -->
+                    </div>
+                </div>
+
+                <!-- Explanation / Feedback Box -->
+                <div id="feedbackBox" class="hidden p-4 rounded-2xl mb-6 text-sm font-medium border">
+                    <!-- Dynamic Feedback -->
+                </div>
+
+                <!-- Footer Navigation Buttons -->
+                <div class="flex items-center justify-between pt-4 border-t border-pink-100">
+                    <button id="prevBtn" onclick="prevQuestion()" disabled class="px-5 py-2.5 rounded-xl border border-pink-200 text-slate-400 font-bold text-sm disabled:opacity-50">
+                        السابق
+                    </button>
+
+                    <button id="nextBtn" onclick="nextQuestion()" class="btn-pink text-white font-bold px-6 py-2.5 rounded-xl text-sm flex items-center gap-2 shadow">
+                        <span>السؤال التالي</span>
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Cute Footer -->
+    <footer class="mt-auto bg-pink-100/80 border-t border-pink-200 py-8 px-4 text-center">
+        <div class="max-w-4xl mx-auto space-y-3">
+            <div class="text-3xl bow-icon">🎀</div>
+            <h5 class="text-lg font-bold text-pink-700">Programming Advices</h5>
+            <p class="text-xs text-slate-600 max-w-lg mx-auto">
+                مستوحى من درس لغات البرمجة ومستوياتها للبشمهندس عبدالرحمن محمد 🎀 تم التصميم والتطوير بأسلوب بناتي جذاب لتسهيل عملية التعلم والاستمتاع بالبرمجة.
+            </p>
+            <div class="text-xs font-bold text-pink-500 pt-2">
+                حقوق الطبع والنشر محفوظة © 2026 | التعلم بالطريقة الصحيحة ✨
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Web Audio API Synthesizer for Cute Sound Effects ---
+        let audioEnabled = true;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function playSound(type) {
+            if (!audioEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new AudioCtx();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.1); // E5
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                    osc.start(now);
+                    osc.stop(now + 0.1);
+                } else if (type === 'success') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(587.33, now); // D5
+                    osc.frequency.setValueAtTime(880, now + 0.1); // A5
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.setValueAtTime(180, now + 0.15);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                }
+            } catch (e) {
+                console.log("Audio not supported or blocked");
+            }
+        }
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const btn = document.getElementById('soundToggleBtn');
+            if (audioEnabled) {
+                btn.innerHTML = `<i class="fas fa-volume-up text-lg"></i><span class="hidden sm:inline">الصوت: مفعل</span>`;
+                playSound('click');
+            } else {
+                btn.innerHTML = `<i class="fas fa-volume-mute text-lg"></i><span class="hidden sm:inline">الصوت: مكتوم</span>`;
+            }
+        }
+
+        // --- Simulator Lab Logic ---
+        const labSnippets = {
+            basic: {
+                source: `PRINT "Hello, World!"`,
+                assembly: `push $0x80484b0\ncall 0x80482c8\nadd $0x4, %esp`,
+                machine: `0x55 0x89 0xe5 0xe8 0xfc 0xff\n01001000 01100101 01101100\n0x83 0xf8 0x41 0x75 0x68`
+            },
+            cpp: {
+                source: `#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "Hello, World!";\n    return 0;\n}`,
+                assembly: `mov %esp, %ebp\npush %ebp\ncall std::cout::operator<<\nmov $0x0, %eax\nret`,
+                machine: `0x83 0xf8 0x41 0x75 0x68 0x0d\n01010111 01101111 01110010\n0x00 0x00 0xe8 0xfc`
+            },
+            python: {
+                source: `print("Hello, World!")`,
+                assembly: `LOAD_NAME 0 (print)\nLOAD_CONST 0 ('Hello, World!')\nCALL_FUNCTION 1\nPOP_TOP`,
+                machine: `0x64 0x00 0x5a 0x00 0x01\n01101100 01101101 01110011\n0x89 0xec 0x5d 0xc3`
+            },
+            js: {
+                source: `console.log("Hello, World!");`,
+                assembly: `GetProperty 'log'\nPushConstant "Hello, World!"\nCallProperty1\nReturn`,
+                machine: `0xb8 0x00 0x04 0xc4 0x00\n01001000 00100001 01111001\n0x55 0x89 0xe5`
+            }
+        };
+
+        function updateLabCode() {
+            playSound('click');
+            const selected = document.getElementById('langSelect').value;
+            const snippet = labSnippets[selected];
+            document.getElementById('sourceCodeDisplay').textContent = snippet.source;
+            document.getElementById('assemblyDisplay').textContent = "اضغطي زر الترجمة للمعالجة...";
+            document.getElementById('machineDisplay').textContent = "01001000 01100101...";
+            document.getElementById('labStatusText').textContent = "تم تغيير اللغة المصدر. جاهز للترجمة!";
+        }
+
+        function runTranslationLab() {
+            playSound('click');
+            const selected = document.getElementById('langSelect').value;
+            const translator = document.getElementById('translatorType').value;
+            const snippet = labSnippets[selected];
+
+            const statusText = document.getElementById('labStatusText');
+            const assemblyBox = document.getElementById('assemblyBox');
+            const machineBox = document.getElementById('machineBox');
+
+            statusText.textContent = `جاري تشغيل الـ ${translator === 'compiler' ? 'Compiler (المترجم)' : 'Interpreter (المفسر)'}... ✨`;
+            
+            assemblyBox.classList.add('scale-105', 'border-pink-500');
+            
+            setTimeout(() => {
+                document.getElementById('assemblyDisplay').textContent = snippet.assembly;
+                statusText.textContent = "تم تحويل الكود إلى Assembly! جاري إنشاء لغة الآلة (Object Code)... ⚡";
+                playSound('click');
+
+                setTimeout(() => {
+                    document.getElementById('machineDisplay').textContent = snippet.machine;
+                    statusText.textContent = `تمت الترجمة بنجاح! تم إنشاء الـ Object Code بلغة الآلة جاهز للتنفيذ 🎀`;
+                    assemblyBox.classList.remove('scale-105', 'border-pink-500');
+                    playSound('success');
+                }, 700);
+
+            }, 600);
+        }
+
+        // --- Levels Visualizer Data & Functions ---
+        const levelsData = {
+            5: {
+                title: "Scripting / Interpreted Languages",
+                badge: "مستوى 05 - Scripting",
+                icon: "🐍",
+                desc: "لغات مثل Python و JavaScript. تُعتبر من أسهل اللغات قراءة وكتابة للإنسان. يتم تنفيذها سطر بسطر بواسطة المفسر (Interpreter)، وتكون أبطأ نسبياً من اللغات المترجمة المباشرة.",
+                readability: 95,
+                readabilityText: "عالية جداً (95%)",
+                speed: 30,
+                speedText: "بطيئة نسبياً (30%)"
+            },
+            4: {
+                title: "High Level Languages",
+                badge: "مستوى 04 - High Level",
+                icon: "☕",
+                desc: "لغات مثل Java و C# و VB.NET. لغات قوية وعالية المستوى، سهلة القراءة وتعتمد على مترجمات ذكية، توفر أمان عالي وإدارة تلقائية للذاكرة.",
+                readability: 85,
+                readabilityText: "عالية (85%)",
+                speed: 55,
+                speedText: "متوسطة إلى عالية (55%)"
+            },
+            3: {
+                title: "Middle Level Languages",
+                badge: "مستوى 03 - Middle Level",
+                icon: "⚙️",
+                desc: "لغات C و C++. تُلقب باللغات متوسطة المستوى لأنها تجمع بين سهولة اللغات العالية وقدرتها المباشرة على التحكم في ذاكرة الحاسوب والعتاد (Pointers & Memory Control).",
+                readability: 60,
+                readabilityText: "متوسطة (60%)",
+                speed: 85,
+                speedText: "سريعة جداً (85%)"
+            },
+            2: {
+                title: "Low Level Languages (Assembly)",
+                badge: "مستوى 02 - Assembly",
+                icon: "🛠️",
+                desc: "لغة التجميع Assembly. قريبة جداً من العتاد، تستخدم اختصارات مثل MOV و PUSH. صعبة القراءة للبشر وتستغرق وقتاً طويلاً في الكتابة لكنها سريعة جداً في التنفيذ.",
+                readability: 25,
+                readabilityText: "منخفضة وصعبة (25%)",
+                speed: 95,
+                speedText: "فائقة السرعة (95%)"
+            },
+            1: {
+                title: "Lowest Level (Machine Language)",
+                badge: "مستوى 01 - Machine Code",
+                icon: "⚡",
+                desc: "لغة الآلة المباشرة (Binary & Hexadecimal). تتكون من 0s و 1s فقط! يفهمها المعالج فوراً دون الحاجة لأي برنامج ترجمة. هي الأسرع على الإطلاق والأصعب بشرياً.",
+                readability: 5,
+                readabilityText: "شبه مستحيلة للبشر (5%)",
+                speed: 100,
+                speedText: "سرعة اللحظة القصوى (100%)"
+            }
+        };
+
+        function selectLevel(lvl) {
+            playSound('click');
+            const data = levelsData[lvl];
+
+            // Reset buttons style
+            for (let i = 1; i <= 5; i++) {
+                const btn = document.getElementById(`lvlBtn-${i}`);
+                if (btn) {
+                    btn.classList.remove('border-pink-500', 'bg-pink-100', 'shadow-md');
+                }
+            }
+
+            // Highlight active button
+            const activeBtn = document.getElementById(`lvlBtn-${lvl}`);
+            if (activeBtn) {
+                activeBtn.classList.add('border-pink-500', 'bg-pink-100', 'shadow-md');
+            }
+
+            // Update details
+            document.getElementById('levelTitle').textContent = data.title;
+            document.getElementById('levelBadge').textContent = data.badge;
+            document.getElementById('levelIcon').textContent = data.icon;
+            document.getElementById('levelDesc').textContent = data.desc;
+
+            // Update Gauges
+            document.getElementById('readabilityValue').textContent = data.readabilityText;
+            document.getElementById('readabilityBar').style.width = `${data.readability}%`;
+
+            document.getElementById('speedValue').textContent = data.speedText;
+            document.getElementById('speedBar').style.width = `${data.speed}%`;
+        }
+
+        // --- Converter Text to Binary ---
+        function convertTextToBinary() {
+            const input = document.getElementById('userInputText').value;
+            let binaryResult = '';
+            let hexResult = '';
+
+            for (let i = 0; i < input.length; i++) {
+                const charCode = input.charCodeAt(i);
+                const bin = charCode.toString(2).padStart(8, '0');
+                const hex = charCode.toString(16).toUpperCase().padStart(2, '0');
+
+                binaryResult += bin + ' ';
+                hexResult += hex + ' ';
+            }
+
+            document.getElementById('binaryResult').textContent = binaryResult.trim() || 'ادخلي نصاً للعرض...';
+            document.getElementById('hexResult').textContent = hexResult.trim() || 'ادخلي نصاً للعرض...';
+        }
+
+        function copyToClipboard(elementId) {
+            playSound('click');
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("تم النسخ إلى الحافظة بنجاح! 🎀");
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast("تم النسخ بنجاح! 🎀");
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-pink-600 text-white font-bold text-sm px-6 py-3 rounded-full shadow-lg z-50 flex items-center gap-2 border-2 border-white';
+            toast.innerHTML = `<span>🎀</span><span>${message}</span>`;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => toast.remove(), 500);
+            }, 2000);
+        }
+
+        // --- Homework Interactive Quiz Database ---
+        const quizQuestions = [
+            {
+                question: "1. ما هي لغة البرمجة (Programming Language) بمفهومها الأساسي؟ 🎀",
+                options: [
+                    "أ) برنامج للرسم والتصميم فقط.",
+                    "ب) أداة (TOOL) مساعدة لكتابة تعليمات للحاسوب لتنفيذ مهمة معينة.",
+                    "ج) شاشة العرض والعتاد الصلب في الجهاز.",
+                    "د) لغة يتحدث بها البشر فيما بينهم."
+                ],
+                correct: 1,
+                explanation: "لغة البرمجة هي مجرد أداة (TOOL) تمكن المبرمج من كتابة الأوامر للكمبيوتر."
+            },
+            {
+                question: "2. ماذا يُقصد بمصطلح (Code) في البرمجة؟ 📜",
+                options: [
+                    "أ) الأوامر والتعليمات المكتوبة بلغة البرمجة.",
+                    "ب) كلمة السر الخاصة بالكمبيوتر.",
+                    "ج) سعة الذاكرة العشوائية RAM.",
+                    "د) ألوان الشاشة المتغيرة."
+                ],
+                correct: 0,
+                explanation: "الكود (Code) هو اسم يُطلق على التعليمات والأوامر التي تكتبينها."
+            },
+            {
+                question: "3. ما هو الفرق بين Source Code و Object Code؟ 🔄",
+                options: [
+                    "أ) لا يوجد أي فرق بينهما.",
+                    "ب) Source Code هو كود الآلة، بينما Object Code هو كود البشر.",
+                    "ج) Source Code مكتوب بلغة عالية يفهمها البشري، بينما Object Code هو الكود المترجم للغة الآلة.",
+                    "د) Source Code يُستخدم في الهواتف فقط."
+                ],
+                correct: 2,
+                explanation: "Source Code هو الكود المصدري البشري، أما Object Code فهو الكود المترجم إلى أصفار وآحاد."
+            },
+            {
+                question: "4. لماذا نحتاج إلى المترجمات (Compilers / Interpreters)؟ 🔮",
+                options: [
+                    "أ) لأن الحاسوب لا يفهم سوى لغة الآلة المباشرة (0s & 1s).",
+                    "ب) لتسريع تشغيل الشاشة.",
+                    "ج) لحفظ الملفات على الإنترنت.",
+                    "د) للتحقق من عدم وجود فيروسات فقط."
+                ],
+                correct: 0,
+                explanation: "المترجم يلعب دور الوسيط لأن المعالج لا يتواصل إلا بلغة الآلة الثنائية."
+            },
+            {
+                question: "5. متى تُعتبر لغة البرمجة سريعة التنفيذ (Fast Language)؟ ⚡",
+                options: [
+                    "أ) عندما تكون مكتوبة باللغة العربية.",
+                    "ب) عندما تكون قريبة من العتاد (Low-Level) ولا تحتاج لترجمة معقدة أثناء وقت التشغيل.",
+                    "ج) عندما تكون مليئة بالصور والرسومات.",
+                    "د) عندما تكون مجانية فقط."
+                ],
+                correct: 1,
+                explanation: "اللغات منخفضة المستوى مثل Assembly أو C++ تنفذ بسرعة لأنها أقرب للعتاد."
+            },
+            {
+                question: "6. متى تُعتبر لغة البرمجة بطيئة التنفيذ (Slow Language)؟ 🐢",
+                options: [
+                    "أ) عندما تعتمد على المفسر (Interpreter) الذي يترجم ينفذ سطر بسطر في Runtime.",
+                    "ب) عندما يكون حجم الشاشة كبيراً.",
+                    "ج) عندما تُكتب بواسطة المبتدئين فقط.",
+                    "د) إذا كانت تستخدم أرقام هكساديسيمال."
+                ],
+                correct: 0,
+                explanation: "اللغات المفسرة مثل Python تحتاج وقتاً أطول للترجمة والتنفيذ أثناء التشغيل."
+            },
+            {
+                question: "7. ما هي اللغات عالية المستوى (High-Level Language)؟ 👑",
+                options: [
+                    "أ) لغات تتكون من 0 و 1 فقط.",
+                    "ب) لغات قريبة من لغة الإنسان وسهلة القراءة والفهم مثل Python و C#.",
+                    "ج) لغات لا تحتاج لبرامج إطلاقاً.",
+                    "د) لغات خاصة بأجهزة الفضاء فقط."
+                ],
+                correct: 1,
+                explanation: "اللغات عالية المستوى صُممت لتكون مريحة ومفهومة للبشر بسهولة."
+            },
+            {
+                question: "8. ما هي اللغات منخفضة المستوى (Low-Level Language)؟ 🛠️",
+                options: [
+                    "أ) لغات قريبة من المعالجات والعتاد الصلب مثل Assembly ولغة الآلة.",
+                    "ب) لغات غير مفيدة وتالفة.",
+                    "ج) لغات تستخدم في تصميم الفوتوشوب.",
+                    "د) لغات لا تفهمها أجهزة الكمبيوتر."
+                ],
+                correct: 0,
+                explanation: "Low-Level تتحدث مباشرة أو بشكل قريب جداً من المعالج والذاكرة."
+            },
+            {
+                question: "9. متى تُعتبر لغة البرمجة مقروءة للبشر (Human Readable)؟ 📖",
+                options: [
+                    "أ) إذا كانت تحتوي على أرقام Hexadecimal صعبة.",
+                    "ب) إذا كانت كلماتها تشبه اللغة الإنجليزية وتستخدم مفردات واضحة مثل PRINT و IF.",
+                    "ج) إذا كانت بدون أي كلمات برمجية.",
+                    "د) إذا كانت مخزنة على قرص صلب."
+                ],
+                correct: 1,
+                explanation: "Human Readable يعني أنكِ تستطيعين قراءتها وفهم معناها كجمل إنجليزية."
+            },
+            {
+                question: "10. أي من اللغات التالية تُعتبر لغة منخفضة المستوى Low-Level؟ ⚙️",
+                options: [
+                    "أ) Python",
+                    "ب) JavaScript",
+                    "ج) Assembly Language",
+                    "د) Ruby"
+                ],
+                correct: 2,
+                explanation: "Assembly تُصنف كـ Low-Level Language لأنها تعتمد اختصارات معالج مباشرة."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let selectedAnswers = new Array(quizQuestions.length).fill(null);
+
+        function renderQuestion() {
+            const q = quizQuestions[currentQuestionIndex];
+            document.getElementById('currentQuestionNum').textContent = currentQuestionIndex + 1;
+            document.getElementById('totalQuestionsNum').textContent = quizQuestions.length;
+            document.getElementById('questionText').textContent = q.question;
+
+            // Progress bar
+            const progressPct = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
+            document.getElementById('quizProgressBar').style.width = `${progressPct}%`;
+
+            // Options
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+
+            const feedbackBox = document.getElementById('feedbackBox');
+            feedbackBox.classList.add('hidden');
+
+            q.options.forEach((opt, idx) => {
+                const isSelected = selectedAnswers[currentQuestionIndex] === idx;
+                const optBtn = document.createElement('button');
+                optBtn.className = `w-full text-right p-4 rounded-2xl border-2 transition font-medium text-sm flex items-center justify-between ${
+                    isSelected ? 'border-pink-500 bg-pink-100 text-pink-900 font-bold' : 'border-pink-100 bg-pink-50/40 text-slate-700 hover:bg-pink-50 hover:border-pink-300'
+                }`;
+                
+                optBtn.onclick = () => selectQuizOption(idx);
+                optBtn.innerHTML = `
+                    <span>${opt}</span>
+                    <span class="w-6 h-6 rounded-full border-2 border-pink-300 flex items-center justify-center ${isSelected ? 'bg-pink-500 text-white border-pink-500' : 'bg-white'}">
+                        ${isSelected ? '✓' : ''}
+                    </span>
+                `;
+                container.appendChild(optBtn);
+            });
+
+            // Update Prev button state
+            document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+
+            // Check if already answered to show feedback
+            if (selectedAnswers[currentQuestionIndex] !== null) {
+                showQuestionFeedback(selectedAnswers[currentQuestionIndex]);
+            }
+        }
+
+        function selectQuizOption(optionIndex) {
+            playSound('click');
+            selectedAnswers[currentQuestionIndex] = optionIndex;
+            
+            // Recalculate total score
+            score = 0;
+            selectedAnswers.forEach((ans, idx) => {
+                if (ans === quizQuestions[idx].correct) score += 10;
+            });
+            document.getElementById('quizScore').textContent = score;
+
+            renderQuestion();
+            showQuestionFeedback(optionIndex);
+        }
+
+        function showQuestionFeedback(optionIndex) {
+            const q = quizQuestions[currentQuestionIndex];
+            const feedbackBox = document.getElementById('feedbackBox');
+            feedbackBox.classList.remove('hidden');
+
+            if (optionIndex === q.correct) {
+                feedbackBox.className = 'p-4 rounded-2xl mb-6 text-sm font-medium border bg-emerald-50 border-emerald-300 text-emerald-800';
+                feedbackBox.innerHTML = `
+                    <div class="flex items-center gap-2 font-bold mb-1">
+                        <span>✨ إجابة صحيحة ممتازة!</span>
+                    </div>
+                    <p>${q.explanation}</p>
+                `;
+                playSound('success');
+            } else {
+                feedbackBox.className = 'p-4 rounded-2xl mb-6 text-sm font-medium border bg-rose-50 border-rose-300 text-rose-800';
+                feedbackBox.innerHTML = `
+                    <div class="flex items-center gap-2 font-bold mb-1">
+                        <span>❌ إجابة غير دقيقة!</span>
+                    </div>
+                    <p>${q.explanation}</p>
+                `;
+                playSound('wrong');
+            }
+        }
+
+        function nextQuestion() {
+            playSound('click');
+            if (currentQuestionIndex < quizQuestions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            } else {
+                // Finish Quiz
+                finishQuiz();
+            }
+        }
+
+        function prevQuestion() {
+            playSound('click');
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            playSound('success');
+            
+            // Launch Confetti
+            try {
+                confetti({
+                    particleCount: 120,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#FF69B4', '#FFB6C1', '#DB2777', '#FF1493']
+                });
+            } catch(e) {}
+
+            const card = document.getElementById('quizCardContent');
+            card.innerHTML = `
+                <div class="text-center py-8 space-y-4">
+                    <div class="text-6xl bow-icon">👑</div>
+                    <h4 class="text-3xl font-black text-pink-700">مبارك! أتممتِ اختبار الواجب التفاعلي 🎀</h4>
+                    <p class="text-slate-600 font-bold text-lg">درجتكِ النهائية هي: <span class="text-pink-600 font-black text-2xl px-3 py-1 bg-pink-100 rounded-full border border-pink-300">${score} / 100</span></p>
+                    
+                    <p class="text-sm text-slate-500 max-w-md mx-auto">
+                        ${score >= 80 ? 'أنتِ المبرمجة المتفوقة! فهمتِ جميع المفاهيم والمستويات بامتياز 🎀✨' : 'أداء لطيف جداً! يمكنكِ إعادة الاختبار لتعزيز معلوماتكِ والحصول على 100/100 🌸'}
+                    </p>
+
+                    <div class="pt-4">
+                        <button onclick="restartQuiz()" class="btn-pink text-white font-bold px-8 py-3 rounded-full shadow-lg">
+                            إعادة الاختبار من جديد 🔄
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('feedbackBox').classList.add('hidden');
+            document.getElementById('nextBtn').classList.add('hidden');
+            document.getElementById('prevBtn').classList.add('hidden');
+        }
+
+        function restartQuiz() {
+            playSound('click');
+            currentQuestionIndex = 0;
+            score = 0;
+            selectedAnswers.fill(null);
+            document.getElementById('quizScore').textContent = '0';
+            document.getElementById('nextBtn').classList.remove('hidden');
+            document.getElementById('prevBtn').classList.remove('hidden');
+            
+            // Restore card UI structure
+            const card = document.getElementById('quizCardContent');
+            card.innerHTML = `
+                <h4 id="questionText" class="text-xl font-bold text-slate-800 mb-6 leading-snug">
+                    جاري تحميل السؤال...
+                </h4>
+                <div id="optionsContainer" class="space-y-3 mb-6"></div>
+            `;
+            
+            renderQuestion();
+        }
+
+        // --- Window Initializer ---
+        window.onload = function() {
+            // Select default level 5
+            selectLevel(5);
+            // Convert initial text
+            convertTextToBinary();
+            // Start Quiz
+            renderQuestion();
+        };
+    </script>
+</body>
+</html>
