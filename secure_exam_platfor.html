@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="notranslate" translate="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="google" content="notranslate">
+    <title>منصة الامتحانات الآمنة - اختبار أمن المعلومات</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Strict Anti-Copy & Anti-Select Rules */
+        body, html {
+            user-select: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            touch-action: manipulation;
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Watermark style */
+        .watermark {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-content: space-around;
+            opacity: 0.04;
+            transform: rotate(-20deg) scale(1.2);
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #ffffff;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+
+        /* Pulse animations for alerts */
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            50% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+        }
+        .security-alert {
+            animation: pulse-red 1.5s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between bg-slate-900 text-slate-100 select-none antialiased" oncontextmenu="return false;">
+
+    <!-- Watermark Overlay Container -->
+    <div id="watermarkOverlay" class="watermark hidden"></div>
+
+    <header class="bg-slate-800/90 backdrop-blur-md border-b border-slate-700 sticky top-0 z-40 px-4 py-3 shadow-lg">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-shield-halved text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-bold leading-tight text-white">منصة الاختبارات الرقمية الآمنة</h1>
+                    <p class="text-xs text-slate-400">مادة أمن المعلومات - اختبار إلكتروني موثق</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button onclick="toggleAdminPanel()" class="px-3 py-1.5 text-xs bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg border border-slate-600 flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-gear text-indigo-400"></i>
+                    <span>إدارة الأسئلة</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dynamic Content Wrapper -->
+    <main class="flex-grow flex items-center justify-center p-3 sm:p-6 relative z-10 max-w-4xl mx-auto w-full">
+
+        <!-- SCREEN 1: WELCOME / LOGIN -->
+        <section id="screen-welcome" class="w-full bg-slate-800 border border-slate-700 rounded-2xl p-5 sm:p-8 shadow-2xl space-y-6">
+            <div class="text-center space-y-2">
+                <span class="px-3 py-1 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-full text-xs font-bold">
+                    اختبار نهائي — 30 سؤالاً باللغة العربية
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">تسجيل دخول الطالب لبدء الامتحان</h2>
+                <p class="text-slate-400 text-sm">يرجى كتابة البيانات بشكل صحيح قبل بدء الاختبار المحمي</p>
+            </div>
+
+            <form id="studentLoginForm" onsubmit="handleStartExam(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">اسم الطالب بالكامل</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-user absolute right-3.5 top-3.5 text-slate-400 text-sm"></i>
+                        <input type="text" id="studentName" required placeholder="أدخل اسمك الثلاثي أو الرباعي"
+                            class="w-full pr-10 pl-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm text-white placeholder-slate-500 outline-none transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">رقم الهاتف</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-phone absolute right-3.5 top-3.5 text-slate-400 text-sm"></i>
+                        <input type="tel" id="studentPhone" required value="01224855509" placeholder="أدخل رقم الهاتف"
+                            class="w-full pr-10 pl-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm text-white placeholder-slate-500 outline-none transition">
+                    </div>
+                </div>
+
+                <!-- Security Warnings Box -->
+                <div class="bg-rose-950/40 border border-rose-800/50 rounded-xl p-4 text-xs text-rose-200 space-y-2">
+                    <div class="flex items-center gap-2 font-bold text-rose-400 text-sm">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>تعليمات وشروط الامتحان الصارمة:</span>
+                    </div>
+                    <ul class="list-disc list-inside space-y-1 text-slate-300 leading-relaxed">
+                        <li>ممنوع الخروج من الشاشة أو التنقل إلى تطبيق آخر (سيتم إلغاء الامتحان تلقائياً).</li>
+                        <li>جميع الأسئلة مصممة باللغة العربية ومحددة بزمن معين.</li>
+                        <li>ممنوع نسخ الأسئلة أو التقاط لقطات شاشة (Screenshot).</li>
+                        <li>سيتم تفعيل الوضع الآمن ومراقبة أي محاولة خروج.</li>
+                        <li>لديك **محاولتا إنذار فقط** قبل إلغاء الاختبار وتثبيت النتيجة.</li>
+                    </ul>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 transition transform active:scale-[0.99] flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-lock"></i>
+                    <span>تأكيد البيانات وبدء الامتحان الآن</span>
+                </button>
+            </form>
+        </section>
+
+        <!-- SCREEN 2: EXAM INTERFACE -->
+        <section id="screen-exam" class="w-full bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden hidden flex-col">
+            <!-- Exam Status Bar -->
+            <div class="bg-slate-900 border-b border-slate-700 p-3 sm:p-4 flex justify-between items-center gap-2 text-xs sm:text-sm">
+                <!-- Violations badge -->
+                <div class="flex items-center gap-1.5 px-3 py-1.5 bg-rose-500/10 border border-rose-500/30 text-rose-400 rounded-lg">
+                    <i class="fa-solid fa-shield-cat"></i>
+                    <span>الإنذارات: <strong id="violationCount" class="text-rose-300">0</strong> / 2</span>
+                </div>
+
+                <!-- Timer badge -->
+                <div id="timerContainer" class="flex items-center gap-2 px-3.5 py-1.5 bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 font-mono font-bold rounded-lg text-sm sm:text-base">
+                    <i class="fa-regular fa-clock text-indigo-400"></i>
+                    <span id="timerDisplay">30:00</span>
+                </div>
+
+                <!-- Fullscreen status -->
+                <button onclick="requestExamFullscreen()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-slate-300 flex items-center gap-1">
+                    <i class="fa-solid fa-expand"></i>
+                    <span class="hidden sm:inline">ملء الشاشة</span>
+                </button>
+            </div>
+
+            <!-- Exam Progress Bar -->
+            <div class="w-full bg-slate-900 h-2">
+                <div id="progressBar" class="bg-indigo-500 h-2 transition-all duration-300" style="width: 0%;"></div>
+            </div>
+
+            <!-- Exam Question Content Area -->
+            <div class="p-4 sm:p-7 space-y-6 flex-grow">
+                <div class="flex justify-between items-center text-xs text-slate-400 border-b border-slate-700/60 pb-3">
+                    <span id="questionCategory" class="px-2.5 py-1 bg-slate-700 rounded-md font-semibold text-slate-200">🟢 الجزء الأول — أسئلة أساسية</span>
+                    <span>سؤال <span id="currentQuestionNum" class="text-indigo-400 font-bold">1</span> من <span id="totalQuestionsNum">30</span></span>
+                </div>
+
+                <!-- Question Text -->
+                <div class="space-y-2">
+                    <h3 id="questionText" class="text-lg sm:text-xl font-bold text-white leading-relaxed" dir="rtl">
+                        جاري تحميل السؤال...
+                    </h3>
+                </div>
+
+                <!-- MCQ Options Container -->
+                <div id="optionsContainer" class="space-y-3" dir="rtl">
+                    <!-- Dynamic Options Inserted Here -->
+                </div>
+            </div>
+
+            <!-- Footer Controls Navigation -->
+            <div class="bg-slate-900/90 border-t border-slate-700 p-4 flex justify-between items-center gap-3">
+                <button id="prevBtn" onclick="navigateQuestion(-1)" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-semibold border border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-2 text-xs sm:text-sm">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>السابق</span>
+                </button>
+
+                <button id="reviewBtn" onclick="toggleBookmarkCurrentQuestion()" class="px-3 py-2.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-xl font-semibold transition flex items-center gap-1.5 text-xs sm:text-sm">
+                    <i id="reviewIcon" class="fa-regular fa-bookmark"></i>
+                    <span class="hidden sm:inline">مراجعة لاحقاً</span>
+                </button>
+
+                <button id="nextBtn" onclick="navigateQuestion(1)" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition flex items-center gap-2 text-xs sm:text-sm shadow-lg shadow-indigo-600/20">
+                    <span>التالي</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+
+                <button id="submitBtn" onclick="confirmSubmitExam()" class="hidden px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition flex items-center gap-2 text-xs sm:text-sm shadow-lg shadow-emerald-600/20">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>إنهاء وتسليم الامتحان</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- SCREEN 3: RESULTS & REVIEW -->
+        <section id="screen-results" class="w-full bg-slate-800 border border-slate-700 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 hidden">
+            <div class="text-center space-y-3">
+                <div id="resultStatusIcon" class="w-20 h-20 mx-auto rounded-full bg-emerald-500/20 border-2 border-emerald-500 flex items-center justify-center text-emerald-400 text-3xl shadow-lg">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h2 id="resultTitle" class="text-2xl sm:text-3xl font-extrabold text-white">تم تسليم الاختبار بنجاح</h2>
+                <p id="resultSubtitle" class="text-slate-400 text-sm">كشف أداء الطالب في اختبار أمن المعلومات</p>
+            </div>
+
+            <!-- Score Summary Cards Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="bg-slate-900 border border-slate-700/60 p-3.5 rounded-xl text-center">
+                    <span class="block text-xs text-slate-400 mb-1">النتيجة النهائية</span>
+                    <strong id="finalScore" class="text-xl sm:text-2xl font-black text-indigo-400">0 / 30</strong>
+                </div>
+                <div class="bg-slate-900 border border-slate-700/60 p-3.5 rounded-xl text-center">
+                    <span class="block text-xs text-slate-400 mb-1">النسبة المئوية</span>
+                    <strong id="finalPercentage" class="text-xl sm:text-2xl font-black text-emerald-400">0%</strong>
+                </div>
+                <div class="bg-slate-900 border border-slate-700/60 p-3.5 rounded-xl text-center">
+                    <span class="block text-xs text-slate-400 mb-1">الوقت المستغرق</span>
+                    <strong id="timeSpent" class="text-xl sm:text-2xl font-black text-amber-400">00:00</strong>
+                </div>
+                <div class="bg-slate-900 border border-slate-700/60 p-3.5 rounded-xl text-center">
+                    <span class="block text-xs text-slate-400 mb-1">الإنذارات الأمنيّة</span>
+                    <strong id="violationsLogged" class="text-xl sm:text-2xl font-black text-rose-400">0</strong>
+                </div>
+            </div>
+
+            <!-- WhatsApp Send Result Box -->
+            <div id="whatsappSendContainer" class="p-4 bg-emerald-950/40 border border-emerald-500/30 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-right">
+                <div class="space-y-1">
+                    <span class="font-bold text-emerald-400 text-sm flex items-center gap-2 justify-center sm:justify-start">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>إرسال تقرير النتيجة عبر واتساب</span>
+                    </span>
+                    <p class="text-xs text-slate-300">تم إعداد النتيجة للإرسال الفوري إلى الرقم: 01224855509</p>
+                </div>
+                <button id="whatsappDirectBtn" onclick="sendResultToWhatsApp()" class="w-full sm:w-auto px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition">
+                    <i class="fa-brands fa-whatsapp text-base"></i>
+                    <span>إرسال عبر WhatsApp</span>
+                </button>
+            </div>
+
+            <!-- Detailed Question Review Accordion -->
+            <div class="space-y-3">
+                <button onclick="toggleDetailedReview()" class="w-full py-3 px-4 bg-slate-900 hover:bg-slate-700 border border-slate-700 rounded-xl flex justify-between items-center text-sm font-bold text-slate-200 transition">
+                    <span class="flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-indigo-400"></i>
+                        <span>عرض مراجعة الأسئلة والإجابات الصحيحة</span>
+                    </span>
+                    <i id="reviewChevron" class="fa-solid fa-chevron-down text-slate-400"></i>
+                </button>
+
+                <div id="detailedReviewContainer" class="hidden space-y-4 max-h-96 overflow-y-auto pr-1" dir="rtl">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <button onclick="resetToWelcome()" class="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-rotate-right"></i>
+                <span>العودة للرئيسية</span>
+            </button>
+        </section>
+
+        <!-- SCREEN 4: ADMIN PANEL MODAL -->
+        <section id="screen-admin" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-lg flex items-center justify-center p-3 sm:p-6 hidden">
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+                <!-- Admin Header -->
+                <div class="p-4 bg-slate-900 border-b border-slate-700 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-indigo-400 text-lg"></i>
+                        <h3 class="font-bold text-base text-white">لوحة تحكم إدارة وتحديث الأسئلة</h3>
+                    </div>
+                    <button onclick="toggleAdminPanel()" class="text-slate-400 hover:text-white p-1">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Admin Body / Tools -->
+                <div class="p-4 sm:p-6 overflow-y-auto space-y-6 flex-grow">
+                    <!-- Quick JSON Export/Import & Reset -->
+                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 space-y-3">
+                        <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">أدوات النسخ الاحتياطي وتحديث الأسئلة</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="exportQuestionsJSON()" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
+                                <i class="fa-solid fa-download"></i>
+                                <span>تصدير الأسئلة (JSON)</span>
+                            </button>
+                            
+                            <label class="px-3.5 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition">
+                                <i class="fa-solid fa-upload"></i>
+                                <span>استيراد ملف أسئلة</span>
+                                <input type="file" id="importJsonInput" accept=".json" onchange="importQuestionsJSON(event)" class="hidden">
+                            </label>
+
+                            <button onclick="restoreDefaultQuestions()" class="px-3.5 py-2 bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/30 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
+                                <i class="fa-solid fa-arrow-rotate-left"></i>
+                                <span>استعادة الـ 30 سؤالاً الأصلية</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Add New Question Form -->
+                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 space-y-4">
+                        <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-plus-circle text-indigo-400"></i>
+                            <span>إضافة سؤال جديد باللغة العربية</span>
+                        </h4>
+
+                        <form id="addQuestionForm" onsubmit="handleAddNewQuestion(event)" class="space-y-3 text-xs" dir="rtl">
+                            <div>
+                                <label class="block font-semibold text-slate-300 mb-1">الجزء / المفهوم</label>
+                                <input type="text" id="newCat" placeholder="مثال: 🟢 الجزء 1 — مفاهيم أساسية" required class="w-full p-2 bg-slate-800 border border-slate-700 rounded-lg text-white outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block font-semibold text-slate-300 mb-1">نص السؤال</label>
+                                <textarea id="newQText" rows="2" placeholder="أدخل نص السؤال بالعربية..." required class="w-full p-2 bg-slate-800 border border-slate-700 rounded-lg text-white outline-none"></textarea>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block font-semibold text-slate-300 mb-1">الخيار (أ)</label>
+                                    <input type="text" id="optA" placeholder="أ) نص الخيار الأول" required class="w-full p-2 bg-slate-800 border border-slate-700 rounded-lg text-white outline-none">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-300 mb-1">الخيار (ب)</label>
+                                    <input type="text" id="optB" placeholder="ب) نص الخيار الثاني" required class="w-full p-2 bg-slate-800 border border-slate-700 rounded-lg text-white outline-none">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-300 mb-1">الخيار (ج)</label>
+                                    <input type="text" id="optC" placeholder="ج) نص الخيار الثالث" required class="w-full p-2 bg-slate-800 border border-slate-700 rounded-lg text-white outline-none">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-300 mb-1">الخيار (د)</label>
+                                    <input type="text" id="optD" placeholder="د) نص الخيار الرابع" required class="w-full p-2 bg-slate-800 border border-slate-700 rounded-lg text-white outline-none">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block font-semibold text-slate-300 mb-1">الإجابة الصحيحة</label>
+                                <select id="correctOpt" class="w-full p-2 bg-slate-800 border border-slate-700 rounded-lg text-white outline-none">
+                                    <option value="أ">أ (الخيار الأول)</option>
+                                    <option value="ب">ب (الخيار الثاني)</option>
+                                    <option value="ج">ج (الخيار الثالث)</option>
+                                    <option value="د">د (الخيار الرابع)</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg transition">
+                                حفظ السؤال وإضافته لقائمة الأسئلة
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Question List Overview -->
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">قائمة الأسئلة المسجلة حالياً (<span id="adminQuestionsCount">0</span>)</h4>
+                        </div>
+                        <div id="adminQuestionsList" class="space-y-2 max-h-60 overflow-y-auto text-xs" dir="rtl">
+                            <!-- Injected JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SECURITY ALERT MODAL -->
+    <div id="securityModal" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border-2 border-rose-600 rounded-2xl max-w-md w-full p-6 text-center space-y-5 security-alert shadow-2xl">
+            <div class="w-16 h-16 bg-rose-500/20 text-rose-500 rounded-full border border-rose-500 flex items-center justify-center mx-auto text-3xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+
+            <div class="space-y-2">
+                <h3 class="text-xl font-extrabold text-white">تنبيه أمني عاجل!</h3>
+                <p id="securityModalText" class="text-rose-200 text-sm leading-relaxed">
+                    تم رصد مغادرة شاشة الامتحان أو محاولة التبديل إلى تطبيق آخر!
+                </p>
+            </div>
+
+            <div class="bg-rose-950/60 p-3 rounded-xl border border-rose-800/60 text-xs text-rose-300">
+                متبقي لديك <strong id="remainingViolationsText" class="text-white font-bold text-sm">1</strong> إنذار قبل إلغاء الامتحان وتثبيت الدرجة صفر!
+            </div>
+
+            <button onclick="acknowledgeSecurityWarning()" class="w-full py-3 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl shadow-lg shadow-rose-600/30 transition">
+                العودة فوراً للامتحان والإلتزام بالتعليمات
+            </button>
+        </div>
+    </div>
+
+    <!-- ADMIN AUTH MODAL -->
+    <div id="adminAuthModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
+            <div class="w-12 h-12 bg-indigo-500/20 text-indigo-400 rounded-full border border-indigo-500/30 flex items-center justify-center mx-auto text-2xl">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white">كلمة سر الإدارة</h3>
+            <p class="text-slate-400 text-xs">يرجى إدخال رمز الدخول للوصول لبنك الأسئلة</p>
+            <input type="password" id="adminPasswordInput" placeholder="أدخل كلمة السر" class="w-full text-center py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white outline-none focus:ring-2 focus:ring-indigo-500 text-base tracking-widest" onkeyup="if(event.key==='Enter') verifyAdminPassword()">
+            <div class="flex gap-2 pt-2">
+                <button onclick="closeAdminAuthModal()" class="w-1/2 py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-xl text-xs font-bold transition">إلغاء</button>
+                <button onclick="verifyAdminPassword()" class="w-1/2 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition">دخول</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <script>
+        /* ==========================================================================
+           1. 100% ARABIC QUESTIONS DATASET (30 Questions - No English Words)
+           ========================================================================== */
+        const defaultQuestions = [
+            // الجزء الأول — سهل (الأسئلة 1 - 10)
+            {
+                id: 1,
+                category: "🟢 الجزء 1 — مستوى أساسي",
+                question: "ما هو الهدف الرئيسي والأساسي من تطبيق أمن المعلومات؟",
+                options: [
+                    "أ) تصميم وبناء المواقع الإلكترونية",
+                    "ب) زيادة سرعة وأداء أجهزة الحاسوب",
+                    "ج) حماية البيانات والمعلومات وإدارتها بشكل آمن وموثوق",
+                    "د) حذف البيانات القديمة غير المستخدمة"
+                ],
+                correct: "ج"
+            },
+            {
+                id: 2,
+                category: "🟢 الجزء 1 — مستوى أساسي",
+                question: "تسمح إحدى الشركات لموظفيها المختصين فقط بالاطلاع على بيانات العملاء. أي عنصر أمني يمثل ذلك؟",
+                options: [
+                    "أ) السرية والكتمان",
+                    "ب) النسخ الاحتياطي للبيانات",
+                    "ج) التوافر والإتاحة",
+                    "د) سلامة ودقة البيانات"
+                ],
+                correct: "أ"
+            },
+            {
+                id: 3,
+                category: "🟢 الجزء 1 — مستوى أساسي",
+                question: "قام طالب بتعديل درجاته الدراسية المسجلة في نظام المدرسة دون إذن. أي عنصر من عناصر أمن المعلومات تم انتهاكه؟",
+                options: [
+                    "أ) التوافر والإتاحة",
+                    "ب) توثيق الهوية",
+                    "ج) السرية",
+                    "د) سلامة ودقة البيانات"
+                ],
+                correct: "د"
+            },
+            {
+                id: 4,
+                category: "🟢 الجزء 1 — مستوى أساسي",
+                question: "يحتاج الموظف للوصول إلى الملفات والبيانات فور طلبها في أي وقت. أي مبدأ أمني يضمن جاهزيتها المستمرة؟",
+                options: [
+                    "أ) قوة كلمة المرور",
+                    "ب) التوافر والإتاحة",
+                    "ج) السرية",
+                    "د) سلامة البيانات"
+                ],
+                correct: "ب"
+            },
+            {
+                id: 5,
+                category: "🟢 الجزء 1 — مستوى أساسي",
+                question: "قام شخص بالتسلل والدخول إلى نظام حاسوبي دون الحصول على تصريح أو إذن. ماذا يسمى هذا السلوك؟",
+                options: [
+                    "أ) النسخ الاحتياطي للبيانات",
+                    "ب) التوثيق الإلكتروني",
+                    "ج) الوصول غير المصرح به",
+                    "د) استرجاع البيانات"
+                ],
+                correct: "ج"
+            },
+            {
+                id: 6,
+                category: "🟢 الجزء 1 — مستوى أساسي",
+                question: "أي مما يلي يُعد من البرمجيات الضارة التي تهدف لإلحاق الضرر بالأجهزة والأنظمة؟",
+                options: [
+                    "أ) البرمجيات الخبيثة",
+                    "ب) المصادقة الثنائية",
+                    "ج) جدار الحماية",
+                    "د) كلمات المرور المعقدة"
+                ],
+                correct: "أ"
+            },
+            {
+                id: 7,
+                category: "🟢 الجزء 1 — مستوى أساسي",
+                question: "أي نوع من البرمجيات الخبيثة يمتلك القدرة على نسخ نفسه والانتقال تلقائياً عبر شبكة الإنترنت؟",
+                options: [
+                    "أ) الدودة البرمجية",
+                    "ب) مسجل ضربات المفاتيح",
+                    "ج) حصان طروادة",
+                    "د) برمجيات الإعلانات"
+                ],
+                correct: "أ"
+            },
+            {
+                id: 8,
+                category: "🟢 الجزء 1 — مستوى أساسي",
+                question: "ما اسم البرمجية الخبيثة التي تجمع بيانات المستخدم الشخصية وسجل تصفحه سرية وترسلها لأطراف خارجية؟",
+                options: [
+                    "أ) جدار الحماية",
+                    "ب) الدودة البرمجية",
+                    "ج) برمجيات الإعلانات",
+                    "د) برمجيات التجسس"
+                ],
+                correct: "د"
+            },
+            {
+                id: 9,
+                category: "🟢 الجزء 1 — مستوى أساسي",
+                question: "ما الهدف المباشر والأساسي من تعيين كلمة المرور الحصينة للحسابات؟",
+                options: [
+                    "أ) تنظيف الجهاز من الفيروسات",
+                    "ب) التحقق من هوية صاحب الحساب الشرعي",
+                    "ج) زيادة سرعة الاتصال بالإنترنت",
+                    "د) إنشاء نسخة احتياطية تلقائية"
+                ],
+                correct: "ب"
+            },
+            {
+                id: 10,
+                category: "🟢 الجزء 1 — مستوى أساسي",
+                question: "أي مما يلي يُعتبر مثالاً واضحاً على المصادقة باستخدام الخصائص الحيوية (البيومترية)؟",
+                options: [
+                    "أ) البطاقات الذكية الممغنطة",
+                    "ب) رمز التعريف الشخصي السري",
+                    "ج) بصمة الأصبع أو بصمة الوجه",
+                    "د) كلمة المرور النصية"
+                ],
+                correct: "ج"
+            },
+
+            // الجزء الثاني — متوسط (الأسئلة 11 - 20)
+            {
+                id: 11,
+                category: "🟡 الجزء 2 — مستوى متوسط",
+                question: "ضغط أحمد على رابط بالبريد الإلكتروني فظهرت رسالة تطالبه بدفع مبلغ مالي فوراً بدعوى إبرام عقد وهمي. ما نوع هذا الاحتيال؟",
+                options: [
+                    "أ) كشط البيانات",
+                    "ب) التفتيش في المهملات",
+                    "ج) التصيد الاحتيالي",
+                    "د) احتيال النقرة الواحدة"
+                ],
+                correct: "د"
+            },
+            {
+                id: 12,
+                category: "🟡 الجزء 2 — مستوى متوسط",
+                question: "تلقى شخص المطالبة بملف فاتورة مالية عن خدمة لم يسبق له طلبها أو استخدامها نهائياً. ماذا يسمى هذا النصب؟",
+                options: [
+                    "أ) الفواتير الاحتيالية المزيفة",
+                    "ب) التلصص عبر الكتف",
+                    "ج) الاختراق المباشر",
+                    "د) برمجيات الفدية"
+                ],
+                correct: "أ"
+            },
+            {
+                id: 13,
+                category: "🟡 الجزء 2 — مستوى متوسط",
+                question: "قام هاقر بإنشاء موقع شبيه بموقع البنك الرسمي لسرقة أرقام البطاقات وكلمات المرور من المستخدمين. ماذا يسمى هذا الهجوم؟",
+                options: [
+                    "أ) النسخ الاحتياطي",
+                    "ب) التصيد الاحتيالي",
+                    "ج) الدودة البرمجية",
+                    "د) برمجيات الإعلانات"
+                ],
+                correct: "ب"
+            },
+            {
+                id: 14,
+                category: "🟡 الجزء 2 — مستوى متوسط",
+                question: "اتصل شخص بموظف وادعى أنه مديره في العمل ليحصل منه على بيانات دخول سرية. ما الأسلوب المتبع هنا؟",
+                options: [
+                    "أ) التوافر الإجبارى",
+                    "ب) انتحال الشخصية",
+                    "ج) جدار الحماية",
+                    "د) كشط البيانات"
+                ],
+                correct: "ب"
+            },
+            {
+                id: 15,
+                category: "🟡 الجزء 2 — مستوى متوسط",
+                question: "يقف شخص خلف مستخدم آخر في مكان عام ويسترق النظر لشاشته لمعرفة رمز السر الخاص به. ماذا يسمى هذا؟",
+                options: [
+                    "أ) التصيد الاحتيالي",
+                    "ب) التفتيش في القمامة",
+                    "ج) اختراق الأنظمة",
+                    "د) التلصص عبر الكتف"
+                ],
+                correct: "د"
+            },
+            {
+                id: 16,
+                category: "🟡 الجزء 2 — مستوى متوسط",
+                question: "قام مهاجم بالبحث في سلة مهملات الشركة وأوراقها المهملة للحصول على معلومات سرية. ماذا يسمى هذا الأسلوب؟",
+                options: [
+                    "أ) احتيال النقرة الواحدة",
+                    "ب) كشط البيانات",
+                    "ج) التفتيش في المهملات",
+                    "د) انتحال الشخصية"
+                ],
+                correct: "ج"
+            },
+            {
+                id: 17,
+                category: "🟡 الجزء 2 — مستوى متوسط",
+                question: "أي من كلمات المرور التالية هي الأكثر قوة وتطابقاً مع معايير الأمان الحصينة؟",
+                options: [
+                    "أ) T#8mQ2!zP",
+                    "ب) Ahmed2000",
+                    "ج) MyBirthday",
+                    "د) 123456"
+                ],
+                correct: "أ"
+            },
+            {
+                id: 18,
+                category: "🟡 الجزء 2 — مستوى متوسط",
+                question: "يتطلب التطبيق إدخال كلمة المرور أولاً ثم إدخال رمز موقت يُرسل في رسالة نصية للهاتف. ماذا يسمى هذا الأسلوب؟",
+                options: [
+                    "أ) التحكم في الوصول",
+                    "ب) المصادقة بخطوة واحدة",
+                    "ج) رمز المرة الواحدة فقط",
+                    "د) المصادقة متعددة العوامل"
+                ],
+                correct: "د"
+            },
+            {
+                id: 19,
+                category: "🟡 الجزء 2 — مستوى متوسط",
+                question: "نظام أمني يحدد الصلاحيات ويمنع الموظفين من الوصول لملفات لا تقع ضمن اختصاصهم. ماذا يسمى هذا النظام؟",
+                options: [
+                    "أ) التصيد الاحتيالي",
+                    "ب) نظام التحكم في الوصول",
+                    "ج) البرمجيات الخبيثة",
+                    "د) سلامة البيانات"
+                ],
+                correct: "ب"
+            },
+            {
+                id: 20,
+                category: "🟡 الجزء 2 — مستوى متوسط",
+                question: "جهاز أو برنامج يوضع عند مدخل الشبكة لمراقبة البيانات القادمة والظاهرة وتصفيتها ومنع الاختراق. ما هو؟",
+                options: [
+                    "أ) جدار الحماية",
+                    "ب) مسجل ضربات المفاتيح",
+                    "ج) وحدة النسخ الاحتياطي",
+                    "د) برمجيات التجسس"
+                ],
+                correct: "أ"
+            },
+
+            // الجزء الثالث — متقدم (الأسئلة 21 - 30)
+            {
+                id: 21,
+                category: "🔴 الجزء 3 — مستوى متقدم",
+                question: "بيانات الطلاب في المدرسة دقيقة وسليمة تماماً، ولا يُسمح باطلاع غير المعلمين المعتمدين عليها. ما العنصران المحميان هنا؟",
+                options: [
+                    "أ) التوافر وكلمة المرور",
+                    "ب) المصادقة والبرمجيات الخبيثة",
+                    "ج) السرية وسلامة البيانات",
+                    "د) سلامة البيانات والتوافر"
+                ],
+                correct: "ج"
+            },
+            {
+                id: 22,
+                category: "🔴 الجزء 3 — مستوى متقدم",
+                question: "بيانات العملاء سليمة ولم تتعرض للتعديل، لكن الموظفين غير قادرين على الوصول إليها بسبب تعطل الخادم. أي عنصر أمني تأثر؟",
+                options: [
+                    "أ) التوافر والإتاحة",
+                    "ب) المصادقة والتوثيق",
+                    "ج) السرية والكتمان",
+                    "د) سلامة ودقة البيانات"
+                ],
+                correct: "أ"
+            },
+            {
+                id: 23,
+                category: "🔴 الجزء 3 — مستوى متقدم",
+                question: "استولى مخترق على حساب موظف ودخل للنظام دون إذن. ما التصنيف القانوني الصحيح لهذا الفعل؟",
+                options: [
+                    "أ) مجرد خلل في البرمجيات الإعلانية",
+                    "ب) خطأ عادي في النسخ الاحتياطي",
+                    "ج) سلوك تقني مسموح به",
+                    "د) جريمة اختراق وانتهاك لقوانين مكافحة الجرائم الإلكترونية"
+                ],
+                correct: "د"
+            },
+            {
+                id: 24,
+                category: "🔴 الجزء 3 — مستوى متقدم",
+                question: "برنامج يظهر للمستخدم كأداة نافعة ومفيدة، وبمجرد تثبيته يبدأ سرية في تخريب الملفات وفتح ثغرات. ما نوعه؟",
+                options: [
+                    "أ) برمجيات الإعلانات",
+                    "ب) حصان طروادة",
+                    "ج) مسجل ضربات المفاتيح",
+                    "د) الدودة البرمجية"
+                ],
+                correct: "ب"
+            },
+            {
+                id: 25,
+                category: "🔴 الجزء 3 — مستوى متقدم",
+                question: "برنامج خفي يرصد ويسجل كل زر يتم الضغط عليه في لوحة المفاتيح لسرفة الحسابات والمفاتيح. ما اسم هذا البرنامج؟",
+                options: [
+                    "أ) مسجل ضربات المفاتيح",
+                    "ب) الدودة البرمجية",
+                    "ج) جدار الحماية",
+                    "د) برمجيات الإعلانات"
+                ],
+                correct: "أ"
+            },
+            {
+                id: 26,
+                category: "🔴 الجزء 3 — مستوى متقدم",
+                question: "يتواصل المهاجم مع الضحية خديعةً ويتظاهر بأنه موظف الدعم الفني لاستدراج كلماته السرية. ما الاسم العلمي لهذه الحيلة؟",
+                options: [
+                    "أ) سلامة البيانات",
+                    "ب) الهندسة الاجتماعية",
+                    "ج) النسخ الاحتياطي",
+                    "د) التوافر والإتاحة"
+                ],
+                correct: "ب"
+            },
+            {
+                id: 27,
+                category: "🔴 الجزء 3 — مستوى متقدم",
+                question: "وثيقة توضح القواعد التفصيلية الخاصة بكيفية تركيب وتغيير كلمات المرور بالمؤسسة. أي جزء يمثل ذلك من سياسة الأمان؟",
+                options: [
+                    "أ) البرمجيات الخبيثة",
+                    "ب) السرية",
+                    "ج) السياسة الأساسية",
+                    "د) المعايير والضوابط الأمنية"
+                ],
+                correct: "د"
+            },
+            {
+                id: 28,
+                category: "🔴 الجزء 3 — مستوى متقدم",
+                question: "عبارة عامة تنشرها المؤسسة: 'نحن نلتزم بحماية كافة أصول ومعلومات الشركة.' أي جزء تصفه هذه العبارة؟",
+                options: [
+                    "أ) القواعد التشغيلية التفصيلية",
+                    "ب) المعايير الأمنية",
+                    "ج) السياسة الأمنية الأساسية",
+                    "د) جدار الحماية"
+                ],
+                correct: "ج"
+            },
+            {
+                id: 29,
+                category: "🔴 الجزء 3 — مستوى متقدم",
+                question: "دليل يحتوي على الخطوات الإجرائية اليومية التي يجب على الموظف اتباعها لتطبيق أمن المعلومات. ماذا يسمى؟",
+                options: [
+                    "أ) الإجراءات والقواعد التشغيلية",
+                    "ب) السرية",
+                    "ج) المعايير الأمنية",
+                    "د) السياسة الأساسية"
+                ],
+                correct: "أ"
+            },
+            {
+                id: 30,
+                category: "🔴 الجزء 3 — مستوى متقدم",
+                question: "أدخل مستخدم بياناته الحساسة في موقع يقلد البنك ببراعة وشكل متطابق. ما نوع هذا الهجوم؟",
+                options: [
+                    "أ) التلصص عبر الكتف",
+                    "ب) الفواتير الاحتيالية",
+                    "ج) احتيال النقرة الواحدة",
+                    "د) التصيد الاحتيالي"
+                ],
+                correct: "د"
+            }
+        ];
+
+        /* ==========================================================================
+           2. GLOBAL STATE VARIABLES
+           ========================================================================== */
+        let activeQuestions = [];
+        let currentQuestionIndex = 0;
+        let studentAnswers = {}; // { questionId: "أ" }
+        let bookmarkedQuestions = new Set();
+        let studentProfile = { name: "", phone: "01224855509" };
+        let lastExamReport = null; // Store final calculated report for WhatsApp
+        
+        let timerInterval = null;
+        let timeRemainingSeconds = 30 * 60; // 30 Minutes
+        let totalTimeSpentSeconds = 0;
+
+        let securityViolationsCount = 0;
+        const MAX_VIOLATIONS = 2;
+        let isExamActive = false;
+        let isAdminAuthenticated = false;
+        const ADMIN_PASSWORD_CODE = "121212";
+        const TARGET_WHATSAPP_PHONE = "201224855509"; // Target phone (+20)
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadQuestionsBank();
+            setupAntiCheatListeners();
+        });
+
+        function loadQuestionsBank() {
+            const saved = localStorage.getItem('secure_exam_questions_ar');
+            if (saved) {
+                try {
+                    activeQuestions = JSON.parse(saved);
+                } catch(e) {
+                    activeQuestions = [...defaultQuestions];
+                }
+            } else {
+                activeQuestions = [...defaultQuestions];
+            }
+            document.getElementById('totalQuestionsNum').textContent = activeQuestions.length;
+            renderAdminQuestionsList();
+        }
+
+        /* ==========================================================================
+           3. ANTI-CHEAT SECURITY ENGINE & EVENT LISTENERS
+           ========================================================================== */
+        function setupAntiCheatListeners() {
+            // 1. Detect Tab Switching / Minimizing / App Blur
+            document.addEventListener("visibilitychange", () => {
+                if (isExamActive && document.hidden) {
+                    registerSecurityViolation("تم كشف مغادرة الشاشة أو التبديل إلى تطبيق آخر!");
+                }
+            });
+
+            window.addEventListener("blur", () => {
+                if (isExamActive) {
+                    registerSecurityViolation("تم كشف فقدان تركيز النافذة! تجنب فتح إشعارات أو تطبيقات أخرى.");
+                }
+            });
+
+            // 2. Prevent Copy, Cut, Paste, Text Selection
+            document.addEventListener("copy", (e) => { if (isExamActive) e.preventDefault(); });
+            document.addEventListener("cut", (e) => { if (isExamActive) e.preventDefault(); });
+            document.addEventListener("paste", (e) => { if (isExamActive) e.preventDefault(); });
+            document.addEventListener("selectstart", (e) => { if (isExamActive) e.preventDefault(); });
+
+            // 3. Block Developer Key Combos
+            document.addEventListener("keydown", (e) => {
+                if (!isExamActive) return;
+
+                if (
+                    e.key === "F12" ||
+                    (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'u' || e.key === 'U' || e.key === 'i' || e.key === 'I' || e.key === 's' || e.key === 'S')) ||
+                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C'))
+                ) {
+                    e.preventDefault();
+                    registerSecurityViolation("محاولة استخدام اختصارات لوحة المفاتيح الممنوعة!");
+                }
+            });
+        }
+
+        function registerSecurityViolation(reasonText) {
+            if (!isExamActive) return;
+
+            securityViolationsCount++;
+            document.getElementById('violationCount').textContent = securityViolationsCount;
+
+            if (securityViolationsCount > MAX_VIOLATIONS) {
+                // Auto Fail & Immediate Submit
+                isExamActive = false;
+                clearInterval(timerInterval);
+                hideSecurityModal();
+                showToast("تم إلغاء الامتحان فوراً بسبب تجاوز الحد الأقصى للمخالفات!", "error");
+                finishAndSubmitExam(true); // Force fail
+            } else {
+                // Show Warning Modal
+                const remaining = (MAX_VIOLATIONS + 1) - securityViolationsCount;
+                document.getElementById('securityModalText').textContent = reasonText;
+                document.getElementById('remainingViolationsText').textContent = remaining;
+                showSecurityModal();
+            }
+        }
+
+        function requestExamFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(err => {});
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            }
+        }
+
+        function showSecurityModal() {
+            document.getElementById('securityModal').classList.remove('hidden');
+        }
+
+        function hideSecurityModal() {
+            document.getElementById('securityModal').classList.add('hidden');
+        }
+
+        function acknowledgeSecurityWarning() {
+            hideSecurityModal();
+            requestExamFullscreen();
+        }
+
+        /* ==========================================================================
+           4. EXAM WORKFLOW & NAVIGATION
+           ========================================================================== */
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function handleStartExam(e) {
+            e.preventDefault();
+            const name = document.getElementById('studentName').value.trim();
+            const phone = document.getElementById('studentPhone').value.trim();
+
+            if (!name || !phone) return;
+
+            if (activeQuestions.length === 0) {
+                showToast("لا توجد أسئلة مجهزة للامتحان حالياً!", "error");
+                return;
+            }
+
+            // Shuffle questions for fair examination
+            activeQuestions = shuffleArray(activeQuestions);
+
+            studentProfile = { name, phone };
+            studentAnswers = {};
+            bookmarkedQuestions.clear();
+            currentQuestionIndex = 0;
+            securityViolationsCount = 0;
+            timeRemainingSeconds = activeQuestions.length * 60; // 1 min per question
+
+            // Setup Watermark
+            setupWatermark(name, phone);
+
+            // Switch Screen
+            document.getElementById('screen-welcome').classList.add('hidden');
+            document.getElementById('screen-exam').classList.remove('hidden');
+            document.getElementById('screen-exam').classList.add('flex');
+
+            // Force Fullscreen
+            requestExamFullscreen();
+
+            // Start Timer & Exam State
+            isExamActive = true;
+            document.getElementById('violationCount').textContent = "0";
+            document.getElementById('totalQuestionsNum').textContent = activeQuestions.length;
+            startTimer();
+
+            // Render First Question
+            renderQuestion(currentQuestionIndex);
+        }
+
+        function setupWatermark(name, phone) {
+            const container = document.getElementById('watermarkOverlay');
+            container.innerHTML = '';
+            const text = `${name} • ${phone} • اختبار آمن`;
+            for(let i=0; i<20; i++) {
+                const span = document.createElement('span');
+                span.textContent = text;
+                container.appendChild(span);
+            }
+            container.classList.remove('hidden');
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            const timerDisplay = document.getElementById('timerDisplay');
+
+            timerInterval = setInterval(() => {
+                if (timeRemainingSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    finishAndSubmitExam(false);
+                    showToast("انتهى وقت الامتحان! تم التسليم تلقائياً.", "warning");
+                    return;
+                }
+                timeRemainingSeconds--;
+                totalTimeSpentSeconds++;
+
+                const mins = Math.floor(timeRemainingSeconds / 60);
+                const secs = timeRemainingSeconds % 60;
+                timerDisplay.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function renderQuestion(index) {
+            const q = activeQuestions[index];
+            if (!q) return;
+
+            // Update Progress
+            const progress = ((index + 1) / activeQuestions.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            document.getElementById('currentQuestionNum').textContent = index + 1;
+            document.getElementById('questionCategory').textContent = q.category || "أمن المعلومات";
+
+            // Set Text
+            document.getElementById('questionText').textContent = `${index + 1}. ${q.question}`;
+
+            // Render Options
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+
+            const selectedOptLetter = studentAnswers[q.id];
+
+            q.options.forEach((optStr) => {
+                // Extract letter (أ, ب, ج, د)
+                const match = optStr.match(/^([أبجدA-D])\)/);
+                const letter = match ? match[1] : optStr.charAt(0);
+
+                const isSelected = selectedOptLetter === letter;
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => selectOption(q.id, letter);
+                btn.className = `w-full text-right p-3.5 sm:p-4 rounded-xl border transition-all flex items-center justify-between text-sm sm:text-base font-semibold ${
+                    isSelected
+                        ? 'bg-indigo-600/20 border-indigo-500 text-indigo-200 shadow-md shadow-indigo-500/10'
+                        : 'bg-slate-900/60 hover:bg-slate-700/50 border-slate-700/80 text-slate-200'
+                }`;
+
+                btn.innerHTML = `
+                    <span class="leading-relaxed">${optStr}</span>
+                    <div class="w-5 h-5 rounded-full border ${isSelected ? 'border-indigo-400 bg-indigo-500' : 'border-slate-500'} flex items-center justify-center text-xs shrink-0 mr-2">
+                        ${isSelected ? '<i class="fa-solid fa-check text-white"></i>' : ''}
+                    </div>
+                `;
+                container.appendChild(btn);
+            });
+
+            // Update Navigation Buttons
+            document.getElementById('prevBtn').disabled = (index === 0);
+
+            if (index === activeQuestions.length - 1) {
+                document.getElementById('nextBtn').classList.add('hidden');
+                document.getElementById('submitBtn').classList.remove('hidden');
+            } else {
+                document.getElementById('nextBtn').classList.remove('hidden');
+                document.getElementById('submitBtn').classList.add('hidden');
+            }
+
+            // Update Bookmark status icon
+            const reviewIcon = document.getElementById('reviewIcon');
+            if (bookmarkedQuestions.has(q.id)) {
+                reviewIcon.className = 'fa-solid fa-bookmark text-amber-400';
+            } else {
+                reviewIcon.className = 'fa-regular fa-bookmark';
+            }
+        }
+
+        function selectOption(qId, optionLetter) {
+            studentAnswers[qId] = optionLetter;
+            renderQuestion(currentQuestionIndex);
+        }
+
+        function navigateQuestion(direction) {
+            const nextIndex = currentQuestionIndex + direction;
+            if (nextIndex >= 0 && nextIndex < activeQuestions.length) {
+                currentQuestionIndex = nextIndex;
+                renderQuestion(currentQuestionIndex);
+            }
+        }
+
+        function toggleBookmarkCurrentQuestion() {
+            const q = activeQuestions[currentQuestionIndex];
+            if (!q) return;
+
+            if (bookmarkedQuestions.has(q.id)) {
+                bookmarkedQuestions.delete(q.id);
+                showToast("تم إزالة السؤال من قائمة المراجعة", "info");
+            } else {
+                bookmarkedQuestions.add(q.id);
+                showToast("تم تعليم السؤال للمراجعة لاحقاً", "info");
+            }
+            renderQuestion(currentQuestionIndex);
+        }
+
+        function confirmSubmitExam() {
+            const unanswered = activeQuestions.length - Object.keys(studentAnswers).length;
+            let msg = "هل أنت متأكد من إنهاء وتسليم الامتحان الآن؟";
+            if (unanswered > 0) {
+                msg = `تنبيه: لديك ${unanswered} سؤالاً لم تقم بإجابتها بعد! هل تريد التسليم بالفعل؟`;
+            }
+
+            showCustomConfirm(msg, () => {
+                finishAndSubmitExam(false);
+            });
+        }
+
+        /* ==========================================================================
+           5. RESULTS EVALUATION & REVIEW
+           ========================================================================== */
+        function finishAndSubmitExam(isTerminatedForCheating = false) {
+            isExamActive = false;
+            clearInterval(timerInterval);
+            document.getElementById('watermarkOverlay').classList.add('hidden');
+
+            let score = 0;
+
+            if (!isTerminatedForCheating) {
+                activeQuestions.forEach(q => {
+                    if (studentAnswers[q.id] === q.correct) {
+                        score++;
+                    }
+                });
+            } else {
+                score = 0; // Disqualified
+            }
+
+            const percentage = Math.round((score / activeQuestions.length) * 100);
+            const mins = Math.floor(totalTimeSpentSeconds / 60);
+            const secs = totalTimeSpentSeconds % 60;
+            const timeFormatted = `${mins}:${secs.toString().padStart(2, '0')}`;
+
+            // Save report
+            lastExamReport = {
+                studentName: studentProfile.name,
+                studentPhone: studentProfile.phone,
+                score: score,
+                total: activeQuestions.length,
+                percentage: percentage,
+                timeSpent: timeFormatted,
+                violations: securityViolationsCount,
+                isTerminated: isTerminatedForCheating
+            };
+
+            // Display Results UI
+            document.getElementById('screen-exam').classList.add('hidden');
+            document.getElementById('screen-exam').classList.remove('flex');
+            document.getElementById('screen-results').classList.remove('hidden');
+
+            const statusIcon = document.getElementById('resultStatusIcon');
+            const resultTitle = document.getElementById('resultTitle');
+
+            if (isTerminatedForCheating) {
+                statusIcon.className = "w-20 h-20 mx-auto rounded-full bg-rose-500/20 border-2 border-rose-500 flex items-center justify-center text-rose-400 text-3xl shadow-lg";
+                statusIcon.innerHTML = `<i class="fa-solid fa-user-slash"></i>`;
+                resultTitle.textContent = "تم إيقافك وإلغاء الامتحان للغش!";
+                resultTitle.className = "text-2xl sm:text-3xl font-extrabold text-rose-400";
+            } else {
+                statusIcon.className = "w-20 h-20 mx-auto rounded-full bg-emerald-500/20 border-2 border-emerald-500 flex items-center justify-center text-emerald-400 text-3xl shadow-lg";
+                statusIcon.innerHTML = `<i class="fa-solid fa-check"></i>`;
+                resultTitle.textContent = "تم تسليم الاختبار بنجاح";
+                resultTitle.className = "text-2xl sm:text-3xl font-extrabold text-white";
+            }
+
+            document.getElementById('finalScore').textContent = `${score} / ${activeQuestions.length}`;
+            document.getElementById('finalPercentage').textContent = `${percentage}%`;
+            document.getElementById('timeSpent').textContent = timeFormatted;
+            document.getElementById('violationsLogged').textContent = securityViolationsCount;
+
+            renderDetailedReview();
+
+            // Auto Trigger WhatsApp Redirect
+            setTimeout(() => {
+                sendResultToWhatsApp();
+            }, 800);
+        }
+
+        function sendResultToWhatsApp() {
+            if (!lastExamReport) return;
+
+            const r = lastExamReport;
+            const statusText = r.isTerminated ? "❌ ملغى بسبب مخالفات الغش" : "✅ تسليم ناجح ومكتمل";
+
+            const message = 
+`📝 *كشف نتيجة اختبار أمن المعلومات الرقمي*
+━━━━━━━━━━━━━━━━━━━━
+👤 *اسم الطالب:* ${r.studentName}
+📱 *رقم الهاتف:* ${r.studentPhone}
+🎯 *النتيجة:* ${r.score} من ${r.total}
+📊 *النسبة المئوية:* ${r.percentage}%
+⏱️ *الوقت المستغرق:* ${r.timeSpent}
+⚠️ *عدد الإنذارات:* ${r.violations}
+📌 *حالة الاختبار:* ${statusText}
+━━━━━━━━━━━━━━━━━━━━`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const waUrl = `https://wa.me/${TARGET_WHATSAPP_PHONE}?text=${encodedMessage}`;
+            
+            window.open(waUrl, '_blank');
+        }
+
+        function renderDetailedReview() {
+            const container = document.getElementById('detailedReviewContainer');
+            container.innerHTML = '';
+
+            activeQuestions.forEach((q, idx) => {
+                const userAns = studentAnswers[q.id] || "لم يحل";
+                const isCorrect = userAns === q.correct;
+
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-xl border text-xs sm:text-sm space-y-2 ${
+                    isCorrect
+                        ? 'bg-emerald-950/20 border-emerald-800/50'
+                        : 'bg-rose-950/20 border-rose-800/50'
+                }`;
+
+                card.innerHTML = `
+                    <div class="flex justify-between font-bold text-slate-300">
+                        <span>س${idx+1}. ${q.question}</span>
+                        <span class="${isCorrect ? 'text-emerald-400' : 'text-rose-400'} shrink-0 mr-2">
+                            ${isCorrect ? '✓ إجابة صحيحة' : '✗ إجابة خاطئة'}
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-400 pt-1 border-t border-slate-700/40">
+                        <div>إجابة الطالب: <strong class="${isCorrect ? 'text-emerald-400' : 'text-rose-400'}">${userAns}</strong></div>
+                        <div>الإجابة النموذجية الصحيحة: <strong class="text-emerald-400">${q.correct}</strong></div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function toggleDetailedReview() {
+            const container = document.getElementById('detailedReviewContainer');
+            const chevron = document.getElementById('reviewChevron');
+            if (container.classList.contains('hidden')) {
+                container.classList.remove('hidden');
+                chevron.classList.add('rotate-180');
+            } else {
+                container.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
+            }
+        }
+
+        function resetToWelcome() {
+            document.getElementById('screen-results').classList.add('hidden');
+            document.getElementById('screen-welcome').classList.remove('hidden');
+        }
+
+        /* ==========================================================================
+           6. ADMIN PANEL & QUESTION BANK CRUD WITH PASSWORD AUTH
+           ========================================================================== */
+        function toggleAdminPanel() {
+            if (!isAdminAuthenticated) {
+                showAdminAuthModal();
+            } else {
+                openAdminPanel();
+            }
+        }
+
+        function showAdminAuthModal() {
+            document.getElementById('adminAuthModal').classList.remove('hidden');
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('adminPasswordInput').focus();
+        }
+
+        function closeAdminAuthModal() {
+            document.getElementById('adminAuthModal').classList.add('hidden');
+        }
+
+        function verifyAdminPassword() {
+            const pwd = document.getElementById('adminPasswordInput').value.trim();
+            if (pwd === ADMIN_PASSWORD_CODE) {
+                isAdminAuthenticated = true;
+                closeAdminAuthModal();
+                openAdminPanel();
+                showToast("تم تسجيل الدخول كمسؤول بنجاح!", "success");
+            } else {
+                showToast("كلمة السر غير صحيحة!", "error");
+            }
+        }
+
+        function openAdminPanel() {
+            const modal = document.getElementById('screen-admin');
+            modal.classList.remove('hidden');
+            renderAdminQuestionsList();
+        }
+
+        function renderAdminQuestionsList() {
+            const container = document.getElementById('adminQuestionsList');
+            document.getElementById('adminQuestionsCount').textContent = activeQuestions.length;
+            container.innerHTML = '';
+
+            activeQuestions.forEach((q, index) => {
+                const row = document.createElement('div');
+                row.className = "bg-slate-900 border border-slate-700 p-3 rounded-lg flex justify-between items-center gap-2";
+                row.innerHTML = `
+                    <div class="overflow-hidden">
+                        <div class="font-bold text-slate-200 truncate">س${index+1}: ${q.question}</div>
+                        <div class="text-slate-400 text-[10px]">${q.category} | الإجابة الصحيحة: ${q.correct}</div>
+                    </div>
+                    <button onclick="deleteQuestion(${q.id})" class="text-rose-400 hover:text-rose-300 p-1.5 rounded bg-rose-500/10 shrink-0">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function handleAddNewQuestion(e) {
+            e.preventDefault();
+            const cat = document.getElementById('newCat').value.trim();
+            const qText = document.getElementById('newQText').value.trim();
+            const optA = document.getElementById('optA').value.trim();
+            const optB = document.getElementById('optB').value.trim();
+            const optC = document.getElementById('optC').value.trim();
+            const optD = document.getElementById('optD').value.trim();
+            const correctOpt = document.getElementById('correctOpt').value;
+
+            const newObj = {
+                id: Date.now(),
+                category: cat,
+                question: qText,
+                options: [optA, optB, optC, optD],
+                correct: correctOpt
+            };
+
+            activeQuestions.push(newObj);
+            saveQuestionsToStorage();
+            renderAdminQuestionsList();
+            document.getElementById('addQuestionForm').reset();
+            showToast("تمت إضافة السؤال بنجاح!", "success");
+        }
+
+        function deleteQuestion(id) {
+            activeQuestions = activeQuestions.filter(q => q.id !== id);
+            saveQuestionsToStorage();
+            renderAdminQuestionsList();
+            showToast("تم حذف السؤال!", "info");
+        }
+
+        function saveQuestionsToStorage() {
+            localStorage.setItem('secure_exam_questions_ar', JSON.stringify(activeQuestions));
+            document.getElementById('totalQuestionsNum').textContent = activeQuestions.length;
+        }
+
+        function exportQuestionsJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(activeQuestions, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `exam_questions_ar_${Date.now()}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importQuestionsJSON(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const imported = JSON.parse(event.target.result);
+                    if (Array.isArray(imported)) {
+                        activeQuestions = imported;
+                        saveQuestionsToStorage();
+                        renderAdminQuestionsList();
+                        showToast("تم استيراد بنك الأسئلة بنجاح!", "success");
+                    }
+                } catch(err) {
+                    showToast("ملف JSON غير صالح!", "error");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function restoreDefaultQuestions() {
+            activeQuestions = [...defaultQuestions];
+            saveQuestionsToStorage();
+            renderAdminQuestionsList();
+            showToast("تمت استعادة الأسئلة الأصلية بنجاح!", "success");
+        }
+
+        /* ==========================================================================
+           7. UI UTILITIES & NOTIFICATIONS
+           ========================================================================== */
+        function showToast(message, type = "info") {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            const bgColors = {
+                success: 'bg-emerald-600 text-white',
+                error: 'bg-rose-600 text-white',
+                warning: 'bg-amber-600 text-white',
+                info: 'bg-indigo-600 text-white'
+            };
+
+            toast.className = `px-4 py-3 rounded-xl shadow-xl border border-white/10 text-xs font-bold transition transform translate-y-2 opacity-0 flex items-center gap-2 pointer-events-auto ${bgColors[type] || bgColors.info}`;
+            toast.innerHTML = `<span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function showCustomConfirm(msg, onConfirm) {
+            const modal = document.createElement('div');
+            modal.className = "fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4";
+            modal.innerHTML = `
+                <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl max-w-sm w-full space-y-4 text-center shadow-2xl">
+                    <i class="fa-solid fa-circle-question text-amber-400 text-3xl"></i>
+                    <p class="text-sm font-bold text-slate-200">${msg}</p>
+                    <div class="flex gap-2 pt-2">
+                        <button id="cancelBtn" class="w-1/2 py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-xl text-xs font-bold">إلغاء</button>
+                        <button id="okBtn" class="w-1/2 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold">تأكيد</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            modal.querySelector('#cancelBtn').onclick = () => modal.remove();
+            modal.querySelector('#okBtn').onclick = () => {
+                modal.remove();
+                onConfirm();
+            };
+        }
+    </script>
+</body>
+</html>
