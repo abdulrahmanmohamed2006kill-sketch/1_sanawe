@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مغامرة مازن مع أنظمة التشغيل | Operating Systems Adventure</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Arabic Cute Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        tajawal: ['Tajawal', 'sans-serif'],
+                    },
+                    colors: {
+                        cartoonBlue: '#2563EB',
+                        cartoonPurple: '#7C3AED',
+                        cartoonYellow: '#F59E0B',
+                        cartoonGreen: '#10B981',
+                        cartoonPink: '#EC4899',
+                        cartoonDark: '#1E293B',
+                    },
+                    boxShadow: {
+                        'cartoon': '4px 4px 0px #000000',
+                        'cartoon-lg': '6px 6px 0px #000000',
+                        'cartoon-sm': '2px 2px 0px #000000',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #F0F9FF;
+            background-image: radial-gradient(#BAE6FD 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+        }
+        .cartoon-border {
+            border: 3px solid #000000;
+        }
+        .bounce-gentle {
+            animation: bounceGentle 2s infinite;
+        }
+        @keyframes bounceGentle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .pulse-glow {
+            animation: pulseGlow 1.5s infinite alternate;
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 5px rgba(37, 99, 235, 0.4); }
+            100% { box-shadow: 0 0 20px rgba(37, 99, 235, 0.8); }
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col justify-between selection:bg-yellow-300 selection:text-black">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-yellow-400 border-b-4 border-black sticky top-0 z-50 px-4 py-3 shadow-md">
+        <div class="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-white rounded-full border-2 border-black flex items-center justify-center text-2xl shadow-cartoon-sm">
+                    🚀
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-black text-black leading-tight">مغامرة مازن مع أنظمة التشغيل</h1>
+                    <p class="text-xs md:text-sm font-bold text-slate-700">الصف الأول الإعدادي - الحاسب الآلي (ICT)</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button onclick="playAudioText()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-3 rounded-xl border-2 border-black shadow-cartoon-sm text-sm flex items-center gap-1 active:translate-y-1 transition-all">
+                    <i class="fas fa-volume-high"></i> <span class="hidden sm:inline">اقرأ لي القصة</span>
+                </button>
+                <div class="bg-white border-2 border-black rounded-xl px-3 py-1 font-black text-xs md:text-sm text-blue-700 shadow-cartoon-sm">
+                    ⭐ النقاط: <span id="scoreDisplay" class="text-red-500">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto w-full p-4 md:p-6 flex-grow">
+        
+        <!-- Story Progress Bar -->
+        <div class="bg-white border-3 border-black rounded-2xl p-4 mb-6 shadow-cartoon">
+            <div class="flex justify-between items-center mb-2 font-bold text-sm">
+                <span><i class="fas fa-map-location-dot text-blue-600 ml-1"></i> خريطة رحلة مازن في مدينة التكنولوجيا</span>
+                <span id="chapterProgressText" class="text-purple-600">المحطة 1 من 6</span>
+            </div>
+            <div class="w-full bg-slate-200 h-4 rounded-full border-2 border-black overflow-hidden">
+                <div id="progressBar" class="bg-gradient-to-r from-blue-500 to-green-400 h-full w-1/6 transition-all duration-500"></div>
+            </div>
+            
+            <!-- Chapter Selector Navigation Buttons -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 mt-4 text-xs font-bold">
+                <button onclick="goToChapter(1)" id="navBtn1" class="p-2 rounded-xl border-2 border-black bg-yellow-300 text-black shadow-cartoon-sm text-center truncate hover:bg-yellow-400">1. القابلة للارتداء والشبكات</button>
+                <button onclick="goToChapter(2)" id="navBtn2" class="p-2 rounded-xl border-2 border-black bg-white text-slate-700 shadow-cartoon-sm text-center truncate hover:bg-slate-100">2. الأجهزة الذكية</button>
+                <button onclick="goToChapter(3)" id="navBtn3" class="p-2 rounded-xl border-2 border-black bg-white text-slate-700 shadow-cartoon-sm text-center truncate hover:bg-slate-100">3. السيارات والأنظمة المدمجة</button>
+                <button onclick="goToChapter(4)" id="navBtn4" class="p-2 rounded-xl border-2 border-black bg-white text-slate-700 shadow-cartoon-sm text-center truncate hover:bg-slate-100">4. التحكم الصناعي (ICS)</button>
+                <button onclick="goToChapter(5)" id="navBtn5" class="p-2 rounded-xl border-2 border-black bg-white text-slate-700 shadow-cartoon-sm text-center truncate hover:bg-slate-100">5. الشاشة الافتتاحية</button>
+                <button onclick="goToChapter(6)" id="navBtn6" class="p-2 rounded-xl border-2 border-black bg-white text-slate-700 shadow-cartoon-sm text-center truncate hover:bg-slate-100">6. المختبر والتحدي</button>
+            </div>
+        </div>
+
+        <!-- Story Content Dynamic Area -->
+        <div id="storyContainer" class="bg-white border-4 border-black rounded-3xl p-5 md:p-8 shadow-cartoon-lg relative min-h-[450px]">
+            <!-- Content will be dynamically populated here via JS -->
+        </div>
+
+        <!-- Character Helper Overlay Box -->
+        <div class="mt-6 bg-blue-100 border-3 border-black rounded-2xl p-4 shadow-cartoon flex items-center gap-4">
+            <div class="text-4xl md:text-5xl bg-white p-3 rounded-2xl border-2 border-black bounce-gentle flex-shrink-0">
+                👦🏻
+            </div>
+            <div>
+                <h4 class="font-black text-blue-900 text-lg">مازن يقول لك:</h4>
+                <p id="mazenTip" class="text-slate-800 text-sm font-semibold">"أهلاً بك يا صديقي! تعال ننطلق معاً لنكتشف كيف تدير أنظمة التشغيل العالم من حولنا بأسلوب ممتع وبسيط!"</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Custom Modal for Alerts & Interactive Feedback -->
+    <div id="customModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white border-4 border-black rounded-3xl max-w-md w-full p-6 shadow-cartoon-lg text-center relative animate-bounce-in">
+            <div id="modalIcon" class="text-5xl mb-3">🎉</div>
+            <h3 id="modalTitle" class="text-2xl font-black text-black mb-2">ممتاز يا بطل!</h3>
+            <p id="modalMessage" class="text-slate-700 font-bold mb-5">إجابة صحيحة وحصلت على نقاط جديدة!</p>
+            <button onclick="closeModal()" class="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-black py-3 px-6 rounded-2xl border-3 border-black shadow-cartoon active:translate-y-1 transition-all">
+                استمرار المغامرة 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t-4 border-black text-white text-center p-4 text-sm font-bold">
+        <p>مغامرة أنظمة التشغيل - مادة الكمبيوتر وتكنولوجيا المعلومات للصف الأول الإعدادي 🎓</p>
+    </footer>
+
+    <script>
+        // Global State & Data
+        let currentChapter = 1;
+        let score = 0;
+        let audioSynth = window.speechSynthesis;
+
+        // Sound synthesizer using Web Audio API to avoid external files
+        function playSound(type) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'success') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.3); // A5
+                    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.3);
+                } else if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.08);
+                } else if (type === 'error') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(200, ctx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(100, ctx.currentTime + 0.2);
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.2);
+                }
+            } catch (e) {
+                console.log("Audio not supported or blocked");
+            }
+        }
+
+        function addScore(pts) {
+            score += pts;
+            document.getElementById('scoreDisplay').innerText = score;
+            playSound('success');
+        }
+
+        function showModal(title, message, icon = '🎉') {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalMessage').innerText = message;
+            document.getElementById('modalIcon').innerText = icon;
+            document.getElementById('customModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            playSound('click');
+            document.getElementById('customModal').classList.add('hidden');
+        }
+
+        function playAudioText() {
+            if (!audioSynth) {
+                alert('عذراً، متصفحك لا يدعم قراءة النصوص الصوتي.');
+                return;
+            }
+            audioSynth.cancel(); // Stop current speech
+            
+            const chapterText = document.getElementById('storyContentText')?.innerText || "مرحباً بك في مغامرة أنظمة التشغيل مع مازن!";
+            const utterance = new SpeechSynthesisUtterance(chapterText);
+            utterance.lang = 'ar-SA';
+            utterance.rate = 0.9; // Friendly moderate pace
+            audioSynth.speak(utterance);
+        }
+
+        function updateNavigationUI() {
+            document.getElementById('progressBar').style.width = `${(currentChapter / 6) * 100}%`;
+            document.getElementById('chapterProgressText').innerText = `المحطة ${currentChapter} من 6`;
+
+            for (let i = 1; i <= 6; i++) {
+                const btn = document.getElementById(`navBtn${i}`);
+                if (i === currentChapter) {
+                    btn.className = "p-2 rounded-xl border-2 border-black bg-yellow-300 text-black font-black shadow-cartoon-sm text-center truncate hover:bg-yellow-400";
+                } else {
+                    btn.className = "p-2 rounded-xl border-2 border-black bg-white text-slate-700 shadow-cartoon-sm text-center truncate hover:bg-slate-100";
+                }
+            }
+        }
+
+        function goToChapter(num) {
+            playSound('click');
+            if (audioSynth) audioSynth.cancel();
+            currentChapter = num;
+            updateNavigationUI();
+            renderChapter();
+            window.scrollTo({ top: 120, behavior: 'smooth' });
+        }
+
+        function renderChapter1() {
+            document.getElementById('mazenTip').innerText = "في الصباح، استيقظت على صوت المنبه في ساعتي الذكية، ورأيت والدي يقدم لي الراوتر الجديد!";
+            return `
+                <div id="storyContentText" class="space-y-6">
+                    <div class="flex items-center gap-3 border-b-3 border-black pb-3">
+                        <span class="text-3xl bg-yellow-200 p-2 rounded-2xl border-2 border-black">⌚</span>
+                        <div>
+                            <span class="bg-blue-600 text-white text-xs font-black px-2 py-1 rounded-md border border-black">الجزء السادس والسابع 6 & 7</span>
+                            <h2 class="text-2xl font-black text-slate-900">المحطة 1: الأجهزة القابلة للارتداء وأجهزة الشبكة</h2>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Wearable Devices -->
+                        <div class="bg-purple-50 border-3 border-black rounded-2xl p-5 shadow-cartoon relative">
+                            <span class="absolute -top-3 right-4 bg-purple-600 text-white font-black text-xs px-3 py-1 rounded-full border border-black">
+                                6. Wearable Devices
+                            </span>
+                            <h3 class="text-xl font-black text-purple-900 mt-2 mb-2">1. الأجهزة القابلة للارتداء</h3>
+                            
+                            <p class="text-slate-700 text-sm leading-relaxed mb-3">
+                                <strong>تستعمل الأجهزة القابلة للارتداء</strong> مثل: <span class="text-purple-700 font-bold">(الساعات الذكية Smartwatches - وأجهزة تتبع اللياقة البدنية Fitness Trackers)</span> أنظمة تشغيل مصممة خصيصاً لوظائفها المحتلفة ومتطلباتها الخاصة.
+                            </p>
+                            <div class="bg-white border-2 border-black rounded-xl p-3 text-xs space-y-2">
+                                <p class="font-bold text-slate-800">💡 مثال مازن من الحياة اليومية:</p>
+                                <p class="text-slate-600">"ساعتي الذكية بتحسب نبضات قلبي وخطواتي وأنا بلعب كورة في المدرسة، لأن نظام تشغيلها خفيف ومخصص للياقة البدنية!"</p>
+                            </div>
+                        </div>
+
+                        <!-- Network Devices -->
+                        <div class="bg-blue-50 border-3 border-black rounded-2xl p-5 shadow-cartoon relative">
+                            <span class="absolute -top-3 right-4 bg-blue-600 text-white font-black text-xs px-3 py-1 rounded-full border border-black">
+                                7. Network Devices
+                            </span>
+                            <h3 class="text-xl font-black text-blue-900 mt-2 mb-2">2. أجهزة الشبكة</h3>
+                            
+                            <p class="text-slate-700 text-sm leading-relaxed mb-3">
+                                <strong>تستخدم أجهزة التوجيه (Routers) والمحولات (Switches)</strong> ومعدات الشبكة الأخرى أنظمة تشغيل لإدارة الشبكة، والإعدادات، ومميزات الأمان.
+                            </p>
+                            <div class="bg-white border-2 border-black rounded-xl p-3 text-xs space-y-2">
+                                <p class="font-bold text-slate-800">💡 مثال مازن من الحياة اليومية:</p>
+                                <p class="text-slate-600">"الراوتر (Router) في صالة بيتنا جواه نظام تشغيل متطور بيميّز الأجهزة ويدير كلمة سر الواي فاي وحمايتنا!"</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Micro-Simulation 1 -->
+                    <div class="bg-yellow-50 border-3 border-black rounded-2xl p-4 shadow-cartoon">
+                        <h4 class="font-black text-black text-md mb-2 flex items-center gap-2">
+                            🎮 تجربة تفاعلية: اختبر جهاز الشبكة واللائقة!
+                        </h4>
+                        <p class="text-xs text-slate-700 mb-3">اضغط على الزر لتشغيل نظام تشغيل الساعة والراوتر وشاهد ماذا يحدث:</p>
+                        
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="simulateWearable()" class="bg-purple-500 hover:bg-purple-600 text-white font-black text-xs py-2 px-4 rounded-xl border-2 border-black shadow-cartoon-sm active:translate-y-0.5">
+                                ⌚ تشغيل نظام الساعة الذكية
+                            </button>
+                            <button onclick="simulateRouter()" class="bg-blue-500 hover:bg-blue-600 text-white font-black text-xs py-2 px-4 rounded-xl border-2 border-black shadow-cartoon-sm active:translate-y-0.5">
+                                📡 ضبط إعدادات أمان الراوتر
+                            </button>
+                        </div>
+                        <div id="simResult1" class="mt-3 hidden p-3 bg-white border-2 border-black rounded-xl text-xs font-bold text-slate-800"></div>
+                    </div>
+
+                    <div class="flex justify-end pt-4">
+                        <button onclick="goToChapter(2)" class="bg-green-400 hover:bg-green-500 text-black font-black py-3 px-6 rounded-2xl border-3 border-black shadow-cartoon active:translate-y-1 transition-all flex items-center gap-2">
+                            المحطة التالية: أنظمة الأجهزة الذكية 👈
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderChapter2() {
+            document.getElementById('mazenTip').innerText = "دخلت الصالة فوجدت كل جهاز في بيتنا يعمل بنظام تشغيل مختلف تناسب مع شاشته وحجمه!";
+            return `
+                <div id="storyContentText" class="space-y-6">
+                    <div class="flex items-center gap-3 border-b-3 border-black pb-3">
+                        <span class="text-3xl bg-blue-200 p-2 rounded-2xl border-2 border-black">📱</span>
+                        <div>
+                            <span class="bg-yellow-500 text-black text-xs font-black px-2 py-1 rounded-md border border-black">Learn : Operating Systems</span>
+                            <h2 class="text-2xl font-black text-slate-900">المحطة 2: أنظمة تشغيل الأجهزة الذكية (Smart Devices)</h2>
+                        </div>
+                    </div>
+
+                    <p class="text-slate-800 font-bold text-sm bg-blue-50 p-3 rounded-xl border-2 border-black">
+                        📌 <strong>حقيقة هامة:</strong> تُستخدم أنظمة التشغيل في العديد من الأجهزة الذكية لتسهيل التعامل معها وتحديد تطبيقاتها.
+                    </p>
+
+                    <!-- Smart Devices Grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <!-- Tizen -->
+                        <div class="bg-red-50 border-3 border-black rounded-2xl p-4 shadow-cartoon text-center hover:scale-105 transition-all">
+                            <div class="text-4xl mb-2">📺</div>
+                            <h4 class="font-black text-slate-900 text-base">Tizen</h4>
+                            <p class="text-xs font-bold text-red-600 mt-1">التلفزيون الذكي (Smart TV)</p>
+                            <p class="text-[11px] text-slate-600 mt-2">نظام مخصص للشاشات الذكية لعرض الأفلام والتطبيقات.</p>
+                        </div>
+
+                        <!-- Windows -->
+                        <div class="bg-blue-50 border-3 border-black rounded-2xl p-4 shadow-cartoon text-center hover:scale-105 transition-all">
+                            <div class="text-4xl mb-2">🖥️</div>
+                            <h4 class="font-black text-slate-900 text-base">Windows</h4>
+                            <p class="text-xs font-bold text-blue-600 mt-1">الكمبيوتر المكتبي (Desktop PC)</p>
+                            <p class="text-[11px] text-slate-600 mt-2">النظام الأشهر للكمبيوتر المكتبي والبرامج الأكاديمية.</p>
+                        </div>
+
+                        <!-- iOS -->
+                        <div class="bg-purple-50 border-3 border-black rounded-2xl p-4 shadow-cartoon text-center hover:scale-105 transition-all">
+                            <div class="text-4xl mb-2">📱</div>
+                            <h4 class="font-black text-slate-900 text-base">iOS</h4>
+                            <p class="text-xs font-bold text-purple-600 mt-1">الهواتف الذكية (Apple's iPhones)</p>
+                            <p class="text-[11px] text-slate-600 mt-2">نظام تشغيل هواتف وأجهزة أبل الذكية.</p>
+                        </div>
+
+                        <!-- Linux -->
+                        <div class="bg-green-50 border-3 border-black rounded-2xl p-4 shadow-cartoon text-center hover:scale-105 transition-all">
+                            <div class="text-4xl mb-2">💻</div>
+                            <h4 class="font-black text-slate-900 text-base">Linux</h4>
+                            <p class="text-xs font-bold text-green-600 mt-1">اللابتوب والكمبيوتر (Laptop)</p>
+                            <p class="text-[11px] text-slate-600 mt-2">نظام تشغيل قوي ومفتوح المصدر للكمبيوتر المحمول.</p>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Matching Activity -->
+                    <div class="bg-yellow-100 border-3 border-black rounded-2xl p-5 shadow-cartoon">
+                        <h3 class="font-black text-black text-base mb-2">🧩 نشاط الكتاب المدرسي التفاعلي (Activity):</h3>
+                        <p class="text-xs font-bold text-slate-700 mb-4">اختر نظام التشغيل المناسب لكل جهاز من القائمة التالية: (Windows - Tizen - iOS - Linux)</p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-bold">
+                            <div class="bg-white p-3 rounded-xl border-2 border-black flex justify-between items-center">
+                                <span>1. التلفزيون الذكي (Smart TV)</span>
+                                <select id="match1" class="border-2 border-black rounded-lg p-1 bg-yellow-50">
+                                    <option value="">اختر النظام...</option>
+                                    <option value="Tizen">Tizen</option>
+                                    <option value="Windows">Windows</option>
+                                    <option value="iOS">iOS</option>
+                                    <option value="Linux">Linux</option>
+                                </select>
+                            </div>
+
+                            <div class="bg-white p-3 rounded-xl border-2 border-black flex justify-between items-center">
+                                <span>2. جهاز الكيسة المكتبي (PC Box)</span>
+                                <select id="match2" class="border-2 border-black rounded-lg p-1 bg-yellow-50">
+                                    <option value="">اختر النظام...</option>
+                                    <option value="Tizen">Tizen</option>
+                                    <option value="Windows">Windows</option>
+                                    <option value="iOS">iOS</option>
+                                    <option value="Linux">Linux</option>
+                                </select>
+                            </div>
+
+                            <div class="bg-white p-3 rounded-xl border-2 border-black flex justify-between items-center">
+                                <span>3. الهاتف الذكي (Smartphone)</span>
+                                <select id="match3" class="border-2 border-black rounded-lg p-1 bg-yellow-50">
+                                    <option value="">اختر النظام...</option>
+                                    <option value="Tizen">Tizen</option>
+                                    <option value="Windows">Windows</option>
+                                    <option value="iOS">iOS</option>
+                                    <option value="Linux">Linux</option>
+                                </select>
+                            </div>
+
+                            <div class="bg-white p-3 rounded-xl border-2 border-black flex justify-between items-center">
+                                <span>4. اللابتوب المحمول (Laptop)</span>
+                                <select id="match4" class="border-2 border-black rounded-lg p-1 bg-yellow-50">
+                                    <option value="">اختر النظام...</option>
+                                    <option value="Tizen">Tizen</option>
+                                    <option value="Windows">Windows</option>
+                                    <option value="iOS">iOS</option>
+                                    <option value="Linux">Linux</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button onclick="checkActivityMatching()" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-2.5 rounded-xl border-2 border-black shadow-cartoon-sm active:translate-y-0.5">
+                            تأكد من إجابتك وحصّل النقاط 🎯
+                        </button>
+                    </div>
+
+                    <div class="flex justify-between pt-4">
+                        <button onclick="goToChapter(1)" class="bg-slate-200 hover:bg-slate-300 text-black font-black py-3 px-6 rounded-2xl border-3 border-black shadow-cartoon active:translate-y-1">
+                            👉 المحطة السابقة
+                        </button>
+                        <button onclick="goToChapter(3)" class="bg-green-400 hover:bg-green-500 text-black font-black py-3 px-6 rounded-2xl border-3 border-black shadow-cartoon active:translate-y-1">
+                            المحطة التالية: السيارات والأنظمة المدمجة 👈
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderChapter3() {
+            document.getElementById('mazenTip').innerText = "ركبت مع أبي السيارة وذهبنا لسحب النقود والشراء، واكتشفت أن السيارات وأجهزة الـ ATM والـ POS تعمل بأنظمة تشغيل ذكية!";
+            return `
+                <div id="storyContentText" class="space-y-6">
+                    <div class="flex items-center gap-3 border-b-3 border-black pb-3">
+                        <span class="text-3xl bg-green-200 p-2 rounded-2xl border-2 border-black">🚗</span>
+                        <div>
+                            <span class="bg-green-600 text-white text-xs font-black px-2 py-1 rounded-md border border-black">Lesson Three - Parts 1 & 2</span>
+                            <h2 class="text-2xl font-black text-slate-900">المحطة 3: أنظمة السيارات والأنظمة المدمجة</h2>
+                        </div>
+                    </div>
+
+                    <!-- 1. Automotive Systems -->
+                    <div class="bg-blue-50 border-3 border-black rounded-2xl p-5 shadow-cartoon">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center font-black border border-black text-sm">1</span>
+                            <h3 class="text-xl font-black text-blue-900">أنظمة السيارات (Automotive Systems)</h3>
+                        </div>
+                        <p class="text-slate-700 text-sm leading-relaxed mb-3">
+                            غالباً ما تحتوي السيارات والمركبات الحديثة (Modern cars and vehicles) على أنظمة تشغيل للتحكم في الوظائف المختلفة مثل:
+                        </p>
+                        <ul class="grid md:grid-cols-3 gap-3 text-xs font-bold">
+                            <li class="bg-white p-3 rounded-xl border-2 border-black shadow-cartoon-sm">
+                                <span class="text-blue-600 font-black block mb-1">🎵 أنظمة المعلومات والترفيه (Infotainment)</span>
+                                تشغيل الأغاني والراديو وعرض معلومات السيارة.
+                            </li>
+                            <li class="bg-white p-3 rounded-xl border-2 border-black shadow-cartoon-sm">
+                                <span class="text-green-600 font-black block mb-1">🗺️ الترفيه والملاحة (Navigation)</span>
+                                خرائط وتحديد المسارات والاتجاهات أثناء القيادة.
+                            </li>
+                            <li class="bg-white p-3 rounded-xl border-2 border-black shadow-cartoon-sm">
+                                <span class="text-purple-600 font-black block mb-1">🛡️ تقنيات مساعدة السائق (Driver Assistance)</span>
+                                مساعدة السائق أثناء قيادة السيارة والتحكم بها وبث إنذارات الأمان.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- 2. Embedded Systems -->
+                    <div class="bg-yellow-50 border-3 border-black rounded-2xl p-5 shadow-cartoon">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="bg-yellow-500 text-black rounded-full w-7 h-7 flex items-center justify-center font-black border border-black text-sm">2</span>
+                            <h3 class="text-xl font-black text-yellow-900">الأنظمة المدمجة (Embedded Systems)</h3>
+                        </div>
+                        <p class="text-slate-700 text-sm leading-relaxed mb-3">
+                            تُستخدم أنظمة التشغيل في الأنظمة المدمجة مثل:
+                        </p>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="bg-white p-4 rounded-2xl border-2 border-black">
+                                <h4 class="font-black text-slate-900 text-sm mb-1">🏧 أجهزة الصراف الآلي (Automated Teller Machine - ATM)</h4>
+                                <p class="text-xs text-slate-600">ماكينات سحب وإيداع الأموال البنكية بأمان تام.</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-2xl border-2 border-black">
+                                <h4 class="font-black text-slate-900 text-sm mb-1">💳 محطات نقاط البيع (Point of Sale Terminal - POS)</h4>
+                                <p class="text-xs text-slate-700 leading-relaxed bg-yellow-100 p-2 rounded-lg border border-black mt-1">
+                                    <strong>تعريف هام جداً:</strong> محطات نقاط البيع هي عبارة عن <span class="text-red-600 font-bold">جهاز إلكتروني</span> يستطيع من خلاله العميل دفع ثمن المنتجات التي قام بشرائها، ليتم <span class="text-blue-700 font-bold">خصم ثمن المنتجات من حسابه البنكي بدلاً من أن يقوم بدفع ثمنها نقداً (كاش)</span>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ATM / POS Interactive Simulator -->
+                    <div class="bg-purple-100 border-3 border-black rounded-2xl p-4 shadow-cartoon">
+                        <h4 class="font-black text-purple-900 text-sm mb-2">💳 محاكاة نقطة البيع (POS Terminal Simulation):</h4>
+                        <p class="text-xs text-slate-700 mb-3">اشترى مازن عصيراً بقيمة 20 جنيهاً. ادفع بالفيزا وشاهد كيف يخصم الجهاز المبلغ عبر نظام التشغيل المدمج!</p>
+                        
+                        <div class="flex items-center gap-3">
+                            <button onclick="simulatePOSPay()" class="bg-purple-600 hover:bg-purple-700 text-white font-black text-xs py-2 px-4 rounded-xl border-2 border-black shadow-cartoon-sm active:translate-y-0.5">
+                                💳 تمرير الكارت والدفع عبر POS
+                            </button>
+                            <span id="posStatus" class="text-xs font-bold text-slate-800">الحالة: بانتظار الكارت...</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between pt-4">
+                        <button onclick="goToChapter(2)" class="bg-slate-200 hover:bg-slate-300 text-black font-black py-3 px-6 rounded-2xl border-3 border-black shadow-cartoon active:translate-y-1">
+                            👉 المحطة السابقة
+                        </button>
+                        <button onclick="goToChapter(4)" class="bg-green-400 hover:bg-green-500 text-black font-black py-3 px-6 rounded-2xl border-3 border-black shadow-cartoon active:translate-y-1">
+                            المحطة التالية: التحكم الصناعي (ICS) 👈
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderChapter4() {
+            document.getElementById('mazenTip').innerText = "مررنا بـ المنطقة الصناعية ومحطة المياه، وشرح لي أبي كيف تحمي أنظمة ICS المصانع والعمال وتزيد الإنتاج!";
+            return `
+                <div id="storyContentText" class="space-y-6">
+                    <div class="flex items-center gap-3 border-b-3 border-black pb-3">
+                        <span class="text-3xl bg-red-200 p-2 rounded-2xl border-2 border-black">🏭</span>
+                        <div>
+                            <span class="bg-red-600 text-white text-xs font-black px-2 py-1 rounded-md border border-black">Lesson Three - Part 3</span>
+                            <h2 class="text-2xl font-black text-slate-900">المحطة 4: أنظمة التحكم الصناعية (ICS)</h2>
+                        </div>
+                    </div>
+
+                    <!-- ICS Definition -->
+                    <div class="bg-pink-50 border-3 border-black rounded-2xl p-5 shadow-cartoon">
+                        <div class="bg-pink-500 text-white font-black text-sm p-3 rounded-xl border-2 border-black mb-3">
+                            📌 Industrial Control Systems (ICS) هو مصطلح واسع يشمل: العديد من أنظمة التحكم الصناعية والعديد من الأجهزة التي تُستخدم في المنشآت الصناعية.
+                        </div>
+                        <p class="text-slate-800 font-bold text-sm">
+                            🎯 <strong>الهدف الرئيسي:</strong> للتحكم في أداء الآلات والعمليات الصناعية (To control the performance of machines and industrial processes).
+                        </p>
+                    </div>
+
+                    <!-- Work Mechanism & Benefits -->
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-blue-50 border-3 border-black rounded-2xl p-4 shadow-cartoon">
+                            <h4 class="font-black text-blue-900 text-base mb-2">1. ضبط ومراقبة سير العمليات الصناعية</h4>
+                            <p class="text-xs text-blue-700 font-bold bg-white p-2 rounded-lg border border-black">
+                                📈 Control and monitor the progress of industrial processes <br>
+                                ➔ مما يزيد من إنتاجية المصانع ويحسن جودة المنتجات المُصنّعة (Which increases factory productivity and improves the quality of manufactured products).
+                            </p>
+                        </div>
+
+                        <div class="bg-green-50 border-3 border-black rounded-2xl p-4 shadow-cartoon">
+                            <h4 class="font-black text-green-900 text-base mb-2">2. توفير بيئة آمنة للصحة والسلامة التشغيلية</h4>
+                            <p class="text-xs text-green-700 font-bold bg-white p-2 rounded-lg border border-black">
+                                🛡️ Provide a safe environment for health and operational safety <br>
+                                ➔ من خلال تقليل التعرض للمواد والبيئات الخطرة (by reducing exposure to hazardous materials or environments).
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Hazardous Places & Industrial Sectors -->
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <!-- Hazardous Places -->
+                        <div class="bg-yellow-50 border-3 border-black rounded-2xl p-4 shadow-cartoon">
+                            <h4 class="font-black text-yellow-900 text-sm mb-2">⚠️ أمثلة البيئات والمصانع الخطرة:</h4>
+                            <ul class="text-xs font-bold text-slate-800 space-y-1.5 list-disc list-inside">
+                                <li>المصانع الكيماوية (chemical plants)</li>
+                                <li>مراكز معالجة المياه والنفايات (water and waste treatment centers)</li>
+                                <li>منشآت الطاقة النووية (nuclear power plants)</li>
+                                <li>مصافي التكرير (refineries)</li>
+                            </ul>
+                        </div>
+
+                        <!-- Industrial Sectors -->
+                        <div class="bg-purple-50 border-3 border-black rounded-2xl p-4 shadow-cartoon">
+                            <h4 class="font-black text-purple-900 text-sm mb-2">🌐 القطاعات الصناعية التي تستخدم ICS:</h4>
+                            <ul class="text-xs font-bold text-slate-800 space-y-1.5 list-disc list-inside">
+                                <li>مجال الطاقة والنقل (energy, transportation)</li>
+                                <li>الإنتاج الغذائي والبتروكيميائي (food and petrochemical production)</li>
+                                <li>الصناعات الإلكترونية والطبية والعديد من الصناعات الأخرى (electronics, medical industries, and many other industries)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Important Note Summary -->
+                    <div class="bg-yellow-200 border-3 border-black rounded-2xl p-4 shadow-cartoon text-xs font-bold text-slate-900">
+                        💡 <strong>ملخص هامة (Note):</strong> اعتمدت مجموعة واسعة من الأجهزة على أنظمة تشغيل لإدارة موارد الأجهزة الإلكترونية والحديثة ➔ لتشغيل التطبيقات ➔ تزويد المستخدمين بمنصة للتفاعل مع الجهاز (Provide users with a platform to interact with the device).
+                    </div>
+
+                    <div class="flex justify-between pt-4">
+                        <button onclick="goToChapter(3)" class="bg-slate-200 hover:bg-slate-300 text-black font-black py-3 px-6 rounded-2xl border-3 border-black shadow-cartoon active:translate-y-1">
+                            👉 المحطة السابقة
+                        </button>
+                        <button onclick="goToChapter(5)" class="bg-green-400 hover:bg-green-500 text-black font-black py-3 px-6 rounded-2xl border-3 border-black shadow-cartoon active:translate-y-1">
+                            المحطة التالية: الشاشة الافتتاحية لنظام التشغيل 👈
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderChapter5() {
+            document.getElementById('mazenTip').innerText = "عدت للمنزل وفتحت كمبيوتري المحمول، وهذه هي الشاشة الافتتاحية (Desktop) ومكوناتها الممتعة!";
+            return `
+                <div id="storyContentText" class="space-y-6">
+                    <div class="flex items-center gap-3 border-b-3 border-black pb-3">
+                        <span class="text-3xl bg-purple-200 p-2 rounded-2xl border-2 border-black">🖥️</span>
+                        <div>
+                            <span class="bg-purple-600 text-white text-xs font-black px-2 py-1 rounded-md border border-black">Startup screen of an OS</span>
+                            <h2 class="text-2xl font-black text-slate-900">المحطة 5: الشاشة الافتتاحية لنظام التشغيل (Desktop)</h2>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-50 border-3 border-black rounded-2xl p-4 shadow-cartoon">
+                        <p class="text-sm font-bold text-blue-900">
+                            🖥️ <strong>سطح المكتب (Desktop):</strong> هو الشاشة الافتتاحية لنظام التشغيل (Desktop is the operating system startup screen).
+                        </p>
+                    </div>
+
+                    <!-- Components Grid -->
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="bg-yellow-50 border-3 border-black rounded-2xl p-4 shadow-cartoon">
+                            <div class="text-2xl mb-1">🖼️</div>
+                            <h4 class="font-black text-slate-900 text-sm">الأيقونات (Icons)</h4>
+                            <p class="text-xs text-slate-700 mt-1">
+                                يتضمن سطح المكتب مجموعة من الرموز تسمى <strong>أيقونات (Icons)</strong>. تظهر الأيقونات مرتبة بشكل معين فوق خلفية.
+                            </p>
+                        </div>
+
+                        <div class="bg-green-50 border-3 border-black rounded-2xl p-4 shadow-cartoon">
+                            <div class="text-2xl mb-1">🎨</div>
+                            <h4 class="font-black text-slate-900 text-sm">الخلفية (Background)</h4>
+                            <p class="text-xs text-slate-700 mt-1">
+                                <strong>الخلفية</strong> هي عبارة عن صورة أو لون يقوم المستخدم بتحديدهم.
+                            </p>
+                        </div>
+
+                        <div class="bg-purple-50 border-3 border-black rounded-2xl p-4 shadow-cartoon">
+                            <div class="text-2xl mb-1">📊</div>
+                            <h4 class="font-black text-slate-900 text-sm">الأشرطة (Bars)</h4>
+                            <p class="text-xs text-slate-700 mt-1">
+                                تحتوي الأشرطة على:
+                                <br>• أيقونات ترمز لبرمجيات مثبتة على نظام التشغيل.
+                                <br>• أيقونات أخرى لضبط بعض إعدادات النظام مثل: <strong>التاريخ، الوقت، إعدادات الصوت، والشبكة</strong>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Desktop Simulator -->
+                    <div class="bg-slate-900 text-white border-4 border-black rounded-2xl p-4 shadow-cartoon relative overflow-hidden">
+                        <div class="flex justify-between items-center border-b border-slate-700 pb-2 mb-3">
+                            <span class="text-xs font-bold text-yellow-400">🖥️ شاشة كمبيوتر مازن التفاعلية (Interactive Desktop Simulator)</span>
+                            <span class="text-xs text-slate-400">Windows / Linux Desktop</span>
+                        </div>
+
+                        <!-- Desktop Content area -->
+                        <div id="virtualDesktop" class="h-44 bg-cover bg-center rounded-xl p-3 border border-slate-700 transition-all duration-300 relative" style="background-image: linear-gradient(to right bottom, #1e3c72, #2a5298);">
+                            <div class="grid grid-cols-3 gap-2 w-36">
+                                <div onclick="clickDesktopIcon('الملفات')" class="p-2 bg-white/20 hover:bg-white/40 rounded-lg text-center cursor-pointer backdrop-blur-sm border border-white/30 text-white">
+                                    <div class="text-xl">📁</div>
+                                    <span class="text-[10px] font-bold">الملفات</span>
+                                </div>
+                                <div onclick="clickDesktopIcon('المتصفح')" class="p-2 bg-white/20 hover:bg-white/40 rounded-lg text-center cursor-pointer backdrop-blur-sm border border-white/30 text-white">
+                                    <div class="text-xl">🌐</div>
+                                    <span class="text-[10px] font-bold">المتصفح</span>
+                                </div>
+                                <div onclick="clickDesktopIcon('الألعاب')" class="p-2 bg-white/20 hover:bg-white/40 rounded-lg text-center cursor-pointer backdrop-blur-sm border border-white/30 text-white">
+                                    <div class="text-xl">🎮</div>
+                                    <span class="text-[10px] font-bold">الألعاب</span>
+                                </div>
+                            </div>
+
+                            <!-- Bottom Bar / Taskbar -->
+                            <div class="absolute bottom-2 left-2 right-2 bg-black/80 backdrop-blur-md rounded-lg p-2 border border-slate-600 flex justify-between items-center text-[11px]">
+                                <div class="flex items-center gap-2">
+                                    <span class="bg-blue-600 px-2 py-0.5 rounded font-black cursor-pointer">ابدأ</span>
+                                    <span class="text-slate-300">أيقونات البرمجيات المثبتة</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-yellow-300">
+                                    <span onclick="showModal('إعدادات الصوت والشبكة', 'تتيح لك الأشرطة تعديل الصوت والواي فاي بسهولة!', '🔊')" class="cursor-pointer">🔊 📶</span>
+                                    <span id="liveClock" class="font-mono text-white">12:00 PM</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Wallpaper toggles -->
+                        <div class="mt-3 flex gap-2 text-xs font-bold">
+                            <span>تغيير خلفية سطح المكتب:</span>
+                            <button onclick="changeWallpaper('linear-gradient(to right bottom, #1e3c72, #2a5298)')" class="bg-blue-600 px-2 py-1 rounded text-white border border-white">أزرق</button>
+                            <button onclick="changeWallpaper('linear-gradient(to right bottom, #11998e, #38ef7d)')" class="bg-green-600 px-2 py-1 rounded text-white border border-white">أخضر</button>
+                            <button onclick="changeWallpaper('linear-gradient(to right bottom, #8e2de2, #4a00e0)')" class="bg-purple-600 px-2 py-1 rounded text-white border border-white">بنفسجي</button>
+                        </div>
+                    </div>
+
+                    <!-- Key Notes -->
+                    <div class="bg-red-50 border-3 border-black rounded-2xl p-4 shadow-cartoon text-xs font-bold text-slate-800 space-y-1">
+                        <p class="text-red-600 font-black">⚠️ ملاحظات هامة في الامتحانات (Note):</p>
+                        <p>1. تختلف الشاشة الافتتاحية لأنظمة التشغيل المختلفة (The startup screen varies for different operating systems).</p>
+                        <p>2. تختلف الشاشة الافتتاحية لنظام التشغيل حسب إصدار نظام التشغيل (The startup screen varies according to the version of the operating system).</p>
+                    </div>
+
+                    <div class="flex justify-between pt-4">
+                        <button onclick="goToChapter(4)" class="bg-slate-200 hover:bg-slate-300 text-black font-black py-3 px-6 rounded-2xl border-3 border-black shadow-cartoon active:translate-y-1">
+                            👉 المحطة السابقة
+                        </button>
+                        <button onclick="goToChapter(6)" class="bg-green-400 hover:bg-green-500 text-black font-black py-3 px-6 rounded-2xl border-3 border-black shadow-cartoon active:translate-y-1">
+                            المحطة التالية: المختبر والتحدي النهائي 🏆
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderChapter6() {
+            document.getElementById('mazenTip').innerText = "وصلنا للمحطة الأخيرة! اختبر نفسك في الأسئلة الشاملة لجميع محتويات الدرس واحصل على الوسام الذهبي!";
+            return `
+                <div id="storyContentText" class="space-y-6">
+                    <div class="flex items-center gap-3 border-b-3 border-black pb-3">
+                        <span class="text-3xl bg-yellow-200 p-2 rounded-2xl border-2 border-black">🏆</span>
+                        <div>
+                            <span class="bg-yellow-600 text-white text-xs font-black px-2 py-1 rounded-md border border-black">Pop Quiz & Challenge</span>
+                            <h2 class="text-2xl font-black text-slate-900">المحطة 6: المختبر والتحدي النهائي (Pop Quiz)</h2>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Final Quiz Box -->
+                    <div class="bg-yellow-50 border-3 border-black rounded-2xl p-5 shadow-cartoon space-y-6">
+                        <h3 class="text-lg font-black text-black">اختر الإجابة الصحيحة من بين الأقواس (Choose the correct answer):</h3>
+
+                        <!-- Q1 -->
+                        <div class="bg-white p-4 rounded-xl border-2 border-black">
+                            <p class="font-bold text-sm text-slate-900 mb-2">1. The operating system of "Apple" is ............. [نظام تشغيل أبل هو]:</p>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs font-bold">
+                                <button onclick="answerQuiz(1, 'iOS', true)" class="p-2 border-2 border-black rounded-lg hover:bg-yellow-200">a. iOS</button>
+                                <button onclick="answerQuiz(1, 'Android', false)" class="p-2 border-2 border-black rounded-lg hover:bg-yellow-200">b. Android</button>
+                                <button onclick="answerQuiz(1, 'Windows', false)" class="p-2 border-2 border-black rounded-lg hover:bg-yellow-200">c. Windows</button>
+                                <button onclick="answerQuiz(1, 'ATM', false)" class="p-2 border-2 border-black rounded-lg hover:bg-yellow-200">d. ATM</button>
+                            </div>
+                            <p id="q1Feedback" class="mt-2 text-xs font-bold hidden"></p>
+                        </div>
+
+                        <!-- Q2 -->
+                        <div class="bg-white p-4 rounded-xl border-2 border-black">
+                            <p class="font-bold text-sm text-slate-900 mb-2">2. Desktop and laptop computers use different distributions of "............." [تستخدم أجهزة الكمبيوتر توزيعات مختلفة من]:</p>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs font-bold">
+                                <button onclick="answerQuiz(2, 'Apple iOS', false)" class="p-2 border-2 border-black rounded-lg hover:bg-yellow-200">a. Apple's iOS</button>
+                                <button onclick="answerQuiz(2, 'Smart TVs', false)" class="p-2 border-2 border-black rounded-lg hover:bg-yellow-200">b. Smart TVs</button>
+                                <button onclick="answerQuiz(2, 'Routers', false)" class="p-2 border-2 border-black rounded-lg hover:bg-yellow-200">c. Routers</button>
+                                <button onclick="answerQuiz(2, 'Linux', true)" class="p-2 border-2 border-black rounded-lg hover:bg-yellow-200">d. Linux</button>
+                            </div>
+                            <p id="q2Feedback" class="mt-2 text-xs font-bold hidden"></p>
+                        </div>
+
+                        <!-- Q3 -->
+                        <div class="bg-white p-4 rounded-xl border-2 border-black">
+                            <p class="font-bold text-sm text-slate-900 mb-2">3. أجهزة إلكترونية تتيح للعملاء دفع ثمن المنتجات بخصمها من حسابهم البنكي بدلاً من النقد هي:</p>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs font-bold">
+                                <button onclick="answerQuiz(3, 'POS', true)" class="p-2 border-2 border-black rounded-lg hover:bg-yellow-200">a. Point of Sale (POS)</button>
+                                <button onclick="answerQuiz(3, 'Wearables', false)" class="p-2 border-2 border-black rounded-lg hover:bg-yellow-200">b. Smatwatches</button>
+                                <button onclick="answerQuiz(3, 'Tizen', false)" class="p-2 border-2 border-black rounded-lg hover:bg-yellow-200">c. Tizen OS</button>
+                                <button onclick="answerQuiz(3, 'Router', false)" class="p-2 border-2 border-black rounded-lg hover:bg-yellow-200">d. Routers</button>
+                            </div>
+                            <p id="q3Feedback" class="mt-2 text-xs font-bold hidden"></p>
+                        </div>
+                    </div>
+
+                    <!-- Congratulations Certificate Box -->
+                    <div class="bg-gradient-to-r from-yellow-300 to-amber-400 border-4 border-black rounded-3xl p-6 text-center shadow-cartoon-lg">
+                        <div class="text-5xl mb-2">🎓</div>
+                        <h3 class="text-2xl font-black text-black">وسام خبير أنظمة التشغيل!</h3>
+                        <p class="text-sm font-bold text-slate-800 mt-1">تهانينا يا بطل للصف الأول الإعدادي! لقد أتممت المغامرة واستوعبت كامل المنهج بنجاح!</p>
+                        <button onclick="goToChapter(1)" class="mt-4 bg-black text-white hover:bg-slate-800 font-black py-2.5 px-6 rounded-2xl border-2 border-white shadow-cartoon-sm">
+                            إعادة المغامرة من جديد 🔄
+                        </button>
+                    </div>
+
+                    <div class="flex justify-start pt-4">
+                        <button onclick="goToChapter(5)" class="bg-slate-200 hover:bg-slate-300 text-black font-black py-3 px-6 rounded-2xl border-3 border-black shadow-cartoon active:translate-y-1">
+                            👉 المحطة السابقة
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderChapter() {
+            const container = document.getElementById('storyContainer');
+            if (currentChapter === 1) container.innerHTML = renderChapter1();
+            else if (currentChapter === 2) container.innerHTML = renderChapter2();
+            else if (currentChapter === 3) container.innerHTML = renderChapter3();
+            else if (currentChapter === 4) container.innerHTML = renderChapter4();
+            else if (currentChapter === 5) container.innerHTML = renderChapter5();
+            else if (currentChapter === 6) container.innerHTML = renderChapter6();
+            
+            // Start clock if on chapter 5
+            if (currentChapter === 5) {
+                setInterval(() => {
+                    const clock = document.getElementById('liveClock');
+                    if (clock) {
+                        const now = new Date();
+                        clock.innerText = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                    }
+                }, 1000);
+            }
+        }
+
+        // Chapter 1 Simulations
+        function simulateWearable() {
+            const res = document.getElementById('simResult1');
+            res.classList.remove('hidden');
+            res.innerHTML = "⌚ <span class='text-purple-600'>نظام تشغيل الساعة الذكية يعمل:</span> تم قياس نبضات القلب (75 نبضة/دقيقة) وحساب 4,500 خطوة بنجاح!";
+            addScore(10);
+        }
+
+        function simulateRouter() {
+            const res = document.getElementById('simResult1');
+            res.classList.remove('hidden');
+            res.innerHTML = "📡 <span class='text-blue-600'>نظام تشغيل الراوتر (Router OS):</span> تم تفعيل جدار الحماية الأمني WPA3 وتحديد السرعة للأجهزة بنجاح!";
+            addScore(10);
+        }
+
+        // Chapter 2 Activity Check
+        function checkActivityMatching() {
+            const m1 = document.getElementById('match1').value;
+            const m2 = document.getElementById('match2').value;
+            const m3 = document.getElementById('match3').value;
+            const m4 = document.getElementById('match4').value;
+
+            if (m1 === 'Tizen' && m2 === 'Windows' && m3 === 'iOS' && m4 === 'Linux') {
+                showModal('إجابة ممتازة ومطابقة 100%!', 'أحسنت يا بطل! التلفزيون الذكي يستخدم Tizen، والكمبيوتر Windows، والهاتف iOS، واللابتوب Linux.', '🎯');
+                addScore(50);
+            } else {
+                playSound('error');
+                showModal('حاول مرة أخرى!', 'تأكد من اختيار Tizen للشاشة، Windows للكيسة، iOS للهاتف، و Linux للابتوب.', '❌');
+            }
+        }
+
+        // Chapter 3 POS Simulation
+        function simulatePOSPay() {
+            const st = document.getElementById('posStatus');
+            st.innerText = "جاري قراءة البطاقة وخصم 20 ج.م من الحساب البنكي...";
+            setTimeout(() => {
+                st.innerHTML = "✅ <span class='text-green-600 font-bold'>تمت العملية! تم الخصم بنجاح وطباعة الإيصال عبر نظام POS المدمج!</span>";
+                addScore(20);
+            }, 1000);
+        }
+
+        // Chapter 5 Desktop Actions
+        function clickDesktopIcon(name) {
+            playSound('click');
+            showModal(`فتحت أيقونة: ${name}`, `نقرت على رمز برنامج (${name}) المُثبت في نظام التشغيل!`, '📂');
+        }
+
+        function changeWallpaper(gradient) {
+            playSound('click');
+            document.getElementById('virtualDesktop').style.backgroundImage = gradient;
+        }
+
+        // Chapter 6 Quiz logic
+        function answerQuiz(qNum, selectedOption, isCorrect) {
+            const fb = document.getElementById(`q${qNum}Feedback`);
+            fb.classList.remove('hidden');
+            if (isCorrect) {
+                fb.className = "mt-2 text-xs font-bold text-green-600";
+                fb.innerText = `✅ إجابة صحيحة! (${selectedOption})`;
+                addScore(30);
+            } else {
+                playSound('error');
+                fb.className = "mt-2 text-xs font-bold text-red-600";
+                fb.innerText = `❌ إجابة خاطئة! حاول مرة أخرى.`;
+            }
+        }
+
+        // Initialize App on window load
+        window.onload = function() {
+            renderChapter();
+            updateNavigationUI();
+        };
+    </script>
+</body>
+</html>
