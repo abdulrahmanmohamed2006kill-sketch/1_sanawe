@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دليل المعاملات البرمجية التفاعلي 🌸🎀</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & ReactDOM CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel CDN for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts: Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #fff0f5;
+            background-image: 
+                radial-gradient(#fbcfe8 1.5px, transparent 1.5px), 
+                radial-gradient(#fbcfe8 1.5px, #fff0f5 1.5px);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+        }
+
+        .pink-gradient {
+            background: linear-gradient(135deg, #f472b6 0%, #ec4899 50%, #db2777 100%);
+        }
+
+        .soft-pink-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            border: 2px solid #fbcfe8;
+            box-shadow: 0 10px 25px -5px rgba(244, 114, 182, 0.15);
+        }
+
+        .bow-decoration::before {
+            content: "🎀";
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            font-size: 24px;
+        }
+
+        .flower-badge {
+            background: #fdf2f8;
+            border: 1.5px dashed #f472b6;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #fce7f3;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #f472b6;
+            border-radius: 10px;
+        }
+
+        @keyframes pulse-soft {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        .animate-soft {
+            animation: pulse-soft 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen pb-12">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Custom Ribbon Header Component
+        function Header() {
+            return (
+                <header className="relative mb-8 pt-6 px-4 text-center">
+                    <div className="max-w-4xl mx-auto soft-pink-card rounded-3xl p-6 relative overflow-hidden border-4 border-pink-300">
+                        {/* Decorative background ribbons/flowers */}
+                        <div className="absolute -top-4 -left-4 text-4xl select-none opacity-80">🌸</div>
+                        <div className="absolute -bottom-4 -right-4 text-4xl select-none opacity-80">🌸</div>
+                        <div className="absolute top-2 right-4 text-3xl select-none">🎀</div>
+                        <div className="absolute top-2 left-4 text-3xl select-none">🎀</div>
+
+                        <div className="inline-flex items-center gap-2 bg-pink-100 text-pink-700 px-4 py-1.5 rounded-full text-sm font-bold mb-3 border border-pink-300 shadow-sm">
+                            <span>✨ أساسيات برمجية ممتعة وسهلة ✨</span>
+                        </div>
+
+                        <h1 className="text-3xl md:text-5xl font-black text-pink-600 mb-2 leading-tight">
+                            دليل المعاملات البرمجية التفاعلي 🎀
+                        </h1>
+                        <p className="text-pink-500 font-semibold text-lg md:text-xl mb-4">
+                            Operators in Computer Science
+                        </p>
+
+                        <div className="inline-block bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white font-bold text-md md:text-lg px-6 py-2.5 rounded-2xl shadow-md border-2 border-white">
+                            🌸 إعداد البشمهندس: عبد الرحمن محمد 🌸
+                        </div>
+                    </div>
+                </header>
+            );
+        }
+
+        // Section Navigation Tabs
+        function Navigation({ activeTab, setActiveTab }) {
+            const tabs = [
+                { id: 'overview', label: 'المقدمة والأحجام 🌸', icon: '✨' },
+                { id: 'math', label: 'المعاملات الحسابية ➕', icon: '🔢' },
+                { id: 'relational', label: 'معاملات المقارنة ⚖️', icon: '🔍' },
+                { id: 'logical', label: 'المعاملات المنطقية 🧠', icon: '💡' },
+                { id: 'hiring', label: 'لعبة التوظيف 💼', icon: '🎮' },
+                { id: 'homework', label: 'حل الواجب كاملاً (24 مسألة) 📝', icon: '⭐' }
+            ];
+
+            return (
+                <nav className="max-w-5xl mx-auto px-4 mb-8">
+                    <div className="flex flex-wrap justify-center gap-2 md:gap-3">
+                        {tabs.map((tab) => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`px-4 py-2.5 rounded-2xl font-bold text-sm md:text-base transition-all duration-300 flex items-center gap-2 shadow-sm ${
+                                    activeTab === tab.id
+                                        ? 'bg-pink-500 text-white shadow-pink-300 shadow-lg scale-105 border-2 border-white'
+                                        : 'bg-white text-pink-600 hover:bg-pink-100 border border-pink-200'
+                                }`}
+                            >
+                                <span>{tab.icon}</span>
+                                <span>{tab.label}</span>
+                            </button>
+                        ))}
+                    </div>
+                </nav>
+            );
+        }
+
+        // Section 1: Overview
+        function OverviewSection() {
+            return (
+                <div className="space-y-6 animate-fadeIn">
+                    <div className="soft-pink-card rounded-3xl p-6 md:p-8 relative border-2 border-pink-200">
+                        <div className="bow-decoration"></div>
+                        <h2 className="text-2xl md:text-3xl font-extrabold text-pink-600 mb-4 flex items-center gap-2">
+                            <span>🌸</span> ما هي المعاملات (Operators) في الكمبيوتر؟
+                        </h2>
+                        <p className="text-gray-700 leading-relaxed text-lg mb-6">
+                            تخيل أن جهاز الكمبيوتر هو صديق ذكي جداً ولكنه يحتاج توجيهات دقيقة جداً! 
+                            المعاملات (<strong>Operators</strong>) هي الرموز والأدوات التي نستخدمها لإخبار الكمبيوتر بكيفية معالجة البيانات، سواء كانت عمليات حسابية، مقارنات، أو اتخاذ قرارات منطقية.
+                        </p>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                            <div className="bg-pink-50 p-5 rounded-2xl border border-pink-200 text-center hover:shadow-md transition">
+                                <div className="text-4xl mb-2">➕</div>
+                                <h3 className="font-bold text-pink-600 text-xl mb-1">المعاملات الحسابية</h3>
+                                <p className="text-sm text-gray-600">Mathematical</p>
+                                <span className="inline-block mt-3 bg-white px-3 py-1 rounded-full text-xs font-bold text-pink-500 border border-pink-200">
+                                    + , - , * , / , Mod , ^
+                                </span>
+                            </div>
+
+                            <div className="bg-rose-50 p-5 rounded-2xl border border-rose-200 text-center hover:shadow-md transition">
+                                <div className="text-4xl mb-2">⚖️</div>
+                                <h3 className="font-bold text-rose-600 text-xl mb-1">معاملات المقارنة</h3>
+                                <p className="text-sm text-gray-600">Relational</p>
+                                <span className="inline-block mt-3 bg-white px-3 py-1 rounded-full text-xs font-bold text-rose-500 border border-rose-200">
+                                    = , &lt; , &gt; , &lt;= , &gt;= , &lt;&gt;
+                                </span>
+                            </div>
+
+                            <div className="bg-purple-50 p-5 rounded-2xl border border-purple-200 text-center hover:shadow-md transition">
+                                <div className="text-4xl mb-2">🧠</div>
+                                <h3 className="font-bold text-purple-600 text-xl mb-1">المعاملات المنطقية</h3>
+                                <p className="text-sm text-gray-600">Logical</p>
+                                <span className="inline-block mt-3 bg-white px-3 py-1 rounded-full text-xs font-bold text-purple-500 border border-purple-200">
+                                    AND , OR , NOT
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-pink-100 border-2 border-pink-300 p-5 rounded-2xl flex items-center gap-4">
+                        <div className="text-3xl">🎀</div>
+                        <p className="text-pink-800 font-bold text-sm md:text-base">
+                            تذكر دائماً: النتيجة من معاملات المقارنة والمنطق تكون دائماً إما <strong>True (1)</strong> أو <strong>False (0)</strong>!
+                        </p>
+                    </div>
+                </div>
+            );
+        }
+
+        // Section 2: Mathematical Operators
+        function MathSection() {
+            const [num1, setNum1] = useState(9);
+            const [num2, setNum2] = useState(4);
+
+            const mathOperators = [
+                { name: 'الجمع (Addition)', symbol: '+', example: '3.0 + 4.2', result: '7.2', desc: 'يقوم بجمع رقمين معاً' },
+                { name: 'الطرح (Subtraction)', symbol: '-', example: '8.5 - 4.0', result: '4.5', desc: 'يطرح الرقم الثاني من الأول' },
+                { name: 'الضرب (Multiplication)', symbol: '*', example: '5 * 5', result: '25', desc: 'يضرب الرقمين في بعضهما' },
+                { name: 'القسمة (Integer Division)', symbol: '/', example: '10 / 5', result: '2', desc: 'يقسم الرقم على الآخر' },
+                { name: 'باقي القسمة (Modulo Division)', symbol: 'Mod', example: '9 Mod 4', result: '1', desc: 'يعطينا الباقي المتبقي فقط بعد توزيع القسمة الصحيحة' },
+                { name: 'الأسس (Power)', symbol: '^', example: '3 ^ 2', result: '9', desc: 'يرفع الرقم الأول للقوة (الأس)' }
+            ];
+
+            return (
+                <div className="space-y-6">
+                    <div className="soft-pink-card rounded-3xl p-6 border-2 border-pink-200">
+                        <div className="bow-decoration"></div>
+                        <h2 className="text-2xl font-extrabold text-pink-600 mb-2 flex items-center gap-2">
+                            <span>➕</span> المعاملات الحسابية (Mathematical Operators)
+                        </h2>
+                        <p className="text-gray-600 mb-6">
+                            جدول المعاملات الحسابية المعتمدة في البرمجة مع أمثلتها الدقيقة من المنهج:
+                        </p>
+
+                        <div className="overflow-x-auto rounded-2xl border border-pink-200 shadow-sm mb-8">
+                            <table className="w-full text-right bg-white">
+                                <thead>
+                                    <tr className="bg-pink-500 text-white">
+                                        <th className="p-3 md:p-4 font-bold">العملية (Operator)</th>
+                                        <th className="p-3 md:p-4 font-bold text-center">الرمز برمجياً</th>
+                                        <th className="p-3 md:p-4 font-bold text-center">مثال (Operation)</th>
+                                        <th className="p-3 md:p-4 font-bold text-center">النتيجة (Results)</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-pink-100 text-sm md:text-base">
+                                    {mathOperators.map((op, idx) => (
+                                        <tr key={idx} className="hover:bg-pink-50/50 transition">
+                                            <td className="p-3 md:p-4 font-semibold text-pink-700">
+                                                {op.name}
+                                                <div className="text-xs text-gray-500 font-normal">{op.desc}</div>
+                                            </td>
+                                            <td className="p-3 md:p-4 text-center font-mono font-bold text-rose-600 text-lg bg-pink-50/30">
+                                                {op.symbol}
+                                            </td>
+                                            <td className="p-3 md:p-4 text-center font-mono text-gray-700">{op.example}</td>
+                                            <td className="p-3 md:p-4 text-center font-bold text-pink-600">{op.result}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* Modulo Interactive Calculator */}
+                        <div className="bg-pink-50 p-6 rounded-2xl border-2 border-pink-300">
+                            <h3 className="text-lg font-bold text-pink-700 mb-3 flex items-center gap-2">
+                                <span>🌸</span> مختبر تجربة باقي القسمة (Mod Calculator) 🌸
+                            </h3>
+                            <p className="text-xs text-pink-600 mb-4">
+                                كعكة تحتوي على {num1} قطع وتريدين توزيعها بالتساوي على {num2} صديقات. كم قطعة ستبقى لكِ؟
+                            </p>
+                            <div className="flex flex-wrap items-center gap-4">
+                                <div className="flex items-center gap-2">
+                                    <label className="font-bold text-gray-700">الرقم الأول:</label>
+                                    <input 
+                                        type="number" 
+                                        value={num1} 
+                                        onChange={(e) => setNum1(Number(e.target.value))}
+                                        className="w-20 p-2 rounded-xl border-2 border-pink-300 text-center font-bold"
+                                    />
+                                </div>
+                                <span className="font-bold text-pink-600 text-xl">Mod</span>
+                                <div className="flex items-center gap-2">
+                                    <label className="font-bold text-gray-700">الرقم الثاني:</label>
+                                    <input 
+                                        type="number" 
+                                        value={num2} 
+                                        onChange={(e) => setNum2(Number(e.target.value))}
+                                        className="w-20 p-2 rounded-xl border-2 border-pink-300 text-center font-bold"
+                                    />
+                                </div>
+                                <div className="bg-white px-5 py-2 rounded-2xl border-2 border-pink-400 font-bold text-pink-600 text-lg shadow-sm">
+                                    النتيجة (الباقي): {num2 !== 0 ? num1 % num2 : 'لا يمكن القسمة على 0'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Section 3: Relational Operators
+        function RelationalSection() {
+            const [v1, setV1] = useState(5);
+            const [v2, setV2] = useState(7);
+
+            const relationalOps = [
+                { name: 'يساوي (Equal to)', symbol: '=', example: '5 = 7', result: 'False' },
+                { name: 'أصغر من (Less than)', symbol: '<', example: '5 < 7', result: 'True' },
+                { name: 'أكبر من (Greater than)', symbol: '>', example: '5 > 7', result: 'False' },
+                { name: 'أصغر من أو يساوي (Less than or equal)', symbol: '<=', example: '5 <= 7', result: 'True' },
+                { name: 'أكبر من أو يساوي (Greater than or equal)', symbol: '>=', example: '5 >= 7', result: 'False' },
+                { name: 'لا يساوي (Not equal to)', symbol: '<>', example: '5 <> 7', result: 'True' }
+            ];
+
+            return (
+                <div className="space-y-6">
+                    <div className="soft-pink-card rounded-3xl p-6 border-2 border-pink-200">
+                        <div className="bow-decoration"></div>
+                        <h2 className="text-2xl font-extrabold text-pink-600 mb-2 flex items-center gap-2">
+                            <span>⚖️</span> معاملات المقارنة (Relational Operators)
+                        </h2>
+                        <p className="text-gray-600 mb-6">
+                            تُستخدم لمقارنة قيمتين، وتكون النتيجة دائماً منطقية (إما <strong>True</strong> أو <strong>False</strong>):
+                        </p>
+
+                        <div className="overflow-x-auto rounded-2xl border border-pink-200 shadow-sm mb-8">
+                            <table className="w-full text-right bg-white">
+                                <thead>
+                                    <tr className="bg-rose-500 text-white">
+                                        <th className="p-3 md:p-4 font-bold">معامل المقارنة</th>
+                                        <th className="p-3 md:p-4 font-bold text-center">الرمز برمجياً</th>
+                                        <th className="p-3 md:p-4 font-bold text-center">مثال المنهج</th>
+                                        <th className="p-3 md:p-4 font-bold text-center">النتيجة</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-pink-100">
+                                    {relationalOps.map((op, idx) => (
+                                        <tr key={idx} className="hover:bg-rose-50/50 transition">
+                                            <td className="p-3 md:p-4 font-semibold text-rose-700">{op.name}</td>
+                                            <td className="p-3 md:p-4 text-center font-mono font-bold text-pink-600 text-lg bg-pink-50/30">
+                                                {op.symbol}
+                                            </td>
+                                            <td className="p-3 md:p-4 text-center font-mono text-gray-700">{op.example}</td>
+                                            <td className={`p-3 md:p-4 text-center font-bold ${op.result === 'True' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                                {op.result}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* Interactive Relational Tester */}
+                        <div className="bg-rose-50 p-6 rounded-2xl border-2 border-rose-300">
+                            <h3 className="text-lg font-bold text-rose-700 mb-4 flex items-center gap-2">
+                                <span>🌸</span> اختبار المقارنة التفاعلي بين رقمين 🌸
+                            </h3>
+                            <div className="flex flex-wrap items-center justify-center gap-4 mb-6">
+                                <input 
+                                    type="number" 
+                                    value={v1} 
+                                    onChange={(e) => setV1(Number(e.target.value))}
+                                    className="w-24 p-3 rounded-2xl border-2 border-pink-300 text-center font-bold text-xl"
+                                />
+                                <span className="font-bold text-gray-500">مع</span>
+                                <input 
+                                    type="number" 
+                                    value={v2} 
+                                    onChange={(e) => setV2(Number(e.target.value))}
+                                    className="w-24 p-3 rounded-2xl border-2 border-pink-300 text-center font-bold text-xl"
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                <div className="bg-white p-3 rounded-xl border border-pink-200 text-center shadow-sm">
+                                    <span className="block text-xs text-gray-500 mb-1">{v1} = {v2}</span>
+                                    <span className={`font-bold ${v1 === v2 ? 'text-emerald-600' : 'text-rose-500'}`}>{v1 === v2 ? 'True' : 'False'}</span>
+                                </div>
+                                <div className="bg-white p-3 rounded-xl border border-pink-200 text-center shadow-sm">
+                                    <span className="block text-xs text-gray-500 mb-1">{v1} &lt; {v2}</span>
+                                    <span className={`font-bold ${v1 < v2 ? 'text-emerald-600' : 'text-rose-500'}`}>{v1 < v2 ? 'True' : 'False'}</span>
+                                </div>
+                                <div className="bg-white p-3 rounded-xl border border-pink-200 text-center shadow-sm">
+                                    <span className="block text-xs text-gray-500 mb-1">{v1} &gt; {v2}</span>
+                                    <span className={`font-bold ${v1 > v2 ? 'text-emerald-600' : 'text-rose-500'}`}>{v1 > v2 ? 'True' : 'False'}</span>
+                                </div>
+                                <div className="bg-white p-3 rounded-xl border border-pink-200 text-center shadow-sm">
+                                    <span className="block text-xs text-gray-500 mb-1">{v1} &lt;= {v2}</span>
+                                    <span className={`font-bold ${v1 <= v2 ? 'text-emerald-600' : 'text-rose-500'}`}>{v1 <= v2 ? 'True' : 'False'}</span>
+                                </div>
+                                <div className="bg-white p-3 rounded-xl border border-pink-200 text-center shadow-sm">
+                                    <span className="block text-xs text-gray-500 mb-1">{v1} &gt;= {v2}</span>
+                                    <span className={`font-bold ${v1 >= v2 ? 'text-emerald-600' : 'text-rose-500'}`}>{v1 >= v2 ? 'True' : 'False'}</span>
+                                </div>
+                                <div className="bg-white p-3 rounded-xl border border-pink-200 text-center shadow-sm">
+                                    <span className="block text-xs text-gray-500 mb-1">{v1} &lt;&gt; {v2}</span>
+                                    <span className={`font-bold ${v1 !== v2 ? 'text-emerald-600' : 'text-rose-500'}`}>{v1 !== v2 ? 'True' : 'False'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Section 4: Logical Operators
+        function LogicalSection() {
+            return (
+                <div className="space-y-6">
+                    <div className="soft-pink-card rounded-3xl p-6 border-2 border-pink-200">
+                        <div className="bow-decoration"></div>
+                        <h2 className="text-2xl font-extrabold text-pink-600 mb-2 flex items-center gap-2">
+                            <span>🧠</span> المعاملات المنطقية (Logical Operators)
+                        </h2>
+                        <p className="text-gray-600 mb-6">
+                            تُستخدم للربط بين أكثر من شرط منطقي للحصول على قرار أخير:
+                        </p>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                            <div className="bg-pink-50 p-4 rounded-2xl border border-pink-300">
+                                <h3 className="font-bold text-pink-700 text-lg mb-1">1. AND (و)</h3>
+                                <p className="text-xs text-gray-600 mb-2">تتطلب تحقق جميع الشروط معاً!</p>
+                                <div className="bg-white p-2 rounded-lg text-xs border border-pink-200 text-center font-bold text-pink-600">
+                                    Any "False" in AND $\rightarrow$ Result is False
+                                </div>
+                            </div>
+
+                            <div className="bg-purple-50 p-4 rounded-2xl border border-purple-300">
+                                <h3 className="font-bold text-purple-700 text-lg mb-1">2. OR (أو)</h3>
+                                <p className="text-xs text-gray-600 mb-2">يكفي تحقق شرط واحد على الأقل!</p>
+                                <div className="bg-white p-2 rounded-lg text-xs border border-purple-200 text-center font-bold text-purple-600">
+                                    Any "True" in OR $\rightarrow$ Result is True
+                                </div>
+                            </div>
+
+                            <div className="bg-rose-50 p-4 rounded-2xl border border-rose-300">
+                                <h3 className="font-bold text-rose-700 text-lg mb-1">3. NOT (عكس)</h3>
+                                <p className="text-xs text-gray-600 mb-2">تعكس النتيجة المنطقية دائماً!</p>
+                                <div className="bg-white p-2 rounded-lg text-xs border border-rose-200 text-center font-bold text-rose-600">
+                                    NOT True = False | NOT False = True
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Truth Tables */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* AND Truth Table */}
+                            <div className="bg-white rounded-2xl border border-pink-200 overflow-hidden shadow-sm">
+                                <div className="bg-pink-500 text-white p-3 font-bold text-center">
+                                    جدول حقيقة AND (جدول الصواب)
+                                </div>
+                                <table className="w-full text-center text-sm">
+                                    <thead className="bg-pink-50 border-b">
+                                        <tr>
+                                            <th className="p-2">A</th>
+                                            <th className="p-2">B</th>
+                                            <th className="p-2">A AND B</th>
+                                            <th className="p-2 text-xs text-gray-500">بالأرقام (1/0)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100">
+                                        <tr className="bg-emerald-50"><td className="p-2">True</td><td className="p-2">True</td><td className="p-2 font-bold text-emerald-600">True</td><td className="p-2">1 AND 1 = 1</td></tr>
+                                        <tr><td className="p-2">True</td><td className="p-2">False</td><td className="p-2 font-bold text-rose-600">False</td><td className="p-2">1 AND 0 = 0</td></tr>
+                                        <tr><td className="p-2">False</td><td className="p-2">True</td><td className="p-2 font-bold text-rose-600">False</td><td className="p-2">0 AND 1 = 0</td></tr>
+                                        <tr><td className="p-2">False</td><td className="p-2">False</td><td className="p-2 font-bold text-rose-600">False</td><td className="p-2">0 AND 0 = 0</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {/* OR Truth Table */}
+                            <div className="bg-white rounded-2xl border border-purple-200 overflow-hidden shadow-sm">
+                                <div className="bg-purple-500 text-white p-3 font-bold text-center">
+                                    جدول حقيقة OR (جدول الصواب)
+                                </div>
+                                <table className="w-full text-center text-sm">
+                                    <thead className="bg-purple-50 border-b">
+                                        <tr>
+                                            <th className="p-2">A</th>
+                                            <th className="p-2">B</th>
+                                            <th className="p-2">A OR B</th>
+                                            <th className="p-2 text-xs text-gray-500">بالأرقام (1/0)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100">
+                                        <tr className="bg-emerald-50"><td className="p-2">True</td><td className="p-2">True</td><td className="p-2 font-bold text-emerald-600">True</td><td className="p-2">1 OR 1 = 1</td></tr>
+                                        <tr className="bg-emerald-50"><td className="p-2">True</td><td className="p-2">False</td><td className="p-2 font-bold text-emerald-600">True</td><td className="p-2">1 OR 0 = 1</td></tr>
+                                        <tr className="bg-emerald-50"><td className="p-2">False</td><td className="p-2">True</td><td className="p-2 font-bold text-emerald-600">True</td><td className="p-2">0 OR 1 = 1</td></tr>
+                                        <tr><td className="p-2">False</td><td className="p-2">False</td><td className="p-2 font-bold text-rose-600">False</td><td className="p-2">0 OR 0 = 0</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        {/* NOT Table */}
+                        <div className="mt-6 bg-rose-50 p-4 rounded-2xl border border-rose-200">
+                            <h4 className="font-bold text-rose-700 mb-2 text-center">جدول حقيقة المعامل العاكس NOT</h4>
+                            <div className="flex justify-center gap-8 text-center text-sm">
+                                <div className="bg-white p-3 rounded-xl border border-rose-200 shadow-sm">
+                                    <span>Condition A = <strong>True</strong></span> $\rightarrow$ <span className="font-bold text-rose-600">NOT A = False (0)</span>
+                                </div>
+                                <div className="bg-white p-3 rounded-xl border border-rose-200 shadow-sm">
+                                    <span>Condition A = <strong>False</strong></span> $\rightarrow$ <span className="font-bold text-emerald-600">NOT A = True (1)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Section 5: Hiring Simulator
+        function HiringSimulator() {
+            const [age, setAge] = useState(22);
+            const [hasLicense, setHasLicense] = useState(true);
+
+            const isAgeValid = age >= 21;
+            const andResult = isAgeValid && hasLicense;
+            const orResult = isAgeValid || hasLicense;
+
+            return (
+                <div className="space-y-6">
+                    <div className="soft-pink-card rounded-3xl p-6 border-2 border-pink-200">
+                        <div className="bow-decoration"></div>
+                        <h2 className="text-2xl font-extrabold text-pink-600 mb-2 flex items-center gap-2">
+                            <span>💼</span> حاسبة شرط التوظيف التفاعلية (Practical Example)
+                        </h2>
+                        <p className="text-gray-600 mb-6">
+                            تطبيق العملي المذكور في المنهج لاختبار قبول المتقدمين للوظيفة:
+                        </p>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-pink-50 p-6 rounded-2xl border border-pink-300 mb-6">
+                            <div className="space-y-4">
+                                <h3 className="font-bold text-pink-700 text-lg">بيانات المتقدم للوظيفة:</h3>
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">
+                                        العمر الحالي: ({age} سنة)
+                                    </label>
+                                    <input 
+                                        type="range" 
+                                        min="16" 
+                                        max="35" 
+                                        value={age} 
+                                        onChange={(e) => setAge(Number(e.target.value))}
+                                        className="w-full accent-pink-500"
+                                    />
+                                    <div className="text-xs text-pink-600 mt-1">الشرط الأولى: أن يكون العمر &gt;= 21</div>
+                                </div>
+
+                                <div className="flex items-center gap-3">
+                                    <input 
+                                        type="checkbox" 
+                                        id="licenseCheck"
+                                        checked={hasLicense} 
+                                        onChange={(e) => setHasLicense(e.target.checked)}
+                                        className="w-5 h-5 accent-pink-500 rounded"
+                                    />
+                                    <label htmlFor="licenseCheck" className="font-bold text-gray-700 text-sm">
+                                        يمتلك رخصة قيادة (Has Driver License)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div className="space-y-4 border-t md:border-t-0 md:border-r border-pink-200 pt-4 md:pt-0 md:pr-6">
+                                <h3 className="font-bold text-pink-700 text-lg">نتائج تقييم الشروط:</h3>
+                                
+                                {/* AND Evaluation */}
+                                <div className="bg-white p-4 rounded-xl border border-pink-200 shadow-sm">
+                                    <div className="text-xs font-bold text-pink-600 mb-1">شرط التوظيف الصارم (AND Operator):</div>
+                                    <div className="text-xs text-gray-600 mb-2 font-mono">
+                                        ({age} &gt;= 21) AND (License = {hasLicense ? 'True' : 'False'})
+                                    </div>
+                                    <div className={`text-base font-black px-3 py-1 rounded-lg text-center ${andResult ? 'bg-emerald-100 text-emerald-700 border border-emerald-300' : 'bg-rose-100 text-rose-700 border border-rose-300'}`}>
+                                        {andResult ? '🎉 مبروك! تم قبولك بالوظيفة (True)' : '❌ عفواً! لم تتطابق جميع الشروط (False)'}
+                                    </div>
+                                </div>
+
+                                {/* OR Evaluation */}
+                                <div className="bg-white p-4 rounded-xl border border-purple-200 shadow-sm">
+                                    <div className="text-xs font-bold text-purple-600 mb-1">شرط التوظيف المرن (OR Operator):</div>
+                                    <div className="text-xs text-gray-600 mb-2 font-mono">
+                                        ({age} &gt;= 21) OR (License = {hasLicense ? 'True' : 'False'})
+                                    </div>
+                                    <div className={`text-base font-black px-3 py-1 rounded-lg text-center ${orResult ? 'bg-emerald-100 text-emerald-700 border border-emerald-300' : 'bg-rose-100 text-rose-700 border border-rose-300'}`}>
+                                        {orResult ? '✨ متوافق بناءً على تحقق شرط واحد على الأقل (True)' : '❌ لم يتحقق أي شرط من الشروط (False)'}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Section 7: Complete Homework Solutions (All 24 Questions from Page 30)
+        function HomeworkSection() {
+            const homeworkQuestions = [
+                { id: 1, expr: '12 >= 12', expected: 'True', explanation: 'العدد 12 يساوي 12 بالفعل، بالتالي الشرط صحيح (True).' },
+                { id: 2, expr: 'NOT (12 >= 12)', expected: 'False', explanation: 'بما أن (12 >= 12) تساوي True، فإن NOT تعكسها لـ False.' },
+                { id: 3, expr: '1 AND 1', expected: '1', expectedAlt: 'True', explanation: 'كلا الطرفين 1 (True)، بالتالي النتيجة 1 (True).' },
+                { id: 4, expr: '(7 = 7) and (7 > 5)', expected: 'True', explanation: '(7=7) صائبة (True) وَ (7>5) صائبة (True). النتيجة True AND True = True.' },
+                { id: 5, expr: '12 > 7', expected: 'True', explanation: 'العدد 12 أكبر من 7 قطعاً، بالتالي True.' },
+                { id: 6, expr: 'NOT (12 < 7)', expected: 'True', explanation: '(12 < 7) خاطئة (False)، والعاكس NOT تحول False إلى True.' },
+                { id: 7, expr: 'True AND 0', expected: 'False', expectedAlt: '0', explanation: 'وجود 0 (False) في عملية AND يجعل النتيجة مباشرة False (أو 0).' },
+                { id: 8, expr: '(7 = 7) and (7 < 5)', expected: 'False', explanation: '(7=7) صائبة True ولكن (7<5) خاطئة False. وبينهم AND فتنتهي بـ False.' },
+                { id: 9, expr: '8 < 6', expected: 'False', explanation: 'العدد 8 ليس أصغر من 6، فالنتيجة False.' },
+                { id: 10, expr: 'NOT (8 < 6)', expected: 'True', explanation: '(8 < 6) خاطئة (False)، ومع وجود NOT تصبح النتيجة True.' },
+                { id: 11, expr: '0 OR 1', expected: 'True', expectedAlt: '1', explanation: 'وجود 1 (True) في عملية OR يجعل النتيجة صائبة True (أو 1).' },
+                { id: 12, expr: '(7 = 7) OR (7 < 5)', expected: 'True', explanation: '(7=7) هي True. بما أن المعامل OR يكفي فيه وجود True واحدة، فالنتيجة True.' },
+                { id: 13, expr: '8 = 8', expected: 'True', explanation: 'العدد 8 يساوي 8، فالنتيجة True.' },
+                { id: 14, expr: 'NOT (8 = 8)', expected: 'False', explanation: '(8 = 8) هي True، والعاكس NOT تحولها إلى False.' },
+                { id: 15, expr: '0 OR 0', expected: 'False', expectedAlt: '0', explanation: 'كلا الطرفين صفر (False)، فالنتيجة 0 (False).' },
+                { id: 16, expr: '(7 < 7) OR (7 > 5)', expected: 'True', explanation: '(7<7) خاطئة False لكن (7>5) صائبة True. وبما أن الرابط OR فالنتيجة True.' },
+                { id: 17, expr: '12 <= 12', expected: 'True', explanation: 'العدد 12 يساوي 12 (تحقق شرط أو يساوي)، فالنتيجة True.' },
+                { id: 18, expr: 'NOT (12 <= 12)', expected: 'False', explanation: '(12 <= 12) هي True، والعاكس NOT يعكسها إلى False.' },
+                { id: 19, expr: 'Not 0', expected: 'True', expectedAlt: '1', explanation: 'عكس الصفر (False) هو الواحد (True).' },
+                { id: 20, expr: 'NOT (7 = 7) and (7 > 5)', expected: 'False', explanation: 'NOT (7=7) تعطي False. ثم False AND True تعطي النتيجة النهائي False.' },
+                { id: 21, expr: '7 = 5', expected: 'False', explanation: 'العدد 7 لا يساوي 5، فالنتيجة False.' },
+                { id: 22, expr: 'NOT (7 = 5)', expected: 'True', explanation: '(7 = 5) خاطئة False، وبمعامل NOT العاكس تصبح True.' },
+                { id: 23, expr: 'Not (1 OR 0)', expected: 'False', expectedAlt: '0', explanation: '(1 OR 0) تعطي 1 (True)، ثم المعامل NOT يحولها إلى 0 (False).' },
+                { id: 24, expr: '(7 = 7) and Not (7 < 5)', expected: 'True', explanation: '(7=7) هي True، و Not (7<5) هي Not(False) أي True. فتصبح True AND True = True.' }
+            ];
+
+            const [answers, setAnswers] = useState({});
+            const [showResults, setShowResults] = useState(false);
+
+            const handleInputChange = (id, val) => {
+                setAnswers(prev => ({ ...prev, [id]: val.trim() }));
+            };
+
+            const calculateScore = () => {
+                let score = 0;
+                homeworkQuestions.forEach(q => {
+                    const userAns = (answers[q.id] || '').toLowerCase();
+                    const exp1 = q.expected.toLowerCase();
+                    const exp2 = q.expectedAlt ? q.expectedAlt.toLowerCase() : null;
+                    if (userAns === exp1 || (exp2 && userAns === exp2)) {
+                        score++;
+                    }
+                });
+                return score;
+            };
+
+            return (
+                <div className="space-y-6">
+                    <div className="soft-pink-card rounded-3xl p-6 border-2 border-pink-200">
+                        <div className="bow-decoration"></div>
+                        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+                            <div>
+                                <h2 className="text-2xl font-extrabold text-pink-600 flex items-center gap-2">
+                                    <span>📝</span> حل واجب المنهج كاملاً (Page 30 Homework)
+                                </h2>
+                                <p className="text-sm text-gray-600 mt-1">
+                                    جربي إجابة الـ 24 مسألة المذكورة بملف الشرح واضغطي على زُر التصحيح التفاعلي!
+                                </p>
+                            </div>
+
+                            <button 
+                                onClick={() => setShowResults(!showResults)}
+                                className="bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold px-6 py-3 rounded-2xl shadow-md hover:opacity-95 transition"
+                            >
+                                {showResults ? 'إخفاء التصحيح 🙈' : 'تصحيح وتفاصيل الإجابات 🌸'}
+                            </button>
+                        </div>
+
+                        {showResults && (
+                            <div className="bg-pink-100 border-2 border-pink-300 p-4 rounded-2xl mb-6 text-center">
+                                <span className="text-lg font-bold text-pink-800">
+                                    النتيجة الإجمالية: {calculateScore()} من {homeworkQuestions.length} صحيح! 🎀
+                                </span>
+                            </div>
+                        )}
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {homeworkQuestions.map((q) => {
+                                const userAns = (answers[q.id] || '').toLowerCase();
+                                const exp1 = q.expected.toLowerCase();
+                                const exp2 = q.expectedAlt ? q.expectedAlt.toLowerCase() : null;
+                                const isCorrect = userAns === exp1 || (exp2 && userAns === exp2);
+
+                                return (
+                                    <div key={q.id} className="bg-white p-4 rounded-2xl border border-pink-200 shadow-sm flex flex-col justify-between">
+                                        <div>
+                                            <div className="flex items-center justify-between mb-2">
+                                                <span className="bg-pink-100 text-pink-700 text-xs font-bold px-2.5 py-1 rounded-full">
+                                                    مسألة #{q.id}
+                                                </span>
+                                                <span className="font-mono text-base font-bold text-gray-800 dir-ltr">
+                                                    {q.expr}
+                                                </span>
+                                            </div>
+
+                                            <div className="mt-3 flex items-center gap-2">
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="True / False / 1 / 0"
+                                                    value={answers[q.id] || ''}
+                                                    onChange={(e) => handleInputChange(q.id, e.target.value)}
+                                                    className="w-full p-2 text-sm border-2 border-pink-200 rounded-xl font-bold text-center focus:border-pink-500 focus:outline-none"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {showResults && (
+                                            <div className={`mt-3 p-3 rounded-xl text-xs font-bold ${isCorrect ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'}`}>
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <span>الإجابة الصحيحة: {q.expected} {q.expectedAlt ? `أو (${q.expectedAlt})` : ''}</span>
+                                                    <span>{isCorrect ? '✅ ممتاز' : '❌ خطأ'}</span>
+                                                </div>
+                                                <p className="text-gray-600 font-normal mt-1 border-t border-pink-100 pt-1">
+                                                    💡 الشرح: {q.explanation}
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Main App Component
+        function App() {
+            const [activeTab, setActiveTab] = useState('overview');
+
+            return (
+                <div className="min-h-screen">
+                    <Header />
+                    <Navigation activeTab={activeTab} setActiveTab={setActiveTab} />
+
+                    <main className="max-w-5xl mx-auto px-4">
+                        {activeTab === 'overview' && <OverviewSection />}
+                        {activeTab === 'math' && <MathSection />}
+                        {activeTab === 'relational' && <RelationalSection />}
+                        {activeTab === 'logical' && <LogicalSection />}
+                        {activeTab === 'hiring' && <HiringSimulator />}
+                        {activeTab === 'homework' && <HomeworkSection />}
+                    </main>
+
+                    <footer className="mt-16 text-center text-pink-600 font-bold text-sm">
+                        <div className="inline-block soft-pink-card px-6 py-3 rounded-2xl border border-pink-200">
+                            🌸 تم إعداد هذا الدليل التفاعلي بواسطة البشمهندس: عبد الرحمن محمد 🎀
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
