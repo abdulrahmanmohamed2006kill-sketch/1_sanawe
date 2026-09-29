@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>منصة الامتحانات الآمنة - Secure Exam Platform</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Cairo/Tajawal -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Prevent text selection */
+        body {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+        }
+        
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .no-select {
+            user-select: none;
+        }
+
+        /* Modal backdrop effect */
+        .glass-backdrop {
+            backdrop-filter: blur(12px);
+            background-color: rgba(15, 23, 42, 0.85);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col justify-between select-none overflow-x-hidden">
+
+    <!-- Top Navigation / Status Header -->
+    <header id="app-header" class="bg-slate-800/90 border-b border-slate-700 sticky top-0 z-30 backdrop-blur hidden">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center font-bold text-lg">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h1 class="text-sm font-bold text-slate-200" id="student-display-name">اختبار الأمن السيبراني</h1>
+                    <span class="text-xs text-emerald-400 flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> نظام المراقبة نشط
+                    </span>
+                </div>
+            </div>
+
+            <!-- Warnings Counter Badge -->
+            <div class="flex items-center gap-2">
+                <div id="violation-badge" class="bg-slate-700 border border-slate-600 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+                    <span>المخالفات: <span id="violation-count" class="text-amber-400 font-bold">0</span>/3</span>
+                </div>
+
+                <!-- Toggle Fullscreen Button -->
+                <button onclick="toggleFullScreen()" class="p-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-slate-300 text-xs transition">
+                    <i class="fa-solid fa-expand"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Start Screen Container -->
+    <main id="start-screen" class="flex-1 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 sm:p-8 max-w-lg w-full text-center shadow-2xl space-y-6">
+            <div class="w-20 h-20 bg-indigo-600/20 text-indigo-400 rounded-3xl border border-indigo-500/30 flex items-center justify-center mx-auto text-3xl">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-extrabold text-white mb-2">منصة الامتحانات الإلكترونية المحمية</h2>
+                <p class="text-slate-400 text-sm leading-relaxed">يرجى قراءة تعليمات الاختبار بوضوح قبل البدء. النظام مجهز بآليات منع الغش المتقدمة.</p>
+            </div>
+
+            <!-- Rules Box -->
+            <div class="bg-slate-900/60 rounded-xl p-4 border border-slate-700/60 text-right text-xs space-y-2.5 text-slate-300">
+                <div class="font-bold text-indigo-400 text-sm mb-1 flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation"></i> تعليمات وإرشادات مهمة:
+                </div>
+                <p class="flex items-start gap-2">
+                    <i class="fa-solid fa-circle-dot text-indigo-400 mt-1"></i>
+                    <span>يحتوي الاختبار على <b>30 سؤالاً</b> تم خلطها هي والخيارات عشوائياً.</span>
+                </p>
+                <p class="flex items-start gap-2">
+                    <i class="fa-solid fa-circle-dot text-indigo-400 mt-1"></i>
+                    <span>يُمنع الخروج من صفحة الشاشة أو التبديل بين التطبيقات. لديك <b>3 محاولات خروج كحد أقصى</b>.</span>
+                </p>
+                <p class="flex items-start gap-2 text-rose-400">
+                    <i class="fa-solid fa-circle-dot text-rose-400 mt-1"></i>
+                    <span>عند الخروج <b>للمرة الرابعة</b> يتم قفل الاختبار فوراً ولا يُفتح إلا بكلمة السر الخاصة بالمشرف.</span>
+                </p>
+                <p class="flex items-start gap-2">
+                    <i class="fa-solid fa-circle-dot text-indigo-400 mt-1"></i>
+                    <span>يمكنك استخدام زر <b>تثبيت السؤال (Pin)</b> للإشارة للأسئلة للرجوع إليها لاحقاً.</span>
+                </p>
+            </div>
+
+            <!-- Inputs -->
+            <div class="space-y-4 text-right">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">اسم الطالب رباعي:</label>
+                    <input type="text" id="student-name" placeholder="أدخل اسمك الكامل..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">
+                        رقم هاتف ولي الأمر (إجباري <span class="text-rose-400">*</span>):
+                    </label>
+                    <input type="tel" id="parent-phone" placeholder="أدخل رقم هاتف ولي الأمر (مثال: 01012345678)..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition text-sm font-mono dir-ltr">
+                    <p id="phone-error-msg" class="text-rose-400 text-xs mt-1.5 hidden font-bold flex items-center gap-1 bg-rose-500/10 p-2 rounded-lg border border-rose-500/20">
+                        <i class="fa-solid fa-circle-xmark text-rose-400 text-sm"></i>
+                        <span id="phone-error-text">رقم الهاتف غير صحيح</span>
+                    </p>
+                </div>
+            </div>
+
+            <button onclick="startExam()" class="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-indigo-600/30 active:scale-95 transition flex items-center justify-center gap-2">
+                <span>بدء الاختبار الآن</span>
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+        </div>
+    </main>
+
+    <!-- Main Exam Container -->
+    <main id="exam-screen" class="hidden flex-1 max-w-4xl w-full mx-auto p-4 flex flex-col justify-between gap-4">
+        
+        <!-- Question Bar Nav Drawer/Grid -->
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-700/80 pb-2">
+                <span class="text-xs font-bold text-slate-300 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-indigo-400"></i> خريطة أسئلة الاختبار (30 سؤال)
+                </span>
+                <div class="flex gap-3 text-[11px] text-slate-400">
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span> مجاب</span>
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> مثبّت (Pin)</span>
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-700 border border-slate-600"></span> متبقي</span>
+                </div>
+            </div>
+
+            <!-- Grid of 30 Numbers -->
+            <div id="questions-grid" class="grid grid-cols-6 sm:grid-cols-10 gap-2">
+                <!-- Dynamically generated buttons 1 to 30 -->
+            </div>
+        </div>
+
+        <!-- Question Box Card -->
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 sm:p-7 shadow-xl flex-1 flex flex-col justify-between space-y-6">
+            
+            <!-- Question Header Info -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <span id="question-part-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                        الجزء 1 — سهل
+                    </span>
+
+                    <button id="pin-btn" onclick="togglePinCurrentQuestion()" class="px-3 py-1.5 bg-slate-700 hover:bg-amber-500/20 text-slate-300 hover:text-amber-400 border border-slate-600 hover:border-amber-500/40 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-thumbtack"></i>
+                        <span id="pin-btn-text">تثبيت السؤال (Pin)</span>
+                    </button>
+                </div>
+
+                <div class="text-xs font-bold text-indigo-400" id="question-number-title">
+                    سؤال رقم 1 من 30
+                </div>
+
+                <!-- Arabic Question Content -->
+                <h3 id="question-text" class="text-base sm:text-lg font-bold text-slate-100 leading-relaxed font-sans text-right dir-rtl">
+                    جاري تحميل السؤال...
+                </h3>
+            </div>
+
+            <!-- Options List -->
+            <div id="options-container" class="space-y-3 dir-rtl">
+                <!-- Options rendered dynamically -->
+            </div>
+
+            <!-- Footer Controls (Prev, Next, Finish) -->
+            <div class="flex items-center justify-between border-t border-slate-700 pt-4 mt-auto">
+                <button id="prev-btn" onclick="navigateQuestion(-1)" class="bg-slate-700 hover:bg-slate-600 text-slate-200 px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition disabled:opacity-40 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>السابق</span>
+                </button>
+
+                <button id="next-btn" onclick="navigateQuestion(1)" class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 shadow-lg shadow-indigo-600/20 transition">
+                    <span>التالي</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+
+                <button id="submit-btn" onclick="confirmSubmitExam()" class="hidden bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2.5 rounded-xl font-bold text-sm items-center gap-2 shadow-lg shadow-emerald-600/20 transition">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>إنهاء وتسليم الاختبار</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Result Screen -->
+    <main id="result-screen" class="hidden flex-1 max-w-3xl w-full mx-auto p-4 flex items-center justify-center">
+        <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6 sm:p-8 w-full text-center shadow-2xl space-y-6">
+            <div class="w-20 h-20 bg-emerald-500/20 text-emerald-400 rounded-full border border-emerald-500/30 flex items-center justify-center mx-auto text-4xl">
+                <i class="fa-solid fa-award"></i>
+            </div>
+
+            <div>
+                <h2 class="text-2xl font-extrabold text-slate-100">تم اكتمال الاختبار بنجاح</h2>
+                <p class="text-slate-400 text-sm mt-1" id="result-student-name">الطالب: -</p>
+            </div>
+
+            <div id="parent-dispatch-card" class="bg-indigo-950/40 border border-indigo-500/30 rounded-2xl p-4 text-right space-y-2">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-indigo-300 flex items-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-emerald-400 text-lg"></i>
+                        تم إرسال النتيجة تلقائياً إلى ولي الأمر
+                    </span>
+                    <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                        <i class="fa-solid fa-check-double text-emerald-400"></i> تم التسليم
+                    </span>
+                </div>
+                <div class="text-xs text-slate-300 flex justify-between items-center bg-slate-900/80 p-2.5 rounded-xl border border-slate-700/60 font-mono">
+                    <span>رقم ولي الأمر: <strong id="result-parent-phone" class="text-amber-400 text-sm">01000000000</strong></span>
+                    <a id="wa-send-btn" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-sans font-bold px-3 py-1 rounded-lg transition flex items-center gap-1">
+                        <i class="fa-brands fa-whatsapp"></i> فتح التقرير
+                    </a>
+                </div>
+            </div>
+
+            <!-- Score Cards Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-700 text-center">
+                    <span class="text-xs text-slate-400 block font-medium">الدرجة الكلية</span>
+                    <span id="final-score" class="text-2xl font-extrabold text-indigo-400">0 / 30</span>
+                </div>
+                <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-700 text-center">
+                    <span class="text-xs text-slate-400 block font-medium">النسبة المئوية</span>
+                    <span id="final-percentage" class="text-2xl font-extrabold text-emerald-400">0%</span>
+                </div>
+                <div class="col-span-2 sm:col-span-1 bg-slate-900/80 p-4 rounded-2xl border border-slate-700 text-center">
+                    <span class="text-xs text-slate-400 block font-medium">عدد المخالفات</span>
+                    <span id="final-violations" class="text-2xl font-extrabold text-amber-400">0</span>
+                </div>
+            </div>
+
+            <!-- Breakdown by level -->
+            <div class="bg-slate-900/50 rounded-2xl p-4 border border-slate-700/60 text-right space-y-3">
+                <h4 class="text-xs font-bold text-slate-300 border-b border-slate-800 pb-2">تفاصيل الأداء حسب المستويات:</h4>
+                <div class="flex justify-between text-xs">
+                    <span class="text-emerald-400 font-bold">الجزء 1 - سهل:</span>
+                    <span id="easy-score-text" class="text-slate-300">0/10</span>
+                </div>
+                <div class="flex justify-between text-xs">
+                    <span class="text-amber-400 font-bold">الجزء 2 - متوسط:</span>
+                    <span id="medium-score-text" class="text-slate-300">0/10</span>
+                </div>
+                <div class="flex justify-between text-xs">
+                    <span class="text-rose-400 font-bold">الجزء 3 - صعب:</span>
+                    <span id="hard-score-text" class="text-slate-300">0/10</span>
+                </div>
+            </div>
+
+            <button onclick="location.reload()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold py-3 px-8 rounded-xl text-sm transition">
+                إعادة المحاولة
+            </button>
+        </div>
+    </main>
+
+    <!-- Security Lock Overlay Modal (Password Required: 139200) -->
+    <div id="lock-modal" class="fixed inset-0 glass-backdrop z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-rose-500/50 rounded-3xl p-6 sm:p-8 max-w-md w-full text-center shadow-2xl space-y-5 relative overflow-hidden animate-bounce-short">
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-rose-500/10 rounded-full blur-xl"></div>
+            
+            <div class="w-16 h-16 bg-rose-500/20 text-rose-400 rounded-2xl border border-rose-500/30 flex items-center justify-center mx-auto text-3xl">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-black text-rose-400">تم قفل الاختبار لحماية النظام!</h3>
+                <p class="text-slate-300 text-xs mt-2 leading-relaxed">
+                    تجاوزت الحد المسموح به من محاولات الخروج أو التبديل بين الشاشات (أكثر من 3 مرات). 
+                    يُرجى طلب كلمة السر من المشرف لإلغاء القفل ومتابعة الاختبار.
+                </p>
+            </div>
+
+            <!-- PIN Code Form -->
+            <div class="space-y-3">
+                <input type="password" id="unlock-pin" placeholder="أدخل رمز كلمة السر..." class="w-full text-center bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-lg font-mono tracking-widest text-slate-100 placeholder-slate-600 focus:outline-none focus:border-rose-500">
+                <p id="pin-error" class="text-rose-400 text-xs hidden font-bold">رمز كلمة السر غير صحيح! حاول مجدداً.</p>
+                
+                <button onclick="unlockPlatform()" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-rose-600/30">
+                    فك القفل واستئناف الاختبار
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Dialog / Toast Message (Replaces native alerts) -->
+    <div id="custom-toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 hidden max-w-sm w-full px-4">
+        <div id="toast-body" class="bg-slate-800 border border-slate-700 text-slate-100 rounded-xl p-4 shadow-2xl flex items-center gap-3">
+            <i id="toast-icon" class="fa-solid fa-circle-info text-indigo-400 text-xl"></i>
+            <span id="toast-message" class="text-xs font-semibold">تنبيه بسيط</span>
+        </div>
+    </div>
+
+    <!-- Modal for Submit Confirmation -->
+    <div id="confirm-submit-modal" class="fixed inset-0 glass-backdrop z-40 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 max-w-sm w-full text-center space-y-4">
+            <div class="text-amber-400 text-3xl">
+                <i class="fa-solid fa-circle-question"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-100">تأكيد تسليم الاختبار</h3>
+            <p id="unanswered-count-msg" class="text-xs text-slate-400">هل أنت تأكد من انك تريد إنهاء الاختبار الآن؟</p>
+            
+            <div class="flex gap-2">
+                <button onclick="closeConfirmModal()" class="flex-1 bg-slate-700 hover:bg-slate-600 py-2.5 rounded-xl text-xs font-bold text-slate-300">
+                    مراجعة الأسئلة
+                </button>
+                <button onclick="processFinalSubmission()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 py-2.5 rounded-xl text-xs font-bold text-white">
+                    نعم، تسليم
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 py-3 text-center text-[11px] text-slate-500 border-t border-slate-800/80">
+        جميع الحقوق محفوظة &copy; منصة الامتحانات المحمية 2026
+    </footer>
+
+    <script>
+        // --- Questions Master Data with Answer Mapping (Arabic Translation) ---
+        const MASTER_QUESTIONS = [
+            // PART 1 - EASY
+            { id: 1, part: "الجزء 1 — سهل", question: "1. تلقى عميل رسومًا مقابل خدمة لم يطلبها أبداً. ماذا حدث؟", options: ["أ) مشكلة في الدفع عبر الإنترنت", "ب) رسوم خدمة وهمية", "ج) خطأ في الوصول إلى الحساب", "د) تأخير في دفع الشبكة"], correct: "ب) رسوم خدمة وهمية" },
+            { id: 2, part: "الجزء 1 — سهل", question: "2. ينقر المستخدم على رابط ويرى فوراً مطالبات بدفع أموال وهمية. أي موقف ينطبق على ذلك؟", options: ["أ) احتيال النقر المباشر (One-click fraud)", "ب) سرقة بيانات البطاقة", "ج) استخدام هوية مزيفة", "د) البحث في معلومات المهملات"], correct: "أ) احتيال النقر المباشر (One-click fraud)" },
+            { id: 3, part: "الجزء 1 — سهل", question: "3. تطلب صفحة بنكية مزيفة تفاصيل حساب المستخدم. ما الذي يحاول المهاجم الحصول عليه؟", options: ["أ) أجهزة الكمبيوتر", "ب) المعلومات الشخصية", "ج) اتصال الإنترنت", "د) إعدادات الشاشة"], correct: "ب) المعلومات الشخصية" },
+            { id: 4, part: "الجزء 1 — سهل", question: "4. يتظاهر شخص بأنه موظف أثناء مكالمة هاتفية. ما الذي يتم استخدامه؟", options: ["أ) نسخ البطاقات", "ب) البحث في المهملات", "ج) انتحال الشخصية / الهوية", "د) مراقبة كلمة المرور"], correct: "ج) انتحال الشخصية / الهوية" },
+            { id: 5, part: "الجزء 1 — سهل", question: "5. يشاهد شخص ما سرًا لوحة مفاتيح المستخدم أثناء الكتابة. ما هذا؟", options: ["أ) سرقة بيانات البطاقة", "ب) مراقبة الشاشة", "ج) تخمين كلمة المرور", "د) هجوم مراقبة الكتف (Shoulder surfing)"], correct: "د) هجوم مراقبة الكتف (Shoulder surfing)" },
+            { id: 6, part: "الجزء 1 — سهل", question: "6. يعثر شخص ما على وثائق خاصة داخل سلة المهملات. ما هي الطريقة المستخدمة؟", options: ["أ) البحث في سلة المهملات (Dumpster diving)", "ب) الانتحال عبر الإنترنت", "ج) الخداع في الدفع", "د) سرقة معلومات البطاقة"], correct: "أ) البحث في سلة المهملات (Dumpster diving)" },
+            { id: 7, part: "الجزء 1 — سهل", question: "7. يقوم مجرم بنسخ معلومات من بطاقة مصرفية لإنشاء بطاقة أخرى. ما هذا؟", options: ["أ) الفوترة الوهمية", "ب) قراءة وتفريغ بيانات البطاقة (Skimming)", "ج) موقع إلكتروني مزيف", "د) انتحال الهوية"], correct: "ب) قراءة وتفريغ بيانات البطاقة (Skimming)" },
+            { id: 8, part: "الجزء 1 — سهل", question: "8. ما الذي توفره سياسة الأمن في المؤسسة بشكل أساسي؟", options: ["أ) تعليمات الألعاب", "ب) معدات الشبكة", "ج) الإرشادات والتوجيهات الأمنية", "د) تصاميم البرامج"], correct: "ج) الإرشادات والتوجيهات الأمنية" },
+            { id: 9, part: "الجزء 1 — سهل", question: "9. أي جزء يحدد المبادئ الأمنية العامة للمؤسسة؟", options: ["أ) المعايير الأمنية (Security Standards)", "ب) السياسة الأساسية (Basic Policy)", "ج) الإجراءات اليومية", "د) القواعد التشغيلية"], correct: "ب) السياسة الأساسية (Basic Policy)" },
+            { id: 10, part: "الجزء 1 — سهل", question: "10. أي جزء يوضح المتطلبات التفصيلية لتطبيق القواعد الأمنية؟", options: ["أ) المعايير الأمنية (Security Standards)", "ب) السياسة الأساسية (Basic Policy)", "ج) ضوابط الشبكة", "د) حسابات المستخدمين"], correct: "أ) المعايير الأمنية (Security Standards)" },
+
+            // PART 2 - MEDIUM
+            { id: 11, part: "الجزء 2 — متوسط", question: "11. يتلقى شخص رسومًا مقابل خدمة غير موجودة. ما الذي ينبغي أن يشتبه به؟", options: ["أ) موقع إلكتروني مزيف", "ب) الفوترة المزيفة/الوهمية", "ج) نسخ البطاقة", "د) إساءة استخدام الهوية"], correct: "ب) الفوترة المزيفة/الوهمية" },
+            { id: 12, part: "الجزء 2 — متوسط", question: "12. يدعي موقع إلكتروني أنه تم إنشاء عقد بعد نقرة واحدة، ثم يطالب بالمال. ما هذا؟", options: ["أ) هجوم قراءة البطاقات (Skimming)", "ب) محاولة تصيد احتيالي (Phishing)", "ج) احتيال النقر المباشر (One-click fraud)", "د) هجوم سلة المهملات"], correct: "ج) احتيال النقر المباشر (One-click fraud)" },
+            { id: 13, part: "الجزء 2 — متوسط", question: "13. يرسل مهاجم رسالة متظاهرًا بأنه شخص موثوق للحصول على بيانات خاصة. أي طريقة تنطبق على هذا؟", options: ["أ) الهندسة الاجتماعية (Social engineering)", "ب) نسخ البطاقة", "ج) الفوترة المزيفة", "د) البحث في المهملات"], correct: "أ) الهندسة الاجتماعية (Social engineering)" },
+            { id: 14, part: "الجزء 2 — متوسط", question: "14. يتلقى موظف مكالمة من شخص يدعي أنه مدير الشركة ويطلب بيانات سرية. ما هي الطريقة المستخدمة؟", options: ["أ) مراقبة الكتف (Shoulder surfing)", "ب) الفوترة الوهمية", "ج) انتحال الهوية / الشخصية", "د) سرقة معلومات البطاقة"], correct: "ج) انتحال الهوية / الشخصية" },
+            { id: 15, part: "الجزء 2 — متوسط", question: "15. يبحث شخص ما في أوراق الشركة المهملة للعثور على بيانات مفيدة. ما هو الهدف؟", options: ["أ) العثور على بيانات خاصة", "ب) إنشاء بطاقات مزيفة", "ج) إرسال فواتير وهمية", "د) الدخول إلى مواقع إلكترونية آمنة"], correct: "أ) العثور على بيانات خاصة" },
+            { id: 16, part: "الجزء 2 — متوسط", question: "16. يراقب مجرم سرًا شخصًا يدخل الرقم السري (PIN) في صراف آلي. ما هي المعلومات التي قد تُسرق؟", options: ["أ) عنوان الحساب", "ب) إعدادات الجهاز", "ج) كلمة مرور تسجيل الدخول", "د) معلومات الرقم السري (PIN)"], correct: "د) معلومات الرقم السري (PIN)" },
+            { id: 17, part: "الجزء 2 — متوسط", question: "17. يحصل مجرم على معلومات بطاقة ويستخدمها لإنشاء بطاقة أخرى. أي طريقة تطابق ذلك؟", options: ["أ) استخدام موقع إلكتروني مزيف", "ب) نسخ بيانات البطاقة", "ج) انتحال شخصية موظف", "د) البحث في الأوراق المهملة"], correct: "ب) نسخ بيانات البطاقة" },
+            { id: 18, part: "الجزء 2 — متوسط", question: "18. تكتب شركة بيانًا عامًا حول حماية جميع معلومات الشركة. إلى أين ينتمي هذا البيان؟", options: ["أ) السياسة الأساسية (Basic Policy)", "ب) المعايير الأمنية (Security Standards)", "ج) الإجراءات اليومية", "د) القواعد التشغيلية"], correct: "أ) السياسة الأساسية (Basic Policy)" },
+            { id: 19, part: "الجزء 2 — متوسط", question: "19. تحدد شركة متطلبات أمنية محددة يجب على الموظفين اتباعها. أي قسم ينطبق على ذلك؟", options: ["أ) السياسة الأساسية (Basic Policy)", "ب) المعايير الأمنية (Security Standards)", "ج) معلومات المستخدم", "د) معدات الشبكة"], correct: "ب) المعايير الأمنية (Security Standards)" },
+            { id: 20, part: "الجزء 2 — متوسط", question: "20. يزود الموظفون ببيان الخطوات الدقيقة لتنفيذ قاعدة أمنية. أي قسم يساعدهم في ذلك؟", options: ["أ) السياسة الأساسية (Basic Policy)", "ب) المعايير الأمنية (Security Standards)", "ج) إجراءات التنفيذ (Implementation Procedures)", "د) المبادئ الأمنية"], correct: "ج) إجراءات التنفيذ (Implementation Procedures)" },
+
+            // PART 3 - HARD
+            { id: 21, part: "الجزء 3 — صعب", question: "21. تقنع رسالة مزيفة المستخدم بتقديم معلومات خاصة عن طريق إثارة الخوف والاستعجال. أي فكرة تنطبق على هذا؟", options: ["أ) نسخ البطاقة", "ب) الهندسة الاجتماعية (Social engineering)", "ج) الفوترة المزيفة", "د) البحث في المهملات"], correct: "ب) الهندسة الاجتماعية (Social engineering)" },
+            { id: 22, part: "الجزء 3 — صعب", question: "22. يتلقى شخص فاتورة غير متوقعة ويفحص سجلاته، ليكتشف أنه لم يطلب الخدمة أبداً. ما الذي يجب أن يحدده؟", options: ["أ) الفوترة الاحتيالية", "ب) هجوم مراقبة الكتف (Shoulder surfing)", "ج) انتحال الموقع الإلكتروني", "د) سرقة معلومات البطاقة"], correct: "أ) الفوترة الاحتيالية" },
+            { id: 23, part: "الجزء 3 — صعب", question: "23. ينقر مستخدم على رابط، ثم يتلقى ادعاءً مزيفاً بأنه وافق على عقد ويُطلب منه المال بعد ذلك. ماذا حدث؟", options: ["أ) البحث في سلة المهملات", "ب) نشاط قراءة وتفريغ بيانات البطاقات (Skimming)", "ج) احتيال النقر المباشر (One-click fraud)", "د) محاولة انتحال شخصية"], correct: "ج) احتيال النقر المباشر (One-click fraud)" },
+            { id: 24, part: "الجزء 3 — صعب", question: "24. يستخدم متصل اسم موظف آخر لإقناع عامل بكشف معلومات سرية. ما هي الطريقة المستخدمة؟", options: ["أ) الفوترة الوهمية", "ب) نسخ البطاقات", "ج) انتحال الهوية / الشخصية", "د) البحث في معلومات المهملات"], correct: "ج) انتحال الهوية / الشخصية" },
+            { id: 25, part: "الجزء 3 — صعب", question: "25. لا يهاجم المجرم جهاز كمبيوتر، بل يبحث في الأوراق المهملة عن كلمات المرور. أي طريقة تصف هذا؟", options: ["أ) نشاط التصيد الاحتيالي (Phishing)", "ب) البحث في سلة المهملات (Dumpster diving)", "ج) احتيال النقر المباشر", "د) نشاط نسخ وتفريغ البطاقات"], correct: "ب) البحث في سلة المهملات (Dumpster diving)" },
+            { id: 26, part: "الجزء 3 — صعب", question: "26. يراقب مجرم سرًا شخصًا يدخل معلومات مصرفية في مكان عام. ما هي الطريقة المستخدمة؟", options: ["أ) الهندسة الاجتماعية", "ب) الفوترة المزيفة", "ج) هجوم مراقبة الكتف (Shoulder surfing)", "د) سرقة معلومات البطاقة"], correct: "ج) هجوم مراقبة الكتف (Shoulder surfing)" },
+            { id: 27, part: "الجزء 3 — صعب", question: "27. تعلن الشركة أولاً عن رؤيتها حول حماية المعلومات، ثم تضع متطلبات تفصيلية. أي جزء يأتي أولاً؟", options: ["أ) المعايير الأمنية (Security Standards)", "ب) السياسة الأساسية (Basic Policy)", "ج) القواعد التشغيلية", "د) إجراءات التنفيذ"], correct: "ب) السياسة الأساسية (Basic Policy)" },
+            { id: 28, part: "الجزء 3 — صعب", question: "28. تمتلك شركة مبادئ أمنية وتريد الآن قواعد تشرح كيفية تطبيق هذه المبادئ. أي قسم يُعد مطلوباً؟", options: ["أ) السياسة الأساسية (Basic Policy)", "ب) المعايير الأمنية (Security Standards)", "ج) إجراءات التنفيذ (Implementation Procedures)", "د) المبادئ العامة"], correct: "ج) إجراءات التنفيذ (Implementation Procedures)" },
+            { id: 29, part: "الجزء 3 — صعب", question: "29. تضع شركة تعليمات للموظفين بناءً على وظائفهم ومهمامهم اليومية. أي جزء هو الأكثر صلة؟", options: ["أ) السياسة الأساسية (Basic Policy)", "ب) المعايير الأمنية (Security Standards)", "ج) القواعد التشغيلية (Operational Rules)", "د) المبادئ الأمنية"], correct: "ج) القواعد التشغيلية (Operational Rules)" },
+            { id: 30, part: "الجزء 3 — صعب", question: "30. تريد شركة تحويل مبدأ أمني عام إلى متطلبات محددة للموظفين. ما الذي يجب عليها إنشاؤه؟", options: ["أ) المعايير الأمنية (Security Standards)", "ب) السياسة الأساسية (Basic Policy)", "ج) المبادئ العامة", "د) بيانات الشركة"], correct: "أ) المعايير الأمنية (Security Standards)" }
+        ];
+
+        // --- Global State Variables ---
+        let activeQuestions = [];
+        let userAnswers = {}; // { questionIndex: selectedOptionString }
+        let pinnedQuestions = new Set(); // Set of question indexes
+        let currentQuestionIndex = 0;
+        let violationCount = 0;
+        let isExamActive = false;
+        let isLocked = false;
+        const UNLOCK_PIN_CODE = "139200";
+
+        let parentPhoneAttemptCount = 0;
+        let parentPhoneNumber = "";
+
+        // --- Shuffle Utility Function (Fisher-Yates) ---
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // --- Initialize and Start Exam ---
+        function startExam() {
+            const studentName = document.getElementById('student-name').value.trim();
+            const parentPhone = document.getElementById('parent-phone').value.trim();
+            const phoneErrorMsg = document.getElementById('phone-error-msg');
+            const phoneErrorText = document.getElementById('phone-error-text');
+
+            if (!studentName) {
+                showToast("يرجى إدخال اسمك رباعي قبل بدء الاختبار", "error");
+                return;
+            }
+
+            if (!parentPhone || parentPhone.length < 8) {
+                phoneErrorText.textContent = "يرجى إدخال رقم هاتف ولي الأمر بشكل صحيح (إجباري).";
+                phoneErrorMsg.classList.remove('hidden');
+                showToast("رقم هاتف ولي الأمر إجباري لبدء الاختبار", "error");
+                return;
+            }
+
+            // --- The Parent Phone Trick Logic (Fails 4 Times) ---
+            if (parentPhoneAttemptCount < 4) {
+                parentPhoneAttemptCount++;
+                phoneErrorText.textContent = `خطأ في مطابقة السجلات: رقم هاتف ولي الأمر غير مطابق لرقم الرعاية المعتمد للطالب! (المحاولة ${parentPhoneAttemptCount} من 4 - أعد كتابته بدقة).`;
+                phoneErrorMsg.classList.remove('hidden');
+                showToast(`رقم ولي الأمر غير مطابق لسجلات الطالب! (المحاولة ${parentPhoneAttemptCount}/4)`, "error");
+                return;
+            }
+
+            // Success on 5th attempt (After 4 failed tries)
+            phoneErrorMsg.classList.add('hidden');
+            parentPhoneNumber = parentPhone;
+            showToast("تم التحقق بنجاح من رقم ولي الأمر واقترانه بنظام الإشعارات الفورية.", "success");
+
+            document.getElementById('student-display-name').textContent = `الطالب: ${studentName}`;
+
+            // Randomize questions completely
+            let shuffledMaster = shuffleArray(MASTER_QUESTIONS);
+            
+            // Randomize options for each question while keeping track
+            activeQuestions = shuffledMaster.map((q) => {
+                return {
+                    ...q,
+                    options: shuffleArray(q.options)
+                };
+            });
+
+            // Reset States
+            userAnswers = {};
+            pinnedQuestions.clear();
+            currentQuestionIndex = 0;
+            violationCount = 0;
+            isExamActive = true;
+            isLocked = false;
+
+            // UI Transitions
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('app-header').classList.remove('hidden');
+            document.getElementById('app-header').classList.add('flex');
+            document.getElementById('exam-screen').classList.remove('hidden');
+
+            // Enter Fullscreen
+            requestFullScreen();
+
+            // Render First Question and Navigation Grid
+            renderQuestionGrid();
+            renderCurrentQuestion();
+            updateViolationCounterUI();
+        }
+
+        function renderCurrentQuestion() {
+            const q = activeQuestions[currentQuestionIndex];
+
+            document.getElementById('question-number-title').textContent = `سؤال رقم ${currentQuestionIndex + 1} من 30`;
+            document.getElementById('question-part-badge').textContent = q.part;
+            document.getElementById('question-text').textContent = q.question;
+
+            // Pin Button State
+            const pinBtn = document.getElementById('pin-btn');
+            const pinBtnText = document.getElementById('pin-btn-text');
+            if (pinnedQuestions.has(currentQuestionIndex)) {
+                pinBtn.classList.add('bg-amber-500/20', 'text-amber-400', 'border-amber-500/40');
+                pinBtn.classList.remove('bg-slate-700', 'text-slate-300', 'border-slate-600');
+                pinBtnText.textContent = "سؤال مثبت (Pin)";
+            } else {
+                pinBtn.classList.remove('bg-amber-500/20', 'text-amber-400', 'border-amber-500/40');
+                pinBtn.classList.add('bg-slate-700', 'text-slate-300', 'border-slate-600');
+                pinBtnText.textContent = "تثبيت السؤال (Pin)";
+            }
+
+            // Options List
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((optText, idx) => {
+                const isSelected = userAnswers[currentQuestionIndex] === optText;
+                
+                const optBtn = document.createElement('button');
+                optBtn.type = 'button';
+                optBtn.onclick = () => selectOption(optText);
+                optBtn.className = `w-full text-right p-3.5 sm:p-4 rounded-xl border text-sm transition flex items-center justify-between ${
+                    isSelected 
+                        ? 'bg-indigo-600/20 border-indigo-500 text-white font-semibold shadow-md' 
+                        : 'bg-slate-900/60 border-slate-700/80 text-slate-300 hover:bg-slate-700/50'
+                }`;
+
+                optBtn.innerHTML = `
+                    <span class="flex-1">${optText}</span>
+                    <span class="w-5 h-5 rounded-full border ${isSelected ? 'border-indigo-400 bg-indigo-500 flex items-center justify-center text-white text-[10px]' : 'border-slate-600'}">
+                        ${isSelected ? '<i class="fa-solid fa-check"></i>' : ''}
+                    </span>
+                `;
+                optionsContainer.appendChild(optBtn);
+            });
+
+            // Prev / Next button states
+            document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+            
+            const nextBtn = document.getElementById('next-btn');
+            const submitBtn = document.getElementById('submit-btn');
+
+            if (currentQuestionIndex === activeQuestions.length - 1) {
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+                submitBtn.classList.add('flex');
+            } else {
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+                submitBtn.classList.remove('flex');
+            }
+
+            renderQuestionGrid();
+        }
+
+        // --- Render 30 Questions Grid Palette ---
+        function renderQuestionGrid() {
+            const grid = document.getElementById('questions-grid');
+            grid.innerHTML = '';
+
+            for (let i = 0; i < 30; i++) {
+                const isCurrent = i === currentQuestionIndex;
+                const isAnswered = userAnswers[i] !== undefined;
+                const isPinned = pinnedQuestions.has(i);
+
+                let bgClass = 'bg-slate-900/80 border-slate-700 text-slate-400';
+
+                if (isPinned) {
+                    bgClass = 'bg-amber-500/20 border-amber-500 text-amber-300 font-bold';
+                } else if (isAnswered) {
+                    bgClass = 'bg-indigo-600 border-indigo-500 text-white font-bold';
+                }
+
+                if (isCurrent) {
+                    bgClass += ' ring-2 ring-indigo-400 ring-offset-2 ring-offset-slate-800';
+                }
+
+                const item = document.createElement('button');
+                item.type = 'button';
+                item.onclick = () => jumpToQuestion(i);
+                item.className = `h-9 rounded-lg border text-xs flex items-center justify-center transition relative ${bgClass}`;
+                item.innerHTML = `
+                    ${i + 1}
+                    ${isPinned ? '<span class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-400"></span>' : ''}
+                `;
+                grid.appendChild(item);
+            }
+        }
+
+        function selectOption(optionText) {
+            userAnswers[currentQuestionIndex] = optionText;
+            renderCurrentQuestion();
+        }
+
+        function togglePinCurrentQuestion() {
+            if (pinnedQuestions.has(currentQuestionIndex)) {
+                pinnedQuestions.delete(currentQuestionIndex);
+                showToast("تم إزالة التثبيت عن السؤال", "info");
+            } else {
+                pinnedQuestions.add(currentQuestionIndex);
+                showToast("تم تثبيت السؤال للرجوع إليه لاحقاً", "warning");
+            }
+            renderCurrentQuestion();
+        }
+
+        function navigateQuestion(step) {
+            const newIndex = currentQuestionIndex + step;
+            if (newIndex >= 0 && newIndex < activeQuestions.length) {
+                currentQuestionIndex = newIndex;
+                renderCurrentQuestion();
+            }
+        }
+
+        function jumpToQuestion(index) {
+            currentQuestionIndex = index;
+            renderCurrentQuestion();
+        }
+
+        // --- Security & Anti-Cheat Logic ---
+        function handleViolation() {
+            if (!isExamActive || isLocked) return;
+
+            violationCount++;
+            updateViolationCounterUI();
+
+            if (violationCount > 3) {
+                // Lock Platform Completely
+                lockPlatform();
+            } else {
+                showToast(`تحذير مغادرة الشاشة (${violationCount}/3)! محاولة أخرى قد تقفل الاختبار.`, "error");
+            }
+        }
+
+        function updateViolationCounterUI() {
+            const countEl = document.getElementById('violation-count');
+            countEl.textContent = violationCount;
+
+            const badge = document.getElementById('violation-badge');
+            if (violationCount > 0) {
+                badge.classList.add('border-rose-500/50', 'bg-rose-950/40');
+            }
+        }
+
+        function lockPlatform() {
+            isLocked = true;
+            document.getElementById('lock-modal').classList.remove('hidden');
+            document.getElementById('unlock-pin').value = '';
+            document.getElementById('pin-error').classList.add('hidden');
+        }
+
+        function unlockPlatform() {
+            const pinInput = document.getElementById('unlock-pin').value;
+            if (pinInput === UNLOCK_PIN_CODE) {
+                isLocked = false;
+                document.getElementById('lock-modal').classList.add('hidden');
+                showToast("تم إلغاء القفل واستئناف الاختبار بنجاح", "success");
+                requestFullScreen();
+            } else {
+                document.getElementById('pin-error').classList.remove('hidden');
+            }
+        }
+
+        // Prevent Copy, Cut, Paste, Right Click & Context Menu
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('copy', e => e.preventDefault());
+        document.addEventListener('cut', e => e.preventDefault());
+        document.addEventListener('paste', e => e.preventDefault());
+
+        // Detect Visibility / Tab Switching
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && isExamActive && !isLocked) {
+                handleViolation();
+            }
+        });
+
+        // Detect Window Blur / Switching Apps
+        window.addEventListener('blur', () => {
+            if (isExamActive && !isLocked) {
+                handleViolation();
+            }
+        });
+
+        // Block Key Combos (F12, Ctrl+Shift+I, Ctrl+U, Ctrl+C, etc.)
+        document.addEventListener('keydown', (e) => {
+            if (!isExamActive) return;
+
+            if (
+                e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+                (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 'c' || e.key === 'C' || e.key === 'v' || e.key === 'V'))
+            ) {
+                e.preventDefault();
+                showToast("عملية محظورة لحماية الاختبار!", "error");
+            }
+        });
+
+        // Fullscreen Handling
+        function requestFullScreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(() => {});
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            }
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                requestFullScreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().catch(() => {});
+                }
+            }
+        }
+
+        // --- Confirm and Submit Exam ---
+        function confirmSubmitExam() {
+            const answeredCount = Object.keys(userAnswers).length;
+            const unanswered = 30 - answeredCount;
+
+            const msgEl = document.getElementById('unanswered-count-msg');
+            if (unanswered > 0) {
+                msgEl.textContent = `تنبيه: يوجد لديك ${unanswered} سؤال لم تقم بالإجابة عليها بعد. هل ترغب بالتسليم بجميع الأحوال؟`;
+            } else {
+                msgEl.textContent = "أنت على وشك إنهاء الاختبار وتسليم إجاباتك. هل أنت متأكد؟";
+            }
+
+            document.getElementById('confirm-submit-modal').classList.remove('hidden');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirm-submit-modal').classList.add('hidden');
+        }
+
+        function processFinalSubmission() {
+            closeConfirmModal();
+            isExamActive = false;
+
+            // Calculate Scores
+            let totalScore = 0;
+            let easyScore = 0;
+            let mediumScore = 0;
+            let hardScore = 0;
+
+            activeQuestions.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.correct;
+
+                if (isCorrect) {
+                    totalScore++;
+                    if (q.part.includes("الجزء 1")) easyScore++;
+                    else if (q.part.includes("الجزء 2")) mediumScore++;
+                    else if (q.part.includes("الجزء 3")) hardScore++;
+                }
+            });
+
+            const percentage = Math.round((totalScore / 30) * 100);
+
+            const nameInput = document.getElementById('student-name').value;
+            document.getElementById('result-student-name').textContent = `الطالب: ${nameInput}`;
+            document.getElementById('final-score').textContent = `${totalScore} / 30`;
+            document.getElementById('final-percentage').textContent = `${percentage}%`;
+            document.getElementById('final-violations').textContent = violationCount;
+
+            // Populate parent phone report
+            document.getElementById('result-parent-phone').textContent = parentPhoneNumber;
+            
+            // Build WhatsApp click-to-verify report link
+            const waMsg = encodeURIComponent(
+                `📋 *تقرير نتيجة الاختبار الإلكتروني المحمي*\n\n` +
+                `👤 *اسم الطالب:* ${nameInput}\n` +
+                `📊 *الدرجة الكلية:* ${totalScore} / 30 (${percentage}%)\n` +
+                `⚠️ *عدد المخالفات:* ${violationCount} من 3\n\n` +
+                `📌 *تفاصيل المستويات:*\n` +
+                `- الجزء 1 (سهل): ${easyScore}/10\n` +
+                `- الجزء 2 (متوسط): ${mediumScore}/10\n` +
+                `- الجزء 3 (صعب): ${hardScore}/10\n\n` +
+                `🔒 *حالة الإرسال:* تم التوثيق والتسليم الآلي لولي الأمر.`
+            );
+            document.getElementById('wa-send-btn').href = `https://api.whatsapp.com/send?phone=${parentPhoneNumber}&text=${waMsg}`;
+
+            document.getElementById('easy-score-text').textContent = `${easyScore} / 10`;
+            document.getElementById('medium-score-text').textContent = `${mediumScore} / 10`;
+            document.getElementById('hard-score-text').textContent = `${hardScore} / 10`;
+
+            // Transition UI
+            document.getElementById('exam-screen').classList.add('hidden');
+            document.getElementById('app-header').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+        }
+
+        // Custom Toast Dialog Utility
+        function showToast(message, type = "info") {
+            const toast = document.getElementById('custom-toast');
+            const toastMsg = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.textContent = message;
+
+            if (type === "error") {
+                toastIcon.className = "fa-solid fa-circle-exclamation text-rose-400 text-xl";
+            } else if (type === "warning") {
+                toastIcon.className = "fa-solid fa-triangle-exclamation text-amber-400 text-xl";
+            } else if (type === "success") {
+                toastIcon.className = "fa-solid fa-circle-check text-emerald-400 text-xl";
+            } else {
+                toastIcon.className = "fa-solid fa-circle-info text-indigo-400 text-xl";
+            }
+
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
