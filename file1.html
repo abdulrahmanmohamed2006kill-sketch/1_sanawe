@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أساسيات للمبرمج: البيانات، المعلومات، المعرفة، والحكمة 🚀</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --card-hover: #334155;
+            --primary-orange: #f97316;
+            --primary-green: #10b981;
+            --primary-blue: #3b82f6;
+            --primary-purple: #8b5cf6;
+            --accent-yellow: #fbbf24;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.7;
+            padding: 20px;
+        }
+
+        .container { max-width: 1150px; margin: 0 auto; }
+
+        /* Top Bar & Author */
+        .author-badge {
+            background: linear-gradient(90deg, #b91c1c, #c2410c);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            padding: 35px 20px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 1px solid #4338ca;
+        }
+
+        header h1 { font-size: 2.3rem; color: var(--accent-yellow); margin-bottom: 10px; }
+        header p { color: var(--text-sub); font-size: 1.1rem; }
+        
+        .instructor-info {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed rgba(255,255,255,0.2);
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+
+        /* Section Styling */
+        .section-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 35px;
+            border: 1px solid #334155;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .section-title {
+            color: var(--accent-yellow);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Pyramid Interactive Simulator */
+        .pyramid-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 750px;
+            margin: 0 auto 25px auto;
+        }
+
+        .pyramid-level {
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .pyramid-level:hover { transform: scale(1.02); filter: brightness(1.15); }
+
+        .level-wisdom { background: var(--primary-purple); width: 45%; margin: 0 auto; }
+        .level-knowledge { background: var(--primary-blue); width: 60%; margin: 0 auto; }
+        .level-info { background: var(--primary-green); width: 78%; margin: 0 auto; }
+        .level-data { background: var(--primary-orange); width: 100%; margin: 0 auto; }
+
+        .pyramid-details-box {
+            background: #0f172a;
+            border: 2px solid var(--accent-yellow);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            min-height: 120px;
+        }
+
+        /* Comparison Table */
+        .comp-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .comp-table th, .comp-table td {
+            padding: 14px 18px;
+            text-align: right;
+            border-bottom: 1px solid #334155;
+        }
+
+        .comp-table th { background: #0f172a; color: var(--accent-yellow); font-size: 1.1rem; }
+        .comp-table tr:hover { background: var(--card-hover); }
+
+        /* Simulator Tool */
+        .sim-box {
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        .sim-btn {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+            transition: 0.2s;
+        }
+
+        .sim-btn:hover { opacity: 0.9; }
+
+        /* Interactive Games */
+        .game-box {
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .statement-display {
+            font-size: 1.25rem;
+            font-weight: bold;
+            padding: 15px;
+            background: #1e293b;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px dashed #475569;
+        }
+
+        .game-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+        }
+
+        .opt-btn {
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .opt-btn:hover { background: var(--primary-orange); }
+
+        .score-box {
+            margin-top: 15px;
+            font-size: 1.2rem;
+            color: var(--primary-green);
+            font-weight: bold;
+        }
+
+        .feedback-text {
+            height: 30px;
+            margin-top: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: var(--text-sub);
+            border-top: 1px solid #334155;
+            margin-top: 40px;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Author Badge -->
+    <div class="author-badge">
+        ✨ موقع تفاعلي تعليمي - إعداد: عبدالرحمن محمد ✨
+    </div>
+
+    <!-- Header -->
+    <header>
+        <h1>أساسيات مهمة لكل مبرمج 💻</h1>
+        <p>ما الفرق بين البيانات ، المعلومات ، المعرفة ، والحكمة؟ (Data VS Information VS Knowledge VS Wisdom)[cite: 3, 4]</p>
+        
+        <div class="instructor-info">
+            المادة العلمية مستمدة من شرح المهندس: <strong>محمد أبو هدهود (Mohammed Abu-Hadhoud)</strong>[cite: 1, 3]<br>
+            خبرة أكثر من 26 سنة | حاصل على: MBA, PMOC, PgMP®, PMP, PMI-RMP®, CM, ITILF, MCPD, MCSD[cite: 1, 3]
+        </div>
+    </header>
+
+    <!-- Section 1: The DIKW Pyramid Interactive -->
+    <div class="section-card">
+        <h2 class="section-title">🔺 هرم الحكمة التفاعلي (DIKW Pyramid)</h2>
+        <p style="margin-bottom: 15px; color: var(--text-sub);">
+            اضغط على أي مستوى من الهرم عشان تشوف التفاصيل والمعنى والسيناريو الشارح بالكامل[cite: 9, 10]:
+        </p>
+
+        <div class="pyramid-container">
+            <div class="pyramid-level level-wisdom" onclick="showPyramidInfo('wisdom')">👑 الحكمة (Wisdom) - Applied</div>
+            <div class="pyramid-level level-knowledge" onclick="showPyramidInfo('knowledge')">🧠 المعرفة (Knowledge) - Context</div>
+            <div class="pyramid-level level-info" onclick="showPyramidInfo('info')">📊 المعلومات (Information) - Meaning</div>
+            <div class="pyramid-level level-data" onclick="showPyramidInfo('data')">📄 البيانات (Data) - Raw</div>
+        </div>
+
+        <div class="pyramid-details-box" id="pyramid-details">
+            <h3 style="color:var(--accent-yellow);">👈 اضغط على أي جزء في الهرم فوق عشان تشوف شرحه العامي والمثال بتاعه!</h3>
+        </div>
+    </div>
+
+    <!-- Section 2: Data vs Information Table -->
+    <div class="section-card">
+        <h2 class="section-title">⚖️ الفروق الأساسية: البيانات VS المعلومات</h2>
+        <p style="color: var(--text-sub);">
+            معادلة المعلومات الذهبية: <strong style="color:var(--accent-yellow);">Data + Meaning = Information</strong> (بيانات + معنى = معلومات)[cite: 6].<br>
+            خطوات المعالجة (Process): الهيكلة (Structure) ⬅️ التنظيم (Organize) ⬅️ التحليل (Analyze) ⬅️️ إعطاء معنى (Give Meaning)[cite: 6].
+        </p>
+
+        <table class="comp-table">
+            <thead>
+                <tr>
+                    <th>وجه المقارنة</th>
+                    <th>📄 البيانات (Data)[cite: 8]</th>
+                    <th>📊 المعلومات (Information)[cite: 8]</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>طبيعة المادة</strong></td>
+                    <td>حقائق خام (Raw facts)[cite: 8]</td>
+                    <td>مشتقة ومأخوذة من البيانات (Driven from data)[cite: 8]</td>
+                </tr>
+                <tr>
+                    <td><strong>الهيكلة والتنظيم</strong></td>
+                    <td>غير مهيكلة / غير منظمة (Unstructured / Unorganized)[cite: 8]</td>
+                    <td>مهيكلة ومجهزة (Structured / Organized)[cite: 8]</td>
+                </tr>
+                <tr>
+                    <td><strong>التحليل</strong></td>
+                    <td>غير محللة (Unanalyzed)[cite: 8]</td>
+                    <td>محللة بدقة (Analyzed)[cite: 8]</td>
+                </tr>
+                <tr>
+                    <td><strong>المعالجة</strong></td>
+                    <td>غير معالجة (Unprocessed)[cite: 8]</td>
+                    <td>معالجة ومتحضرة (Processed)[cite: 8]</td>
+                </tr>
+                <tr>
+                    <td><strong>المعنى والدلالة</strong></td>
+                    <td>ليس لها معنى بمفردها (Has no meaning)[cite: 8]</td>
+                    <td>ذات معنى واضح ومفيد (Has meaning)[cite: 8]</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Section 3: Data Processing Simulator -->
+    <div class="section-card">
+        <h2 class="section-title">⚙️ معمل معالجة البيانات (Data Processor)</h2>
+        <p>جرب بنفسك تحول البيانات الخام لمعلومات ومعرفة ثم حكمة[cite: 6, 9, 10]:</p>
+
+        <div class="sim-box">
+            <p><strong>المُدخل الخام الحالي (Raw Data):</strong></p>
+            <div id="sim-input" style="font-family:monospace; background:#1e293b; padding:10px; border-radius:6px; margin:10px 0; color:#4ade80;">
+                [ 10000 , 20000 , 40000 , "daily_newborns" ][cite: 10]
+            </div>
+
+            <div>
+                <button class="sim-btn" onclick="runProcess(1)">1. ننظم ونحلل البيانات (Process)[cite: 6]</button>
+                <button class="sim-btn" onclick="runProcess(2)">2. نربط بالسياق المحلي (Context)[cite: 10]</button>
+                <button class="sim-btn" onclick="runProcess(3)">3. نأخد قرار حكيم (Wisdom)[cite: 10]</button>
+            </div>
+
+            <div id="sim-output" style="margin-top:15px; padding:15px; background:#1e293b; border-radius:8px; border-right:4px solid var(--primary-blue);">
+                اضغط على الخطوة الأولى للبدء!
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 4: Interactive Games -->
+    <div class="section-card">
+        <h2 class="section-title">🎮 منطقة الألعاب والاختبارات التفاعلية</h2>
+
+        <!-- Game 1 -->
+        <h3 style="color:var(--primary-green); margin-bottom:10px;">اللعبة (1): صنف العبارة صح!</h3>
+        <div class="game-box">
+            <div class="statement-display" id="g1-statement">جاري التحميل...</div>
+            <div class="game-options">
+                <button class="opt-btn" onclick="checkG1('Data')">📄 بيانات (Data)</button>
+                <button class="opt-btn" onclick="checkG1('Information')">📊 معلومات (Info)</button>
+                <button class="opt-btn" onclick="checkG1('Knowledge')">🧠 معرفة (Knowledge)</button>
+                <button class="opt-btn" onclick="checkG1('Wisdom')">👑 حكمة (Wisdom)</button>
+            </div>
+            <div class="feedback-text" id="g1-feedback"></div>
+            <div class="score-box" id="g1-score">النقاط: 0</div>
+        </div>
+
+        <!-- Quiz 2 -->
+        <h3 style="color:var(--primary-blue); margin-top:30px; margin-bottom:10px;">اللعبة (2): اختبار الفهم السريع</h3>
+        <div class="game-box">
+            <div id="quiz-question" style="font-size:1.15rem; font-weight:bold; margin-bottom:15px;"></div>
+            <div id="quiz-options-list" style="display:flex; flex-direction:column; gap:10px;"></div>
+            <div class="feedback-text" id="quiz-feedback"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        حقوق المادة العلمية محفوظة لـ <strong>ProgrammingAdvices.com - Mohammed Abu-Hadhoud (Copyright© 2022)</strong>[cite: 1, 3, 4]<br>
+        تصميم وتطوير الموقع التفاعلي إعداد: <strong>عبدالرحمن محمد</strong> ❤️
+    </footer>
+
+</div>
+
+<script>
+    // 1. Pyramid Simulator Info
+    function showPyramidInfo(level) {
+        const detailsBox = document.getElementById('pyramid-details');
+        if(level === 'data') {
+            detailsBox.innerHTML = `
+                <h3 style="color:var(--primary-orange);">📄 1. البيانات (Data) - Raw Facts</h3>
+                <p><strong>بالعامية المصرية:</strong> دي الحاجات الخام من غير أي تعديل ولا فهم، زي أرقام مرمية في جدول أو أسماء مش معروف بتاعت إيه[cite: 8].</p>
+                <p><strong>المثال المذكور بالملف:</strong> "10,000 مولود كل يوم" (رقم مجرد)[cite: 10]. أو درجات الحرارة لـ 100 سنة فاتوا كأرقام فقط[cite: 6].</p>
+            `;
+        } else if(level === 'info') {
+            detailsBox.innerHTML = `
+                <h3 style="color:var(--primary-green);">📊 2. المعلومات (Information) - Meaning</h3>
+                <p><strong>بالعامية المصرية:</strong> لما نمسك البيانات الخام دي وننظمها ونحللها ونطلع منها بمعنـى مفيد[cite: 6, 8].</p>
+                <p><strong>المثال المذكور بالملف:</strong> "عدد المواليد بيتضاعف كل سنة"[cite: 10]. أو "درجات الحرارة العالمية في ارتفاع مستمر"[cite: 6].</p>
+            `;
+        } else if(level === 'knowledge') {
+            detailsBox.innerHTML = `
+                <h3 style="color:var(--primary-blue);">🧠 3. المعرفة (Knowledge) - Context</h3>
+                <p><strong>بالعامية المصرية:</strong> لما نربط المعلومة دي بالواقع والسياق بتاعنا ونستوعب أبعادها مع الوقت[cite: 9, 10].</p>
+                <p><strong>المثال المذكور بالملف:</strong> "الزيادة والمضاعفة السريعة دي بتحصل في بلدنا إحنا!"[cite: 10].</p>
+            `;
+        } else if(level === 'wisdom') {
+            detailsBox.innerHTML = `
+                <h3 style="color:var(--primary-purple);">👑 4. الحكمة (Wisdom) - Applied</h3>
+                <p><strong>بالعامية المصرية:</strong> دي قمة الذكاء.. نستخدم المعرفة عشان نأخد قرار صح ونبني للمستقبل صح[cite: 9, 10].</p>
+                <p><strong>المثال المذكور بالملف:</strong> "يبقى الأفضل نجهز للمستقبل ونبني بنية تحتية ومدارس ومستشفيات كويسة"[cite: 10].</p>
+            `;
+        }
+    }
+
+    // 2. Data Processing Simulator
+    function runProcess(step) {
+        const out = document.getElementById('sim-output');
+        if(step === 1) {
+            out.innerHTML = `
+                <strong style="color:var(--primary-green);">النتيجة (Information):</strong><br>
+                قمنا بتجميع الأرقام وهيكلتها ⬅️ اتضح إن معدل المواليد بيتضاعف سنويًا![cite: 6, 10]
+            `;
+        } else if(step === 2) {
+            out.innerHTML = `
+                <strong style="color:var(--primary-blue);">النتيجة (Knowledge):</strong><br>
+                ربطنا المعلومة بالواقع ⬅️ أدركنا إن ظاهرة تضاعف المواليد دي بتحصل عندنا في مجتمعنا وبلدنا بالتحديد![cite: 10]
+            `;
+        } else if(step === 3) {
+            out.innerHTML = `
+                <strong style="color:var(--primary-purple);">النتيجة (Wisdom):</strong><br>
+                اتخاذ القرار والتطبيق ⬅️ التخطيط المسبق وبناء مستشفيات ومدارس جديدة لاستيعاب الزيادة المستقبلية[cite: 10].
+            `;
+        }
+    }
+
+    // 3. Game 1
+    const g1Data = [
+        { text: "جدول مليان أرقام عشوائية زي: 5454501653 , 6304681382[cite: 7]", cat: "Data" },
+        { text: "درجات الحرارة المسجلة خلال الـ 100 سنة اللي فاتوا كأرقام مجردة[cite: 6]", cat: "Data" },
+        { text: "تحليل الجداول أظهر إن درجات الحرارة العالمية ترتفع (Global Temperature is raising)[cite: 6]", cat: "Information" },
+        { text: "تضاعف أعداد المواليد سنوياً[cite: 10]", cat: "Information" },
+        { text: "استيعاب إن التضاعف ده بيحصل جوه بلدنا إحنا (It is happening in my country!)[cite: 10]", cat: "Knowledge" },
+        { text: "بناء بنية تحتية قوية ومدارس للتجهيز للمستقبل (Build a good infrastructure)[cite: 10]", cat: "Wisdom" }
+    ];
+
+    let g1Idx = 0;
+    let g1Score = 0;
+
+    function loadG1() {
+        if(g1Idx < g1Data.length) {
+            document.getElementById('g1-statement').innerText = `"${g1Data[g1Idx].text}"`;
+            document.getElementById('g1-feedback').innerText = "";
+        } else {
+            document.getElementById('g1-statement').innerText = "🎉 برافو عليك! كملت كل عبارات اللعبة بنجاح!";
+            document.getElementById('g1-feedback').innerText = "";
+        }
+    }
+
+    function checkG1(selected) {
+        if(g1Idx >= g1Data.length) return;
+        const correct = g1Data[g1Idx].cat;
+        const fb = document.getElementById('g1-feedback');
+
+        if(selected === correct) {
+            fb.innerText = "✅ إجابة ممتازة ومظبوطة!";
+            fb.style.color = "var(--primary-green)";
+            g1Score += 10;
+        } else {
+            fb.innerText = `❌ إجابة خاطئة، التصنيف الصحيح هو: ${correct}`;
+            fb.style.color = "#f43f5e";
+        }
+
+        document.getElementById('g1-score').innerText = `النقاط: ${g1Score}`;
+        g1Idx++;
+        setTimeout(loadG1, 1500);
+    }
+
+    // 4. Quiz Game
+    const quizData = [
+        {
+            q: "إيه هي المعادلة المحددة لحساب المعلومات؟[cite: 6]",
+            opts: ["Data + Numbers", "Data + Meaning = Information[cite: 6]", "Knowledge + Wisdom", "Code + Data"],
+            ans: 1
+        },
+        {
+            q: "أنا مرحلة في الهرم بعبر عن الحقائق غير المنظمة وغير المحللة (Unstructured & Unanalyzed)؟[cite: 8]",
+            opts: ["المعلومات (Information)", "البيانات (Data)[cite: 8]", "الحكمة (Wisdom)", "المعرفة (Knowledge)"],
+            ans: 1
+        }
+    ];
+
+    let qIdx = 0;
+
+    function loadQuiz() {
+        if(qIdx >= quizData.length) {
+            document.getElementById('quiz-question').innerText = "🏆 تهانينا! اجتزت الاختبار بنجاح تام!";
+            document.getElementById('quiz-options-list').innerHTML = "";
+            return;
+        }
+
+        const current = quizData[qIdx];
+        document.getElementById('quiz-question').innerText = `س${qIdx+1}: ${current.q}`;
+        
+        const list = document.getElementById('quiz-options-list');
+        list.innerHTML = "";
+
+        current.opts.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.style.textAlign = 'right';
+            btn.innerText = opt;
+            btn.onclick = () => checkQuiz(index);
+            list.appendChild(btn);
+        });
+    }
+
+    function checkQuiz(chosen) {
+        const current = quizData[qIdx];
+        const fb = document.getElementById('quiz-feedback');
+
+        if(chosen === current.ans) {
+            fb.innerText = "🎯 الله ينور! إجابة صحيحة 100%";
+            fb.style.color = "var(--primary-green)";
+        } else {
+            fb.innerText = "⚠️ إجابة مش مظبوطة، راجع التلخيص وركز تاني!";
+            fb.style.color = "#f43f5e";
+        }
+
+        qIdx++;
+        setTimeout(() => {
+            fb.innerText = "";
+            loadQuiz();
+        }, 1500);
+    }
+
+    window.onload = () => {
+        loadG1();
+        loadQuiz();
+        showPyramidInfo('data');
+    };
+</script>
+
+</body>
+</html>
