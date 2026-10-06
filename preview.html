@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شرح التوقيع الإلكتروني والبصمة الرقمية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg:#050b0d;
+  --panel:#0a1317;
+  --panel2:#0d1a1f;
+  --line:#17353b;
+  --green:#00ff9d;
+  --cyan:#00d9ff;
+  --muted:#7e9aa1;
+  --danger:#ff416c;
+  --yellow:#ffd166;
+  --purple:#b98cff;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Cairo',sans-serif;
+  background:
+    radial-gradient(circle at 15% 10%,rgba(0,255,157,.08),transparent 28%),
+    radial-gradient(circle at 85% 20%,rgba(0,217,255,.07),transparent 30%),
+    linear-gradient(180deg,#030708 0%,#071014 100%);
+  color:#d9f7ef;
+  min-height:100vh;
+}
+body:before{
+  content:"";
+  position:fixed;inset:0;pointer-events:none;opacity:.12;z-index:-1;
+  background-image:linear-gradient(rgba(0,255,157,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(0,255,157,.08) 1px,transparent 1px);
+  background-size:42px 42px;
+  mask-image:linear-gradient(to bottom,black,transparent 85%);
+}
+::selection{background:rgba(0,255,157,.25);color:#fff}
+::-webkit-scrollbar{width:9px}
+::-webkit-scrollbar-track{background:#030708}
+::-webkit-scrollbar-thumb{background:#17444a;border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:#1e6b70}
+
+header{
+  background:rgba(3,8,10,.88)!important;
+  border-bottom:1px solid rgba(0,255,157,.2);
+  box-shadow:0 0 30px rgba(0,255,157,.07),0 8px 30px rgba(0,0,0,.45)!important;
+  backdrop-filter:blur(16px);
+}
+header .container{max-width:1180px}
+header h1{
+  color:#eafff8;
+  letter-spacing:.2px;
+  text-shadow:0 0 18px rgba(0,255,157,.28);
+}
+header h1 i{color:var(--green);filter:drop-shadow(0 0 8px rgba(0,255,157,.5))}
+.nav-btn{
+  color:#87aeb3!important;
+  border:1px solid transparent;
+  background:transparent!important;
+}
+.nav-btn:hover,.nav-btn.bg-indigo-700{
+  color:var(--green)!important;
+  border-color:rgba(0,255,157,.35)!important;
+  background:rgba(0,255,157,.08)!important;
+  box-shadow:inset 0 0 18px rgba(0,255,157,.04),0 0 12px rgba(0,255,157,.08);
+}
+
+main{max-width:1180px!important}
+.glass-panel{
+  background:linear-gradient(145deg,rgba(10,20,24,.94),rgba(5,13,16,.96))!important;
+  border:1px solid #16353b!important;
+  box-shadow:0 20px 60px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.025)!important;
+  border-radius:22px!important;
+  position:relative;overflow:hidden;
+}
+.glass-panel:before{
+  content:"SECURE_CHANNEL // ACTIVE";
+  position:absolute;top:14px;left:20px;
+  font:600 10px 'JetBrains Mono',monospace;
+  color:rgba(0,255,157,.3);letter-spacing:2px;
+}
+.step-container.active{animation:cyberIn .38s ease-out}
+@keyframes cyberIn{from{opacity:0;transform:translateY(12px) scale(.99)}to{opacity:1;transform:none}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 rgba(0,255,157,0)}50%{box-shadow:0 0 24px rgba(0,255,157,.14)}}
+@keyframes scan{0%{transform:translateY(-120%)}100%{transform:translateY(320%)}}
+
+h2,h3{color:#effff9}
+.text-gray-600,.text-gray-700,.text-gray-500{color:#91aeb3!important}
+.text-gray-800{color:#dffaf2!important}
+
+.hash-string{
+  word-break:break-all;
+  font-family:'JetBrains Mono',monospace!important;
+  background:#03090b!important;
+  color:var(--green)!important;
+  padding:9px 11px!important;
+  border:1px solid #16434a!important;
+  border-radius:9px!important;
+  box-shadow:inset 0 0 18px rgba(0,255,157,.025);
+}
+
+.machine-bg{
+  background:
+    radial-gradient(circle at center,rgba(0,255,157,.08),transparent 55%),
+    repeating-linear-gradient(0deg,rgba(0,255,157,.035) 0 1px,transparent 1px 4px),
+    #050d10!important;
+  border:1px solid #155057!important;
+}
+.machine-bg:after{
+  content:"";
+  position:absolute;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+  opacity:.35;animation:scan 3.2s linear infinite;
+}
+.machine-bg .absolute{
+  background:#06231c!important;color:var(--green)!important;
+  border:1px solid rgba(0,255,157,.3);
+}
+
+textarea,input{
+  background:#050c0f!important;color:#dffaf2!important;
+  border-color:#214149!important;
+}
+textarea::placeholder{color:#547078}
+textarea:focus,input:focus{
+  border-color:var(--green)!important;
+  box-shadow:0 0 0 3px rgba(0,255,157,.08),0 0 18px rgba(0,255,157,.06)!important;
+  outline:none!important;
+}
+
+.bg-white{background:#091519!important}
+.bg-gray-50{background:#071115!important}
+.bg-gray-800{background:#020708!important}
+.bg-gray-200{background:#112126!important;color:#b9d1d3!important}
+.bg-yellow-50,.bg-yellow-100{
+  background:rgba(255,209,102,.055)!important;
+  border-color:rgba(255,209,102,.28)!important;
+}
+.bg-blue-50{background:rgba(0,217,255,.055)!important;border-color:rgba(0,217,255,.22)!important}
+.bg-green-50{background:rgba(0,255,157,.055)!important;border-color:rgba(0,255,157,.22)!important}
+.bg-red-50{background:rgba(255,65,108,.06)!important;border-color:rgba(255,65,108,.25)!important}
+.bg-purple-50{background:rgba(185,140,255,.06)!important;border-color:rgba(185,140,255,.24)!important}
+
+.text-indigo-600,.text-blue-600,.text-purple-600,.text-green-600{color:var(--green)!important}
+.text-blue-700,.text-blue-800{color:#62e9ff!important}
+.text-purple-700,.text-purple-600{color:#c9adff!important}
+.text-green-700,.text-green-800{color:#5fffc1!important}
+.text-red-600,.text-red-700{color:#ff6687!important}
+
+.border-blue-100,.border-blue-200{border-color:rgba(0,217,255,.2)!important}
+.border-purple-100,.border-purple-200{border-color:rgba(185,140,255,.2)!important}
+.border-green-100,.border-green-200,.border-green-300{border-color:rgba(0,255,157,.22)!important}
+.border-gray-200,.border-gray-300{border-color:#18343a!important}
+
+button{
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease,background .18s ease!important;
+}
+button:hover:not(:disabled){transform:translateY(-1px)}
+button:active:not(:disabled){transform:translateY(0)}
+.bg-indigo-600,.bg-purple-600,.bg-green-600{
+  background:#063a2b!important;color:#baffea!important;
+  border:1px solid rgba(0,255,157,.42);
+  box-shadow:0 0 18px rgba(0,255,157,.09);
+}
+.bg-indigo-600:hover,.bg-purple-600:hover,.bg-green-600:hover{background:#07543e!important;box-shadow:0 0 25px rgba(0,255,157,.18)}
+.bg-green-500{background:#07523e!important}
+.bg-gray-500{background:#183238!important}
+.bg-gray-800{background:#0a171b!important}
+.bg-gray-200{border:1px solid #23434a!important}
+
+.step-container .fa-fingerprint,
+.step-container .fa-file-signature,
+.step-container .fa-user-check,
+.step-container .fa-store{filter:drop-shadow(0 0 10px rgba(0,255,157,.25))}
+
+.cyber-kicker{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:5px 10px;border:1px solid rgba(0,255,157,.25);
+  background:rgba(0,255,157,.045);border-radius:999px;
+  color:#62e9c0;font:600 11px 'JetBrains Mono',monospace;
+  letter-spacing:1px;margin-bottom:12px;
+}
+.cyber-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 1.5s infinite}
+@keyframes blink{50%{opacity:.35}}
+
+.cyber-callout{
+  border:1px solid rgba(0,255,157,.25)!important;
+  background:linear-gradient(135deg,rgba(0,255,157,.07),rgba(0,217,255,.025))!important;
+  box-shadow:inset 0 0 30px rgba(0,255,157,.025);
+}
+.cyber-card{
+  background:#081317!important;
+  border:1px solid #193940!important;
+  transition:.2s;
+}
+.cyber-card:hover{border-color:rgba(0,255,157,.35)!important;transform:translateY(-2px)}
+
+.process-line{
+  height:2px;background:#17373c;position:relative;margin:24px 0;
+}
+.process-line:after{
+  content:"";position:absolute;left:0;top:-1px;height:4px;width:35%;
+  background:linear-gradient(90deg,transparent,var(--green));
+  box-shadow:0 0 14px var(--green);animation:flow 2.5s linear infinite;
+}
+@keyframes flow{to{left:70%}}
+
+code,.mono{font-family:'JetBrains Mono',monospace}
+</style>
+
+</head>
+<body class="min-h-screen pb-12">
+
+    <header class="bg-indigo-600 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold flex items-center gap-2">
+                <i class="fa-solid fa-shield-halved"></i>
+                التوقيع الإلكتروني والبصمة
+            </h1>
+            <div class="flex gap-2">
+                <button onclick="changeStep(1)" class="nav-btn px-3 py-1 rounded text-sm font-medium bg-indigo-700 hover:bg-indigo-800 transition" id="nav-btn-1">1. القصة</button>
+                <button onclick="changeStep(2)" class="nav-btn px-3 py-1 rounded text-sm font-medium hover:bg-indigo-700 transition" id="nav-btn-2">2. تجربة الـ Hash</button>
+                <button onclick="changeStep(3)" class="nav-btn px-3 py-1 rounded text-sm font-medium hover:bg-indigo-700 transition" id="nav-btn-3">3. توقيع الرسالة</button>
+                <button onclick="changeStep(4)" class="nav-btn px-3 py-1 rounded text-sm font-medium hover:bg-indigo-700 transition" id="nav-btn-4">4. التحقق (محمد)</button>
+            </div>
+        </div>
+    </header>
+<div class="max-w-[1180px] mx-auto px-4 -mt-3 relative z-40">
+  <div class="flex flex-wrap items-center justify-between gap-3 px-4 py-2 rounded-xl border border-emerald-500/15 bg-[#071216]/90 backdrop-blur">
+    <div class="flex items-center gap-3 text-xs">
+      <span class="cyber-dot"></span>
+      <span class="font-mono text-emerald-300">LAB://DIGITAL_SIGNATURE</span>
+      <span class="text-slate-500">|</span>
+      <span class="text-slate-400">LOCAL CRYPTOGRAPHIC SIMULATION</span>
+    </div>
+    <div class="font-mono text-[11px] text-cyan-300/70">SHA-256 • RSA-2048 • VERIFY</div>
+  </div>
+</div>
+
+
+    
+<main class="container mx-auto px-4 mt-8 max-w-4xl">
+<div class="mb-5 grid md:grid-cols-4 gap-2">
+  <div class="cyber-card rounded-xl px-3 py-2 text-center"><div class="text-[10px] font-mono text-slate-500">01</div><div class="text-xs text-emerald-300">MESSAGE</div></div>
+  <div class="cyber-card rounded-xl px-3 py-2 text-center"><div class="text-[10px] font-mono text-slate-500">02</div><div class="text-xs text-cyan-300">HASH</div></div>
+  <div class="cyber-card rounded-xl px-3 py-2 text-center"><div class="text-[10px] font-mono text-slate-500">03</div><div class="text-xs text-purple-300">SIGN</div></div>
+  <div class="cyber-card rounded-xl px-3 py-2 text-center"><div class="text-[10px] font-mono text-slate-500">04</div><div class="text-xs text-emerald-300">VERIFY</div></div>
+</div>
+
+        
+        <section id="step-1" class="step-container active fade-in">
+            <div class="glass-panel rounded-2xl p-8 mb-8">
+                <div class="cyber-kicker"><span class="cyber-dot"></span> THREAT MODEL // WHY SIGNATURES?</div>
+                <div class="flex items-center gap-4 mb-6 text-indigo-600">
+                    <i class="fa-solid fa-store text-4xl"></i>
+                    <h2 class="text-3xl font-bold">الموقف من الحياة اليومية</h2>
+                </div>
+                
+                <div class="space-y-6 text-lg leading-relaxed">
+                    <p>تخيل معايا الموقف ده...</p>
+                    <p>أنت صاحب محل، وعايز تبعت لصاحبك محمد ورقة مكتوب فيها:</p>
+                    
+                    <div class="bg-yellow-100 border border-yellow-300 p-4 rounded-lg shadow-sm w-3/4 mx-auto transform -rotate-1 relative">
+                        <div class="absolute -top-3 left-4 text-gray-400"><i class="fa-solid fa-thumbtack"></i></div>
+                        <p class="font-bold text-center text-xl text-gray-800 font-serif">"أنا موافق أبيعك العربية بـ 500,000 جنيه."</p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6 mt-8">
+                        <div class="bg-red-50 border border-red-200 p-5 rounded-xl border-t-4 border-t-red-500">
+                            <h3 class="font-bold text-red-700 mb-2 flex items-center gap-2"><i class="fa-solid fa-pen-nib"></i> المشكلة الأولى: التغيير</h3>
+                            <p class="text-sm mb-3">حد مسك الورقة وغير الرقم لـ <strong>50,000</strong>.</p>
+                            <p class="font-semibold text-gray-700">كيف يعرف محمد أن الورقة لم تتغير؟</p>
+                        </div>
+                        
+                        <div class="bg-blue-50 border border-blue-200 p-5 rounded-xl border-t-4 border-t-blue-500">
+                            <h3 class="font-bold text-blue-700 mb-2 flex items-center gap-2"><i class="fa-solid fa-user-ninja"></i> المشكلة الثانية: الهوية</h3>
+                            <p class="text-sm mb-3">محمد يقول: "مين قال إنك اللي كتبت الورقة دي أصلاً؟"</p>
+                            <p class="font-semibold text-gray-700">كيف يعرف محمد أن الورقة فعلاً منك؟</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 bg-green-50 p-6 rounded-xl border border-green-200 flex items-start gap-4">
+                        <div class="text-4xl text-green-500 mt-1">💡</div>
+                        <div>
+                            <h3 class="text-xl font-bold text-green-800 mb-2">الحل: Digital Signature (التوقيع الإلكتروني)</h3>
+                            <p class="text-gray-700">توقيع إلكتروني يساعدنا نثبت إن البيانات جاية من صاحبها وإنها ما اتغيرتش. لكن قبل ما نفهمه، لازم نفهم أداة سحرية اسمها <strong>Hash Function</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 text-left">
+                    <button onclick="changeStep(2)" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-bold shadow-md transition flex items-center gap-2 mr-auto">
+                        الخطوة التالية: تجربة الـ Hash <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="step-2" class="step-container fade-in">
+            <div class="glass-panel rounded-2xl p-8 mb-8">
+                <div class="cyber-kicker"><span class="cyber-dot"></span> LIVE HASH LAB // SHA-256</div>
+                <div class="flex items-center gap-4 mb-2 text-blue-600">
+                    <i class="fa-solid fa-fingerprint text-4xl"></i>
+                    <h2 class="text-3xl font-bold">آلة البصمة (Hash Function)</h2>
+                </div>
+                <p class="text-gray-600 mb-6">تخيل الآلة دي، بتدخلها أي نص، بتطلعلك "بصمة" فريدة (Hash Value). جرب تغير حرف واحد وشوف البصمة هتتغير إزاي!</p>
+                
+                <div class="grid md:grid-cols-2 gap-8 items-center bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    
+                    <!-- Input Area -->
+                    <div class="space-y-4">
+                        <label class="block font-bold text-gray-700">الورقة (النص الأصلي):</label>
+                        <textarea id="hash-input" class="w-full h-32 p-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring focus:ring-blue-200 transition text-lg" placeholder="اكتب هنا...">أنا موافق أبيعك العربية بـ 500,000 جنيه.</textarea>
+                        <p class="text-sm text-gray-500"><i class="fa-solid fa-circle-info"></i> جرب تحذف صفر من الرقم اللي فوق</p>
+                    </div>
+
+                    <!-- Machine Process & Output -->
+                    <div class="machine-bg p-6 rounded-xl border border-gray-300 relative flex flex-col items-center justify-center min-h-[250px]">
+                        <div class="absolute -top-4 bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-bold shadow-md">
+                            Hash Function (SHA-256)
+                        </div>
+                        
+                        <div class="text-center w-full mt-4">
+                            <p class="text-sm font-bold text-gray-600 mb-2">البصمة الناتجة (Hash Value):</p>
+                            <div id="hash-output" class="hash-string text-sm text-blue-700 font-bold bg-white p-4 shadow-inner min-h-[60px] flex items-center justify-center transition-colors duration-300">
+                                جاري حساب البصمة...
+                            </div>
+                            <div id="hash-change-alert" class="mt-2 text-sm text-red-600 font-bold h-6 opacity-0 transition-opacity">
+                                🚨 البصمة اتغيرت تماماً!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 bg-blue-50 p-6 rounded-xl border border-blue-100">
+                    <h3 class="font-bold text-blue-800 mb-2">ماذا نتعلم هنا؟</h3>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li><strong>البصمة تتغير:</strong> أي تغيير بسيط في النص يغير البصمة (الـ Hash) بالكامل.</li>
+                        <li><strong>لا يمكن الرجوع:</strong> لو معاك البصمة، مستحيل تستنتج منها النص الأصلي (زي بصمة صباعك، مش بتترسم منها صورتك).</li>
+                        <li><strong>الهدف:</strong> نستخدمها لاكتشاف إذا كانت البيانات قد <strong>تغيرت أو تم التلاعب بها</strong>.</li>
+                    </ul>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button onclick="changeStep(1)" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-right"></i> السابق
+                    </button>
+                    <button onclick="changeStep(3)" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-bold shadow-md transition flex items-center gap-2">
+                        الخطوة التالية: التوقيع <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="step-3" class="step-container fade-in">
+            <div class="glass-panel rounded-2xl p-8 mb-8">
+                <div class="flex items-center gap-4 mb-2 text-purple-600">
+                    <i class="fa-solid fa-file-signature text-4xl"></i>
+                    <h2 class="text-3xl font-bold">إنشاء التوقيع الإلكتروني</h2>
+                </div>
+                
+<div class="cyber-kicker"><span class="cyber-dot"></span> SIGNING PIPELINE</div>
+<p class="text-gray-600 mb-6">أنت (المرسل) عندك مفتاحين:
+ <strong>Public Key</strong> (بتوزعه للناس) و <strong>Private Key</strong> (سرّي بتاعك أنت بس). بنستخدم المفتاح السري عشان نمضي البصمة.</p>
+
+                
+<div class="mb-5 cyber-callout rounded-xl p-5">
+  <div class="font-bold text-emerald-300 mb-3">🧠 الفكرة في 3 حركات</div>
+  <div class="grid md:grid-cols-3 gap-3 text-sm">
+    <div><b class="text-cyan-300">① الرسالة → Hash</b><br><span class="text-slate-400">نحوّل الرسالة لبصمة ثابتة.</span></div>
+    <div><b class="text-purple-300">② Hash → Private Key</b><br><span class="text-slate-400">عبدالرحمن يوقّع البصمة بمفتاحه السري.</span></div>
+    <div><b class="text-emerald-300">③ Public Key → Verify</b><br><span class="text-slate-400">محمد يتحقق من التوقيع ويقارنه بالـHash الجديد.</span></div>
+  </div>
+</div>
+<div class="bg-white border-2 border-purple-100 rounded-xl overflow-hidden shadow-sm">
+
+                    
+                    <!-- Keys Display -->
+                    <div class="bg-purple-50 p-4 border-b border-purple-100 flex flex-wrap justify-between items-center gap-4">
+                        <div class="flex-1 min-w-[200px]">
+                            <p class="text-xs text-gray-500 font-bold mb-1">المفتاح الخاص بك (Private Key - سرّي) 🔐</p>
+                            <div class="hash-string text-xs truncate bg-gray-800 text-green-400" id="display-private-key">جاري إنشاء المفاتيح...</div>
+                        </div>
+                        <div class="flex-1 min-w-[200px]">
+                            <p class="text-xs text-gray-500 font-bold mb-1">المفتاح العام (Public Key - مع محمد) 🔓</p>
+                            <div class="hash-string text-xs truncate" id="display-public-key">جاري إنشاء المفاتيح...</div>
+                        </div>
+                    </div>
+
+                    <!-- Signing Process -->
+                    <div class="p-6">
+                        <div class="flex flex-col md:flex-row gap-6 items-start">
+                            
+                            <!-- Document -->
+                            <div class="flex-1 w-full bg-yellow-50 border border-yellow-200 p-4 rounded-lg relative">
+                                <h3 class="font-bold text-gray-700 mb-2 border-b pb-2">الرسالة النهائية</h3>
+                                <textarea id="sign-input" class="w-full h-24 p-2 bg-transparent border border-dashed border-gray-400 rounded focus:outline-none focus:border-purple-500 resize-none mb-2 font-serif text-lg">أنا موافق أبيعك العربية بـ 500,000 جنيه.</textarea>
+                                
+                                <div class="text-sm text-gray-600 mb-1">1. البصمة (Hash):</div>
+                                <div id="sign-hash-output" class="hash-string text-xs text-blue-600 mb-4 truncate">...</div>
+                                
+                                <button id="btn-sign" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg font-bold flex items-center justify-center gap-2 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <i class="fa-solid fa-pen-fancy"></i> وقّع باستخدام المفتاح السري
+                                </button>
+                            </div>
+
+                            <!-- Arrow -->
+                            <div class="hidden md:flex flex-col justify-center items-center h-full mt-16 text-purple-300">
+                                <i class="fa-solid fa-arrow-left text-3xl"></i>
+                            </div>
+
+                            <!-- Result Package -->
+                            <div class="flex-1 w-full bg-gray-50 border-2 border-gray-200 p-4 rounded-lg relative transition-all duration-500" id="package-box">
+                                <div class="absolute -top-3 right-4 bg-gray-500 text-white px-2 py-1 rounded text-xs font-bold">الطرد المرسل لمحمد 📦</div>
+                                
+                                <div class="opacity-30 transition-opacity duration-500" id="package-content">
+                                    <div class="mb-3">
+                                        <p class="text-xs font-bold text-gray-500">📄 نص الرسالة:</p>
+                                        <p class="text-sm bg-white p-2 border rounded font-serif" id="package-msg">...</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-gray-500">✍️ التوقيع الرقمي (Digital Signature):</p>
+                                        <div class="hash-string text-xs text-purple-700 h-24 overflow-y-auto" id="package-sig">في انتظار التوقيع...</div>
+                                    </div>
+                                    <div class="mt-4 text-center">
+                                        <button onclick="sendToMohamed()" id="btn-send" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded font-bold transition flex items-center justify-center gap-2 w-full disabled:opacity-50" disabled>
+                                            <i class="fa-solid fa-paper-plane"></i> إرسال إلى محمد
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button onclick="changeStep(2)" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-right"></i> السابق
+                    </button>
+                    <!-- Send button takes them to next step -->
+                </div>
+            </div>
+        </section>
+
+        <section id="step-4" class="step-container fade-in">
+            <div class="glass-panel rounded-2xl p-8 mb-8">
+                <div class="flex items-center gap-4 mb-2 text-green-600">
+                    <i class="fa-solid fa-user-check text-4xl"></i>
+                    <h2 class="text-3xl font-bold">عند محمد: التحقق من التوقيع</h2>
+                </div>
+                <p class="text-gray-600 mb-6">محمد استلم الطرد (الرسالة + التوقيع). هيستخدم الـ <strong>Public Key</strong> بتاعك عشان يتأكد إنك أنت اللي ماضي وإنه مفيش حد غيّر الرسالة في السكة.</p>
+
+                
+<div class="cyber-callout rounded-xl p-4 mb-6">
+  <div class="flex flex-wrap items-center justify-center gap-3 text-sm font-mono">
+    <span class="text-cyan-300">MESSAGE</span><span>→</span>
+    <span class="text-cyan-300">SHA-256</span><span>→</span>
+    <span class="text-purple-300">SIGNATURE</span><span>→</span>
+    <span class="text-emerald-300">PUBLIC KEY</span><span>→</span>
+    <span class="text-yellow-300">MATCH?</span>
+  </div>
+</div>
+<div class="grid md:grid-cols-2 gap-8">
+
+                    <!-- Received Data & Tampering -->
+                    <div class="bg-gray-50 border border-gray-300 p-5 rounded-xl shadow-inner">
+                        <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-inbox text-gray-500"></i> الطرد المستلم
+                        </h3>
+                        
+                        <div class="mb-4 relative">
+                            <label class="block text-sm font-bold text-gray-600 mb-1">نص الرسالة (قابل للتعديل للمحاكاة):</label>
+                            <textarea id="verify-input" class="w-full h-20 p-2 border-2 border-dashed border-gray-300 bg-white rounded focus:border-red-500 focus:outline-none transition font-serif"></textarea>
+                            <div class="absolute top-0 left-0 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-bl-lg font-bold border-b border-r border-yellow-300">
+                                جرب تغيّر الرقم هنا! 😈
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-600 mb-1">التوقيع المستلم (Digital Signature):</label>
+                            <div id="verify-sig" class="hash-string text-xs h-20 overflow-y-auto text-gray-500 bg-gray-200 border-gray-300 cursor-not-allowed">لا يوجد توقيع</div>
+                        </div>
+                    </div>
+
+                    <!-- Verification Machine -->
+                    <div class="bg-white border-2 border-green-200 p-5 rounded-xl flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-green-700 mb-3 text-center">جهاز التحقق الخاص بمحمد</h3>
+                            
+                            <ul class="text-sm space-y-3 text-gray-600 mb-4 bg-green-50 p-3 rounded border border-green-100">
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-cogs text-green-500 mt-1"></i>
+                                    <span>يحسب البصمة (Hash) للرسالة اللي وصلته.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-key text-blue-500 mt-1"></i>
+                                    <span>يستخدم المفتاح العام (Public Key) للتحقق من أن التوقيع تم إنشاؤه بالمفتاح الخاص المقابل للرسالة.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-scale-balanced text-purple-500 mt-1"></i>
+                                    <span>يقارن البصمتين ببعض.</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="text-center">
+                            
+<div class="mb-3 flex gap-2">
+  <button onclick="simulateTamper()" class="flex-1 border border-red-500/30 bg-red-500/5 text-red-300 px-3 py-2 rounded-lg text-sm font-bold hover:bg-red-500/10">
+    <i class="fa-solid fa-user-secret"></i> محاكاة هجوم: غيّر الرسالة
+  </button>
+</div>
+<button id="btn-verify" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-bold shadow-md transition w-full mb-4 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-shield-cat"></i> فحص الرسالة
+                            </button>
+                            
+                            <div id="verify-result" class="hidden p-4 rounded-lg font-bold text-lg">
+                                <!-- Result injected here via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 flex justify-between">
+                    <button onclick="changeStep(3)" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-right"></i> السابق
+                    </button>
+                    <button onclick="resetApp()" class="bg-gray-800 hover:bg-gray-900 text-white px-6 py-3 rounded-lg font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i> إعادة التجربة
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // State variables
+        let currentStep = 1;
+        let keyPair = null;
+        let signedMessage = "";
+        let digitalSignature = null;
+        
+        // Setup initial text
+        const initialText = "أنا موافق أبيعك العربية بـ 500,000 جنيه.";
+        let previousHash2 = "";
+
+        // UI Elements
+        const hashInput = document.getElementById('hash-input');
+        const hashOutput = document.getElementById('hash-output');
+        const hashChangeAlert = document.getElementById('hash-change-alert');
+        
+        const signInput = document.getElementById('sign-input');
+        const signHashOutput = document.getElementById('sign-hash-output');
+        const btnSign = document.getElementById('btn-sign');
+        const packageContent = document.getElementById('package-content');
+        const packageMsg = document.getElementById('package-msg');
+        const packageSig = document.getElementById('package-sig');
+        const btnSend = document.getElementById('btn-send');
+        
+        const verifyInput = document.getElementById('verify-input');
+        const verifySig = document.getElementById('verify-sig');
+        const btnVerify = document.getElementById('btn-verify');
+        const verifyResult = document.getElementById('verify-result');
+
+        function bufferToHex(buffer) {
+            return Array.from(new Uint8Array(buffer))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+        }
+
+        // Extremely simplified Base64 display for keys to not overwhelm the UI
+        async function exportPublicKeyToSpki(key) {
+            const exported = await window.crypto.subtle.exportKey("spki", key);
+            const exportedAsString = String.fromCharCode.apply(null, new Uint8Array(exported));
+            const exportedAsBase64 = window.btoa(exportedAsString);
+            return `-----BEGIN PUBLIC KEY-----\n${exportedAsBase64.substring(0, 30)}...`; 
+        }
+
+        async function exportPrivateKeyToPkcs8(key) {
+            const exported = await window.crypto.subtle.exportKey("pkcs8", key);
+            const exportedAsString = String.fromCharCode.apply(null, new Uint8Array(exported));
+            const exportedAsBase64 = window.btoa(exportedAsString);
+            return `-----BEGIN PRIVATE KEY-----\n${exportedAsBase64.substring(0, 30)}...`;
+        }
+
+        
+        // 1. Calculate Hash (SHA-256)
+        async function calculateHash(text) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            return bufferToHex(hashBuffer);
+        }
+
+        // 2. Generate RSA Key Pair
+        async function generateKeys() {
+            try {
+                keyPair = await window.crypto.subtle.generateKey(
+                    {
+                        name: "RSASSA-PKCS1-v1_5",
+                        modulusLength: 2048,
+                        publicExponent: new Uint8Array([1, 0, 1]),
+                        hash: "SHA-256",
+                    },
+                    true, // exportable
+                    ["sign", "verify"]
+                );
+
+                const pubKeyStr = await exportPublicKeyToSpki(keyPair.publicKey);
+                const privKeyStr = await exportPrivateKeyToPkcs8(keyPair.privateKey);
+                
+                document.getElementById('display-public-key').innerText = pubKeyStr;
+                document.getElementById('display-private-key').innerText = privKeyStr;
+                
+            } catch (error) {
+                console.error("Key generation failed:", error);
+            }
+        }
+
+        // 3. Sign Data
+        async function signData(text) {
+            if (!keyPair) return null;
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            
+            try {
+                const signature = await window.crypto.subtle.sign(
+                    "RSASSA-PKCS1-v1_5",
+                    keyPair.privateKey,
+                    data
+                );
+                return bufferToHex(signature);
+            } catch (error) {
+                console.error("Signing failed:", error);
+                return null;
+            }
+        }
+
+        // 4. Verify Signature
+        async function verifySignature(text, signatureHex) {
+            if (!keyPair) return false;
+            
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            
+            // Convert Hex signature back to ArrayBuffer
+            const signatureBytes = new Uint8Array(Math.ceil(signatureHex.length / 2));
+            for (let i = 0; i < signatureBytes.length; i++) {
+                signatureBytes[i] = parseInt(signatureHex.substr(i * 2, 2), 16);
+            }
+
+            try {
+                const isValid = await window.crypto.subtle.verify(
+                    "RSASSA-PKCS1-v1_5",
+                    keyPair.publicKey,
+                    signatureBytes,
+                    data
+                );
+                return isValid;
+            } catch (error) {
+                console.error("Verification failed:", error);
+                return false;
+            }
+        }
+
+
+        
+        // Navigation
+        function changeStep(step) {
+            // Hide all
+            document.querySelectorAll('.step-container').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-700');
+                btn.classList.add('bg-transparent');
+            });
+            
+            // Show current
+            document.getElementById(`step-${step}`).classList.add('active');
+            document.getElementById(`nav-btn-${step}`).classList.add('bg-indigo-700');
+            document.getElementById(`nav-btn-${step}`).classList.remove('bg-transparent');
+            
+            currentStep = step;
+            window.scrollTo(0, 0);
+
+            // Trigger specific step logic
+            if (step === 2) updateHashDemo();
+            if (step === 3 && !keyPair) generateKeys();
+            if (step === 3) updateSignDemo();
+        }
+
+        // Step 2: Live Hash Calculation
+        async function updateHashDemo() {
+            const text = hashInput.value;
+            const currentHash = await calculateHash(text);
+            
+            hashOutput.innerText = currentHash;
+            
+            // Simple logic to show alert when hash changes
+            if (previousHash2 !== "" && previousHash2 !== currentHash) {
+                hashOutput.classList.add('bg-red-50', 'text-red-700', 'border-red-300');
+                hashOutput.classList.remove('bg-white', 'text-blue-700');
+                hashChangeAlert.classList.remove('opacity-0');
+                
+                // reset color after a moment
+                setTimeout(() => {
+                    hashOutput.classList.remove('bg-red-50', 'text-red-700', 'border-red-300');
+                    hashOutput.classList.add('bg-white', 'text-blue-700');
+                    hashChangeAlert.classList.add('opacity-0');
+                }, 1500);
+            }
+            previousHash2 = currentHash;
+        }
+
+        hashInput.addEventListener('input', updateHashDemo);
+
+        // Step 3: Live Hash for Signing Input
+        async function updateSignDemo() {
+            const text = signInput.value;
+            const currentHash = await calculateHash(text);
+            signHashOutput.innerText = currentHash;
+            
+            // Reset package if input changes after signing
+            if (digitalSignature) {
+                digitalSignature = null;
+                packageContent.classList.add('opacity-30');
+                packageSig.innerText = "في انتظار التوقيع...";
+                btnSend.disabled = true;
+                btnSign.innerHTML = '<i class="fa-solid fa-pen-fancy"></i> وقّع باستخدام المفتاح السري';
+                btnSign.classList.remove('bg-gray-500');
+                btnSign.classList.add('bg-purple-600');
+            }
+        }
+
+        signInput.addEventListener('input', updateSignDemo);
+
+        // Step 3: Sign Button Click
+        btnSign.addEventListener('click', async () => {
+            const text = signInput.value;
+            btnSign.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التوقيع...';
+            
+            digitalSignature = await signData(text);
+            signedMessage = text;
+            
+            if (digitalSignature) {
+                btnSign.innerHTML = '<i class="fa-solid fa-check"></i> تم التوقيع';
+                btnSign.classList.remove('bg-purple-600', 'hover:bg-purple-700');
+                btnSign.classList.add('bg-gray-500');
+                
+                packageMsg.innerText = signedMessage;
+                packageSig.innerText = digitalSignature;
+                packageContent.classList.remove('opacity-30');
+                
+                document.getElementById('package-box').classList.add('border-green-400', 'shadow-lg');
+                btnSend.disabled = false;
+            }
+        });
+
+        // Step 3 to 4 Transition (Sending)
+        function sendToMohamed() {
+            // Transfer data to receiver inputs
+            verifyInput.value = signedMessage;
+            verifySig.innerText = digitalSignature;
+            
+            // Reset verification result
+            verifyResult.classList.add('hidden');
+            verifyResult.className = 'hidden p-4 rounded-lg font-bold text-lg mt-4';
+            
+            // Move to step 4
+            changeStep(4);
+        }
+
+        // Step 4: Verify Button Click
+        btnVerify.addEventListener('click', async () => {
+            const currentMessage = verifyInput.value;
+            const receivedSignature = verifySig.innerText;
+            
+            if (receivedSignature === "لا يوجد توقيع" || !receivedSignature) return;
+
+            btnVerify.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الفحص...';
+            
+            // Add a small delay for dramatic effect
+            setTimeout(async () => {
+                const isValid = await verifySignature(currentMessage, receivedSignature);
+                
+                verifyResult.classList.remove('hidden');
+                btnVerify.innerHTML = '<i class="fa-solid fa-shield-cat"></i> فحص الرسالة';
+
+                if (isValid) {
+                    verifyResult.innerHTML = `
+                        <div class="flex items-center justify-center gap-3 text-green-700">
+                            <i class="fa-solid fa-circle-check text-3xl"></i>
+                            <div class="text-right">
+                                <div class="text-xl">✅ التوقيع سليم 100%</div>
+                                <div class="text-sm font-normal text-green-600 mt-1">
+                                    الرسالة جاية من عبدالرحمن ومحدش غيرها في السكة.
+                                    <br> (التوقيع صالح لهذه الرسالة والمفتاح العام)
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    verifyResult.className = 'p-4 rounded-lg font-bold mt-4 bg-green-100 border border-green-300';
+                } else {
+                    verifyResult.innerHTML = `
+                        <div class="flex items-center justify-center gap-3 text-red-700">
+                            <i class="fa-solid fa-circle-xmark text-3xl"></i>
+                            <div class="text-right">
+                                <div class="text-xl">❌ التوقيع غير صالح! (Invalid)</div>
+                                <div class="text-sm font-normal text-red-600 mt-1">
+                                    احذر! الرسالة اتغيرت، أو مش عبدالرحمن اللي باعتها.
+                                    <br> (الـ Hash الجديد لا يتطابق مع التوقيع)
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    verifyResult.className = 'p-4 rounded-lg font-bold mt-4 bg-red-100 border border-red-300';
+                }
+            }, 800);
+        });
+
+
+        // Attack simulation: change the received message without touching the signature.
+        function simulateTamper() {
+            if (!signedMessage) return;
+            const tampered = signedMessage.includes("500,000")
+                ? signedMessage.replace("500,000", "50,000")
+                : signedMessage + " [TAMPERED]";
+            verifyInput.value = tampered;
+            verifyInput.classList.add("border-red-500");
+            setTimeout(() => verifyInput.classList.remove("border-red-500"), 900);
+            verifyResult.classList.add('hidden');
+            changeStep(4);
+        }
+
+        // Reset App function
+        function resetApp() {
+            hashInput.value = initialText;
+            signInput.value = initialText;
+            digitalSignature = null;
+            signedMessage = "";
+            
+            packageContent.classList.add('opacity-30');
+            packageSig.innerText = "في انتظار التوقيع...";
+            btnSend.disabled = true;
+            btnSign.innerHTML = '<i class="fa-solid fa-pen-fancy"></i> وقّع باستخدام المفتاح السري';
+            btnSign.classList.add('bg-purple-600');
+            btnSign.classList.remove('bg-gray-500');
+            document.getElementById('package-box').classList.remove('border-green-400', 'shadow-lg');
+            
+            verifyResult.classList.add('hidden');
+            
+            // Regenerate keys for a fresh start
+            generateKeys();
+            changeStep(1);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            changeStep(1);
+            generateKeys(); // Start generating keys in background
+        });
+
+    </script>
+
+<footer class="max-w-[1180px] mx-auto px-4 pb-8 pt-2 text-center">
+  <div class="font-mono text-[10px] text-slate-600">EDU-CYBER LAB • DIGITAL SIGNATURE SIMULATION • NO REAL DATA SENT</div>
+</footer>
+</body>
+</html>
