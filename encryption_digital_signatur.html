@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة التقييم الأكاديمي | التشفير والتوقيع الرقمي</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Tajawal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            50: '#f0f4f8',
+                            100: '#d9e2ec',
+                            500: '#334e68',
+                            800: '#102a43',
+                            900: '#0b1b2b',
+                        },
+                        brand: {
+                            blue: '#1e40af',
+                            indigo: '#4f46e5',
+                            emerald: '#059669',
+                            rose: '#dc2626',
+                            amber: '#d97706'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Tajawal', 'Inter', 'sans-serif'],
+                        en: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Tajawal', 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        .en-font {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .option-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-card:hover {
+            border-color: #3b82f6;
+            background-color: #f0f9ff;
+        }
+        .option-card.selected {
+            border-color: #2563eb;
+            background-color: #eff6ff;
+            box-shadow: 0 0 0 1px #2563eb;
+        }
+
+        .question-nav-btn {
+            transition: all 0.15s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-blue-100 selection:text-blue-900">
+
+    <!-- Top System Header -->
+    <header class="bg-navy-900 text-white border-b border-navy-800 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            
+            <!-- Brand & Portal Name -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="confirmGoHome()">
+                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-inner">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-extrabold tracking-tight leading-tight">
+                        منصة التقييم الأكاديمي الرقمي
+                    </h1>
+                    <p class="text-xs text-slate-300 font-medium">الأمن السيبراني: التشفير والتوقيع الرقمي (Cryptography Standards)</p>
+                </div>
+            </div>
+
+            <!-- Right Controls / System Status -->
+            <div class="flex items-center gap-3 sm:gap-6">
+                <!-- User / Exam Session Info -->
+                <div id="candidateBadge" class="hidden sm:flex items-center gap-2 bg-navy-800 px-3 py-1.5 rounded-md border border-navy-500/30 text-xs text-slate-200">
+                    <i class="fas fa-user-shield text-blue-400"></i>
+                    <span>جلسة اختبار نشطة</span>
+                </div>
+
+                <!-- Exit Test Button -->
+                <button id="exitExamBtn" onclick="confirmGoHome()" class="hidden text-xs bg-slate-800 hover:bg-rose-900/40 hover:text-rose-300 hover:border-rose-700/50 text-slate-300 border border-slate-700 px-3 py-1.5 rounded-md transition-all items-center gap-1.5">
+                    <i class="fas fa-arrow-right-from-bracket"></i>
+                    <span>إنهاء الجلسة</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col">
+
+        <!-- 1. START & MODE SELECTION DASHBOARD -->
+        <section id="startScreen" class="w-full max-w-4xl mx-auto my-auto space-y-6">
+            
+            <!-- Welcome Header Card -->
+            <div class="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+                <div class="flex items-start justify-between gap-4 border-b border-slate-100 pb-5 mb-5">
+                    <div>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 mb-2">
+                            <i class="fas fa-graduation-cap"></i> التقييم المفهومي الشامل
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+                            اختبار مفاهيم التشفير والتوقيع الرقمي
+                        </h2>
+                        <p class="text-sm text-slate-600 mt-1">
+                            اختبار تقييمي معتمد لقياس الاستيعاب الفني والتطبيقي لمبادئ الخوارزميات، التشفير المتماثل واللامتماثل، ودوال الهاش.
+                        </p>
+                    </div>
+                    <div class="hidden sm:block text-slate-300 text-5xl">
+                        <i class="fas fa-file-signature"></i>
+                    </div>
+                </div>
+
+                <!-- Instructions Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-600 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                    <div class="flex items-center gap-2.5">
+                        <i class="fas fa-list-ol text-blue-600 text-base"></i>
+                        <div>
+                            <p class="font-bold text-slate-800">ترتيب تسلسلي محدد</p>
+                            <p>عرض الأسئلة بالترتيب الأصلي المعتمد (1 إلى 30).</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <i class="fas fa-shuffle text-emerald-600 text-base"></i>
+                        <div>
+                            <p class="font-bold text-slate-800">عشوائية الخيارات</p>
+                            <p>خلط ترتيب الإجابات (A, B, C, D) لضمان الاستيعاب.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <i class="fas fa-chart-pie text-indigo-600 text-base"></i>
+                        <div>
+                            <p class="font-bold text-slate-800">تقرير أداء تفصيلي</p>
+                            <p>تحليل نتائج يوضح نقاط القوة والمجالات للتحسين.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Mode Selection Cards -->
+            <div class="space-y-3">
+                <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fas fa-list-check text-blue-600"></i>
+                    <span>حدد وحدة الاختبار المطلوبة:</span>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Easy Mode Option -->
+                    <div onclick="startExam('easy')" class="bg-white hover:bg-slate-50/80 border border-slate-200 hover:border-emerald-500 rounded-xl p-5 cursor-pointer transition-all shadow-sm group">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="inline-block px-2.5 py-0.5 rounded text-xs font-bold bg-emerald-100 text-emerald-800">
+                                Part 1: Easy
+                            </span>
+                            <span class="text-xs text-slate-400 font-mono">10 أسئلة</span>
+                        </div>
+                        <h4 class="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">
+                            المستوى الأساسي (المفاهيم العامة)
+                        </h4>
+                        <p class="text-xs text-slate-500 mt-1">
+                            يركز على المصطلحات التعريفية: Ciphertext, Decryption, Symmetric vs Public Keys.
+                        </p>
+                    </div>
+
+                    <!-- Medium Mode Option -->
+                    <div onclick="startExam('medium')" class="bg-white hover:bg-slate-50/80 border border-slate-200 hover:border-amber-500 rounded-xl p-5 cursor-pointer transition-all shadow-sm group">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="inline-block px-2.5 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-800">
+                                Part 2: Medium
+                            </span>
+                            <span class="text-xs text-slate-400 font-mono">10 أسئلة</span>
+                        </div>
+                        <h4 class="text-base font-bold text-slate-900 group-hover:text-amber-700 transition-colors">
+                            المستوى المتوسط (التطبيقات والسيناريوهات)
+                        </h4>
+                        <p class="text-xs text-slate-500 mt-1">
+                            تطبيق العمليات بين الطرفين (Sender & Receiver) وكيفية استخدام المفاتيح.
+                        </p>
+                    </div>
+
+                    <!-- Hard Mode Option -->
+                    <div onclick="startExam('hard')" class="bg-white hover:bg-slate-50/80 border border-slate-200 hover:border-rose-500 rounded-xl p-5 cursor-pointer transition-all shadow-sm group">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="inline-block px-2.5 py-0.5 rounded text-xs font-bold bg-rose-100 text-rose-800">
+                                Part 3: Advanced
+                            </span>
+                            <span class="text-xs text-slate-400 font-mono">10 أسئلة</span>
+                        </div>
+                        <h4 class="text-base font-bold text-slate-900 group-hover:text-rose-700 transition-colors">
+                            المستوى المتقدم (التحليل والاستنتاج)
+                        </h4>
+                        <p class="text-xs text-slate-500 mt-1">
+                            تحليل آليات التوقيع الرقمي، دالة الهاش، والتحقق من سلامة البيانات (Integrity).
+                        </p>
+                    </div>
+
+                    <!-- Full Assessment Mode Option -->
+                    <div onclick="startExam('all')" class="bg-slate-900 hover:bg-slate-800 text-white border border-slate-800 rounded-xl p-5 cursor-pointer transition-all shadow-md group">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="inline-block px-2.5 py-0.5 rounded text-xs font-bold bg-blue-500 text-white">
+                                Comprehensive Exam
+                            </span>
+                            <span class="text-xs text-slate-400 font-mono">30 سؤالاً</span>
+                        </div>
+                        <h4 class="text-base font-bold text-white group-hover:text-blue-300 transition-colors">
+                            الاختبار التقييمي الشامل (All Parts 1-3)
+                        </h4>
+                        <p class="text-xs text-slate-300 mt-1">
+                            تقييم أسطوري كامل يشمل الـ 30 سؤالاً لتقديم تقرير تشخيصي شامل لمستواك.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assessment Configuration Bar -->
+            <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-wrap items-center justify-between gap-4 text-xs font-medium text-slate-700">
+                <div class="flex items-center gap-4 flex-wrap">
+                    <label class="flex items-center gap-2 cursor-pointer select-none">
+                        <input type="checkbox" id="instantFeedbackToggle" checked class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                        <span>عرض التفسير والشرح فور إجابة كل سؤال</span>
+                    </label>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 2. LIVE EXAMINATION WORKSPACE -->
+        <section id="examScreen" class="hidden flex-col gap-6 w-full my-auto">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+                
+                <!-- Left Sidebar: Question Navigation Palette (Desktop) -->
+                <div class="lg:col-span-1 bg-white border border-slate-200 rounded-xl p-4 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                            خريطة الأسئلة
+                        </h3>
+                        <span id="answeredCountBadge" class="text-xs bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded">
+                            0 / 10
+                        </span>
+                    </div>
+
+                    <!-- Grid of Question Buttons -->
+                    <div id="questionPaletteGrid" class="grid grid-cols-5 gap-2">
+                        <!-- Rendered via JS -->
+                    </div>
+
+                    <!-- Legend Status Icons -->
+                    <div class="border-t border-slate-100 pt-3 space-y-1.5 text-[11px] text-slate-600">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-sm bg-blue-600 inline-block"></span>
+                            <span>السؤال الحالي</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-sm bg-emerald-100 border border-emerald-500 inline-block"></span>
+                            <span>مُجاب عليه</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-sm bg-amber-100 border border-amber-500 inline-block"></span>
+                            <span>مميّز للمراجعة (Flagged)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-sm bg-slate-100 border border-slate-300 inline-block"></span>
+                            <span>غير مُجاب</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Active Question Container -->
+                <div class="lg:col-span-3 space-y-4">
+                    
+                    <!-- Question Top Header Metadata Bar -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-2">
+                            <span id="qBadgeDifficulty" class="px-2.5 py-1 rounded text-xs font-bold bg-blue-100 text-blue-800">
+                                Part 1: Easy
+                            </span>
+                            <span id="qNumberDisplay" class="text-xs font-extrabold text-slate-700">
+                                السؤال 1 من 10
+                            </span>
+                        </div>
+
+                        <!-- Flag / Bookmark Button -->
+                        <button id="flagBtn" onclick="toggleFlagCurrentQuestion()" class="text-xs bg-slate-50 hover:bg-amber-50 text-slate-600 hover:text-amber-700 border border-slate-200 hover:border-amber-300 px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5 font-medium">
+                            <i id="flagIcon" class="far fa-bookmark"></i>
+                            <span id="flagText">تمييز للمراجعة</span>
+                        </button>
+                    </div>
+
+                    <!-- Question & Options Panel -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-sm space-y-6">
+                        
+                        <!-- Question Text Container -->
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 block mb-1">نص السؤال الأصلي (English):</span>
+                            <h3 id="qText" class="text-lg sm:text-xl font-bold text-slate-900 leading-snug en-font dir-ltr text-left">
+                                Loading Question...
+                            </h3>
+                        </div>
+
+                        <!-- Options List (Randomized Order!) -->
+                        <div id="optionsGrid" class="space-y-3 dir-ltr text-left">
+                            <!-- Options dynamically generated here -->
+                        </div>
+
+                        <!-- Instant Feedback / Explanation Box (Hidden in test mode unless instant feedback is ON) -->
+                        <div id="instantFeedbackBox" class="hidden rounded-lg p-4 text-xs sm:text-sm border transition-all text-right dir-rtl">
+                            <div class="flex items-center gap-2 font-bold mb-1">
+                                <i id="feedbackIcon" class="fas fa-info-circle"></i>
+                                <span id="feedbackTitle">التوضيح الأكاديمي:</span>
+                            </div>
+                            <p id="feedbackText" class="text-slate-700 leading-relaxed font-medium">
+                                -
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- Exam Action Footer Controls -->
+                    <div class="flex items-center justify-between gap-3">
+                        <button id="prevQBtn" onclick="prevQuestion()" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2">
+                            <i class="fas fa-chevron-right"></i>
+                            <span>السابق</span>
+                        </button>
+
+                        <div class="flex items-center gap-2">
+                            <button id="nextQBtn" onclick="nextQuestion()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 shadow-sm">
+                                <span>التالي</span>
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+
+                            <button id="submitExamBtn" onclick="confirmSubmitExam()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-lg text-xs font-bold transition-all items-center gap-2 shadow-sm">
+                                <i class="fas fa-check-circle"></i>
+                                <span>تسليم الاختبار النهائي</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- 3. OFFICIAL ASSESSMENT RESULT & DIAGNOSTIC REPORT -->
+        <section id="resultsScreen" class="hidden flex-col gap-6 w-full max-w-4xl mx-auto my-auto">
+            
+            <!-- Result Summary Banner Card -->
+            <div class="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-sm">
+                
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-slate-100 pb-6 mb-6">
+                    <div class="text-center sm:text-right">
+                        <span id="gradeBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-extrabold bg-emerald-100 text-emerald-800 mb-2">
+                            <i class="fas fa-award"></i> النتيجة: ممتاز جداً
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                            تقرير تقييم أداء الاختيار المعرفي
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-1">
+                            تم إنهاء تقييم وحدة "التشفير والتوقيع الرقمي" وحفظ سجل الإجابات بنجاح.
+                        </p>
+                    </div>
+
+                    <!-- Big Circular / Percentage Score Box -->
+                    <div class="bg-slate-900 text-white p-5 rounded-2xl text-center min-w-[140px] shadow-sm">
+                        <span class="text-xs text-slate-400 font-bold block uppercase tracking-wider mb-1">الدرجة النهائية</span>
+                        <span id="resultPercentText" class="text-3xl sm:text-4xl font-black font-mono text-blue-400">0%</span>
+                        <span id="resultScoreRatio" class="text-xs text-slate-300 block font-mono mt-1">0 / 10</span>
+                    </div>
+                </div>
+
+                <!-- Metrics Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                    <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
+                        <span class="text-[11px] font-bold text-slate-500 block">إجابات صحيحة</span>
+                        <span id="statCorrect" class="text-lg font-extrabold text-emerald-600 font-mono">0</span>
+                    </div>
+                    <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
+                        <span class="text-[11px] font-bold text-slate-500 block">إجابات خاطئة</span>
+                        <span id="statWrong" class="text-lg font-extrabold text-rose-600 font-mono">0</span>
+                    </div>
+                    <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
+                        <span class="text-[11px] font-bold text-slate-500 block">أسئلة غير مُجابة</span>
+                        <span id="statUnanswered" class="text-lg font-extrabold text-slate-600 font-mono">0</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap items-center justify-center gap-3 mt-6 pt-6 border-t border-slate-100">
+                    <button onclick="restartExam()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 shadow-sm">
+                        <i class="fas fa-rotate-right"></i>
+                        <span>إعادة الاختبار</span>
+                    </button>
+                    <button onclick="toggleReviewSection()" class="bg-slate-800 hover:bg-slate-900 text-white px-5 py-2.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2">
+                        <i class="fas fa-list-check"></i>
+                        <span>مراجعة كشف الأسئلة الإجابات</span>
+                    </button>
+                    <button onclick="confirmGoHome()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 px-5 py-2.5 rounded-lg text-xs font-bold transition-all">
+                        <span>الصفحة الرئيسية</span>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Detailed Question-by-Question Audit Review -->
+            <div id="reviewAuditSection" class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fas fa-magnifying-glass-chart text-blue-600"></i>
+                        <span>الكشف التفصيلي للنتائج ومراجعة التفسيرات:</span>
+                    </h3>
+
+                    <!-- Filter buttons -->
+                    <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg text-[11px] font-bold">
+                        <button onclick="filterReview('all')" class="review-filter-btn px-2.5 py-1 rounded bg-white text-slate-800 shadow-sm" data-filter="all">الكل</button>
+                        <button onclick="filterReview('correct')" class="review-filter-btn px-2.5 py-1 rounded text-slate-600 hover:text-slate-900" data-filter="correct">الصحيحة</button>
+                        <button onclick="filterReview('incorrect')" class="review-filter-btn px-2.5 py-1 rounded text-slate-600 hover:text-slate-900" data-filter="incorrect">الخاطئة</button>
+                    </div>
+                </div>
+
+                <div id="reviewAuditList" class="space-y-4 max-h-[600px] overflow-y-auto pr-1">
+                    <!-- Dynamic review items generated via JS -->
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- System Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs font-medium text-slate-500">
+        منصة التقييم الأكاديمي والمهني للتشفير والتوقيع الرقمي © 2026 | نظام معتمد ومزود بخاصية الترتيب العشوائي للخيارات
+    </footer>
+
+    <script>
+        /* ----------------------------------------------------
+           1. QUESTION BANK DATA (All 30 Standard Questions)
+        ---------------------------------------------------- */
+        const rawQuestionsDatabase = [
+            // PART 1: EASY QUESTIONS (1 - 10)
+            {
+                id: 1,
+                part: "easy",
+                partName: "Part 1: Easy",
+                question: "What is encryption mainly used for?",
+                options: [
+                    "To make a message longer",
+                    "To protect information from unwanted interception",
+                    "To delete the original message",
+                    "To increase Internet speed"
+                ],
+                correctAnswer: "To protect information from unwanted interception",
+                hint: "Think about keeping confidential data safe from eavesdroppers!",
+                explanation: "Encryption converts plain text into scrambled ciphertext to protect confidential information from unauthorized interception during transmission."
+            },
+            {
+                id: 2,
+                part: "easy",
+                partName: "Part 1: Easy",
+                question: "What is the encrypted text called?",
+                options: [
+                    "Plaintext",
+                    "Hash value",
+                    "Ciphertext",
+                    "Digital signature"
+                ],
+                correctAnswer: "Ciphertext",
+                hint: "It starts with 'Cipher'!",
+                explanation: "The unreadable, encrypted output produced by an encryption algorithm is called Ciphertext."
+            },
+            {
+                id: 3,
+                part: "easy",
+                partName: "Part 1: Easy",
+                question: "What does decryption do?",
+                options: [
+                    "Converts ciphertext back into plaintext",
+                    "Creates a public key",
+                    "Creates a hash value",
+                    "Deletes ciphertext"
+                ],
+                correctAnswer: "Converts ciphertext back into plaintext",
+                hint: "Decryption is the reverse process of encryption.",
+                explanation: "Decryption restores scrambled ciphertext back to its original readable format, known as plaintext."
+            },
+            {
+                id: 4,
+                part: "easy",
+                partName: "Part 1: Easy",
+                question: "In symmetric key encryption, how many shared keys are used for encryption and decryption?",
+                options: [
+                    "Two different shared keys",
+                    "No key",
+                    "Three keys",
+                    "The same shared key"
+                ],
+                correctAnswer: "The same shared key",
+                hint: "'Symmetric' means balanced or identical on both sides.",
+                explanation: "Symmetric encryption uses one single identical secret key shared between sender and receiver for both encrypting and decrypting."
+            },
+            {
+                id: 5,
+                part: "easy",
+                partName: "Part 1: Easy",
+                question: "Which key is used to encrypt a message in public key encryption?",
+                options: [
+                    "Receiver's public key",
+                    "Sender's private key",
+                    "Sender's public key",
+                    "Receiver's private key"
+                ],
+                correctAnswer: "Receiver's public key",
+                hint: "You lock the message box with the receiver's public key!",
+                explanation: "Anyone who wants to send a secret message locks (encrypts) it using the Receiver's Public Key."
+            },
+            {
+                id: 6,
+                part: "easy",
+                partName: "Part 1: Easy",
+                question: "Which key is used to decrypt the message in public key encryption?",
+                options: [
+                    "Sender's private key",
+                    "Receiver's private key",
+                    "Receiver's public key",
+                    "Shared key"
+                ],
+                correctAnswer: "Receiver's private key",
+                hint: "Only the recipient can unlock their own inbox with their private key!",
+                explanation: "Only the receiver possesses their confidential Private Key needed to unlock (decrypt) messages encrypted with their public key."
+            },
+            {
+                id: 7,
+                part: "easy",
+                partName: "Part 1: Easy",
+                question: "What does a hash function produce from input data?",
+                options: [
+                    "A private key",
+                    "Plaintext",
+                    "A hash value",
+                    "Ciphertext"
+                ],
+                correctAnswer: "A hash value",
+                hint: "The output signature of a cryptographic digest.",
+                explanation: "A mathematical hash function transforms input data into a fixed-length string known as a Hash Value (or digest)."
+            },
+            {
+                id: 8,
+                part: "easy",
+                partName: "Part 1: Easy",
+                question: "Can the original data normally be restored from a hash value?",
+                options: [
+                    "Yes, always",
+                    "Only with a public key",
+                    "Only with a private key",
+                    "No"
+                ],
+                correctAnswer: "No",
+                hint: "Hashing is a one-way street function!",
+                explanation: "Hash functions are strictly one-way mathematical functions; you cannot reverse a hash value back to original plaintext."
+            },
+            {
+                id: 9,
+                part: "easy",
+                partName: "Part 1: Easy",
+                question: "What is a digital signature mainly used to help prove?",
+                options: [
+                    "The message came from the sender and was not changed",
+                    "The message is very large",
+                    "The Internet is fast",
+                    "The receiver knows the sender's private key"
+                ],
+                correctAnswer: "The message came from the sender and was not changed",
+                hint: "Think of authenticity and message integrity!",
+                explanation: "Digital signatures verify the sender's identity (Authenticity) and guarantee that the message contents were not modified (Integrity)."
+            },
+            {
+                id: 10,
+                part: "easy",
+                partName: "Part 1: Easy",
+                question: "What does a session key method combine?",
+                options: [
+                    "Hashing and decryption",
+                    "Symmetric key encryption and public key encryption",
+                    "Two private keys",
+                    "Two hash functions"
+                ],
+                correctAnswer: "Symmetric key encryption and public key encryption",
+                hint: "It combines the speed of symmetric encryption with the safe key exchange of public keys!",
+                explanation: "Session key schemes combine public key encryption (for safe key exchange) and symmetric encryption (for fast bulk data transfer)."
+            },
+
+            // PART 2: MEDIUM QUESTIONS (11 - 20)
+            {
+                id: 11,
+                part: "medium",
+                partName: "Part 2: Medium",
+                question: "Ahmed wants to send a secret message using symmetric key encryption. Which key should be used to encrypt the message?",
+                options: [
+                    "Receiver's private key",
+                    "Receiver's public key",
+                    "The shared key",
+                    "Sender's public key"
+                ],
+                correctAnswer: "The shared key",
+                hint: "Symmetric encryption relies entirely on a pre-shared single key.",
+                explanation: "In symmetric encryption, both Ahmed and the recipient use the exact same Shared Key."
+            },
+            {
+                id: 12,
+                part: "medium",
+                partName: "Part 2: Medium",
+                question: "Sara sends encrypted data using the receiver's public key. Which key should the receiver use to decrypt it?",
+                options: [
+                    "Receiver's private key",
+                    "Sender's public key",
+                    "Sender's private key",
+                    "The sender's shared key"
+                ],
+                correctAnswer: "Receiver's private key",
+                hint: "Public key locks; corresponding private key unlocks.",
+                explanation: "Data encrypted with a recipient's public key can only be decrypted by the matching Receiver's Private Key."
+            },
+            {
+                id: 13,
+                part: "medium",
+                partName: "Part 2: Medium",
+                question: "Why is public key encryption easier in key management according to the lesson?",
+                options: [
+                    "It does not use keys",
+                    "The public key can be shared freely",
+                    "It uses only private keys",
+                    "Everyone uses the same private key"
+                ],
+                correctAnswer: "The public key can be shared freely",
+                hint: "No need for secret key distribution channels!",
+                explanation: "Unlike symmetric keys which must be kept secret during distribution, public keys can be published openly to anyone without compromise."
+            },
+            {
+                id: 14,
+                part: "medium",
+                partName: "Part 2: Medium",
+                question: "Why is symmetric key encryption usually faster than public key encryption?",
+                options: [
+                    "It does not need plaintext",
+                    "It uses hash values instead of messages",
+                    "Its encryption and decryption processing is faster",
+                    "It uses a public key"
+                ],
+                correctAnswer: "Its encryption and decryption processing is faster",
+                hint: "Symmetric algorithms involve simpler mathematical operations.",
+                explanation: "Symmetric key algorithms use computationally lighter mathematical operations, making encryption/decryption significantly faster."
+            },
+            {
+                id: 15,
+                part: "medium",
+                partName: "Part 2: Medium",
+                question: "A sender creates a hash value from the plaintext before creating a digital signature. Why?",
+                options: [
+                    "To create a value that represents the input data",
+                    "To make the plaintext longer",
+                    "To create the receiver's private key",
+                    "To decrypt the message"
+                ],
+                correctAnswer: "To create a value that represents the input data",
+                hint: "The hash acts as a unique compact representation/fingerprint.",
+                explanation: "A hash value is a fixed-size representation of the input data, allowing efficient signing instead of processing huge files directly."
+            },
+            {
+                id: 16,
+                part: "medium",
+                partName: "Part 2: Medium",
+                question: "In a digital signature, which key does the sender use to encrypt the hash value?",
+                options: [
+                    "Receiver's public key",
+                    "Sender's public key",
+                    "Receiver's private key",
+                    "Sender's private key"
+                ],
+                correctAnswer: "Sender's private key",
+                hint: "Only the sender could have created this unique mark!",
+                explanation: "To create a digital signature, the sender encrypts the message hash using the Sender's Private Key."
+            },
+            {
+                id: 17,
+                part: "medium",
+                partName: "Part 2: Medium",
+                question: "The receiver receives plaintext and a digital signature. What does the receiver do with the digital signature?",
+                options: [
+                    "Deletes it",
+                    "Uses the sender's public key to retrieve the original hash value",
+                    "Encrypts it with the receiver's public key",
+                    "Converts it directly into plaintext"
+                ],
+                correctAnswer: "Uses the sender's public key to retrieve the original hash value",
+                hint: "How do you verify something signed with sender's private key?",
+                explanation: "The receiver decrypts the digital signature using the Sender's Public Key to extract the original hash value created by the sender."
+            },
+            {
+                id: 18,
+                part: "medium",
+                partName: "Part 2: Medium",
+                question: "After receiving the plaintext, what does the receiver do to check the message?",
+                options: [
+                    "Creates a new hash value from the received plaintext",
+                    "Changes the plaintext",
+                    "Creates a new private key",
+                    "Encrypts the plaintext with the sender's private key"
+                ],
+                correctAnswer: "Creates a new hash value from the received plaintext",
+                hint: "To compare against the decrypted original hash!",
+                explanation: "The receiver passes the incoming plaintext through the hash function to compute a fresh local hash value."
+            },
+            {
+                id: 19,
+                part: "medium",
+                partName: "Part 2: Medium",
+                question: "What happens if the two hash values in the digital signature process match?",
+                options: [
+                    "The receiver's private key is revealed",
+                    "The message is automatically encrypted",
+                    "It helps prove the message came from the sender and was not changed",
+                    "The original plaintext is deleted"
+                ],
+                correctAnswer: "It helps prove the message came from the sender and was not changed",
+                hint: "Equal hashes confirm integrity & authenticity!",
+                explanation: "If the computed hash matches the extracted hash, it proves the document is authentic and has not been altered."
+            },
+            {
+                id: 20,
+                part: "medium",
+                partName: "Part 2: Medium",
+                question: "Which statement correctly compares symmetric and public key encryption?",
+                options: [
+                    "Symmetric encryption uses two different keys for encryption and decryption",
+                    "Public key encryption is always faster",
+                    "Symmetric encryption uses the same shared key for encryption and decryption",
+                    "Public key encryption does not use a private key"
+                ],
+                correctAnswer: "Symmetric encryption uses the same shared key for encryption and decryption",
+                hint: "Remember: Symmetric = 1 shared key, Asymmetric = 2 paired keys.",
+                explanation: "Symmetric encryption utilizes a single shared key for both locking and unlocking data."
+            },
+
+            // PART 3: HARD / UNDERSTANDING QUESTIONS (21 - 30)
+            {
+                id: 21,
+                part: "hard",
+                partName: "Part 3: Advanced",
+                question: "A sender uses the receiver's public key to encrypt a message. Why can the receiver decrypt it using the receiver's private key?",
+                options: [
+                    "Because the receiver's private key is the same as the sender's public key",
+                    "Because the public/private key pair is designed to work together",
+                    "Because the sender sends the private key with the message",
+                    "Because the message does not actually use encryption"
+                ],
+                correctAnswer: "Because the public/private key pair is designed to work together",
+                hint: "Mathematical relationship between public and private key pairs.",
+                explanation: "Public and private keys are mathematically linked pairs designed so that what one key encrypts, only its corresponding twin key can decrypt."
+            },
+            {
+                id: 22,
+                part: "hard",
+                partName: "Part 3: Advanced",
+                question: "Suppose the receiver creates a hash value from the received plaintext, but it is different from the hash value recovered from the digital signature. What can the receiver conclude?",
+                options: [
+                    "The message may have been changed",
+                    "The sender's public key became a private key",
+                    "The plaintext is definitely correct",
+                    "The shared key was used twice"
+                ],
+                correctAnswer: "The message may have been changed",
+                hint: "Hash mismatch indicates corruption or tampering!",
+                explanation: "Any difference between computed and received hash values proves the message was modified or corrupted during transit."
+            },
+            {
+                id: 23,
+                part: "hard",
+                partName: "Part 3: Advanced",
+                question: "Why does the digital signature process hash the plaintext instead of directly using the whole plaintext to create the signature?",
+                options: [
+                    "The hash value is a value generated from the input data and is used to represent it",
+                    "Hashing makes the receiver's private key public",
+                    "Hashing removes the need for the sender's private key",
+                    "The hash function converts plaintext directly into a public key"
+                ],
+                correctAnswer: "The hash value is a value generated from the input data and is used to represent it",
+                hint: "Efficiency! Hashing creates a compact fixed representation of any length data.",
+                explanation: "Hashing produces a small fixed-size digest representing the original message, making signing computationally efficient regardless of message size."
+            },
+            {
+                id: 24,
+                part: "hard",
+                partName: "Part 3: Advanced",
+                question: "A person changes one part of the plaintext while it is being transmitted. What is the most important effect on the digital signature check?",
+                options: [
+                    "The receiver will always get the same new hash value",
+                    "The receiver's private key will change",
+                    "The new hash value may not match the original hash value",
+                    "The sender's public key will become invalid"
+                ],
+                correctAnswer: "The new hash value may not match the original hash value",
+                hint: "The avalanche effect of hashing changes the hash value completely.",
+                explanation: "Changing even a single character in the plaintext completely alters its hash value, causing a failure during verification."
+            },
+            {
+                id: 25,
+                part: "hard",
+                partName: "Part 3: Advanced",
+                question: "Why does the receiver use the sender's public key in the digital signature process?",
+                options: [
+                    "To create the sender's private key",
+                    "To decrypt the digital signature and retrieve the original hash value",
+                    "To encrypt the received plaintext",
+                    "To create the receiver's private key"
+                ],
+                correctAnswer: "To decrypt the digital signature and retrieve the original hash value",
+                hint: "Public keys verify what private keys signed.",
+                explanation: "Since the sender signed the hash using their private key, the receiver must use the sender's public key to unlock the signature and verify the original hash."
+            },
+            {
+                id: 26,
+                part: "hard",
+                partName: "Part 3: Advanced",
+                question: "Consider this process: Plaintext → Hash Function → Hash Value → Sender's Private Key → Digital Signature. What is the purpose of the sender's private key in this process?",
+                options: [
+                    "To decrypt the plaintext",
+                    "To create the receiver's public key",
+                    "To encrypt the hash value",
+                    "To create the plaintext"
+                ],
+                correctAnswer: "To encrypt the hash value",
+                hint: "Signing a hash value means encrypting it with a private key.",
+                explanation: "In digital signatures, signing means encrypting the hash value with the sender's private key to guarantee sender authenticity."
+            },
+            {
+                id: 27,
+                part: "hard",
+                partName: "Part 3: Advanced",
+                question: "A company wants to send a message secretly to a receiver using public key encryption. Which process is correct?",
+                options: [
+                    "Encrypt with receiver's private key → decrypt with receiver's public key",
+                    "Encrypt with sender's public key → decrypt with sender's private key",
+                    "Encrypt with receiver's public key → decrypt with receiver's private key",
+                    "Encrypt with sender's private key → decrypt with receiver's private key"
+                ],
+                correctAnswer: "Encrypt with receiver's public key → decrypt with receiver's private key",
+                hint: "Receiver's public key secures confidentiality for receiver.",
+                explanation: "For confidential messaging: Encrypt with the Receiver's Public Key, so only the Receiver can decrypt it with their Private Key."
+            },
+            {
+                id: 28,
+                part: "hard",
+                partName: "Part 3: Advanced",
+                question: "Why might a system use a session key method instead of relying only on public key encryption?",
+                options: [
+                    "Because it combines symmetric encryption with public key encryption",
+                    "Because it removes the need for encryption",
+                    "Because it uses only hash values",
+                    "Because it makes all private keys public"
+                ],
+                correctAnswer: "Because it combines symmetric encryption with public key encryption",
+                hint: "Best of both worlds: Speed of symmetric + Security of asymmetric key exchange.",
+                explanation: "Session key hybrid systems combine public key encryption (for secure key exchange) and symmetric encryption (for fast data transmission)."
+            },
+            {
+                id: 29,
+                part: "hard",
+                partName: "Part 3: Advanced",
+                question: "A receiver gets a message and a valid digital signature. The two hash values match. What does this result mainly support?",
+                options: [
+                    "The receiver knows the sender's private key",
+                    "The message is definitely secret from everyone",
+                    "The message is from the sender and has not been tampered with",
+                    "The message was encrypted using a shared key"
+                ],
+                correctAnswer: "The message is from the sender and has not been tampered with",
+                hint: "A digital signature proves authenticity and integrity, not confidentiality.",
+                explanation: "Matching hash values verify both Non-repudiation/Authenticity (from the sender) and Integrity (untampered plaintext)."
+            },
+            {
+                id: 30,
+                part: "hard",
+                partName: "Part 3: Advanced",
+                question: "Which situation correctly describes the difference between encryption and a digital signature?",
+                options: [
+                    "Encryption helps protect information from interception, while a digital signature helps prove the sender and message integrity",
+                    "Encryption creates only hash values, while a digital signature creates plaintext",
+                    "Encryption uses no keys, while digital signatures use no hash functions",
+                    "Encryption and digital signatures have exactly the same purpose"
+                ],
+                correctAnswer: "Encryption helps protect information from interception, while a digital signature helps prove the sender and message integrity",
+                hint: "Confidentiality vs. Authenticity & Integrity!",
+                explanation: "Encryption ensures confidentiality (keeping secrets hidden from eavesdroppers), while Digital Signatures ensure authenticity and data integrity."
+            }
+        ];
+
+        /* ----------------------------------------------------
+           2. EXAMINATION ENGINE STATE MANAGEMENT
+        ---------------------------------------------------- */
+        let activeQuestionsList = [];
+        let activeExamState = []; // Holds user responses, shuffled options, flags
+        let currentQuestionIndex = 0;
+        let instantFeedbackEnabled = true;
+
+        /* Fisher-Yates Array Shuffle */
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        /* ----------------------------------------------------
+           3. EXAM SESSION CONTROL & INITIALIZATION
+        ---------------------------------------------------- */
+        function confirmGoHome() {
+            if (activeExamState.length > 0 && document.getElementById('startScreen').classList.contains('hidden')) {
+                if (!confirm("هل أنت تأكد من رغبتك في إنهاء جلسة الاختبار والعودة للرئيسية؟")) {
+                    return;
+                }
+            }
+            document.getElementById('startScreen').classList.remove('hidden');
+            document.getElementById('examScreen').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.add('hidden');
+            document.getElementById('exitExamBtn').classList.add('hidden');
+            document.getElementById('candidateBadge').classList.add('hidden');
+        }
+
+        function startExam(mode) {
+            let baseList = [];
+            if (mode === 'easy') {
+                baseList = rawQuestionsDatabase.filter(q => q.part === 'easy');
+            } else if (mode === 'medium') {
+                baseList = rawQuestionsDatabase.filter(q => q.part === 'medium');
+            } else if (mode === 'hard') {
+                baseList = rawQuestionsDatabase.filter(q => q.part === 'hard');
+            } else {
+                baseList = [...rawQuestionsDatabase];
+            }
+
+            // الحفاظ على الترتيب الأصلي الثابت للأسئلة (1 - 30)
+            activeQuestionsList = [...baseList];
+
+            /* Prepare active state for each question:
+               - Pre-shuffle options specifically for this session!
+            */
+            activeExamState = activeQuestionsList.map(q => {
+                return {
+                    questionData: q,
+                    shuffledOptions: shuffleArray(q.options), // HIGHLY RANDOMIZED CHOICES
+                    selectedOption: null,
+                    isFlagged: false,
+                    isAnswered: false
+                };
+            });
+
+            currentQuestionIndex = 0;
+            instantFeedbackEnabled = document.getElementById('instantFeedbackToggle').checked;
+
+            // Show UI Elements
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.add('hidden');
+            document.getElementById('examScreen').classList.remove('hidden');
+            document.getElementById('examScreen').classList.add('flex');
+            document.getElementById('exitExamBtn').classList.remove('hidden');
+            document.getElementById('exitExamBtn').classList.add('flex');
+            document.getElementById('candidateBadge').classList.remove('hidden');
+            document.getElementById('candidateBadge').classList.add('flex');
+
+            renderQuestionWorkspace();
+        }
+
+        /* ----------------------------------------------------
+           4. WORKSPACE & QUESTION RENDERER
+        ---------------------------------------------------- */
+        function renderQuestionWorkspace() {
+            const currentItem = activeExamState[currentQuestionIndex];
+            const qData = currentItem.questionData;
+
+            // Update Header Meta
+            document.getElementById('qNumberDisplay').innerText = `السؤال ${currentQuestionIndex + 1} من ${activeExamState.length}`;
+            document.getElementById('qBadgeDifficulty').innerText = qData.partName;
+
+            // Update Flag Button
+            const flagBtn = document.getElementById('flagBtn');
+            const flagIcon = document.getElementById('flagIcon');
+            const flagText = document.getElementById('flagText');
+            if (currentItem.isFlagged) {
+                flagBtn.className = "text-xs bg-amber-100 text-amber-800 border border-amber-400 px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5 font-bold";
+                flagIcon.className = "fas fa-bookmark text-amber-600";
+                flagText.innerText = "مميّز للمراجعة";
+            } else {
+                flagBtn.className = "text-xs bg-slate-50 hover:bg-amber-50 text-slate-600 hover:text-amber-700 border border-slate-200 hover:border-amber-300 px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5 font-medium";
+                flagIcon.className = "far fa-bookmark";
+                flagText.innerText = "تمييز للمراجعة";
+            }
+
+            // Question Text
+            document.getElementById('qText').innerText = qData.question;
+
+            // Render Options (using randomized options array)
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = '';
+            const optionPrefixes = ['A', 'B', 'C', 'D'];
+
+            currentItem.shuffledOptions.forEach((optionText, idx) => {
+                const prefix = optionPrefixes[idx] || `${idx + 1}`;
+                const isSelected = (currentItem.selectedOption === optionText);
+
+                const card = document.createElement('div');
+                card.className = `option-card border rounded-lg p-4 cursor-pointer flex items-center gap-3 text-sm font-medium transition-all ${
+                    isSelected ? 'selected' : 'border-slate-200 bg-white text-slate-800'
+                }`;
+
+                card.innerHTML = `
+                    <div class="w-7 h-7 rounded-md ${isSelected ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'} font-mono font-bold flex items-center justify-center text-xs flex-shrink-0">
+                        ${prefix}
+                    </div>
+                    <div class="flex-grow font-en text-slate-900 font-semibold">${optionText}</div>
+                `;
+
+                card.onclick = () => selectOption(optionText);
+                optionsGrid.appendChild(card);
+            });
+
+            // Instant Feedback Box Handling
+            const feedbackBox = document.getElementById('instantFeedbackBox');
+            if (instantFeedbackEnabled && currentItem.selectedOption !== null) {
+                const isCorrect = (currentItem.selectedOption === qData.correctAnswer);
+                feedbackBox.classList.remove('hidden');
+
+                if (isCorrect) {
+                    feedbackBox.className = "rounded-lg p-4 text-xs sm:text-sm border transition-all text-right dir-rtl bg-emerald-50 border-emerald-300 text-emerald-950";
+                    document.getElementById('feedbackIcon').className = "fas fa-circle-check text-emerald-600 text-base";
+                    document.getElementById('feedbackTitle').innerText = "إجابة صحيحة ومطابقة!";
+                } else {
+                    feedbackBox.className = "rounded-lg p-4 text-xs sm:text-sm border transition-all text-right dir-rtl bg-rose-50 border-rose-300 text-rose-950";
+                    document.getElementById('feedbackIcon').className = "fas fa-circle-xmark text-rose-600 text-base";
+                    document.getElementById('feedbackTitle').innerText = `إجابة غير صحيحة. الإجابة الصحيحة هي: (${qData.correctAnswer})`;
+                }
+                document.getElementById('feedbackText').innerText = qData.explanation;
+            } else {
+                feedbackBox.classList.add('hidden');
+            }
+
+            // Navigation Controls State
+            document.getElementById('prevQBtn').disabled = (currentQuestionIndex === 0);
+            if (currentQuestionIndex === 0) {
+                document.getElementById('prevQBtn').classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                document.getElementById('prevQBtn').classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+
+            if (currentQuestionIndex === activeExamState.length - 1) {
+                document.getElementById('nextQBtn').classList.add('hidden');
+                document.getElementById('submitExamBtn').classList.remove('hidden');
+                document.getElementById('submitExamBtn').classList.add('flex');
+            } else {
+                document.getElementById('nextQBtn').classList.remove('hidden');
+                document.getElementById('submitExamBtn').classList.add('hidden');
+            }
+
+            renderPaletteGrid();
+        }
+
+        /* Render Palette Map Sidebar Grid */
+        function renderPaletteGrid() {
+            const grid = document.getElementById('questionPaletteGrid');
+            grid.innerHTML = '';
+
+            let answeredCount = 0;
+
+            activeExamState.forEach((item, idx) => {
+                if (item.isAnswered) answeredCount++;
+
+                const btn = document.createElement('button');
+                btn.className = 'w-full h-8 text-xs font-bold font-mono rounded transition-all border flex items-center justify-center relative';
+
+                if (idx === currentQuestionIndex) {
+                    btn.classList.add('bg-blue-600', 'text-white', 'border-blue-700', 'ring-2', 'ring-blue-300');
+                } else if (item.isFlagged) {
+                    btn.classList.add('bg-amber-100', 'text-amber-800', 'border-amber-400');
+                } else if (item.isAnswered) {
+                    btn.classList.add('bg-emerald-50', 'text-emerald-800', 'border-emerald-300');
+                } else {
+                    btn.classList.add('bg-slate-50', 'text-slate-600', 'border-slate-200', 'hover:bg-slate-100');
+                }
+
+                btn.innerText = idx + 1;
+
+                if (item.isFlagged) {
+                    const dot = document.createElement('span');
+                    dot.className = 'w-1.5 h-1.5 bg-amber-600 rounded-full absolute top-1 right-1';
+                    btn.appendChild(dot);
+                }
+
+                btn.onclick = () => {
+                    currentQuestionIndex = idx;
+                    renderQuestionWorkspace();
+                };
+
+                grid.appendChild(btn);
+            });
+
+            document.getElementById('answeredCountBadge').innerText = `${answeredCount} / ${activeExamState.length}`;
+        }
+
+        /* ----------------------------------------------------
+           5. INTERACTION LOGIC
+        ---------------------------------------------------- */
+        function selectOption(optionText) {
+            const currentItem = activeExamState[currentQuestionIndex];
+            currentItem.selectedOption = optionText;
+            currentItem.isAnswered = true;
+            renderQuestionWorkspace();
+        }
+
+        function toggleFlagCurrentQuestion() {
+            const currentItem = activeExamState[currentQuestionIndex];
+            currentItem.isFlagged = !currentItem.isFlagged;
+            renderQuestionWorkspace();
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestionWorkspace();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < activeExamState.length - 1) {
+                currentQuestionIndex++;
+                renderQuestionWorkspace();
+            }
+        }
+
+        /* ----------------------------------------------------
+           6. TIMER ENGINE
+        ---------------------------------------------------- */
+        function startExamTimer() {
+            clearInterval(timerInterval);
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                timeRemainingSeconds--;
+                updateTimerDisplay();
+
+                if (timeRemainingSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert("انتهى الوقت المحدد للاختبار! سيتم تسليم إجاباتك الحالية تلقائياً.");
+                    submitFinalExam();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timeRemainingSeconds / 60);
+            const secs = timeRemainingSeconds % 60;
+            const formatted = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            document.getElementById('timeRemaining').innerText = formatted;
+        }
+
+        /* ----------------------------------------------------
+           7. SUBMISSION & RESULT GENERATOR
+        ---------------------------------------------------- */
+        function confirmSubmitExam() {
+            const unanswered = activeExamState.filter(i => !i.isAnswered).length;
+            let msg = "هل أنت متأكد من تسليم الاختبار والبدء في استخراج تقرير الأداء النهائي؟";
+            if (unanswered > 0) {
+                msg = `تنبيه: يوجد لديك (${unanswered}) أسئلة لم تقم بالإجابة عليها بعد. هل ترغب بالتسليم على أي حال؟`;
+            }
+
+            if (confirm(msg)) {
+                submitFinalExam();
+            }
+        }
+
+        function submitFinalExam() {
+            // Hide Exam Workspace
+            document.getElementById('examScreen').classList.add('hidden');
+            document.getElementById('candidateBadge').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.remove('hidden');
+            document.getElementById('resultsScreen').classList.add('flex');
+
+            // Calculations
+            const totalQ = activeExamState.length;
+            let correctCount = 0;
+            let wrongCount = 0;
+            let unansweredCount = 0;
+
+            activeExamState.forEach(item => {
+                if (!item.isAnswered || item.selectedOption === null) {
+                    unansweredCount++;
+                } else if (item.selectedOption === item.questionData.correctAnswer) {
+                    correctCount++;
+                } else {
+                    wrongCount++;
+                }
+            });
+
+            const percentage = Math.round((correctCount / totalQ) * 100);
+
+            // Set Stats UI
+            document.getElementById('resultPercentText').innerText = `${percentage}%`;
+            document.getElementById('resultScoreRatio').innerText = `${correctCount} من ${totalQ}`;
+            document.getElementById('statCorrect').innerText = correctCount;
+            document.getElementById('statWrong').innerText = wrongCount;
+            document.getElementById('statUnanswered').innerText = unansweredCount;
+
+            // Grade Badge Logic
+            const gradeBadge = document.getElementById('gradeBadge');
+            if (percentage >= 90) {
+                gradeBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-extrabold bg-emerald-100 text-emerald-800 mb-2";
+                gradeBadge.innerHTML = '<i class="fas fa-certificate"></i> التقييم: ممتاز مرتفع (Mastery)';
+            } else if (percentage >= 75) {
+                gradeBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-extrabold bg-blue-100 text-blue-800 mb-2";
+                gradeBadge.innerHTML = '<i class="fas fa-check-double"></i> التقييم: جيد جداً (Proficient)';
+            } else if (percentage >= 60) {
+                gradeBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-extrabold bg-amber-100 text-amber-800 mb-2";
+                gradeBadge.innerHTML = '<i class="fas fa-triangle-exclamation"></i> التقييم: مقبول (Satisfactory)';
+            } else {
+                gradeBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-extrabold bg-rose-100 text-rose-800 mb-2";
+                gradeBadge.innerHTML = '<i class="fas fa-circle-xmark"></i> التقييم: يحتاج تحسين (Needs Improvement)';
+            }
+
+            renderReviewAuditList('all');
+        }
+
+        function restartExam() {
+            startExam(activeQuestionsList[0]?.part || 'all');
+        }
+
+        function toggleReviewSection() {
+            const auditSec = document.getElementById('reviewAuditSection');
+            auditSec.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /* ----------------------------------------------------
+           8. DETAILED REVIEW AUDIT ENGINE
+        ---------------------------------------------------- */
+        function filterReview(filterType) {
+            const btns = document.querySelectorAll('.review-filter-btn');
+            btns.forEach(b => {
+                if (b.dataset.filter === filterType) {
+                    b.className = "review-filter-btn px-2.5 py-1 rounded bg-white text-slate-800 shadow-sm font-bold";
+                } else {
+                    b.className = "review-filter-btn px-2.5 py-1 rounded text-slate-600 hover:text-slate-900 font-medium";
+                }
+            });
+            renderReviewAuditList(filterType);
+        }
+
+        function renderReviewAuditList(filter) {
+            const container = document.getElementById('reviewAuditList');
+            container.innerHTML = '';
+
+            activeExamState.forEach((item, idx) => {
+                const qData = item.questionData;
+                const isCorrect = (item.selectedOption === qData.correctAnswer);
+                const isUnanswered = (item.selectedOption === null);
+
+                if (filter === 'correct' && !isCorrect) return;
+                if (filter === 'incorrect' && (isCorrect || isUnanswered)) return;
+
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-lg border text-right dir-rtl font-sans ${
+                    isCorrect ? 'bg-emerald-50/50 border-emerald-200' : 'bg-rose-50/50 border-rose-200'
+                }`;
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between gap-2 border-b border-slate-200/60 pb-2 mb-2">
+                        <span class="font-extrabold text-xs text-slate-700">سؤال ${idx + 1} (${qData.partName})</span>
+                        <span class="text-[11px] font-bold px-2 py-0.5 rounded ${
+                            isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                        }">
+                            ${isCorrect ? 'إجابة صحيحة ✓' : (isUnanswered ? 'لم يتم الإجابة' : 'إجابة خاطئة ✗')}
+                        </span>
+                    </div>
+
+                    <p class="font-bold text-sm text-slate-900 en-font dir-ltr text-left mb-3">${qData.question}</p>
+
+                    <div class="space-y-1 text-xs font-semibold mb-3">
+                        <div class="text-slate-700">إجابتك: <span class="en-font dir-ltr inline-block font-bold ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">${item.selectedOption || 'لم تحدد إجابة'}</span></div>
+                        ${!isCorrect ? `<div class="text-emerald-800">الإجابة الصحيحة: <span class="en-font dir-ltr inline-block font-bold text-emerald-700">${qData.correctAnswer}</span></div>` : ''}
+                    </div>
+
+                    <div class="bg-white/80 p-3 rounded border border-slate-200 text-xs text-slate-700 leading-relaxed font-medium">
+                        <span class="font-bold text-slate-900 block mb-0.5"><i class="fas fa-lightbulb text-amber-500"></i> الشرح الفني:</span>
+                        ${qData.explanation}
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
