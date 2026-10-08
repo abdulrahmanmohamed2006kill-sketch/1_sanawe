@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة التقييم الأكاديمي | التشفير والتوقيع الرقمي</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Tajawal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            50: '#f0f4f8',
+                            100: '#d9e2ec',
+                            500: '#334e68',
+                            800: '#102a43',
+                            900: '#0b1b2b',
+                        },
+                        brand: {
+                            blue: '#1e40af',
+                            indigo: '#4f46e5',
+                            emerald: '#059669',
+                            rose: '#dc2626',
+                            amber: '#d97706'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Tajawal', 'Inter', 'sans-serif'],
+                        en: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Tajawal', 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        .en-font {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .option-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-card:hover {
+            border-color: #3b82f6;
+            background-color: #f0f9ff;
+        }
+        .option-card.selected {
+            border-color: #2563eb;
+            background-color: #eff6ff;
+            box-shadow: 0 0 0 1px #2563eb;
+        }
+
+        .question-nav-btn {
+            transition: all 0.15s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-blue-100 selection:text-blue-900">
+
+    <!-- Top System Header -->
+    <header class="bg-navy-900 text-white border-b border-navy-800 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            
+            <!-- Brand & Portal Name -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="confirmGoHome()">
+                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-inner">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-extrabold tracking-tight leading-tight">
+                        منصة التقييم الأكاديمي الرقمي
+                    </h1>
+                    <p class="text-xs text-slate-300 font-medium">الأمن السيبراني: التشفير والتوقيع الرقمي (Cryptography Standards)</p>
+                </div>
+            </div>
+
+            <!-- Right Controls / System Status -->
+            <div class="flex items-center gap-3 sm:gap-6">
+                <!-- User / Exam Session Info -->
+                <div id="candidateBadge" class="hidden sm:flex items-center gap-2 bg-navy-800 px-3 py-1.5 rounded-md border border-navy-500/30 text-xs text-slate-200">
+                    <i class="fas fa-user-shield text-blue-400"></i>
+                    <span>جلسة اختبار نشطة</span>
+                </div>
+
+                <!-- Exit Test Button -->
+                <button id="exitExamBtn" onclick="confirmGoHome()" class="hidden text-xs bg-slate-800 hover:bg-rose-900/40 hover:text-rose-300 hover:border-rose-700/50 text-slate-300 border border-slate-700 px-3 py-1.5 rounded-md transition-all items-center gap-1.5">
+                    <i class="fas fa-arrow-right-from-bracket"></i>
+                    <span>إنهاء الجلسة</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col">
+
+        <!-- 1. START & MODE SELECTION DASHBOARD -->
+        <section id="startScreen" class="w-full max-w-4xl mx-auto my-auto space-y-6">
+            
+            <!-- Welcome Header Card -->
+            <div class="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+                <div class="flex items-start justify-between gap-4 border-b border-slate-100 pb-5 mb-5">
+                    <div>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 mb-2">
+                            <i class="fas fa-graduation-cap"></i> التقييم المفهومي الشامل
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+                            اختبار مفاهيم التشفير والتوقيع الرقمي
+                        </h2>
+                        <p class="text-sm text-slate-600 mt-1">
+                            اختبار تقييمي معتمد لقياس الاستيعاب الفني والتطبيقي لمبادئ الخوارزميات، التشفير المتماثل واللامتماثل، ودوال الهاش.
+                        </p>
+                    </div>
+                    <div class="hidden sm:block text-slate-300 text-5xl">
+                        <i class="fas fa-file-signature"></i>
+                    </div>
+                </div>
+
+                <!-- Instructions Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-600 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                    <div class="flex items-center gap-2.5">
+                        <i class="fas fa-list-ol text-blue-600 text-base"></i>
+                        <div>
+                            <p class="font-bold text-slate-800">ترتيب تسلسلي محدد</p>
+                            <p>عرض الأسئلة بالترتيب الأصلي المعتمد (1 إلى 30).</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <i class="fas fa-shuffle text-emerald-600 text-base"></i>
+                        <div>
+                            <p class="font-bold text-slate-800">عشوائية الخيارات</p>
+                            <p>خلط ترتيب الإجابات (A, B, C, D) لضمان الاستيعاب.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <i class="fas fa-chart-pie text-indigo-600 text-base"></i>
+                        <div>
+                            <p class="font-bold text-slate-800">تقرير أداء تفصيلي</p>
+                            <p>تحليل نتائج يوضح نقاط القوة والمجالات للتحسين.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Mode Selection Cards -->
+            <div class="space-y-3">
+                <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fas fa-list-check text-blue-600"></i>
+                    <span>حدد وحدة الاختبار المطلوبة:</span>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Easy Mode Option -->
+                    <div onclick="startExam('easy')" class="bg-white hover:bg-slate-50/80 border border-slate-200 hover:border-emerald-500 rounded-xl p-5 cursor-pointer transition-all shadow-sm group">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="inline-block px-2.5 py-0.5 rounded text-xs font-bold bg-emerald-100 text-emerald-800">
+                                الجزء الأول: سهل
+                            </span>
+                            <span class="text-xs text-slate-400 font-mono">10 أسئلة</span>
+                        </div>
+                        <h4 class="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">
+                            المستوى الأساسي (المفاهيم العامة)
+                        </h4>
+                        <p class="text-xs text-slate-500 mt-1">
+                            يركز على المصطلحات التعريفية: النص المشفر، فك التشفير، والمفاتيح المتماثلة والعامة.
+                        </p>
+                    </div>
+
+                    <!-- Medium Mode Option -->
+                    <div onclick="startExam('medium')" class="bg-white hover:bg-slate-50/80 border border-slate-200 hover:border-amber-500 rounded-xl p-5 cursor-pointer transition-all shadow-sm group">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="inline-block px-2.5 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-800">
+                                الجزء الثاني: متوسط
+                            </span>
+                            <span class="text-xs text-slate-400 font-mono">10 أسئلة</span>
+                        </div>
+                        <h4 class="text-base font-bold text-slate-900 group-hover:text-amber-700 transition-colors">
+                            المستوى المتوسط (التطبيقات والسيناريوهات)
+                        </h4>
+                        <p class="text-xs text-slate-500 mt-1">
+                            تطبيق العمليات بين الطرفين (المرسل والمستقبل) وكيفية استخدام المفاتيح.
+                        </p>
+                    </div>
+
+                    <!-- Hard Mode Option -->
+                    <div onclick="startExam('hard')" class="bg-white hover:bg-slate-50/80 border border-slate-200 hover:border-rose-500 rounded-xl p-5 cursor-pointer transition-all shadow-sm group">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="inline-block px-2.5 py-0.5 rounded text-xs font-bold bg-rose-100 text-rose-800">
+                                الجزء الثالث: متقدم
+                            </span>
+                            <span class="text-xs text-slate-400 font-mono">10 أسئلة</span>
+                        </div>
+                        <h4 class="text-base font-bold text-slate-900 group-hover:text-rose-700 transition-colors">
+                            المستوى المتقدم (التحليل والاستنتاج)
+                        </h4>
+                        <p class="text-xs text-slate-500 mt-1">
+                            تحليل آليات التوقيع الرقمي، دالة الهاش، والتحقق من سلامة البيانات (Integrity).
+                        </p>
+                    </div>
+
+                    <!-- Full Assessment Mode Option -->
+                    <div onclick="startExam('all')" class="bg-slate-900 hover:bg-slate-800 text-white border border-slate-800 rounded-xl p-5 cursor-pointer transition-all shadow-md group">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="inline-block px-2.5 py-0.5 rounded text-xs font-bold bg-blue-500 text-white">
+                                الاختبار الشامل
+                            </span>
+                            <span class="text-xs text-slate-400 font-mono">30 سؤالاً</span>
+                        </div>
+                        <h4 class="text-base font-bold text-white group-hover:text-blue-300 transition-colors">
+                            الاختبار التقييمي الشامل (الأجزاء 1-3)
+                        </h4>
+                        <p class="text-xs text-slate-300 mt-1">
+                            تقييم أسطوري كامل يشمل الـ 30 سؤالاً لتقديم تقرير تشخيصي شامل لمستواك.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assessment Configuration Bar -->
+            <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex flex-wrap items-center justify-between gap-4 text-xs font-medium text-slate-700">
+                <div class="flex items-center gap-4 flex-wrap">
+                    <label class="flex items-center gap-2 cursor-pointer select-none">
+                        <input type="checkbox" id="instantFeedbackToggle" checked class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                        <span>عرض التفسير والشرح فور إجابة كل سؤال</span>
+                    </label>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 2. LIVE EXAMINATION WORKSPACE -->
+        <section id="examScreen" class="hidden flex-col gap-6 w-full my-auto">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+                
+                <!-- Left Sidebar: Question Navigation Palette (Desktop) -->
+                <div class="lg:col-span-1 bg-white border border-slate-200 rounded-xl p-4 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                            خريطة الأسئلة
+                        </h3>
+                        <span id="answeredCountBadge" class="text-xs bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded">
+                            0 / 10
+                        </span>
+                    </div>
+
+                    <!-- Grid of Question Buttons -->
+                    <div id="questionPaletteGrid" class="grid grid-cols-5 gap-2">
+                        <!-- Rendered via JS -->
+                    </div>
+
+                    <!-- Legend Status Icons -->
+                    <div class="border-t border-slate-100 pt-3 space-y-1.5 text-[11px] text-slate-600">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-sm bg-blue-600 inline-block"></span>
+                            <span>السؤال الحالي</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-sm bg-emerald-100 border border-emerald-500 inline-block"></span>
+                            <span>مُجاب عليه</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-sm bg-amber-100 border border-amber-500 inline-block"></span>
+                            <span>مميّز للمراجعة (Flagged)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-sm bg-slate-100 border border-slate-300 inline-block"></span>
+                            <span>غير مُجاب</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Active Question Container -->
+                <div class="lg:col-span-3 space-y-4">
+                    
+                    <!-- Question Top Header Metadata Bar -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-2">
+                            <span id="qBadgeDifficulty" class="px-2.5 py-1 rounded text-xs font-bold bg-blue-100 text-blue-800">
+                                الجزء الأول: سهل
+                            </span>
+                            <span id="qNumberDisplay" class="text-xs font-extrabold text-slate-700">
+                                السؤال 1 من 10
+                            </span>
+                        </div>
+
+                        <!-- Flag / Bookmark Button -->
+                        <button id="flagBtn" onclick="toggleFlagCurrentQuestion()" class="text-xs bg-slate-50 hover:bg-amber-50 text-slate-600 hover:text-amber-700 border border-slate-200 hover:border-amber-300 px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5 font-medium">
+                            <i id="flagIcon" class="far fa-bookmark"></i>
+                            <span id="flagText">تمييز للمراجعة</span>
+                        </button>
+                    </div>
+
+                    <!-- Question & Options Panel -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-sm space-y-6">
+                        
+                        <!-- Question Text Container -->
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 block mb-1">نص السؤال:</span>
+                            <h3 id="qText" class="text-lg sm:text-xl font-bold text-slate-900 leading-snug dir-rtl text-right">
+                                جاري تحميل السؤال...
+                            </h3>
+                        </div>
+
+                        <!-- Options List (Randomized Order!) -->
+                        <div id="optionsGrid" class="space-y-3 dir-rtl text-right">
+                            <!-- Options dynamically generated here -->
+                        </div>
+
+                        <!-- Instant Feedback / Explanation Box -->
+                        <div id="instantFeedbackBox" class="hidden rounded-lg p-4 text-xs sm:text-sm border transition-all text-right dir-rtl">
+                            <div class="flex items-center gap-2 font-bold mb-1">
+                                <i id="feedbackIcon" class="fas fa-info-circle"></i>
+                                <span id="feedbackTitle">التوضيح الأكاديمي:</span>
+                            </div>
+                            <p id="feedbackText" class="text-slate-700 leading-relaxed font-medium">
+                                -
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- Exam Action Footer Controls -->
+                    <div class="flex items-center justify-between gap-3">
+                        <button id="prevQBtn" onclick="prevQuestion()" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2">
+                            <i class="fas fa-chevron-right"></i>
+                            <span>السابق</span>
+                        </button>
+
+                        <div class="flex items-center gap-2">
+                            <button id="nextQBtn" onclick="nextQuestion()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 shadow-sm">
+                                <span>التالي</span>
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+
+                            <button id="submitExamBtn" onclick="confirmSubmitExam()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-lg text-xs font-bold transition-all items-center gap-2 shadow-sm">
+                                <i class="fas fa-check-circle"></i>
+                                <span>تسليم الاختبار النهائي</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- 3. OFFICIAL ASSESSMENT RESULT & DIAGNOSTIC REPORT -->
+        <section id="resultsScreen" class="hidden flex-col gap-6 w-full max-w-4xl mx-auto my-auto">
+            
+            <!-- Result Summary Banner Card -->
+            <div class="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-sm">
+                
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-slate-100 pb-6 mb-6">
+                    <div class="text-center sm:text-right">
+                        <span id="gradeBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-extrabold bg-emerald-100 text-emerald-800 mb-2">
+                            <i class="fas fa-award"></i> النتيجة: ممتاز جداً
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                            تقرير تقييم أداء الاختيار المعرفي
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-1">
+                            تم إنهاء تقييم وحدة "التشفير والتوقيع الرقمي" وحفظ سجل الإجابات بنجاح.
+                        </p>
+                    </div>
+
+                    <!-- Big Circular / Percentage Score Box -->
+                    <div class="bg-slate-900 text-white p-5 rounded-2xl text-center min-w-[140px] shadow-sm">
+                        <span class="text-xs text-slate-400 font-bold block uppercase tracking-wider mb-1">الدرجة النهائية</span>
+                        <span id="resultPercentText" class="text-3xl sm:text-4xl font-black font-mono text-blue-400">0%</span>
+                        <span id="resultScoreRatio" class="text-xs text-slate-300 block font-mono mt-1">0 / 10</span>
+                    </div>
+                </div>
+
+                <!-- Metrics Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                    <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
+                        <span class="text-[11px] font-bold text-slate-500 block">إجابات صحيحة</span>
+                        <span id="statCorrect" class="text-lg font-extrabold text-emerald-600 font-mono">0</span>
+                    </div>
+                    <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
+                        <span class="text-[11px] font-bold text-slate-500 block">إجابات خاطئة</span>
+                        <span id="statWrong" class="text-lg font-extrabold text-rose-600 font-mono">0</span>
+                    </div>
+                    <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
+                        <span class="text-[11px] font-bold text-slate-500 block">أسئلة غير مُجابة</span>
+                        <span id="statUnanswered" class="text-lg font-extrabold text-slate-600 font-mono">0</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap items-center justify-center gap-3 mt-6 pt-6 border-t border-slate-100">
+                    <button onclick="restartExam()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 shadow-sm">
+                        <i class="fas fa-rotate-right"></i>
+                        <span>إعادة الاختبار</span>
+                    </button>
+                    <button onclick="toggleReviewSection()" class="bg-slate-800 hover:bg-slate-900 text-white px-5 py-2.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2">
+                        <i class="fas fa-list-check"></i>
+                        <span>مراجعة كشف الأسئلة والإجابات</span>
+                    </button>
+                    <button onclick="confirmGoHome()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 px-5 py-2.5 rounded-lg text-xs font-bold transition-all">
+                        <span>الصفحة الرئيسية</span>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Detailed Question-by-Question Audit Review -->
+            <div id="reviewAuditSection" class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fas fa-magnifying-glass-chart text-blue-600"></i>
+                        <span>الكشف التفصيلي للنتائج ومراجعة التفسيرات:</span>
+                    </h3>
+
+                    <!-- Filter buttons -->
+                    <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg text-[11px] font-bold">
+                        <button onclick="filterReview('all')" class="review-filter-btn px-2.5 py-1 rounded bg-white text-slate-800 shadow-sm" data-filter="all">الكل</button>
+                        <button onclick="filterReview('correct')" class="review-filter-btn px-2.5 py-1 rounded text-slate-600 hover:text-slate-900" data-filter="correct">الصحيحة</button>
+                        <button onclick="filterReview('incorrect')" class="review-filter-btn px-2.5 py-1 rounded text-slate-600 hover:text-slate-900" data-filter="incorrect">الخاطئة</button>
+                    </div>
+                </div>
+
+                <div id="reviewAuditList" class="space-y-4 max-h-[600px] overflow-y-auto pr-1">
+                    <!-- Dynamic review items generated via JS -->
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- System Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs font-medium text-slate-500">
+        منصة التقييم الأكاديمي والمهني للتشفير والتوقيع الرقمي © 2026 | نظام معتمد ومزود بخاصية الترتيب العشوائي للخيارات
+    </footer>
+
+    <script>
+        /* ----------------------------------------------------
+           1. QUESTION BANK DATA (الأسئلة باللغة العربية)
+        ---------------------------------------------------- */
+        const rawQuestionsDatabase = [
+            // PART 1: EASY QUESTIONS (1 - 10)
+            {
+                id: 1,
+                part: "easy",
+                partName: "الجزء الأول: سهل",
+                question: "ما الفائدة الرئيسية من استخدام التشفير؟",
+                options: [
+                    "لجعل الرسالة أطول",
+                    "لحماية المعلومات من الاعتراض غير المصرح به",
+                    "لحذف الرسالة الأصلية",
+                    "لزيادة سرعة الإنترنت"
+                ],
+                correctAnswer: "لحماية المعلومات من الاعتراض غير المصرح به",
+                hint: "فكر في الحفاظ على أمان البيانات السرية عن المتنصتين!",
+                explanation: "يقوم التشفير بتحويل النص الأصلي إلى نص مشفر غير مفهوم لحماية المعلومات السرية من الاعتراض غير المصرح به أثناء نقلها."
+            },
+            {
+                id: 2,
+                part: "easy",
+                partName: "الجزء الأول: سهل",
+                question: "ماذا يُسمى النص المشفر؟",
+                options: [
+                    "النص العادي (Plaintext)",
+                    "قيمة الهاش (Hash value)",
+                    "النص المشفر (Ciphertext)",
+                    "التوقيع الرقمي (Digital signature)"
+                ],
+                correctAnswer: "النص المشفر (Ciphertext)",
+                hint: "يبدأ بالمصطلح الفني Cipher!",
+                explanation: "يُطلق على المخرج غير المفهوم والمشفر الناتج عن خوارزمية التشفير اسم النص المشفر (Ciphertext)."
+            },
+            {
+                id: 3,
+                part: "easy",
+                partName: "الجزء الأول: سهل",
+                question: "ماذا تفعل عملية فك التشفير (Decryption)؟",
+                options: [
+                    "تحول النص المشفر مرة أخرى إلى نص عادي",
+                    "تنشئ مفتاحاً عاماً",
+                    "تنشئ قيمة هاش",
+                    "تحذف النص المشفر"
+                ],
+                correctAnswer: "تحول النص المشفر مرة أخرى إلى نص عادي",
+                hint: "فك التشفير هو العملية العكسية للتشفير.",
+                explanation: "تعيد عملية فك التشفير النص المشفر غير المفهوم إلى صيغته المقروءة الأصلية، والتي تُعرف بالنص العادي (Plaintext)."
+            },
+            {
+                id: 4,
+                part: "easy",
+                partName: "الجزء الأول: سهل",
+                question: "في التشفير المتماثل، كم عدد المفاتيح المشتركة المستخدمة للتشفير وفك التشفير؟",
+                options: [
+                    "مفتاحان مشتركان مختلفان",
+                    "لا يوجد مفتاح",
+                    "ثلاثة مفاتيح",
+                    "نفس المفتاح المشترك"
+                ],
+                correctAnswer: "نفس المفتاح المشترك",
+                hint: "كلمة 'متماثل' تعني متطابقاً في كلا الجانبين.",
+                explanation: "يستخدم التشفير المتماثل مفتاحاً سرياً واحداً متماثلاً ومشاركاً بين المرسل والمستقبل لكلا العمليتين: التشفير وفك التشفير."
+            },
+            {
+                id: 5,
+                part: "easy",
+                partName: "الجزء الأول: سهل",
+                question: "أي مفتاح يُستخدم لتشفير الرسالة في التشفير بالمفتاح العام (غير المتماثل)؟",
+                options: [
+                    "المفتاح العام للمستقبل",
+                    "المفتاح الخاص للمرسل",
+                    "المفتاح العام للمرسل",
+                    "المفتاح الخاص للمستقبل"
+                ],
+                correctAnswer: "المفتاح العام للمستقبل",
+                hint: "أنت تقفل صندوق الرسائل باستخدام المفتاح العام الخاص بالمستقبل!",
+                explanation: "أي شخص يريد إرسال رسالة سرية يقفلها (يشفرها) باستخدام المفتاح العام الخاص بالمستقبل."
+            },
+            {
+                id: 6,
+                part: "easy",
+                partName: "الجزء الأول: سهل",
+                question: "أي مفتاح يُستخدم لفك تشفير الرسالة في التشفير بالمفتاح العام؟",
+                options: [
+                    "المفتاح الخاص للمرسل",
+                    "المفتاح الخاص للمستقبل",
+                    "المفتاح العام للمستقبل",
+                    "المفتاح المشترك"
+                ],
+                correctAnswer: "المفتاح الخاص للمستقبل",
+                hint: "المستلم فقط هو من يستطيع فتح صندوق رسائله باستخدام مفتاحه الخاص!",
+                explanation: "المستلم فقط هو من يمتلك المفتاح الخاص السري اللازم لفتح (فك تشفير) الرسائل المشفرة بمفتاحه العام."
+            },
+            {
+                id: 7,
+                part: "easy",
+                partName: "الجزء الأول: سهل",
+                question: "ماذا تنتج دالة الهاش (Hash function) من البيانات المدخلة؟",
+                options: [
+                    "مفتاحاً خاصاً",
+                    "نصاً عادياً",
+                    "قيمة هاش (Hash value)",
+                    "نصاً مشفراً"
+                ],
+                correctAnswer: "قيمة هاش (Hash value)",
+                hint: "البصمة الرقمية للبيانات.",
+                explanation: "تقوم دالة الهاش الرياضية بتحويل البيانات المدخلة إلى سلسلة ذات طول ثابت تُعرف بقيمة الهاش (أو الملخص Digest)."
+            },
+            {
+                id: 8,
+                part: "easy",
+                partName: "الجزء الأول: سهل",
+                question: "هل يمكن عادةً استرجاع البيانات الأصلية من قيمة الهاش؟",
+                options: [
+                    "نعم، دائماً",
+                    "فقط باستخدام المفتاح العام",
+                    "فقط باستخدام المفتاح الخاص",
+                    "لا"
+                ],
+                correctAnswer: "لا",
+                hint: "دالة الهاش تعمل في اتجاه واحد فقط!",
+                explanation: "دوال الهاش هي دوال رياضية ذات اتجاه واحد فقط؛ ولا يمكن عكس قيمة الهاش لاستعادة النص الأصلي."
+            },
+            {
+                id: 9,
+                part: "easy",
+                partName: "الجزء الأول: سهل",
+                question: "ما الفائدة الرئيسية التي يساعد التوقيع الرقمي في إثباتها؟",
+                options: [
+                    "أن الرسالة جاءت من المرسل ولم يتم تعديلها",
+                    "أن الرسالة حجمها كبير جداً",
+                    "أن الاتصال بالإنترنت سريع",
+                    "أن المستقبل يعرف المفتاح الخاص للمرسل"
+                ],
+                correctAnswer: "أن الرسالة جاءت من المرسل ولم يتم تعديلها",
+                hint: "فكر في إثبات الهوية وسلامة الرسالة!",
+                explanation: "تحقق التوقيعات الرقمية من هوية المرسل (الموثوقية) وتضمن عدم تعديل محتوى الرسالة (سلامة البيانات Integrity)."
+            },
+            {
+                id: 10,
+                part: "easy",
+                partName: "الجزء الأول: سهل",
+                question: "ماذا تجمع طريقة مفتاح الجلسة (Session Key)؟",
+                options: [
+                    "الهاش وفك التشفير",
+                    "التشفير المتماثل والتشفير بالمفتاح العام",
+                    "مفتاحين خاصين",
+                    "دالتي هاش"
+                ],
+                correctAnswer: "التشفير المتماثل والتشفير بالمفتاح العام",
+                hint: "تجمع بين سرعة التشفير المتماثل وأمان التشفير بالمفتاح العام في تبادل المفاتيح!",
+                explanation: "تجمع أنظمة مفتاح الجلسة بين التشفير بالمفتاح العام (لتبادل المفاتيح بآمان) والتشفير المتماثل (لنقل البيانات السريع)."
+            },
+
+            // PART 2: MEDIUM QUESTIONS (11 - 20)
+            {
+                id: 11,
+                part: "medium",
+                partName: "الجزء الثاني: متوسط",
+                question: "يريد أحمد إرسال رسالة سرية باستخدام التشفير المتماثل. أي مفتاح يجب استخدامه لتشفير الرسالة؟",
+                options: [
+                    "المفتاح الخاص للمستقبل",
+                    "المفتاح العام للمستقبل",
+                    "المفتاح المشترك",
+                    "المفتاح العام للمرسل"
+                ],
+                correctAnswer: "المفتاح المشترك",
+                hint: "يعتمد التشفير المتماثل بالكامل على مفتاح واحد مشترك مسبقاً.",
+                explanation: "في التشفير المتماثل، يستخدم كل من أحمد والمستلم نفس المفتاح المشترك تماماً."
+            },
+            {
+                id: 12,
+                part: "medium",
+                partName: "الجزء الثاني: متوسط",
+                question: "أرسلت سارة بيانات مشفرة باستخدام المفتاح العام للمستقبل. أي مفتاح يجب على المستقبل استخدامه لفك تشفيرها؟",
+                options: [
+                    "المفتاح الخاص للمستقبل",
+                    "المفتاح العام للمرسل",
+                    "المفتاح الخاص للمرسل",
+                    "المفتاح المشترك للمرسل"
+                ],
+                correctAnswer: "المفتاح الخاص للمستقبل",
+                hint: "المفتاح العام يقفل؛ والمفتاح الخاص المقابل له يفتح.",
+                explanation: "البيانات المشفرة باستخدام المفتاح العام للمستقبل لا يمكن فك تشفيرها إلا بواسطة المفتاح الخاص المطابق للمستقبل."
+            },
+            {
+                id: 13,
+                part: "medium",
+                partName: "الجزء الثاني: متوسط",
+                question: "لماذا يُعد التشفير بالمفتاح العام أسهل في إدارة المفاتيح؟",
+                options: [
+                    "لأنه لا يستخدم مفاتيح",
+                    "لأنه يمكن مشاركة المفتاح العام بحرية",
+                    "لأنه يستخدم المفاتيح الخاصة فقط",
+                    "لأن الجميع يستخدمون نفس المفتاح الخاص"
+                ],
+                correctAnswer: "لأنه يمكن مشاركة المفتاح العام بحرية",
+                hint: "لا حاجة لقنوات سرية لتوزيع المفاتيح العامة!",
+                explanation: "بخلاف المفاتيح المتماثلة التي يجب الحفاظ على سريتها أثناء التوزيع، يمكن نشر المفاتيح العامة للجميع علناً دون تعريض الأمان للخطر."
+            },
+            {
+                id: 14,
+                part: "medium",
+                partName: "الجزء الثاني: متوسط",
+                question: "لماذا يكون التشفير المتماثل أسرع عادةً من التشفير بالمفتاح العام؟",
+                options: [
+                    "لأنه لا يحتاج إلى نص عادي",
+                    "لأنه يستخدم قيم الهاش بدلاً من الرسائل",
+                    "لأن عمليات التشفير وفك التشفير فيه أسرع حسائياً",
+                    "لأنه يستخدم مفتاحاً عاماً"
+                ],
+                correctAnswer: "لأن عمليات التشفير وفك التشفير فيه أسرع حسائياً",
+                hint: "تعتمد خوارزميات التشفير المتماثل على عمليات رياضية أبسط.",
+                explanation: "تستخدم خوارزميات المفتاح المتماثل عمليات رياضية أخف حاسوبياً، مما يجعل التشفير وفك التشفير أسرع بكثير."
+            },
+            {
+                id: 15,
+                part: "medium",
+                partName: "الجزء الثاني: متوسط",
+                question: "يقوم المرسل بإنشاء قيمة هاش من النص العادي قبل إنشاء التوقيع الرقمي. لماذا؟",
+                options: [
+                    "لإنشاء قيمة تمثل البيانات المدخلة بشكل مختصر",
+                    "لجعل النص العادي أطول",
+                    "لإنشاء المفتاح الخاص للمستقبل",
+                    "لفك تشفير الرسالة"
+                ],
+                correctAnswer: "لإنشاء قيمة تمثل البيانات المدخلة بشكل مختصر",
+                hint: "تعمل قيمة الهاش بمثابة بصمة رقمية فريدة ومختصرة للبيانات.",
+                explanation: "قيمة الهاش هي تمثيل ثابت الحجم للبيانات المدخلة، مما يسمح بتوقيعها بكفاءة بدلاً من معالجة الملفات الضخمة مباشرة."
+            },
+            {
+                id: 16,
+                part: "medium",
+                partName: "الجزء الثاني: متوسط",
+                question: "في التوقيع الرقمي، أي مفتاح يستخدمه المرسل لتشفير قيمة الهاش؟",
+                options: [
+                    "المفتاح العام للمستقبل",
+                    "المفتاح العام للمرسل",
+                    "المفتاح الخاص للمستقبل",
+                    "المفتاح الخاص للمرسل"
+                ],
+                correctAnswer: "المفتاح الخاص للمرسل",
+                hint: "المرسل فقط هو من يمكنه وضع هذه العلامة الفريدة!",
+                explanation: "لإنشاء توقيع رقمي، يشفر المرسل قيمة الهاش للرسالة باستخدام مفتاحه الخاص."
+            },
+            {
+                id: 17,
+                part: "medium",
+                partName: "الجزء الثاني: متوسط",
+                question: "يتلقى المستقبل النص العادي والتوقيع الرقمي. ماذا يفعل المستقبل بالتوقيع الرقمي؟",
+                options: [
+                    "يحذفه",
+                    "يستخدم المفتاح العام للمرسل لاستخراج قيمة الهاش الأصلية",
+                    "يشفره بالمفتاح العام للمستقبل",
+                    "يحوله مباشرة إلى نص عادي"
+                ],
+                correctAnswer: "يستخدم المفتاح العام للمرسل لاستخراج قيمة الهاش الأصلية",
+                hint: "كيف تتحقق من شيء تم توقيعه باستخدام المفتاح الخاص للمرسل؟",
+                explanation: "يفك المستقبل التوقيع الرقمي باستخدام المفتاح العام للمرسل لاستخراج قيمة الهاش الأصلية التي أنشأها المرسل."
+            },
+            {
+                id: 18,
+                part: "medium",
+                partName: "الجزء الثاني: متوسط",
+                question: "بعد استلام النص العادي، ماذا يفعل المستقبل للتحقق من الرسالة؟",
+                options: [
+                    "ينشئ قيمة هاش جديدة من النص العادي المستلم",
+                    "يعدل النص العادي",
+                    "ينشئ مفتاحاً خاصاً جديداً",
+                    "يشفر النص العادي بالمفتاح الخاص للمرسل"
+                ],
+                correctAnswer: "ينشئ قيمة هاش جديدة من النص العادي المستلم",
+                hint: "لمقارنتها بقيمة الهاش الأصلية بعد استخراجها!",
+                explanation: "يمرر المستقبل النص العادي المستلم عبر دالة الهاش بحساب قيمة هاش جديدة محلياً."
+            },
+            {
+                id: 19,
+                part: "medium",
+                partName: "الجزء الثاني: متوسط",
+                question: "ماذا يحدث إذا تطابقت قيمتا الهاش في عملية التوقيع الرقمي؟",
+                options: [
+                    "يتم الكشف عن المفتاح الخاص للمستقبل",
+                    "تتشفر الرسالة تلقائياً",
+                    "يساعد ذلك في إثبات أن الرسالة جاءت من المرسل ولم تُعدّل",
+                    "يتم حذف النص العادي الأصلي"
+                ],
+                correctAnswer: "يساعد ذلك في إثبات أن الرسالة جاءت من المرسل ولم تُعدّل",
+                hint: "تطابق قيم الهاش يؤكد السلامة والموثوقية!",
+                explanation: "إذا تطابقت قيمة الهاش المحسوبة مع الهاش المستخرج، فإن ذلك يثبت أن المستند موثوق ولم يتم التلاعب به."
+            },
+            {
+                id: 20,
+                part: "medium",
+                partName: "الجزء الثاني: متوسط",
+                question: "أي عبارة مما يلي تقارن بشكل صحيح بين التشفير المتماثل والتشفير بالمفتاح العام؟",
+                options: [
+                    "التشفير المتماثل يستخدم مفتاحين مختلفين للتشفير وفك التشفير",
+                    "التشفير بالمفتاح العام أسرع دائماً",
+                    "التشفير المتماثل يستخدم نفس المفتاح المشترك للتشفير وفك التشفير",
+                    "التشفير بالمفتاح العام لا يستخدم مفتاحاً خاصاً"
+                ],
+                correctAnswer: "التشفير المتماثل يستخدم نفس المفتاح المشترك للتشفير وفك التشفير",
+                hint: "تذكر: المتماثل = مفتاح مشترك واحد، غير المتماثل = زوج من المفاتيح.",
+                explanation: "يستخدم التشفير المتماثل مفتاحاً مشاركاً واحداً لقفل البيانات وفك قفلها."
+            },
+
+            // PART 3: HARD / UNDERSTANDING QUESTIONS (21 - 30)
+            {
+                id: 21,
+                part: "hard",
+                partName: "الجزء الثالث: متقدم",
+                question: "استخدم المرسل المفتاح العام للمستقبل لتشفير رسالة. لماذا يستطيع المستقبل فك تشفيرها باستخدام مفتاحه الخاص؟",
+                options: [
+                    "لأن المفتاح الخاص للمستقبل هو نفسه المفتاح العام للمرسل",
+                    "لأن زوج المفتاح العام والخاص مصممان رياضياً للعمل معاً",
+                    "لأن المرسل يرسل المفتاح الخاص مع الرسالة",
+                    "لأن الرسالة لا تستخدم التشفير فعلياً"
+                ],
+                correctAnswer: "لأن زوج المفتاح العام والخاص مصممان رياضياً للعمل معاً",
+                hint: "العلاقة الرياضية الوثيقة بين زوج المفاتيح العامة والخاصة.",
+                explanation: "المفاتيح العامة والخاصة أزواج مرتبطة رياضياً، بحيث ما يشفره مفتاح، لا يمكن فك تشفيره إلا بمفتاحه التوأم المطابق."
+            },
+            {
+                id: 22,
+                part: "hard",
+                partName: "الجزء الثالث: متقدم",
+                question: "افترض أن المستقبل أنشأ قيمة هاش من النص العادي المستلم، ولكنها كانت مختلفة عن قيمة الهاش المستخرجة من التوقيع الرقمي. ماذا يستنتج المستقبل؟",
+                options: [
+                    "الرسالة قد تكون تعرضت للتغيير أو التعديل",
+                    "المفتاح العام للمرسل تحول إلى مفتاح خاص",
+                    "النص العادي صحيح تماماً وخالٍ من الأخطاء",
+                    "تم استخدام المفتاح المشترك مرتين"
+                ],
+                correctAnswer: "الرسالة قد تكون تعرضت للتغيير أو التعديل",
+                hint: "عدم تطابق الهاش يشير إلى الفساد أو التلاعب بالبيانات!",
+                explanation: "أي اختلاف بين قيمة الهاش المحسوبة والمستخرجة يثبت أن الرسالة تم تعديلها أو تلفها أثناء النقل."
+            },
+            {
+                id: 23,
+                part: "hard",
+                partName: "الجزء الثالث: متقدم",
+                question: "لماذا تقوم عملية التوقيع الرقمي بعمل هاش للنص العادي بدلاً من استخدام النص كاملاً مباشرة لإنشاء التوقيع؟",
+                options: [
+                    "لأن قيمة الهاش تمثل البيانات المدخلة بشكل مختصر وثابت الحجم",
+                    "لأن الهاش يجعل المفتاح الخاص للمستقبل عاماً",
+                    "لأن الهاش يلغي الحاجة للمفتاح الخاص للمرسل",
+                    "لأن دالة الهاش تحول النص العادي مباشرة إلى مفتاح عام"
+                ],
+                correctAnswer: "لأن قيمة الهاش تمثل البيانات المدخلة بشكل مختصر وثابت الحجم",
+                hint: "الكفاءة! ينتج الهاش تمثيلاً محدداً ومركزاً لأي حجم من البيانات.",
+                explanation: "ينتج الهاش ملخصاً صغيراً ثابت الحجم يمثل الرسالة الأصلية، مما يجعل عملية التوقيع سريعة وفعالة حاسوبياً بغض النظر عن حجم الملف."
+            },
+            {
+                id: 24,
+                part: "hard",
+                partName: "الجزء الثالث: متقدم",
+                question: "قام شخص بتغيير جزء واحد من النص العادي أثناء نقله. ما هو الأثر الأهم على فحص التوقيع الرقمي؟",
+                options: [
+                    "سيحصل المستقبل دائماً على نفس قيمة الهاش",
+                    "سيتغير المفتاح الخاص للمستقبل",
+                    "قيمة الهاش الجديدة لن تتطابق مع قيمة الهاش الأصلية",
+                    "سيصبح المفتاح العام للمرسل غير صالحة"
+                ],
+                correctAnswer: "قيمة الهاش الجديدة لن تتطابق مع قيمة الهاش الأصلية",
+                hint: "تأثير الانهيار الجليدي في الهاش يغير قيمة الهاش بالكامل عند تغير حرف واحد.",
+                explanation: "تغيير حرف واحد فقط في النص العادي يغير قيمة الهاش الناتجة بالكامل، مما يسبب فشل عملية التحقق من التوقيع."
+            },
+            {
+                id: 25,
+                part: "hard",
+                partName: "الجزء الثالث: متقدم",
+                question: "لماذا يستخدم المستقبل المفتاح العام للمرسل في عملية التوقيع الرقمي؟",
+                options: [
+                    "لإنشاء المفتاح الخاص للمرسل",
+                    "لقراءة/فك التوقيع الرقمي واستعادة قيمة الهاش الأصلية",
+                    "لتشفير النص العادي المستلم",
+                    "لإنشاء المفتاح الخاص للمستقبل"
+                ],
+                correctAnswer: "لقراءة/فك التوقيع الرقمي واستعادة قيمة الهاش الأصلية",
+                hint: "المفاتيح العامة تتحقق مما وقّعته المفاتيح الخاصة.",
+                explanation: "بما أن المرسل وقّع الهاش بمفتاحه الخاص، يجب على المستقبل استخدام المفتاح العام للمرسل لفك التوقيع والتحقق من الهاش الأصلي."
+            },
+            {
+                id: 26,
+                part: "hard",
+                partName: "الجزء الثالث: متقدم",
+                question: "تأمل العملية: نص عادي ← دالة هاش ← قيمة هاش ← المفتاح الخاص للمرسل ← توقيع رقمي. ما هو الغرض من المفتاح الخاص للمرسل هنا؟",
+                options: [
+                    "لفك تشفير النص العادي",
+                    "لإنشاء المفتاح العام للمستقبل",
+                    "لتشفير قيمة الهاش (توقيعها)",
+                    "لإنشاء النص العادي"
+                ],
+                correctAnswer: "لتشفير قيمة الهاش (توقيعها)",
+                hint: "توقيع قيمة الهاش يعني تشفيرها باستخدام المفتاح الخاص.",
+                explanation: "في التوقيعات الرقمية، يعني التوقيع تشفير قيمة الهاش باستخدام المفتاح الخاص للمرسل لإثبات موثوقية المرسل."
+            },
+            {
+                id: 27,
+                part: "hard",
+                partName: "الجزء الثالث: متقدم",
+                question: "تريد شركة إرسال رسالة بمرتبة السرية لمستقبل باستخدام التشفير بالمفتاح العام. أي العمليات التالية هي الصحيحة؟",
+                options: [
+                    "التشفير بالمفتاح الخاص للمستقبل ← فك التشفير بالمفتاح العام للمستقبل",
+                    "التشفير بالمفتاح العام للمرسل ← فك التشفير بالمفتاح الخاص للمرسل",
+                    "التشفير بالمفتاح العام للمستقبل ← فك التشفير بالمفتاح الخاص للمستقبل",
+                    "التشفير بالمفتاح الخاص للمرسل ← فك التشفير بالمفتاح الخاص للمستقبل"
+                ],
+                correctAnswer: "التشفير بالمفتاح العام للمستقبل ← فك التشفير بالمفتاح الخاص للمستقبل",
+                hint: "المفتاح العام للمستقبل يضمن السرية للمستقبل فقط.",
+                explanation: "للرسائل السرية: تشفر الرسالة بالمفتاح العام للمستقبل، بحيث لا يستطيع فكها إلا المستقبل بمفتاحه الخاص."
+            },
+            {
+                id: 28,
+                part: "hard",
+                partName: "الجزء الثالث: متقدم",
+                question: "لماذا قد يستبدل نظام التشفير فقط بأسلوب مفتاح الجلسة (Session Key)؟",
+                options: [
+                    "لأنه يجمع بين سرعة التشفير المتماثل وأمان التشفير بالمفتاح العام",
+                    "لأنه يلغي الحاجة إلى التشفير",
+                    "لأنه يستخدم قيم الهاش فقط",
+                    "لأنه يجعل جميع المفاتيح الخاصة عامة"
+                ],
+                correctAnswer: "لأنه يجمع بين سرعة التشفير المتماثل وأمان التشفير بالمفتاح العام",
+                hint: "الجمع بين الأفضل من العالَمين: السرية للبيانات بالمتماثل والأمان لنقل المفتاح بغير المتماثل.",
+                explanation: "تجمع أنظمة مفتاح الجلسة بين التشفير بالمفتاح العام (تبادل آمن للمفاتيح) والتشفير المتماثل (سرعة فائقة في نقل البيانات)."
+            },
+            {
+                id: 29,
+                part: "hard",
+                partName: "الجزء الثالث: متقدم",
+                question: "تلقى المستقبل رسالة وتوقيعاً رقمياً صالحاً وتطابقت قيمتا الهاش. ما الذي يدعمه هذا الناتج بشكل رئيسي؟",
+                options: [
+                    "أن المستقبل يعرف المفتاح الخاص للمرسل",
+                    "أن الرسالة سرية عن الجميع بالتأكيد",
+                    "أن الرسالة صادرة من المرسل بالفعل ولم يتم التلاعب بها",
+                    "أن الرسالة تم تشفيرها باستخدام مفتاح مشترك"
+                ],
+                correctAnswer: "أن الرسالة صادرة من المرسل بالفعل ولم يتم التلاعب بها",
+                hint: "التوقيع الرقمي يثبت الهوية وسلامة النص، وليس السرية.",
+                explanation: "تطابق قيم الهاش يثبت عدم الإنكار/الموثوقية (من المرسل) وسلامة البيانات (لم يُعدل النص)."
+            },
+            {
+                id: 30,
+                part: "hard",
+                partName: "الجزء الثالث: متقدم",
+                question: "أي موقف مما يلي يصف بدقة الفرق بين التشفير والتوقيع الرقمي؟",
+                options: [
+                    "التشفير يحمي المعلومات من اعتراضها، بينما التوقيع الرقمي يثبت هوية المرسل وسلامة الرسالة",
+                    "التشفير ينشئ قيم هاش فقط، بينما التوقيع الرقمي ينشئ نصاً عادياً",
+                    "التشفير لا يستخدم مفاتيح، بينما التوقيع الرقمي لا يستخدم دوال هاش",
+                    "التشفير والتوقيع الرقمي لهما نفس الغرض تماماً"
+                ],
+                correctAnswer: "التشفير يحمي المعلومات من اعتراضها، بينما التوقيع الرقمي يثبت هوية المرسل وسلامة الرسالة",
+                hint: "السرية في مقابل الموثوقية وسلامة البيانات!",
+                explanation: "يضمن التشفير السرية (إخفاء البيانات عن المتنصتين)، بينما يضمن التوقيع الرقمي الهوية وسلامة البيانات."
+            }
+        ];
+
+        /* ----------------------------------------------------
+           2. EXAMINATION ENGINE STATE MANAGEMENT
+        ---------------------------------------------------- */
+        let activeQuestionsList = [];
+        let activeExamState = []; // Holds user responses, shuffled options, flags
+        let currentQuestionIndex = 0;
+        let instantFeedbackEnabled = true;
+
+        /* Fisher-Yates Array Shuffle */
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        /* ----------------------------------------------------
+           3. EXAM SESSION CONTROL & INITIALIZATION
+        ---------------------------------------------------- */
+        function confirmGoHome() {
+            if (activeExamState.length > 0 && document.getElementById('startScreen').classList.contains('hidden')) {
+                if (!confirm("هل أنت تأكد من رغبتك في إنهاء جلسة الاختبار والعودة للرئيسية؟")) {
+                    return;
+                }
+            }
+            document.getElementById('startScreen').classList.remove('hidden');
+            document.getElementById('examScreen').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.add('hidden');
+            document.getElementById('exitExamBtn').classList.add('hidden');
+            document.getElementById('candidateBadge').classList.add('hidden');
+        }
+
+        function startExam(mode) {
+            let baseList = [];
+            if (mode === 'easy') {
+                baseList = rawQuestionsDatabase.filter(q => q.part === 'easy');
+            } else if (mode === 'medium') {
+                baseList = rawQuestionsDatabase.filter(q => q.part === 'medium');
+            } else if (mode === 'hard') {
+                baseList = rawQuestionsDatabase.filter(q => q.part === 'hard');
+            } else {
+                baseList = [...rawQuestionsDatabase];
+            }
+
+            // الحفاظ على الترتيب الأصلي الثابت للأسئلة (1 - 30)
+            activeQuestionsList = [...baseList];
+
+            /* Prepare active state for each question:
+               - Pre-shuffle options specifically for this session!
+            */
+            activeExamState = activeQuestionsList.map(q => {
+                return {
+                    questionData: q,
+                    shuffledOptions: shuffleArray(q.options), // HIGHLY RANDOMIZED CHOICES
+                    selectedOption: null,
+                    isFlagged: false,
+                    isAnswered: false
+                };
+            });
+
+            currentQuestionIndex = 0;
+            instantFeedbackEnabled = document.getElementById('instantFeedbackToggle').checked;
+
+            // Show UI Elements
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.add('hidden');
+            document.getElementById('examScreen').classList.remove('hidden');
+            document.getElementById('examScreen').classList.add('flex');
+            document.getElementById('exitExamBtn').classList.remove('hidden');
+            document.getElementById('exitExamBtn').classList.add('flex');
+            document.getElementById('candidateBadge').classList.remove('hidden');
+            document.getElementById('candidateBadge').classList.add('flex');
+
+            renderQuestionWorkspace();
+        }
+
+        /* ----------------------------------------------------
+           4. WORKSPACE & QUESTION RENDERER
+        ---------------------------------------------------- */
+        function renderQuestionWorkspace() {
+            const currentItem = activeExamState[currentQuestionIndex];
+            const qData = currentItem.questionData;
+
+            // Update Header Meta
+            document.getElementById('qNumberDisplay').innerText = `السؤال ${currentQuestionIndex + 1} من ${activeExamState.length}`;
+            document.getElementById('qBadgeDifficulty').innerText = qData.partName;
+
+            // Update Flag Button
+            const flagBtn = document.getElementById('flagBtn');
+            const flagIcon = document.getElementById('flagIcon');
+            const flagText = document.getElementById('flagText');
+            if (currentItem.isFlagged) {
+                flagBtn.className = "text-xs bg-amber-100 text-amber-800 border border-amber-400 px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5 font-bold";
+                flagIcon.className = "fas fa-bookmark text-amber-600";
+                flagText.innerText = "مميّز للمراجعة";
+            } else {
+                flagBtn.className = "text-xs bg-slate-50 hover:bg-amber-50 text-slate-600 hover:text-amber-700 border border-slate-200 hover:border-amber-300 px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5 font-medium";
+                flagIcon.className = "far fa-bookmark";
+                flagText.innerText = "تمييز للمراجعة";
+            }
+
+            // Question Text
+            document.getElementById('qText').innerText = qData.question;
+
+            // Render Options (using randomized options array)
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = '';
+            const optionPrefixes = ['أ', 'ب', 'ج', 'د'];
+
+            currentItem.shuffledOptions.forEach((optionText, idx) => {
+                const prefix = optionPrefixes[idx] || `${idx + 1}`;
+                const isSelected = (currentItem.selectedOption === optionText);
+
+                const card = document.createElement('div');
+                card.className = `option-card border rounded-lg p-4 cursor-pointer flex items-center gap-3 text-sm font-medium transition-all ${
+                    isSelected ? 'selected' : 'border-slate-200 bg-white text-slate-800'
+                }`;
+
+                card.innerHTML = `
+                    <div class="w-7 h-7 rounded-md ${isSelected ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'} font-bold flex items-center justify-center text-xs flex-shrink-0">
+                        ${prefix}
+                    </div>
+                    <div class="flex-grow text-slate-900 font-semibold">${optionText}</div>
+                `;
+
+                card.onclick = () => selectOption(optionText);
+                optionsGrid.appendChild(card);
+            });
+
+            // Instant Feedback Box Handling
+            const feedbackBox = document.getElementById('instantFeedbackBox');
+            if (instantFeedbackEnabled && currentItem.selectedOption !== null) {
+                const isCorrect = (currentItem.selectedOption === qData.correctAnswer);
+                feedbackBox.classList.remove('hidden');
+
+                if (isCorrect) {
+                    feedbackBox.className = "rounded-lg p-4 text-xs sm:text-sm border transition-all text-right dir-rtl bg-emerald-50 border-emerald-300 text-emerald-950";
+                    document.getElementById('feedbackIcon').className = "fas fa-circle-check text-emerald-600 text-base";
+                    document.getElementById('feedbackTitle').innerText = "إجابة صحيحة ومطابقة!";
+                } else {
+                    feedbackBox.className = "rounded-lg p-4 text-xs sm:text-sm border transition-all text-right dir-rtl bg-rose-50 border-rose-300 text-rose-950";
+                    document.getElementById('feedbackIcon').className = "fas fa-circle-xmark text-rose-600 text-base";
+                    document.getElementById('feedbackTitle').innerText = `إجابة غير صحيحة. الإجابة الصحيحة هي: (${qData.correctAnswer})`;
+                }
+                document.getElementById('feedbackText').innerText = qData.explanation;
+            } else {
+                feedbackBox.classList.add('hidden');
+            }
+
+            // Navigation Controls State
+            document.getElementById('prevQBtn').disabled = (currentQuestionIndex === 0);
+            if (currentQuestionIndex === 0) {
+                document.getElementById('prevQBtn').classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                document.getElementById('prevQBtn').classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+
+            if (currentQuestionIndex === activeExamState.length - 1) {
+                document.getElementById('nextQBtn').classList.add('hidden');
+                document.getElementById('submitExamBtn').classList.remove('hidden');
+                document.getElementById('submitExamBtn').classList.add('flex');
+            } else {
+                document.getElementById('nextQBtn').classList.remove('hidden');
+                document.getElementById('submitExamBtn').classList.add('hidden');
+            }
+
+            renderPaletteGrid();
+        }
+
+        /* Render Palette Map Sidebar Grid */
+        function renderPaletteGrid() {
+            const grid = document.getElementById('questionPaletteGrid');
+            grid.innerHTML = '';
+
+            let answeredCount = 0;
+
+            activeExamState.forEach((item, idx) => {
+                if (item.isAnswered) answeredCount++;
+
+                const btn = document.createElement('button');
+                btn.className = 'w-full h-8 text-xs font-bold font-mono rounded transition-all border flex items-center justify-center relative';
+
+                if (idx === currentQuestionIndex) {
+                    btn.classList.add('bg-blue-600', 'text-white', 'border-blue-700', 'ring-2', 'ring-blue-300');
+                } else if (item.isFlagged) {
+                    btn.classList.add('bg-amber-100', 'text-amber-800', 'border-amber-400');
+                } else if (item.isAnswered) {
+                    btn.classList.add('bg-emerald-50', 'text-emerald-800', 'border-emerald-300');
+                } else {
+                    btn.classList.add('bg-slate-50', 'text-slate-600', 'border-slate-200', 'hover:bg-slate-100');
+                }
+
+                btn.innerText = idx + 1;
+
+                if (item.isFlagged) {
+                    const dot = document.createElement('span');
+                    dot.className = 'w-1.5 h-1.5 bg-amber-600 rounded-full absolute top-1 right-1';
+                    btn.appendChild(dot);
+                }
+
+                btn.onclick = () => {
+                    currentQuestionIndex = idx;
+                    renderQuestionWorkspace();
+                };
+
+                grid.appendChild(btn);
+            });
+
+            document.getElementById('answeredCountBadge').innerText = `${answeredCount} / ${activeExamState.length}`;
+        }
+
+        /* ----------------------------------------------------
+           5. INTERACTION LOGIC
+        ---------------------------------------------------- */
+        function selectOption(optionText) {
+            const currentItem = activeExamState[currentQuestionIndex];
+            currentItem.selectedOption = optionText;
+            currentItem.isAnswered = true;
+            renderQuestionWorkspace();
+        }
+
+        function toggleFlagCurrentQuestion() {
+            const currentItem = activeExamState[currentQuestionIndex];
+            currentItem.isFlagged = !currentItem.isFlagged;
+            renderQuestionWorkspace();
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestionWorkspace();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < activeExamState.length - 1) {
+                currentQuestionIndex++;
+                renderQuestionWorkspace();
+            }
+        }
+
+        /* ----------------------------------------------------
+           6. SUBMISSION & RESULT GENERATOR
+        ---------------------------------------------------- */
+        function confirmSubmitExam() {
+            const unanswered = activeExamState.filter(i => !i.isAnswered).length;
+            let msg = "هل أنت متأكد من تسليم الاختبار والبدء في استخراج تقرير الأداء النهائي؟";
+            if (unanswered > 0) {
+                msg = `تنبيه: يوجد لديك (${unanswered}) أسئلة لم تقم بالإجابة عليها بعد. هل ترغب بالتسليم على أي حال؟`;
+            }
+
+            if (confirm(msg)) {
+                submitFinalExam();
+            }
+        }
+
+        function submitFinalExam() {
+            // Hide Exam Workspace
+            document.getElementById('examScreen').classList.add('hidden');
+            document.getElementById('candidateBadge').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.remove('hidden');
+            document.getElementById('resultsScreen').classList.add('flex');
+
+            // Calculations
+            const totalQ = activeExamState.length;
+            let correctCount = 0;
+            let wrongCount = 0;
+            let unansweredCount = 0;
+
+            activeExamState.forEach(item => {
+                if (!item.isAnswered || item.selectedOption === null) {
+                    unansweredCount++;
+                } else if (item.selectedOption === item.questionData.correctAnswer) {
+                    correctCount++;
+                } else {
+                    wrongCount++;
+                }
+            });
+
+            const percentage = Math.round((correctCount / totalQ) * 100);
+
+            // Set Stats UI
+            document.getElementById('resultPercentText').innerText = `${percentage}%`;
+            document.getElementById('resultScoreRatio').innerText = `${correctCount} من ${totalQ}`;
+            document.getElementById('statCorrect').innerText = correctCount;
+            document.getElementById('statWrong').innerText = wrongCount;
+            document.getElementById('statUnanswered').innerText = unansweredCount;
+
+            // Grade Badge Logic
+            const gradeBadge = document.getElementById('gradeBadge');
+            if (percentage >= 90) {
+                gradeBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-extrabold bg-emerald-100 text-emerald-800 mb-2";
+                gradeBadge.innerHTML = '<i class="fas fa-certificate"></i> التقييم: ممتاز مرتفع (Mastery)';
+            } else if (percentage >= 75) {
+                gradeBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-extrabold bg-blue-100 text-blue-800 mb-2";
+                gradeBadge.innerHTML = '<i class="fas fa-check-double"></i> التقييم: جيد جداً (Proficient)';
+            } else if (percentage >= 60) {
+                gradeBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-extrabold bg-amber-100 text-amber-800 mb-2";
+                gradeBadge.innerHTML = '<i class="fas fa-triangle-exclamation"></i> التقييم: مقبول (Satisfactory)';
+            } else {
+                gradeBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-extrabold bg-rose-100 text-rose-800 mb-2";
+                gradeBadge.innerHTML = '<i class="fas fa-circle-xmark"></i> التقييم: يحتاج تحسين (Needs Improvement)';
+            }
+
+            renderReviewAuditList('all');
+        }
+
+        function restartExam() {
+            startExam(activeQuestionsList[0]?.part || 'all');
+        }
+
+        function toggleReviewSection() {
+            const auditSec = document.getElementById('reviewAuditSection');
+            auditSec.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /* ----------------------------------------------------
+           7. DETAILED REVIEW AUDIT ENGINE
+        ---------------------------------------------------- */
+        function filterReview(filterType) {
+            const btns = document.querySelectorAll('.review-filter-btn');
+            btns.forEach(b => {
+                if (b.dataset.filter === filterType) {
+                    b.className = "review-filter-btn px-2.5 py-1 rounded bg-white text-slate-800 shadow-sm font-bold";
+                } else {
+                    b.className = "review-filter-btn px-2.5 py-1 rounded text-slate-600 hover:text-slate-900 font-medium";
+                }
+            });
+            renderReviewAuditList(filterType);
+        }
+
+        function renderReviewAuditList(filter) {
+            const container = document.getElementById('reviewAuditList');
+            container.innerHTML = '';
+
+            activeExamState.forEach((item, idx) => {
+                const qData = item.questionData;
+                const isCorrect = (item.selectedOption === qData.correctAnswer);
+                const isUnanswered = (item.selectedOption === null);
+
+                if (filter === 'correct' && !isCorrect) return;
+                if (filter === 'incorrect' && (isCorrect || isUnanswered)) return;
+
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-lg border text-right dir-rtl font-sans ${
+                    isCorrect ? 'bg-emerald-50/50 border-emerald-200' : 'bg-rose-50/50 border-rose-200'
+                }`;
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between gap-2 border-b border-slate-200/60 pb-2 mb-2">
+                        <span class="font-extrabold text-xs text-slate-700">سؤال ${idx + 1} (${qData.partName})</span>
+                        <span class="text-[11px] font-bold px-2 py-0.5 rounded ${
+                            isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                        }">
+                            ${isCorrect ? 'إجابة صحيحة ✓' : (isUnanswered ? 'لم يتم الإجابة' : 'إجابة خاطئة ✗')}
+                        </span>
+                    </div>
+
+                    <p class="font-bold text-sm text-slate-900 dir-rtl text-right mb-3">${qData.question}</p>
+
+                    <div class="space-y-1 text-xs font-semibold mb-3">
+                        <div class="text-slate-700">إجابتك: <span class="inline-block font-bold ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">${item.selectedOption || 'لم تحدد إجابة'}</span></div>
+                        ${!isCorrect ? `<div class="text-emerald-800">الإجابة الصحيحة: <span class="inline-block font-bold text-emerald-700">${qData.correctAnswer}</span></div>` : ''}
+                    </div>
+
+                    <div class="bg-white/80 p-3 rounded border border-slate-200 text-xs text-slate-700 leading-relaxed font-medium">
+                        <span class="font-bold text-slate-900 block mb-0.5"><i class="fas fa-lightbulb text-amber-500"></i> الشرح الفني:</span>
+                        ${qData.explanation}
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
