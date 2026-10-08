@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radwa's Romantic Space & Quiz 💖</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Great+Vibes&family=Tajawal:wght@400;700;900&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Canvas & Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pinkPrimary: '#ff6b8b',
+                        pinkDark: '#d81b60',
+                        pinkSoft: '#fff0f5',
+                        pinkCard: '#ffe4e1'
+                    },
+                    fontFamily: {
+                        arabic: ['Tajawal', 'sans-serif'],
+                        english: ['Poppins', 'sans-serif'],
+                        fancy: ['Great Vibes', 'Alex Brush', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #feada6 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        /* Floating Hearts Canvas background */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Heart Pulse & Glow Animation */
+        .radwa-heart-badge {
+            animation: heartBeat 1.3s infinite ease-in-out, glowPulse 2.2s infinite alternate;
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.12); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.12); }
+            70% { transform: scale(1); }
+        }
+
+        @keyframes glowPulse {
+            0% { filter: drop-shadow(0 0 12px rgba(255, 107, 139, 0.6)); }
+            100% { filter: drop-shadow(0 0 25px rgba(216, 27, 96, 0.9)); }
+        }
+
+        .fancy-name {
+            font-family: 'Great Vibes', 'Alex Brush', cursive;
+            background: linear-gradient(180deg, #ffffff 0%, #ffe4e1 60%, #ffd1dc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 2px 4px rgba(136, 14, 79, 0.8));
+        }
+
+        /* Glassmorphism card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 182, 193, 0.6);
+            box-shadow: 0 15px 35px rgba(216, 27, 96, 0.2);
+        }
+
+        /* Dodging or growing buttons */
+        .btn-dodge {
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #ffe4e1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ff6b8b;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen relative text-gray-800">
+
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- Main Dynamic Content Wrapper -->
+    <div class="relative z-10 flex-1 flex flex-col justify-center items-center p-4">
+
+        <!-- ========================================== -->
+        <!-- PHASE 1: ROMANTIC GATE FOR RADWA           -->
+        <!-- ========================================== -->
+        <div id="gateScreen" class="w-full max-w-lg text-center">
+            <div class="glass-card rounded-3xl p-8 md:p-10 relative overflow-hidden transition-all duration-500">
+                
+                <!-- Heart Icon Top Decor with Calligraphic Radwa Name -->
+                <div class="relative inline-flex items-center justify-center mb-4 radwa-heart-badge select-none">
+                    <!-- SVG Radiant Pulsing Heart -->
+                    <svg class="w-48 h-48 md:w-56 md:h-56" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#ff537c" />
+                                <stop offset="50%" stop-color="#d81b60" />
+                                <stop offset="100%" stop-color="#880e4f" />
+                            </linearGradient>
+                            <filter id="heartGlow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="5" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <!-- Pulsing Glow Outline -->
+                        <path d="M100,175 C100,175 20,120 20,65 C20,35 42,15 70,15 C87,15 100,28 100,28 C100,28 113,15 130,15 C158,15 180,35 180,65 C180,120 100,175 100,175 Z" 
+                              fill="url(#heartGradient)" filter="url(#heartGlow)" />
+                        <!-- Decorative Heart Inner Dash Line -->
+                        <path d="M100,163 C100,163 28,113 28,65 C28,40 46,24 70,24 C84,24 95,34 100,41 C105,34 116,24 130,24 C154,24 172,40 172,65 C172,113 100,163 100,163 Z" 
+                              stroke="rgba(255, 255, 255, 0.45)" stroke-width="2" fill="none" stroke-dasharray="5 3" />
+                        <!-- Top Shine Highlight -->
+                        <path d="M42,54 C42,40 54,30 70,28" stroke="rgba(255, 255, 255, 0.85)" stroke-width="4" stroke-linecap="round" fill="none" />
+                    </svg>
+
+                    <!-- Ornate Decorated "Radwa" Text inside Heart -->
+                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-2">
+                        <span class="text-5xl md:text-6xl font-extrabold fancy-name tracking-wide transform -rotate-3 select-none">
+                            Radwa
+                        </span>
+                        <span class="text-xs md:text-sm text-pink-200 font-bold tracking-widest opacity-90 mt-1">
+                            ✨ 💖 ✨
+                        </span>
+                    </div>
+                </div>
+
+                <h1 class="text-3xl md:text-4xl font-black text-pink-600 mb-6">
+                    اثيك يقميل 💕
+                </h1>
+                
+                <div class="mb-8">
+                    <span class="text-2xl font-black text-pink-700 block bg-pink-100 py-3 px-6 rounded-2xl shadow-inner border border-pink-300">
+                        "هتيجي الدرس مذاكرة النهاردة؟ 📚💖"
+                    </span>
+                </div>
+
+                <!-- Interactive Buttons Container -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 min-h-[140px] relative" id="buttonContainer">
+                    <!-- YES Button -->
+                    <button id="yesBtn" onclick="passGate()" 
+                            class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-black text-xl rounded-2xl shadow-lg hover:shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2">
+                        <span>أه طبعاً جايّة ومذاكرة! 🎉</span>
+                        <i class="fa-solid fa-heart text-pink-200"></i>
+                    </button>
+
+                    <!-- NO Button (The playful dodging/changing button) -->
+                    <button id="noBtn" onclick="handleNoClick()" 
+                            class="btn-dodge w-full sm:w-auto px-8 py-4 bg-gray-200 text-gray-700 font-bold text-xl rounded-2xl shadow hover:bg-gray-300 active:scale-95 transition-all duration-200">
+                        لا 🙈
+                    </button>
+                </div>
+
+                <!-- Funny feedback message when she tries to click NO -->
+                <p id="funnyPopup" class="text-pink-600 font-bold text-lg mt-6 min-h-[30px] opacity-0 transition-opacity duration-300">
+                    <!-- Dynamic funny message populates here -->
+                </p>
+
+            </div>
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- PHASE 2: EXAM DASHBOARD FOR RADWA          -->
+        <!-- ========================================== -->
+        <div id="quizScreen" class="hidden w-full max-w-4xl">
+            
+            <!-- Quiz Top Header -->
+            <div class="glass-card rounded-2xl p-6 mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-pink-500 text-white rounded-2xl flex items-center justify-center text-2xl font-bold shadow-md">
+                        👑
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-black text-pink-600">امتحان التشفير لـ Radwa</h2>
+                        <p class="text-xs md:text-sm text-gray-500 font-english">Encryption & Digital Signature Exam (30 Questions)</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4 w-full md:w-auto justify-between">
+                    <div class="bg-pink-100 text-pink-800 font-bold px-4 py-2 rounded-xl text-sm border border-pink-300">
+                        السؤال: <span id="currentQNum">1</span> / 30
+                    </div>
+                    <div class="bg-pink-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow">
+                        النتيجة: <span id="liveScore">0</span> نقطة
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global Progress Bar -->
+            <div class="w-full bg-white/60 h-3 rounded-full mb-6 overflow-hidden border border-pink-200 p-0.5">
+                <div id="progressBar" class="bg-gradient-to-r from-pink-400 to-rose-600 h-full rounded-full transition-all duration-300" style="width: 3.33%;"></div>
+            </div>
+
+            <!-- Active Question Card -->
+            <div class="glass-card rounded-3xl p-6 md:p-8 relative">
+                
+                <!-- Category Badge -->
+                <div class="mb-4 flex items-center justify-between">
+                    <span id="partBadge" class="text-xs md:text-sm font-bold px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-300">
+                        🟢 Part 1: Easy Questions
+                    </span>
+                    <span class="text-xs text-gray-400 font-english" id="qIdText">Question #1</span>
+                </div>
+
+                <!-- Question Text -->
+                <h3 id="questionText" class="text-xl md:text-2xl font-bold text-gray-800 mb-6 font-english leading-relaxed" dir="ltr">
+                    Loading question...
+                </h3>
+
+                <!-- MCQ Options List -->
+                <div id="optionsContainer" class="space-y-3 font-english" dir="ltr">
+                    <!-- Options injected dynamically -->
+                </div>
+
+                <!-- Answer Explanation/Feedback Box -->
+                <div id="feedbackBox" class="hidden mt-6 p-4 rounded-2xl text-sm font-bold transition-all">
+                </div>
+
+                <!-- Navigation Action Buttons -->
+                <div class="mt-8 flex items-center justify-between gap-4 pt-4 border-t border-pink-100">
+                    <button id="prevBtn" onclick="navigateQuestion(-1)" 
+                            class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-xl transition disabled:opacity-40 disabled:cursor-not-allowed">
+                        <i class="fa-solid fa-arrow-right ml-2"></i> السابق
+                    </button>
+
+                    <button id="nextBtn" onclick="navigateQuestion(1)" 
+                            class="px-6 py-2.5 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-xl shadow transition flex items-center gap-2">
+                        <span>التالي</span> <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+
+                    <button id="finishBtn" onclick="finishQuiz()" 
+                            class="hidden px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl shadow transition flex items-center gap-2">
+                        <span>إنهاء الامتحان ✨</span> <i class="fa-solid fa-check"></i>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Direct Question Navigation Grid -->
+            <div class="glass-card rounded-2xl p-4 mt-6">
+                <div class="text-xs font-bold text-gray-500 mb-3 text-center">التنقل السريع بين جميع الأسئلة:</div>
+                <div id="questionGrid" class="flex flex-wrap justify-center gap-2">
+                    <!-- 30 buttons created dynamically -->
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- PHASE 3: FINAL RESULTS SCREEN FOR RADWA    -->
+        <!-- ========================================== -->
+        <div id="resultScreen" class="hidden w-full max-w-xl text-center">
+            <div class="glass-card rounded-3xl p-8 md:p-10 relative overflow-hidden">
+                <div class="text-7xl mb-3">👑💖</div>
+                <h2 class="text-3xl font-extrabold text-pink-600 mb-2">ممتازة يا رضوى! 🎉</h2>
+                <p class="text-gray-600 font-semibold mb-6">نتيجة امتحان التشفير والتوقيع الرقمي الخاصة بيكي:</p>
+
+                <!-- Circular Score Display -->
+                <div class="w-40 h-40 mx-auto rounded-full bg-gradient-to-tr from-pink-500 to-rose-400 text-white flex flex-col items-center justify-center shadow-xl border-4 border-white mb-6">
+                    <span id="finalScore" class="text-4xl font-extrabold font-english">0 / 30</span>
+                    <span id="percentage" class="text-sm font-semibold opacity-90 font-english">0%</span>
+                </div>
+
+                <div id="resultMessage" class="text-xl font-bold text-pink-700 bg-pink-100 p-4 rounded-2xl border border-pink-300 mb-6">
+                    أحسنتِ يا شاطرة! 💕
+                </div>
+
+                <!-- Summary Breakdown -->
+                <div class="grid grid-cols-3 gap-2 text-xs md:text-sm font-bold mb-6">
+                    <div class="bg-emerald-100 text-emerald-800 p-3 rounded-xl border border-emerald-200">
+                        سهل 🟢<br><span id="easyScore" class="text-lg font-english">0/10</span>
+                    </div>
+                    <div class="bg-amber-100 text-amber-800 p-3 rounded-xl border border-amber-200">
+                        متوسط 🟡<br><span id="medScore" class="text-lg font-english">0/10</span>
+                    </div>
+                    <div class="bg-rose-100 text-rose-800 p-3 rounded-xl border border-rose-200">
+                        صعب 🔴<br><span id="hardScore" class="text-lg font-english">0/10</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button onclick="reviewAnswers()" class="flex-1 py-3 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-xl shadow transition">
+                        مراجعة إجاباتك 📝
+                    </button>
+                    <button onclick="restartQuiz()" class="flex-1 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl transition">
+                        إعادة الامتحان 🔄
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        /* -------------------------------------------------------------
+           1. DATA STRUCTURE: 30 QUESTIONS & CORRECT ANSWERS
+        ------------------------------------------------------------- */
+        const quizData = [
+            // PART 1: EASY (Q1 - Q10)
+            {
+                id: 1, part: 1, category: "🟢 Part 1: Easy Questions",
+                question: "1. What is encryption mainly used for?",
+                options: [
+                    "A) To make a message longer",
+                    "B) To protect information from unwanted interception",
+                    "C) To delete the original message",
+                    "D) To increase Internet speed"
+                ],
+                correct: "B"
+            },
+            {
+                id: 2, part: 1, category: "🟢 Part 1: Easy Questions",
+                question: "2. What is the encrypted text called?",
+                options: [
+                    "A) Plaintext",
+                    "B) Hash value",
+                    "C) Ciphertext",
+                    "D) Digital signature"
+                ],
+                correct: "C"
+            },
+            {
+                id: 3, part: 1, category: "🟢 Part 1: Easy Questions",
+                question: "3. What does decryption do?",
+                options: [
+                    "A) Converts ciphertext back into plaintext",
+                    "B) Creates a public key",
+                    "C) Creates a hash value",
+                    "D) Deletes ciphertext"
+                ],
+                correct: "A"
+            },
+            {
+                id: 4, part: 1, category: "🟢 Part 1: Easy Questions",
+                question: "4. In symmetric key encryption, how many shared keys are used for encryption and decryption?",
+                options: [
+                    "A) Two different shared keys",
+                    "B) No key",
+                    "C) Three keys",
+                    "D) The same shared key"
+                ],
+                correct: "D"
+            },
+            {
+                id: 5, part: 1, category: "🟢 Part 1: Easy Questions",
+                question: "5. Which key is used to encrypt a message in public key encryption?",
+                options: [
+                    "A) Receiver's public key",
+                    "B) Sender's private key",
+                    "C) Sender's public key",
+                    "D) Receiver's private key"
+                ],
+                correct: "A"
+            },
+            {
+                id: 6, part: 1, category: "🟢 Part 1: Easy Questions",
+                question: "6. Which key is used to decrypt the message in public key encryption?",
+                options: [
+                    "A) Sender's private key",
+                    "B) Receiver's private key",
+                    "C) Receiver's public key",
+                    "D) Shared key"
+                ],
+                correct: "B"
+            },
+            {
+                id: 7, part: 1, category: "🟢 Part 1: Easy Questions",
+                question: "7. What does a hash function produce from input data?",
+                options: [
+                    "A) A private key",
+                    "B) Plaintext",
+                    "C) A hash value",
+                    "D) Ciphertext"
+                ],
+                correct: "C"
+            },
+            {
+                id: 8, part: 1, category: "🟢 Part 1: Easy Questions",
+                question: "8. Can the original data normally be restored from a hash value?",
+                options: [
+                    "A) Yes, always",
+                    "B) Only with a public key",
+                    "C) Only with a private key",
+                    "D) No"
+                ],
+                correct: "D"
+            },
+            {
+                id: 9, part: 1, category: "🟢 Part 1: Easy Questions",
+                question: "9. What is a digital signature mainly used to help prove?",
+                options: [
+                    "A) The message came from the sender and was not changed",
+                    "B) The message is very large",
+                    "C) The Internet is fast",
+                    "D) The receiver knows the sender's private key"
+                ],
+                correct: "A"
+            },
+            {
+                id: 10, part: 1, category: "🟢 Part 1: Easy Questions",
+                question: "10. What does a session key method combine?",
+                options: [
+                    "A) Hashing and decryption",
+                    "B) Symmetric key encryption and public key encryption",
+                    "C) Two private keys",
+                    "D) Two hash functions"
+                ],
+                correct: "B"
+            },
+
+            // PART 2: MEDIUM (Q11 - Q20)
+            {
+                id: 11, part: 2, category: "🟡 Part 2: Medium Questions",
+                question: "11. Ahmed wants to send a secret message using symmetric key encryption. Which key should be used to encrypt the message?",
+                options: [
+                    "A) Receiver's private key",
+                    "B) Receiver's public key",
+                    "C) The shared key",
+                    "D) Sender's public key"
+                ],
+                correct: "C"
+            },
+            {
+                id: 12, part: 2, category: "🟡 Part 2: Medium Questions",
+                question: "12. Sara sends encrypted data using the receiver's public key. Which key should the receiver use to decrypt it?",
+                options: [
+                    "A) Receiver's private key",
+                    "B) Sender's public key",
+                    "C) Sender's private key",
+                    "D) The sender's shared key"
+                ],
+                correct: "A"
+            },
+            {
+                id: 13, part: 2, category: "🟡 Part 2: Medium Questions",
+                question: "13. Why is public key encryption easier in key management according to the lesson?",
+                options: [
+                    "A) It does not use keys",
+                    "B) The public key can be shared freely",
+                    "C) It uses only private keys",
+                    "D) Everyone uses the same private key"
+                ],
+                correct: "B"
+            },
+            {
+                id: 14, part: 2, category: "🟡 Part 2: Medium Questions",
+                question: "14. Why is symmetric key encryption usually faster than public key encryption?",
+                options: [
+                    "A) It does not need plaintext",
+                    "B) It uses hash values instead of messages",
+                    "C) Its encryption and decryption processing is faster",
+                    "D) It uses a public key"
+                ],
+                correct: "C"
+            },
+            {
+                id: 15, part: 2, category: "🟡 Part 2: Medium Questions",
+                question: "15. A sender creates a hash value from the plaintext before creating a digital signature. Why?",
+                options: [
+                    "A) To create a value that represents the input data",
+                    "B) To make the plaintext longer",
+                    "C) To create the receiver's private key",
+                    "D) To decrypt the message"
+                ],
+                correct: "A"
+            },
+            {
+                id: 16, part: 2, category: "🟡 Part 2: Medium Questions",
+                question: "16. In a digital signature, which key does the sender use to encrypt the hash value?",
+                options: [
+                    "A) Receiver's public key",
+                    "B) Sender's public key",
+                    "C) Receiver's private key",
+                    "D) Sender's private key"
+                ],
+                correct: "D"
+            },
+            {
+                id: 17, part: 2, category: "🟡 Part 2: Medium Questions",
+                question: "17. The receiver receives plaintext and a digital signature. What does the receiver do with the digital signature?",
+                options: [
+                    "A) Deletes it",
+                    "B) Uses the sender's public key to retrieve the original hash value",
+                    "C) Encrypts it with the receiver's public key",
+                    "D) Converts it directly into plaintext"
+                ],
+                correct: "B"
+            },
+            {
+                id: 18, part: 2, category: "🟡 Part 2: Medium Questions",
+                question: "18. After receiving the plaintext, what does the receiver do to check the message?",
+                options: [
+                    "A) Creates a new hash value from the received plaintext",
+                    "B) Changes the plaintext",
+                    "C) Creates a new private key",
+                    "D) Encrypts the plaintext with the sender's private key"
+                ],
+                correct: "A"
+            },
+            {
+                id: 19, part: 2, category: "🟡 Part 2: Medium Questions",
+                question: "19. What happens if the two hash values in the digital signature process match?",
+                options: [
+                    "A) The receiver's private key is revealed",
+                    "B) The message is automatically encrypted",
+                    "C) It helps prove the message came from the sender and was not changed",
+                    "D) The original plaintext is deleted"
+                ],
+                correct: "C"
+            },
+            {
+                id: 20, part: 2, category: "🟡 Part 2: Medium Questions",
+                question: "20. Which statement correctly compares symmetric and public key encryption?",
+                options: [
+                    "A) Symmetric encryption uses two different keys for encryption and decryption",
+                    "B) Public key encryption is always faster",
+                    "C) Symmetric encryption uses the same shared key for encryption and decryption",
+                    "D) Public key encryption does not use a private key"
+                ],
+                correct: "C"
+            },
+
+            // PART 3: HARD / UNDERSTANDING (Q21 - Q30)
+            {
+                id: 21, part: 3, category: "🔴 Part 3: Hard / Understanding Questions",
+                question: "21. A sender uses the receiver's public key to encrypt a message. Why can the receiver decrypt it using the receiver's private key?",
+                options: [
+                    "A) Because the receiver's private key is the same as the sender's public key",
+                    "B) Because the public/private key pair is designed to work together",
+                    "C) Because the sender sends the private key with the message",
+                    "D) Because the message does not actually use encryption"
+                ],
+                correct: "B"
+            },
+            {
+                id: 22, part: 3, category: "🔴 Part 3: Hard / Understanding Questions",
+                question: "22. Suppose the receiver creates a hash value from the received plaintext, but it is different from the hash value recovered from the digital signature. What can the receiver conclude?",
+                options: [
+                    "A) The message may have been changed",
+                    "B) The sender's public key became a private key",
+                    "C) The plaintext is definitely correct",
+                    "D) The shared key was used twice"
+                ],
+                correct: "A"
+            },
+            {
+                id: 23, part: 3, category: "🔴 Part 3: Hard / Understanding Questions",
+                question: "23. Why does the digital signature process hash the plaintext instead of directly using the whole plaintext to create the signature?",
+                options: [
+                    "A) The hash value is a value generated from the input data and is used to represent it",
+                    "B) Hashing makes the receiver's private key public",
+                    "C) Hashing removes the need for the sender's private key",
+                    "D) The hash function converts plaintext directly into a public key"
+                ],
+                correct: "A"
+            },
+            {
+                id: 24, part: 3, category: "🔴 Part 3: Hard / Understanding Questions",
+                question: "24. A person changes one part of the plaintext while it is being transmitted. What is the most important effect on the digital signature check?",
+                options: [
+                    "A) The receiver will always get the same new hash value",
+                    "B) The receiver's private key will change",
+                    "C) The new hash value may not match the original hash value",
+                    "D) The sender's public key will become invalid"
+                ],
+                correct: "C"
+            },
+            {
+                id: 25, part: 3, category: "🔴 Part 3: Hard / Understanding Questions",
+                question: "25. Why does the receiver use the sender's public key in the digital signature process?",
+                options: [
+                    "A) To create the sender's private key",
+                    "B) To decrypt the digital signature and retrieve the original hash value",
+                    "C) To encrypt the received plaintext",
+                    "D) To create the receiver's private key"
+                ],
+                correct: "B"
+            },
+            {
+                id: 26, part: 3, category: "🔴 Part 3: Hard / Understanding Questions",
+                question: "26. Consider this process: Plaintext → Hash Function → Hash Value → Sender's Private Key → Digital Signature. What is the purpose of the sender's private key in this process?",
+                options: [
+                    "A) To decrypt the plaintext",
+                    "B) To create the receiver's public key",
+                    "C) To encrypt the hash value",
+                    "D) To create the plaintext"
+                ],
+                correct: "C"
+            },
+            {
+                id: 27, part: 3, category: "🔴 Part 3: Hard / Understanding Questions",
+                question: "27. A company wants to send a message secretly to a receiver using public key encryption. Which process is correct?",
+                options: [
+                    "A) Encrypt with receiver's private key → decrypt with receiver's public key",
+                    "B) Encrypt with sender's public key → decrypt with sender's private key",
+                    "C) Encrypt with receiver's public key → decrypt with receiver's private key",
+                    "D) Encrypt with sender's private key → decrypt with receiver's private key"
+                ],
+                correct: "C"
+            },
+            {
+                id: 28, part: 3, category: "🔴 Part 3: Hard / Understanding Questions",
+                question: "28. Why might a system use a session key method instead of relying only on public key encryption?",
+                options: [
+                    "A) Because it combines symmetric encryption with public key encryption",
+                    "B) Because it removes the need for encryption",
+                    "C) Because it uses only hash values",
+                    "D) Because it makes all private keys public"
+                ],
+                correct: "A"
+            },
+            {
+                id: 29, part: 3, category: "🔴 Part 3: Hard / Understanding Questions",
+                question: "29. A receiver gets a message and a valid digital signature. The two hash values match. What does this result mainly support?",
+                options: [
+                    "A) The receiver knows the sender's private key",
+                    "B) The message is definitely secret from everyone",
+                    "C) The message is from the sender and has not been tampered with",
+                    "D) The message was encrypted using a shared key"
+                ],
+                correct: "C"
+            },
+            {
+                id: 30, part: 3, category: "🔴 Part 3: Hard / Understanding Questions",
+                question: "30. Which situation correctly describes the difference between encryption and a digital signature?",
+                options: [
+                    "A) Encryption helps protect information from interception, while a digital signature helps prove the sender and message integrity",
+                    "B) Encryption creates only hash values, while a digital signature creates plaintext",
+                    "C) Encryption uses no keys, while digital signatures use no hash functions",
+                    "D) Encryption and digital signatures have exactly the same purpose"
+                ],
+                correct: "A"
+            }
+        ];
+
+        /* -------------------------------------------------------------
+           2. STATE VARIABLES
+        ------------------------------------------------------------- */
+        let currentQIndex = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let noClickCount = 0;
+        let isReviewMode = false;
+
+        const funnyPhrases = [
+            "لا اختاري أه يا عجلة! 😂❤️",
+            "قصدي هتيجي يعني هتيجي! 🙈",
+            "مفيش زرار لا هنا يا رضوى! 💖",
+            "اضغطي أه وبلاش شقاوة! 😜",
+            "هو أنتي عبيطة؟ اضغطي أه بسرعة! 🤣✨",
+            "خلاص الزرار التاني بقى (أه برضه)! 😜"
+        ];
+
+        /* -------------------------------------------------------------
+           3. INTERACTIVE LOVE GATE LOGIC
+        ------------------------------------------------------------- */
+        function handleNoClick() {
+            noClickCount++;
+            const popup = document.getElementById('funnyPopup');
+            const yesBtn = document.getElementById('yesBtn');
+            const noBtn = document.getElementById('noBtn');
+
+            // Show funny text
+            const msgIndex = Math.min(noClickCount - 1, funnyPhrases.length - 1);
+            popup.innerText = funnyPhrases[msgIndex];
+            popup.classList.remove('opacity-0');
+
+            // Playful UI transformations: Yes button grows, No button shrinks or changes text
+            const scaleFactor = 1 + (noClickCount * 0.12);
+            yesBtn.style.transform = `scale(${scaleFactor})`;
+
+            if (noClickCount >= 5) {
+                // Force transform NO button into another YES button!
+                noBtn.innerText = "أه طبعاً! ❤️";
+                noBtn.className = yesBtn.className;
+                noBtn.onclick = passGate;
+            } else {
+                // Dodging motion shift
+                const randomX = (Math.random() - 0.5) * 60;
+                const randomY = (Math.random() - 0.5) * 30;
+                noBtn.style.transform = `translate(${randomX}px, ${randomY}px) scale(${Math.max(0.7, 1 - noClickCount * 0.08)})`;
+            }
+        }
+
+        function passGate() {
+            // Transition smoothly to the Quiz
+            document.getElementById('gateScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.remove('hidden');
+            initQuiz();
+        }
+
+        /* -------------------------------------------------------------
+           4. QUIZ ENGINE LOGIC
+        ------------------------------------------------------------- */
+        function initQuiz() {
+            renderQuestionGrid();
+            loadQuestion(0);
+        }
+
+        function renderQuestionGrid() {
+            const grid = document.getElementById('questionGrid');
+            grid.innerHTML = '';
+            quizData.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.id = `grid-btn-${idx}`;
+                btn.className = `w-8 h-8 rounded-lg text-xs font-bold font-english transition border ${
+                    idx === currentQIndex 
+                        ? 'bg-pink-500 text-white border-pink-600 scale-110 shadow' 
+                        : userAnswers[idx] 
+                            ? 'bg-emerald-100 text-emerald-700 border-emerald-300' 
+                            : 'bg-white text-gray-600 border-gray-200 hover:bg-pink-50'
+                }`;
+                btn.innerText = idx + 1;
+                btn.onclick = () => loadQuestion(idx);
+                grid.appendChild(btn);
+            });
+        }
+
+        function loadQuestion(index) {
+            currentQIndex = index;
+            const q = quizData[index];
+
+            // Update Header & Progress
+            document.getElementById('currentQNum').innerText = index + 1;
+            document.getElementById('qIdText').innerText = `Question #${index + 1}`;
+            document.getElementById('partBadge').innerText = q.category;
+            
+            // Badge color adjustments based on part
+            const badge = document.getElementById('partBadge');
+            if (q.part === 1) {
+                badge.className = "text-xs md:text-sm font-bold px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-300";
+            } else if (q.part === 2) {
+                badge.className = "text-xs md:text-sm font-bold px-3 py-1.5 rounded-full bg-amber-100 text-amber-700 border border-amber-300";
+            } else {
+                badge.className = "text-xs md:text-sm font-bold px-3 py-1.5 rounded-full bg-rose-100 text-rose-700 border border-rose-300";
+            }
+
+            document.getElementById('questionText').innerText = q.question;
+            document.getElementById('progressBar').style.width = `${((index + 1) / 30) * 100}%`;
+
+            // Render Options
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+
+            const selectedOption = userAnswers[index];
+
+            q.options.forEach((opt) => {
+                const optKey = opt.trim().charAt(0); // 'A', 'B', 'C', or 'D'
+                const optBtn = document.createElement('button');
+                optBtn.className = `w-full text-left p-4 rounded-2xl font-semibold border-2 transition-all flex items-center justify-between group `;
+
+                let stateStyle = "bg-white/80 border-gray-200 hover:border-pink-300 hover:bg-pink-50/50 text-gray-800";
+
+                if (selectedOption) {
+                    if (optKey === q.correct) {
+                        stateStyle = "bg-emerald-100 border-emerald-500 text-emerald-900 shadow-sm";
+                    } else if (selectedOption === optKey && optKey !== q.correct) {
+                        stateStyle = "bg-rose-100 border-rose-500 text-rose-900";
+                    } else {
+                        stateStyle = "bg-gray-50 border-gray-200 text-gray-400 opacity-70";
+                    }
+                }
+
+                optBtn.className += stateStyle;
+                optBtn.innerHTML = `
+                    <span>${opt}</span>
+                    <span class="w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-bold
+                        ${selectedOption === optKey ? (optKey === q.correct ? 'bg-emerald-500 border-emerald-500 text-white' : 'bg-rose-500 border-rose-500 text-white') : 'border-gray-300 text-transparent'}">
+                        ${selectedOption === optKey ? (optKey === q.correct ? '✓' : '✕') : ''}
+                    </span>
+                `;
+
+                optBtn.onclick = () => selectAnswer(index, optKey);
+                container.appendChild(optBtn);
+            });
+
+            // Feedback Box Handling
+            const fbBox = document.getElementById('feedbackBox');
+            if (selectedOption) {
+                fbBox.classList.remove('hidden');
+                if (selectedOption === q.correct) {
+                    fbBox.className = "mt-6 p-4 rounded-2xl text-sm font-bold bg-emerald-100 text-emerald-800 border border-emerald-300";
+                    fbBox.innerHTML = `✨ إجابة صحيحة يا رضوى! برافو عليكِ. 👏`;
+                } else {
+                    fbBox.className = "mt-6 p-4 rounded-2xl text-sm font-bold bg-rose-100 text-rose-800 border border-rose-300";
+                    fbBox.innerHTML = `❌ الإجابة الصحيحة هي: <span class="font-black font-english">(${q.correct})</span>. ركزي يا قمر! ❤️`;
+                }
+            } else {
+                fbBox.classList.add('hidden');
+            }
+
+            // Button visibility controls
+            document.getElementById('prevBtn').disabled = (index === 0);
+            if (index === quizData.length - 1) {
+                document.getElementById('nextBtn').classList.add('hidden');
+                document.getElementById('finishBtn').classList.remove('hidden');
+            } else {
+                document.getElementById('nextBtn').classList.remove('hidden');
+                document.getElementById('finishBtn').classList.add('hidden');
+            }
+
+            updateLiveScore();
+            renderQuestionGrid();
+        }
+
+        function selectAnswer(qIdx, selectedLetter) {
+            userAnswers[qIdx] = selectedLetter;
+            loadQuestion(qIdx);
+        }
+
+        function navigateQuestion(step) {
+            const nextIdx = currentQIndex + step;
+            if (nextIdx >= 0 && nextIdx < quizData.length) {
+                loadQuestion(nextIdx);
+            }
+        }
+
+        function updateLiveScore() {
+            let score = 0;
+            userAnswers.forEach((ans, idx) => {
+                if (ans === quizData[idx].correct) score++;
+            });
+            document.getElementById('liveScore').innerText = score;
+        }
+
+        /* -------------------------------------------------------------
+           5. FINISH & RESULTS LOGIC
+        ------------------------------------------------------------- */
+        function finishQuiz() {
+            let totalScore = 0;
+            let easyCount = 0;
+            let medCount = 0;
+            let hardCount = 0;
+
+            quizData.forEach((q, idx) => {
+                if (userAnswers[idx] === q.correct) {
+                    totalScore++;
+                    if (q.part === 1) easyCount++;
+                    if (q.part === 2) medCount++;
+                    if (q.part === 3) hardCount++;
+                }
+            });
+
+            document.getElementById('finalScore').innerText = `${totalScore} / 30`;
+            const pct = Math.round((totalScore / 30) * 100);
+            document.getElementById('percentage').innerText = `${pct}%`;
+
+            document.getElementById('easyScore').innerText = `${easyCount}/10`;
+            document.getElementById('medScore').innerText = `${medCount}/10`;
+            document.getElementById('hardScore').innerText = `${hardCount}/10`;
+
+            const msgBox = document.getElementById('resultMessage');
+            if (pct >= 90) {
+                msgBox.innerText = "ما شاء الله يا رضوى! ممتازة وعبقرية التشفير الأولى! 🌟💖";
+            } else if (pct >= 75) {
+                msgBox.innerText = "شاطرة جداً يا رضوى! النتيجة ممتازة وعاش بجد ✨💕";
+            } else if (pct >= 50) {
+                msgBox.innerText = "جميل يا رضوى! محتاجة بس مراجعة بسيطة وهتبقي 100% 📚❤️";
+            } else {
+                msgBox.innerText = "ولا يهمك يا رضوى! أهم حاجة حاولتي، راجعي الأسئلة وخلينا نجرب تاني 💕";
+            }
+
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+        }
+
+        function reviewAnswers() {
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.remove('hidden');
+            loadQuestion(0);
+        }
+
+        function restartQuiz() {
+            userAnswers = new Array(quizData.length).fill(null);
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.remove('hidden');
+            loadQuestion(0);
+        }
+
+        /* -------------------------------------------------------------
+           6. FLOATING HEARTS BACKGROUND ENGINE (CANVAS)
+        ------------------------------------------------------------- */
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let hearts = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class HeartParticle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 20;
+                this.size = Math.random() * 15 + 8;
+                this.speedY = Math.random() * 1.5 + 0.8;
+                this.speedX = (Math.random() - 0.5) * 0.8;
+                this.opacity = Math.random() * 0.5 + 0.3;
+                this.color = `rgba(255, ${Math.floor(100 + Math.random() * 80)}, ${Math.floor(140 + Math.random() * 80)}, ${this.opacity})`;
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                if (this.y < -30) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                // Draw heart shape
+                const topCurveHeight = this.size * 0.3;
+                ctx.moveTo(0, topCurveHeight);
+                ctx.bezierCurveTo(0, 0, -this.size / 2, 0, -this.size / 2, topCurveHeight);
+                ctx.bezierCurveTo(-this.size / 2, (this.size + topCurveHeight) / 2, 0, this.size, 0, this.size);
+                ctx.bezierCurveTo(0, this.size, this.size / 2, (this.size + topCurveHeight) / 2, this.size / 2, topCurveHeight);
+                ctx.bezierCurveTo(this.size / 2, 0, 0, 0, 0, topCurveHeight);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // Initialize 35 floating hearts
+        for (let i = 0; i < 35; i++) {
+            const h = new HeartParticle();
+            h.y = Math.random() * canvas.height; // scatter initially
+            hearts.push(h);
+        }
+
+        function animateBg() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hearts.forEach(heart => {
+                heart.update();
+                heart.draw();
+            });
+            requestAnimationFrame(animateBg);
+        }
+
+        window.onload = function() {
+            animateBg();
+        };
+    </script>
+</body>
+</html>
