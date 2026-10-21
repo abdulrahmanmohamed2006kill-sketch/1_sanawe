@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة بشمهندس عبدالرحمن محمد التعليمية | أساسيات علوم الحاسب</title>
+    <!-- Google Fonts for Elegant Arabic Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bgPink: '#FFF0F5',
+                        pastelPink: '#F8C8DC',
+                        mediumPink: '#EFA7C4',
+                        accentPink: '#D87093',
+                        darkPink: '#B04A73',
+                        primaryText: '#40313A',
+                        secondaryText: '#887782',
+                        cardBg: '#FFFFFF',
+                        highlightPink: '#FFEDF3'
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        code: ['Fira Code', 'monospace']
+                    },
+                    boxShadow: {
+                        soft: '0 8px 25px -5px rgba(239, 167, 196, 0.25), 0 4px 10px -6px rgba(0, 0, 0, 0.03)',
+                        glow: '0 0 20px rgba(239, 167, 196, 0.4)',
+                        floating: '0 15px 35px -5px rgba(64, 49, 58, 0.08)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FFF0F5;
+            color: #40313A;
+            font-family: 'Cairo', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFF0F5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #F8C8DC;
+            border-radius: 20px;
+            border: 2px solid #FFF0F5;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #EFA7C4;
+        }
+
+        /* Glassmorphism effects */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(248, 200, 220, 0.5);
+        }
+
+        .pink-gradient-btn {
+            background: linear-gradient(135deg, #EFA7C4 0%, #D87093 100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .pink-gradient-btn:hover {
+            background: linear-gradient(135deg, #D87093 0%, #B04A73 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(216, 112, 147, 0.35);
+        }
+
+        .badge-pink {
+            background-color: #FFEDF3;
+            color: #D87093;
+            border: 1px solid #F8C8DC;
+        }
+
+        .nav-link.active {
+            background-color: #F8C8DC;
+            color: #40313A;
+            font-weight: 700;
+        }
+
+        /* Responsive Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .interactive-bit {
+            transition: all 0.2s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+        .interactive-bit.on {
+            background-color: #D87093;
+            color: white;
+            box-shadow: 0 0 12px rgba(216, 112, 147, 0.5);
+            transform: scale(1.05);
+        }
+
+        pre code {
+            direction: ltr;
+            text-align: left;
+            display: block;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-pastelPink/60 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo & Teacher Name -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('home')">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pastelPink to-mediumPink flex items-center justify-center text-white shadow-soft font-extrabold text-xl">
+                        أع
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold text-darkPink tracking-wider block">الأكاديمية التفاعلية</span>
+                        <h1 class="text-lg font-extrabold text-primaryText">بشمهندس عبدالرحمن محمد</h1>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex items-center gap-1 bg-bgPink/80 p-1.5 rounded-2xl border border-pastelPink/50">
+                    <button onclick="navigateTo('home')" id="nav-home" class="nav-link px-4 py-2 rounded-xl text-sm font-semibold text-secondaryText transition hover:text-primaryText">
+                        🏠 الرئيسية
+                    </button>
+                    <button onclick="navigateTo('lectures')" id="nav-lectures" class="nav-link px-4 py-2 rounded-xl text-sm font-semibold text-secondaryText transition hover:text-primaryText">
+                        📚 المحاضرات والدروس
+                    </button>
+                    <button onclick="navigateTo('sandbox')" id="nav-sandbox" class="nav-link px-4 py-2 rounded-xl text-sm font-semibold text-secondaryText transition hover:text-primaryText">
+                        🧪 المعمل التفاعلي
+                    </button>
+                    <button onclick="navigateTo('games')" id="nav-games" class="nav-link px-4 py-2 rounded-xl text-sm font-semibold text-secondaryText transition hover:text-primaryText">
+                        🎮 الألعاب التعليمية
+                    </button>
+                    <button onclick="navigateTo('quizzes')" id="nav-quizzes" class="nav-link px-4 py-2 rounded-xl text-sm font-semibold text-secondaryText transition hover:text-primaryText">
+                        📝 الاختبارات
+                    </button>
+                </nav>
+
+                <!-- Student Quick Progress Badge & Reset Button -->
+                <div class="flex items-center gap-3">
+                    <div class="hidden sm:flex items-center gap-2 bg-highlightPink px-3 py-1.5 rounded-xl border border-pastelPink">
+                        <span class="text-base">⭐</span>
+                        <span id="user-xp" class="font-extrabold text-darkPink text-sm">0 نقاط</span>
+                    </div>
+                    <button onclick="confirmResetProgress()" title="إعادة ضبط تقدمي" class="p-2 text-secondaryText hover:text-darkPink rounded-xl hover:bg-highlightPink transition">
+                        🔄
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Row -->
+        <div class="md:hidden flex items-center justify-around border-t border-pastelPink/40 bg-white px-2 py-2">
+            <button onclick="navigateTo('home')" class="text-xs font-bold p-2 text-primaryText">الرئيسية</button>
+            <button onclick="navigateTo('lectures')" class="text-xs font-bold p-2 text-primaryText">المحاضرات</button>
+            <button onclick="navigateTo('sandbox')" class="text-xs font-bold p-2 text-primaryText">المعمل</button>
+            <button onclick="navigateTo('games')" class="text-xs font-bold p-2 text-primaryText">الألعاب</button>
+            <button onclick="navigateTo('quizzes')" class="text-xs font-bold p-2 text-primaryText">الاختبارات</button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER (VIEWS CONTAINER) -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ================= HOME VIEW ================= -->
+        <section id="view-home" class="space-y-8 animate-fade-in">
+            <!-- Hero Banner -->
+            <div class="bg-gradient-to-r from-white via-highlightPink to-pastelPink/40 rounded-3xl p-6 sm:p-10 border border-pastelPink shadow-soft flex flex-col lg:flex-row items-center justify-between gap-8">
+                <div class="space-y-4 max-w-2xl text-center lg:text-right">
+                    <span class="inline-block px-4 py-1.5 rounded-full badge-pink text-xs font-extrabold tracking-wide">
+                        🌸 أهلاً بكِ في عالم شبكات وأنظمة الحاسب التفاعلي
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-black text-primaryText leading-tight">
+                        مرحباً بك مع <span class="text-darkPink">بشمهندس عبدالرحمن محمد</span>
+                    </h2>
+                    <p class="text-base sm:text-lg text-secondaryText leading-relaxed">
+                        هنا هنبسط المادة العملية بالكامل، بدون تعقيد وبأسلوب ممتع! هتفهم أنظمة العد الهكساديسيمال، أجزاء البايت، والتحويل السريع خطوة بخطوة مع ألعاب واختبارات تفاعلية.
+                    </p>
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+                        <button onclick="navigateTo('lectures')" class="pink-gradient-btn text-white font-bold px-7 py-3.5 rounded-2xl shadow-soft">
+                            🚀 ابدأ المذاكرة الآن
+                        </button>
+                        <button onclick="navigateTo('sandbox')" class="bg-white hover:bg-highlightPink text-primaryText font-bold px-6 py-3.5 rounded-2xl border border-pastelPink transition">
+                            🧪 تجربة المعمل التفاعلي
+                        </button>
+                    </div>
+                </div>
+                <!-- Mini Stats Card -->
+                <div class="w-full lg:w-80 bg-white rounded-2xl p-6 border border-pastelPink shadow-floating space-y-4">
+                    <h3 class="font-extrabold text-primaryText text-lg border-b border-pastelPink/40 pb-2">📊 ملخص تقدمك</h3>
+                    <div>
+                        <div class="flex justify-between text-xs font-bold mb-1">
+                            <span class="text-secondaryText">إجمالي المحتوى المكتمل</span>
+                            <span id="overall-progress-text" class="text-darkPink">0%</span>
+                        </div>
+                        <div class="w-full bg-bgPink rounded-full h-3 border border-pastelPink/50 overflow-hidden">
+                            <div id="overall-progress-bar" class="bg-gradient-to-r from-pastelPink to-darkPink h-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 pt-2 text-center">
+                        <div class="bg-highlightPink p-3 rounded-xl border border-pastelPink/40">
+                            <span class="block text-xl font-black text-darkPink" id="stat-completed-lessons">0/14</span>
+                            <span class="text-xs font-bold text-secondaryText">درس مكتمل</span>
+                        </div>
+                        <div class="bg-highlightPink p-3 rounded-xl border border-pastelPink/40">
+                            <span class="block text-xl font-black text-darkPink" id="stat-quizzes-taken">0/4</span>
+                            <span class="text-xs font-bold text-secondaryText">اختبارات مجتازة</span>
+                        </div>
+                    </div>
+                    <div class="text-xs text-center text-secondaryText bg-bgPink p-2.5 rounded-xl border border-pastelPink/30">
+                        🔒 تقدمك محفوظ محلياً على هذا الجهاز والقتصفح (`localStorage`).
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lectures Overview Cards Grid -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-2xl font-black text-primaryText">📚 المحاضرات الرئيسية</h3>
+                    <span class="text-xs font-semibold text-secondaryText">3 محاضرات كاملة بالتفصيل العلمية</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="home-lecture-cards">
+                    <!-- Lecture Cards populated by JS -->
+                </div>
+            </div>
+
+            <!-- Quick Access Features -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-3xl p-6 border border-pastelPink shadow-soft flex items-center justify-between">
+                    <div class="space-y-2">
+                        <h4 class="text-xl font-extrabold text-primaryText">🎮 الألعاب التعليمية التفاعلية</h4>
+                        <p class="text-xs sm:text-sm text-secondaryText">6 ألعاب متنوعة لتثبيت المعلومة باحترافية وتحدي الوقت!</p>
+                        <button onclick="navigateTo('games')" class="text-xs font-extrabold text-darkPink hover:underline">الانتقال للألعاب ←</button>
+                    </div>
+                    <span class="text-5xl">🎯</span>
+                </div>
+                <div class="bg-white rounded-3xl p-6 border border-pastelPink shadow-soft flex items-center justify-between">
+                    <div class="space-y-2">
+                        <h4 class="text-xl font-extrabold text-primaryText">📝 بنك الاختبارات الشاملة</h4>
+                        <p class="text-xs sm:text-sm text-secondaryText">قياس مستوى الفهم والتطبيق مع الشرح التفصيلي لجميع الإجابات.</p>
+                        <button onclick="navigateTo('quizzes')" class="text-xs font-extrabold text-darkPink hover:underline">بدء الاختبارات ←</button>
+                    </div>
+                    <span class="text-5xl">🎓</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= LECTURES DIRECTORY VIEW ================= -->
+        <section id="view-lectures" class="hidden space-y-6 animate-fade-in">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-pastelPink shadow-soft">
+                <div>
+                    <h2 class="text-3xl font-black text-primaryText">📚 المحاضرات والدروس التعليمية</h2>
+                    <p class="text-sm text-secondaryText mt-1">اختر المحاضرة أو ابحث عن أي مصطلح داخل المحتوى العلمي الكامل.</p>
+                </div>
+                <!-- Search Box -->
+                <div class="relative w-full md:w-80">
+                    <input type="text" id="search-input" oninput="handleSearch()" placeholder="ابحث عن: Hex, Byte, MSB, 469..." 
+                           class="w-full bg-bgPink border border-pastelPink rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-mediumPink text-primaryText placeholder-secondaryText">
+                    <span class="absolute left-3 top-3.5 text-secondaryText">🔍</span>
+                </div>
+            </div>
+
+            <!-- Search Results Container (Hidden by default) -->
+            <div id="search-results-container" class="hidden bg-white p-6 rounded-3xl border border-pastelPink shadow-soft space-y-4">
+                <h3 class="font-extrabold text-lg text-primaryText">🔍 نتائج البحث:</h3>
+                <div id="search-results" class="space-y-3"></div>
+            </div>
+
+            <!-- Full Lectures List Container -->
+            <div id="lectures-accordion-container" class="space-y-6">
+                <!-- Generated Dynamically by JS -->
+            </div>
+        </section>
+
+        <!-- ================= LESSON CONTENT VIEW ================= -->
+        <section id="view-lesson" class="hidden space-y-6 animate-fade-in">
+            <!-- Back navigation & Lesson header -->
+            <div class="flex items-center justify-between bg-white p-4 sm:p-6 rounded-3xl border border-pastelPink shadow-soft">
+                <button onclick="navigateTo('lectures')" class="flex items-center gap-2 text-sm font-bold text-darkPink hover:bg-highlightPink px-4 py-2 rounded-xl transition">
+                    ← العودة لقائمة الدروس
+                </button>
+                <span id="lesson-parent-title" class="text-xs sm:text-sm font-extrabold badge-pink px-3 py-1.5 rounded-xl">المحاضرة الأولى</span>
+            </div>
+
+            <!-- Lesson Body Card -->
+            <div class="bg-white rounded-3xl p-6 sm:p-10 border border-pastelPink shadow-floating space-y-8">
+                <!-- Title & Status -->
+                <div class="border-b border-pastelPink/40 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 id="lesson-title" class="text-2xl sm:text-3xl font-black text-primaryText">عنوان الدرس</h2>
+                        <span id="lesson-subtitle" class="text-xs sm:text-sm font-semibold text-secondaryText block mt-1">شرح مبسط وتطبيقات عملية</span>
+                    </div>
+                    <button id="btn-toggle-complete" onclick="toggleCurrentLessonCompletion()" class="pink-gradient-btn text-white text-xs sm:text-sm font-bold px-5 py-2.5 rounded-xl shadow-soft flex items-center gap-2 self-start sm:self-center">
+                        <span>✅</span> <span id="complete-btn-text">تعليم كـ مكتمل</span>
+                    </button>
+                </div>
+
+                <!-- Scientific Explanation Body -->
+                <div id="lesson-content-body" class="prose max-w-none text-primaryText leading-relaxed space-y-6 text-base sm:text-lg">
+                    <!-- Dynamic Scientific Content Rendered Here -->
+                </div>
+
+                <!-- Interactive Quick Practice inside Lesson -->
+                <div id="lesson-interactive-box" class="bg-highlightPink rounded-2xl p-6 border border-pastelPink space-y-4">
+                    <h4 class="font-extrabold text-primaryText text-lg flex items-center gap-2">
+                        💡 نشاط تفاعلي سريع للدرس
+                    </h4>
+                    <div id="lesson-quiz-content">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lesson Pagination Footer -->
+            <div class="flex items-center justify-between bg-white p-4 rounded-3xl border border-pastelPink shadow-soft">
+                <button id="btn-prev-lesson" onclick="navigateLesson(-1)" class="bg-bgPink hover:bg-pastelPink/50 text-primaryText text-xs sm:text-sm font-extrabold px-5 py-3 rounded-2xl transition">
+                    ← الدرس السابق
+                </button>
+                <button id="btn-next-lesson" onclick="navigateLesson(1)" class="pink-gradient-btn text-white text-xs sm:text-sm font-extrabold px-5 py-3 rounded-2xl shadow-soft">
+                    الدرس التالي →
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= INTERACTIVE SANDBOX & CONVERTERS ================= -->
+        <section id="view-sandbox" class="hidden space-y-6 animate-fade-in">
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-pastelPink shadow-soft text-center space-y-3">
+                <span class="inline-block badge-pink px-4 py-1.5 rounded-full text-xs font-black">🧪 المختبر الرقمي التفاعلي</span>
+                <h2 class="text-3xl font-black text-primaryText">محاكي أجزاء البايت والتحويل المباشر الحي</h2>
+                <p class="text-sm text-secondaryText max-w-2xl mx-auto">
+                    اضغطي على مفاتيح الـ Bits لتتغير قيم البايت، النيبلز، والـ Hex مباشرة أمامك، أو جربي ألوان الـ CSS بترميز Hexadecimal!
+                </p>
+            </div>
+
+            <!-- Byte & Nibble Interactive Visualizer -->
+            <div class="bg-white p-6 sm:p-10 rounded-3xl border border-pastelPink shadow-floating space-y-8">
+                <h3 class="text-xl font-black text-primaryText border-b border-pastelPink/40 pb-3 flex items-center gap-2">
+                    ⚡ 1. محاكي 1 Byte (8 Bits, 2 Nibbles, 4 Crumbs)
+                </h3>
+
+                <!-- Bit Switches Row -->
+                <div class="space-y-3">
+                    <div class="flex justify-between text-xs font-bold text-secondaryText px-1">
+                        <span>Upper Nibble (النيبل العلوي) - MSB</span>
+                        <span>Lower Nibble (النيبل السفلي) - LSB</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-8 gap-2 sm:gap-4" id="bit-switches">
+                        <!-- 8 bit toggle buttons generated by JS -->
+                    </div>
+                    
+                    <div class="grid grid-cols-8 gap-2 sm:gap-4 text-center text-xs font-bold text-secondaryText">
+                        <span>Bit 7 (128)</span>
+                        <span>Bit 6 (64)</span>
+                        <span>Bit 5 (32)</span>
+                        <span>Bit 4 (16)</span>
+                        <span>Bit 3 (8)</span>
+                        <span>Bit 2 (4)</span>
+                        <span>Bit 1 (2)</span>
+                        <span>Bit 0 (1)</span>
+                    </div>
+                </div>
+
+                <!-- Calculated Values Display Breakdown -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+                    <div class="bg-bgPink p-4 rounded-2xl border border-pastelPink text-center">
+                        <span class="text-xs font-bold text-secondaryText block">القيمة العشرية (Decimal)</span>
+                        <span id="sandbox-dec" class="text-3xl font-black text-darkPink">0</span>
+                    </div>
+                    <div class="bg-bgPink p-4 rounded-2xl border border-pastelPink text-center">
+                        <span class="text-xs font-bold text-secondaryText block">النظام السادس عشر (Hex)</span>
+                        <span id="sandbox-hex" class="text-3xl font-black text-darkPink font-code">0x00</span>
+                    </div>
+                    <div class="bg-bgPink p-4 rounded-2xl border border-pastelPink text-center">
+                        <span class="text-xs font-bold text-secondaryText block">Upper Nibble / Lower Nibble</span>
+                        <span id="sandbox-nibbles" class="text-lg font-black text-primaryText font-code">0000 | 0000</span>
+                    </div>
+                    <div class="bg-bgPink p-4 rounded-2xl border border-pastelPink text-center">
+                        <span class="text-xs font-bold text-secondaryText block">MSB vs LSB</span>
+                        <span id="sandbox-msb-lsb" class="text-sm font-bold text-primaryText">MSB: 0 | LSB: 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hex Color Picker Experiment Sandbox -->
+            <div class="bg-white p-6 sm:p-10 rounded-3xl border border-pastelPink shadow-floating space-y-6">
+                <h3 class="text-xl font-black text-primaryText border-b border-pastelPink/40 pb-3 flex items-center gap-2">
+                    🎨 2. مختبر ألوان الهكساديسيمال (#RRGGBB)
+                </h3>
+                <p class="text-sm text-secondaryText">
+                    زي ما شرح بشمهندس عبدالرحمن في المحاضرة الأولى، ألوان الويب بيتكون كل لون فيها من 3 بايتات (أحمر، أخضر، أزرق). كل بايت بيمثله رقمين Hex!
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-xs font-bold text-secondaryText">درجة الأحمر (Red Hex): <span id="hex-r-val" class="font-code text-darkPink font-bold">FF</span></label>
+                            <input type="range" id="range-r" min="0" max="255" value="255" oninput="updateColorSandbox()" class="w-full accent-darkPink">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-secondaryText">درجة الأخضر (Green Hex): <span id="hex-g-val" class="font-code text-darkPink font-bold">C8</span></label>
+                            <input type="range" id="range-g" min="0" max="255" value="200" oninput="updateColorSandbox()" class="w-full accent-darkPink">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-secondaryText">درجة الأزرق (Blue Hex): <span id="hex-b-val" class="font-code text-darkPink font-bold">DC</span></label>
+                            <input type="range" id="range-b" min="0" max="255" value="220" oninput="updateColorSandbox()" class="w-full accent-darkPink">
+                        </div>
+                    </div>
+                    <!-- Dynamic Color Box View -->
+                    <div id="color-preview-box" class="h-40 rounded-3xl shadow-soft border-2 border-white flex flex-col items-center justify-center space-y-2 text-white font-bold transition-all" style="background-color: #FFC8DC;">
+                        <span id="color-hex-code" class="text-2xl font-code bg-black/30 px-4 py-1.5 rounded-xl backdrop-blur-sm">#FFC8DC</span>
+                        <span id="color-rgb-code" class="text-xs font-code bg-black/20 px-3 py-1 rounded-lg">rgb(255, 200, 220)</span>
+                    </div>
+                    <div class="bg-highlightPink p-4 rounded-2xl border border-pastelPink text-xs space-y-2 text-primaryText leading-relaxed">
+                        <span class="font-bold text-darkPink block">💡 معلومة عملية من الشرح:</span>
+                        كل بايت بيتراوح قيمته من 0 (يعني 00 بـ Hex) إلى 255 (يعني FF بـ Hex). اللون #FF0000 أحمر خالص، واللون #0000FF أزرق خالص!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= EDUCATIONAL GAMES VIEW ================= -->
+        <section id="view-games" class="hidden space-y-6 animate-fade-in">
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-pastelPink shadow-soft flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl font-black text-primaryText">🎮 ساحة الألعاب التفاعلية</h2>
+                    <p class="text-sm text-secondaryText mt-1">اختبري معلوماتك بطريقة مسلية، اجمعي النقاط وتحدي نفسك!</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="badge-pink px-4 py-2 rounded-2xl font-black text-darkPink text-sm" id="game-score-badge">🏆 النقاط: 0</span>
+                </div>
+            </div>
+
+            <!-- Games Grid Selection Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Game 1 -->
+                <div class="bg-white rounded-3xl p-6 border border-pastelPink shadow-soft hover:shadow-floating transition space-y-4">
+                    <div class="w-12 h-12 rounded-2xl bg-highlightPink flex items-center justify-center text-2xl">⚡</div>
+                    <h3 class="text-xl font-extrabold text-primaryText">1. تحدي التحويل المباشر السريع</h3>
+                    <p class="text-xs text-secondaryText leading-relaxed">حولي بين Hex وBinary فوراً باستخدام طريقة النيبلز 4-bits قبل ما الوقت يخلص!</p>
+                    <button onclick="startGame(1)" class="w-full pink-gradient-btn text-white text-xs font-bold py-3 rounded-xl shadow-soft">ابدئي اللعبة 🚀</button>
+                </div>
+                <!-- Game 2 -->
+                <div class="bg-white rounded-3xl p-6 border border-pastelPink shadow-soft hover:shadow-floating transition space-y-4">
+                    <div class="w-12 h-12 rounded-2xl bg-highlightPink flex items-center justify-center text-2xl">🧩</div>
+                    <h3 class="text-xl font-extrabold text-primaryText">2. لعبة توصيل المصطلحات</h3>
+                    <p class="text-xs text-secondaryText leading-relaxed">وصّلي بين المصطلحات (Crumb, Nibble, LSB, MSB) وتعاريفها العلمية الصحيحة!</p>
+                    <button onclick="startGame(2)" class="w-full pink-gradient-btn text-white text-xs font-bold py-3 rounded-xl shadow-soft">ابدئي اللعبة 🚀</button>
+                </div>
+                <!-- Game 3 -->
+                <div class="bg-white rounded-3xl p-6 border border-pastelPink shadow-soft hover:shadow-floating transition space-y-4">
+                    <div class="w-12 h-12 rounded-2xl bg-highlightPink flex items-center justify-center text-2xl">🔍</div>
+                    <h3 class="text-xl font-extrabold text-primaryText">3. صائد الأخطاء البرمجية</h3>
+                    <p class="text-xs text-secondaryText leading-relaxed">اكتشفي المعلومة أو التحويل الخاطئ في كود CSS أو الحسابات الهكساديسيمال!</p>
+                    <button onclick="startGame(3)" class="w-full pink-gradient-btn text-white text-xs font-bold py-3 rounded-xl shadow-soft">ابدئي اللعبة 🚀</button>
+                </div>
+            </div>
+
+            <!-- Active Game Arena Modal/Container -->
+            <div id="active-game-container" class="hidden bg-white rounded-3xl p-6 sm:p-10 border-2 border-pastelPink shadow-floating space-y-6">
+                <!-- Header with Timer and Exit -->
+                <div class="flex items-center justify-between border-b border-pastelPink/40 pb-4">
+                    <h3 id="game-title" class="text-2xl font-black text-primaryText">عنوان اللعبة</h3>
+                    <div class="flex items-center gap-4">
+                        <span id="game-timer" class="badge-pink px-4 py-1.5 rounded-xl font-mono font-bold text-darkPink">⏱️ 00:30</span>
+                        <button onclick="closeActiveGame()" class="text-xs font-bold text-secondaryText hover:text-darkPink">إغلاق ✖</button>
+                    </div>
+                </div>
+
+                <!-- Game Content Area -->
+                <div id="game-viewport" class="space-y-6">
+                    <!-- Populated dynamically per game type -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= QUIZZES & EXAMS VIEW ================= -->
+        <section id="view-quizzes" class="hidden space-y-6 animate-fade-in">
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-pastelPink shadow-soft flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl font-black text-primaryText">📝 بنك الاختبارات والتقييم</h2>
+                    <p class="text-sm text-secondaryText mt-1">اختبارات مخصصة لكل محاضرة بالإضافة للاختبار الشامل النهائي.</p>
+                </div>
+            </div>
+
+            <!-- Quiz Selection Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Quiz 1 -->
+                <div class="bg-white p-6 rounded-3xl border border-pastelPink shadow-soft space-y-4">
+                    <span class="badge-pink px-3 py-1 rounded-xl text-xs font-bold">المحاضرة 1</span>
+                    <h3 class="text-lg font-black text-primaryText">اختبار أنظمة العد والـ Hex</h3>
+                    <p class="text-xs text-secondaryText">10 أسئلة تقيس الفهم والتحويل بالقسمة والضرب.</p>
+                    <button onclick="startQuiz(1)" class="w-full pink-gradient-btn text-white text-xs font-bold py-2.5 rounded-xl shadow-soft">بدء الاختبار 📝</button>
+                </div>
+                <!-- Quiz 2 -->
+                <div class="bg-white p-6 rounded-3xl border border-pastelPink shadow-soft space-y-4">
+                    <span class="badge-pink px-3 py-1 rounded-xl text-xs font-bold">المحاضرة 2</span>
+                    <h3 class="text-lg font-black text-primaryText">اختبار أجزاء البايت</h3>
+                    <p class="text-xs text-secondaryText">10 أسئلة حول Bit, Crumb, Nibble, LSB, MSB.</p>
+                    <button onclick="startQuiz(2)" class="w-full pink-gradient-btn text-white text-xs font-bold py-2.5 rounded-xl shadow-soft">بدء الاختبار 📝</button>
+                </div>
+                <!-- Quiz 3 -->
+                <div class="bg-white p-6 rounded-3xl border border-pastelPink shadow-soft space-y-4">
+                    <span class="badge-pink px-3 py-1 rounded-xl text-xs font-bold">المحاضرة 3</span>
+                    <h3 class="text-lg font-black text-primaryText">اختبار التحويل المباشر السريع</h3>
+                    <p class="text-xs text-secondaryText">10 أسئلة تطبيقية في التحويل المباشر بالنيبلز.</p>
+                    <button onclick="startQuiz(3)" class="w-full pink-gradient-btn text-white text-xs font-bold py-2.5 rounded-xl shadow-soft">بدء الاختبار 📝</button>
+                </div>
+                <!-- Final Comprehensive Quiz -->
+                <div class="bg-gradient-to-br from-highlightPink via-white to-pastelPink/30 p-6 rounded-3xl border-2 border-pastelPink shadow-soft space-y-4">
+                    <span class="bg-darkPink text-white px-3 py-1 rounded-xl text-xs font-bold">الاختبار الشامل</span>
+                    <h3 class="text-lg font-black text-primaryText">الامتحان النهائي المتكامل</h3>
+                    <p class="text-xs text-secondaryText">20 سؤالاً تغطي المادة بالكامل وتمنح الشهادة!</p>
+                    <button onclick="startQuiz('final')" class="w-full bg-darkPink hover:bg-primaryText text-white text-xs font-bold py-2.5 rounded-xl shadow-soft transition">بدء الامتحان النهائي 🎓</button>
+                </div>
+            </div>
+
+            <!-- Active Quiz Runner Container -->
+            <div id="active-quiz-container" class="hidden bg-white p-6 sm:p-10 rounded-3xl border border-pastelPink shadow-floating space-y-6">
+                <!-- Quiz Header -->
+                <div class="flex items-center justify-between border-b border-pastelPink/40 pb-4">
+                    <div>
+                        <h3 id="active-quiz-title" class="text-xl font-black text-primaryText">اسم الاختبار</h3>
+                        <span id="quiz-question-counter" class="text-xs font-bold text-secondaryText">سؤال 1 من 10</span>
+                    </div>
+                    <button onclick="cancelActiveQuiz()" class="text-xs font-bold text-secondaryText hover:text-darkPink">خروج ✖</button>
+                </div>
+
+                <!-- Question Viewport -->
+                <div id="quiz-question-body" class="space-y-6">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Quiz Results & Explanations Card -->
+            <div id="quiz-result-container" class="hidden bg-white p-6 sm:p-10 rounded-3xl border border-pastelPink shadow-floating space-y-8">
+                <div class="text-center space-y-3 border-b border-pastelPink/40 pb-6">
+                    <span class="text-6xl" id="quiz-result-icon">🎉</span>
+                    <h3 class="text-3xl font-black text-primaryText">نتيجة الاختبار</h3>
+                    <div class="flex justify-center items-baseline gap-2">
+                        <span id="quiz-score-percent" class="text-5xl font-black text-darkPink">90%</span>
+                        <span id="quiz-score-raw" class="text-sm font-bold text-secondaryText">(9 من 10)</span>
+                    </div>
+                    <p id="quiz-feedback-text" class="text-sm font-bold text-primaryText max-w-md mx-auto">ممتاز يا بطلة! استوعبتِ المحاضرة بشكل ممتاز.</p>
+                </div>
+
+                <!-- Review Wrong & Right Answers -->
+                <div class="space-y-4">
+                    <h4 class="font-extrabold text-primaryText text-lg">💡 مراجعة الشرح والتوضيح العلمي لكل سؤال:</h4>
+                    <div id="quiz-review-list" class="space-y-4">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div class="flex justify-center gap-4 pt-4">
+                    <button onclick="navigateTo('quizzes')" class="pink-gradient-btn text-white text-sm font-bold px-8 py-3 rounded-2xl shadow-soft">العودة بقائمة الاختبارات</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- RESET CONFIRMATION MODAL -->
+    <div id="reset-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-pastelPink shadow-floating space-y-5 text-center">
+            <div class="w-14 h-14 bg-highlightPink text-darkPink text-2xl rounded-2xl flex items-center justify-center mx-auto">⚠️</div>
+            <h3 class="text-xl font-black text-primaryText">هل أنتِ متأكدة من إعادة ضبط تقدمك؟</h3>
+            <p class="text-xs sm:text-sm text-secondaryText leading-relaxed">
+                سيتم حذف جميع الدروس المكتملة والنقاط والنتائج المحفوظة على هذا المتصفح البدء من جديد.
+            </p>
+            <div class="flex gap-3 justify-center pt-2">
+                <button onclick="executeResetProgress()" class="bg-darkPink hover:bg-primaryText text-white text-xs font-bold px-6 py-3 rounded-xl transition">نعم، إعادة الضبط</button>
+                <button onclick="closeResetModal()" class="bg-bgPink hover:bg-pastelPink text-primaryText text-xs font-bold px-6 py-3 rounded-xl transition">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-pastelPink/60 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
+            <div class="flex items-center justify-center gap-2">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-pastelPink to-mediumPink flex items-center justify-center text-white font-black text-xs">أع</div>
+                <span class="font-black text-primaryText text-sm">بوابة بشمهندس عبدالرحمن محمد التعليمية</span>
+            </div>
+            <p class="text-xs text-secondaryText">
+                شرح وتسهيل أساسيات علوم الحاسب والشفرات الرقمية بدون تعقيد • جميع الحقوق محفوظة © 2026
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        
+        // =========================================================================
+        // 1. FULL SCIENTIFIC LECTURE DATA (COMPLETE MATERIAL - NO SHORTCUTS)
+        // =========================================================================
+        const LECTURES_DATA = [
+            {
+                id: 1,
+                title: "المحاضرة الأولى: النظام السادس عشر (Hexadecimal System - Part 1)",
+                description: "مفهوم أنظمة العد المختلفة، ليه بنحتاج النظام السادس عشر، بادئاته في اللغات المختلفة، والتحويل بالقسمة والضرب.",
+                icon: "🔢",
+                lessons: [
+                    {
+                        id: "1-1",
+                        title: "1.1 مقدمة مقارنة أنظمة العد الثلاثة (Decimal vs Binary vs Hex)",
+                        subtitle: "ازاي الكمبيوتر والبشر بيشوفوا الأرقام؟",
+                        content: `
+                            <p>أهلاً بكِ في أول دراستنا لأساسيات حاسوبية مهمة جداً لكل مبرمج! علشان نفهم المادة صح، بشمهندس عبدالرحمن بيشرحلك الفكرة من البداية:</p>
+                            
+                            <h3 class="text-lg font-bold text-darkPink">تخيل إن عندنا 3 أنظمة عد رئيسية:</h3>
+                            <ul class="list-disc list-inside space-y-2 text-sm bg-highlightPink p-4 rounded-2xl border border-pastelPink">
+                                <li><strong>النظام العشري (Decimal System - Base 10):</strong> ده النظام اللي إحنا كبشر بنستخدمه في حياتنا اليومية. خاناته من 0 لـ 9 (يعني 10 أرقام).</li>
+                                <li><strong>النظام الثنائي (Binary System - Base 2):</strong> ده لغة الآلة والكمبيوتر. خاناته فيها رقمين بس: 0 و 1.</li>
+                                <li><strong>النظام السادس عشر (Hexadecimal System - Base 16):</strong> نظام بيجمع بين خانات الأرقام من 0 لـ 9 بالإضافة إلى 6 حروف إنجليزية من A لـ F لتمثيل الأرقام من 10 لـ 15!</li>
+                            </ul>
+
+                            <h3 class="text-lg font-bold text-primaryText mt-4">جدول المقارنة والقيم التكافؤية من 0 لـ 15 (حفظ ومهم جداً):</h3>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-xs text-right border-collapse bg-white rounded-xl overflow-hidden border border-pastelPink">
+                                    <thead class="bg-pastelPink text-primaryText font-extrabold">
+                                        <tr>
+                                            <th class="p-2 border border-pastelPink">العشري (Decimal)</th>
+                                            <th class="p-2 border border-pastelPink">الثنائي (Binary)</th>
+                                            <th class="p-2 border border-pastelPink">السادس عشر (Hex)</th>
+                                            <th class="p-2 border border-pastelPink">ملاحظة القيمة</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td class="p-2 border">0</td><td class="p-2 border font-code">0000</td><td class="p-2 border font-extrabold text-darkPink">0</td><td class="p-2 border">صفر عادي</td></tr>
+                                        <tr><td class="p-2 border">1</td><td class="p-2 border font-code">0001</td><td class="p-2 border font-extrabold text-darkPink">1</td><td class="p-2 border">واحد</td></tr>
+                                        <tr><td class="p-2 border">2</td><td class="p-2 border font-code">0010</td><td class="p-2 border font-extrabold text-darkPink">2</td><td class="p-2 border">اثنان</td></tr>
+                                        <tr><td class="p-2 border">3</td><td class="p-2 border font-code">0011</td><td class="p-2 border font-extrabold text-darkPink">3</td><td class="p-2 border">ثلاثة</td></tr>
+                                        <tr><td class="p-2 border">4</td><td class="p-2 border font-code">0100</td><td class="p-2 border font-extrabold text-darkPink">4</td><td class="p-2 border">أربعة</td></tr>
+                                        <tr><td class="p-2 border">5</td><td class="p-2 border font-code">0101</td><td class="p-2 border font-extrabold text-darkPink">5</td><td class="p-2 border">خمسة</td></tr>
+                                        <tr><td class="p-2 border">6</td><td class="p-2 border font-code">0110</td><td class="p-2 border font-extrabold text-darkPink">6</td><td class="p-2 border">ستة</td></tr>
+                                        <tr><td class="p-2 border">7</td><td class="p-2 border font-code">0111</td><td class="p-2 border font-extrabold text-darkPink">7</td><td class="p-2 border">سبعة</td></tr>
+                                        <tr><td class="p-2 border">8</td><td class="p-2 border font-code">1000</td><td class="p-2 border font-extrabold text-darkPink">8</td><td class="p-2 border">ثمانية</td></tr>
+                                        <tr><td class="p-2 border">9</td><td class="p-2 border font-code">1001</td><td class="p-2 border font-extrabold text-darkPink">9</td><td class="p-2 border">تسعة</td></tr>
+                                        <tr class="bg-highlightPink"><td class="p-2 border font-bold">10</td><td class="p-2 border font-code">1010</td><td class="p-2 border font-black text-darkPink">A</td><td class="p-2 border">الحرف A يمثل 10</td></tr>
+                                        <tr class="bg-highlightPink"><td class="p-2 border font-bold">11</td><td class="p-2 border font-code">1011</td><td class="p-2 border font-black text-darkPink">B</td><td class="p-2 border">الحرف B يمثل 11</td></tr>
+                                        <tr class="bg-highlightPink"><td class="p-2 border font-bold">12</td><td class="p-2 border font-code">1100</td><td class="p-2 border font-black text-darkPink">C</td><td class="p-2 border">الحرف C يمثل 12</td></tr>
+                                        <tr class="bg-highlightPink"><td class="p-2 border font-bold">13</td><td class="p-2 border font-code">1101</td><td class="p-2 border font-black text-darkPink">D</td><td class="p-2 border">الحرف D يمثل 13</td></tr>
+                                        <tr class="bg-highlightPink"><td class="p-2 border font-bold">14</td><td class="p-2 border font-code">1110</td><td class="p-2 border font-black text-darkPink">E</td><td class="p-2 border">الحرف E يمثل 14</td></tr>
+                                        <tr class="bg-highlightPink"><td class="p-2 border font-bold">15</td><td class="p-2 border font-code">1111</td><td class="p-2 border font-black text-darkPink">F</td><td class="p-2 border">الحرف F يمثل 15 (أعلى رقم ببديل واحد)</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        `,
+                        quizQuestion: "ما هو الحرف الممثل للرقم العشري 13 في النظام السادس عشر؟",
+                        quizOptions: ["A", "B", "C", "D"],
+                        quizAnswer: 3,
+                        quizExplanation: "في نظام Hex: A=10, B=11, C=12, D=13, E=14, F=15."
+                    },
+                    {
+                        id: "1-2",
+                        title: "1.2 لماذا نستخدم النظام السادس عشر؟ (Why Hexadecimal?)",
+                        subtitle: "سهولة القراءة للبشر وتطبيقات الألوان في الويب",
+                        content: `
+                            <p>سؤال مهم جداً بيسأله كل طالب: <em>"ليه بنوجع دماغنا بـ Hex طالما الكمبيوتر بيتكلم 0 و 1 فقط؟"</em></p>
+                            
+                            <div class="bg-white p-4 rounded-2xl border border-pastelPink space-y-3">
+                                <h4 class="font-bold text-darkPink">السبب الأول: صعوبة قراءة الثنائي على العنصر البشري (It's hard for humans to read Binary!)</h4>
+                                <p class="text-sm">لو شوفت جملة مكتوبة بالـ Binary زي كده:</p>
+                                <div class="bg-primaryText text-pastelPink p-3 rounded-xl font-code text-xs overflow-x-auto">
+                                    01001001 00100000 01001100 01101111 01110110 01100101 00100000 01011001 01101111 01110101 00100001
+                                </div>
+                                <p class="text-sm">مستحيل على أي مبرمج يقرأ ده بسهولة! لكن بالـ Hex بتكون مختصرة جداً (الجملة دي بتعني "I Love You!").</p>
+                            </div>
+
+                            <div class="bg-white p-4 rounded-2xl border border-pastelPink space-y-3 mt-4">
+                                <h4 class="font-bold text-darkPink">السبب الثاني: كل Byte يُمثّل بحرفين فقط في Hex (Each Byte is represented with 2 letters only)</h4>
+                                <p class="text-sm">مثلاً: <code>11010100</code> في الباينري بتتحول لـ <code>D4</code> بس في الهكساديسيمال!</p>
+                                <p class="text-sm">ومثلاً 8 بايتات مليانة 1 (<code>11111111 11111111...</code>) بتتحول لـ <code>FFFFFF</code> فقط!</p>
+                            </div>
+
+                            <h3 class="text-lg font-bold text-primaryText mt-4">تطبيق عملي: ترميز الألوان في HTML/CSS وفي الفوتوشوب</h3>
+                            <p class="text-sm leading-relaxed">أي لون في الشاشة بيتكون من 3 ألوان أساسية: الأحمر (Red)، الأخضر (Green)، والأزرق (Blue). كل لون بياخد بايت واحد (من 0 لـ 255)، وعشان نكتب اللون بـ CSS بنستخدم Hex Code بتركيب <code>#RRGGBB</code>:</p>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                                <div class="p-3 rounded-xl border flex items-center justify-between" style="background-color: #FF0000; color: white;">
+                                    <span>Red (أحمر)</span>
+                                    <span class="font-code font-bold">#FF0000 | rgb(255,0,0)</span>
+                                </div>
+                                <div class="p-3 rounded-xl border flex items-center justify-between" style="background-color: #FFA500; color: white;">
+                                    <span>Orange (برتقالي)</span>
+                                    <span class="font-code font-bold">#FFA500 | rgb(255,165,0)</span>
+                                </div>
+                                <div class="p-3 rounded-xl border flex items-center justify-between text-primaryText" style="background-color: #FFFF00;">
+                                    <span>Yellow (أصفر)</span>
+                                    <span class="font-code font-bold">#FFFF00 | rgb(255,255,0)</span>
+                                </div>
+                                <div class="p-3 rounded-xl border flex items-center justify-between" style="background-color: #008000; color: white;">
+                                    <span>Green (أخضر)</span>
+                                    <span class="font-code font-bold">#008000 | rgb(0,128,0)</span>
+                                </div>
+                                <div class="p-3 rounded-xl border flex items-center justify-between text-primaryText" style="background-color: #00FFFF;">
+                                    <span>Cyan (سماوي)</span>
+                                    <span class="font-code font-bold">#00FFFF | rgb(0,255,255)</span>
+                                </div>
+                                <div class="p-3 rounded-xl border flex items-center justify-between" style="background-color: #0000FF; color: white;">
+                                    <span>Blue (أزرق)</span>
+                                    <span class="font-code font-bold">#0000FF | rgb(0,0,255)</span>
+                                </div>
+                                <div class="p-3 rounded-xl border flex items-center justify-between" style="background-color: #800080; color: white;">
+                                    <span>Purple (بنفسجي)</span>
+                                    <span class="font-code font-bold">#800080 | rgb(128,0,128)</span>
+                                </div>
+                                <div class="p-3 rounded-xl border flex items-center justify-between text-primaryText" style="background-color: #FFCOCB;">
+                                    <span>Pink (وردي)</span>
+                                    <span class="font-code font-bold font-bold">#FFC0CB | rgb(255,192,203)</span>
+                                </div>
+                            </div>
+                        `,
+                        quizQuestion: "كم عدد الحروف/الأرقام المستخدمة لتمثيل Byte واحد في نظام Hexadecimal؟",
+                        quizOptions: ["حرف/رقم واحد", "حرفين (2)", "4 حروف", "8 حروف"],
+                        quizAnswer: 1,
+                        quizExplanation: "كل Byte (8-bits) بيتم تمثيله بحرفين فقط في Hex (مثلاً D4 أو FF)."
+                    },
+                    {
+                        id: "1-3",
+                        title: "1.3 بادئات Hexadecimal في لغات البرمجة (Prefixes)",
+                        subtitle: "ازاي المترجم (Compiler) بيعرف إن الرقم ده Hex؟",
+                        content: `
+                            <p>علشان الكمبيوتر أو لغة البرمجة متتلخبطش بين الرقم العشري العادي والرقم Hex، كل تكنولوجيا بتستخدم بادئة (Prefix) معينة قبل الكود:</p>
+
+                            <div class="overflow-x-auto mt-4">
+                                <table class="w-full text-xs text-right border-collapse bg-white rounded-xl overflow-hidden border border-pastelPink">
+                                    <thead class="bg-pastelPink text-primaryText font-extrabold">
+                                        <tr>
+                                            <th class="p-3 border border-pastelPink">التكنولوجيا / لغة البرمجة</th>
+                                            <th class="p-3 border border-pastelPink">البادئة (Prefix)</th>
+                                            <th class="p-3 border border-pastelPink">مثال توضيحي</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="p-3 border font-bold">HTML & CSS</td>
+                                            <td class="p-3 border font-code text-darkPink font-bold">#Code</td>
+                                            <td class="p-3 border font-code">#FFFFFF أو #FF0000</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 border font-bold">C, C++, Java, C#, JS</td>
+                                            <td class="p-3 border font-code text-darkPink font-bold">0xCode</td>
+                                            <td class="p-3 border font-code">0xC2A4 أو 0x1D5</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 border font-bold">XML</td>
+                                            <td class="p-3 border font-code text-darkPink font-bold">&#Code</td>
+                                            <td class="p-3 border font-code">&#C2A4</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 border font-bold">Unicode (الرموز والإموجي)</td>
+                                            <td class="p-3 border font-code text-darkPink font-bold">U+Code</td>
+                                            <td class="p-3 border font-code">U+C2A4 أو U+1F600</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        `,
+                        quizQuestion: "ما هي البادئة (Prefix) المستخدمة لتمثيل أرقام Hex في لغات مثل C و C++ و Java؟",
+                        quizOptions: ["#", "0x", "&#", "U+"],
+                        quizAnswer: 1,
+                        quizExplanation: "في لغات البرمجة كـ C و C++ و Java بنكتب 0x قبل الرقم زي 0x1D5."
+                    },
+                    {
+                        id: "1-4",
+                        title: "1.4 أساسيات الحساب وأُسس النظام 16 (Powers of 16)",
+                        subtitle: "جدول مضاعفات الأساس 16",
+                        content: `
+                            <p>في النظام الثنائي (Base 2) كانت الخانات هي 2 مرفوعة لأس معين (1, 2, 4, 8, 16, 32...).</p>
+                            <p>في النظام السادس عشر (Base 16) الخانات بتعتمد على أُسس الرقم 16:</p>
+                            
+                            <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center my-4 font-code text-xs">
+                                <div class="bg-highlightPink p-3 rounded-xl border border-pastelPink">
+                                    <span class="block font-bold text-darkPink">16⁰</span>
+                                    <span>= 1</span>
+                                </div>
+                                <div class="bg-highlightPink p-3 rounded-xl border border-pastelPink">
+                                    <span class="block font-bold text-darkPink">16¹</span>
+                                    <span>= 16</span>
+                                </div>
+                                <div class="bg-highlightPink p-3 rounded-xl border border-pastelPink">
+                                    <span class="block font-bold text-darkPink">16²</span>
+                                    <span>= 256</span>
+                                </div>
+                                <div class="bg-highlightPink p-3 rounded-xl border border-pastelPink">
+                                    <span class="block font-bold text-darkPink">16³</span>
+                                    <span>= 4096</span>
+                                </div>
+                                <div class="bg-highlightPink p-3 rounded-xl border border-pastelPink col-span-2 sm:col-span-1">
+                                    <span class="block font-bold text-darkPink">16⁴</span>
+                                    <span>= 65536</span>
+                                </div>
+                            </div>
+                        `,
+                        quizQuestion: "ما قيمة 16² في النظام السادس عشر؟",
+                        quizOptions: ["32", "64", "256", "4096"],
+                        quizAnswer: 2,
+                        quizExplanation: "16 * 16 = 256."
+                    },
+                    {
+                        id: "1-5",
+                        title: "1.5 التحويل من العشري Decimal إلى السادس عشر Hex",
+                        subtitle: "طريقة القسمة على 16 وتتبع باقي القسمة (Remainders)",
+                        content: `
+                            <p>علشان نحول من رقم عشري (Decimal) إلى Hex، بنقسم الرقم على 16، وبناخد الجزء الصحيح نقسمه تاني، والكسر بنضربه في 16 عشان يدينا باقي القسمة (Remainder).</p>
+                            
+                            <h3 class="text-base font-bold text-darkPink mt-4">مثال 1: تحويل 469 إلى Hex:</h3>
+                            <ol class="list-decimal list-inside space-y-2 text-xs font-code bg-bgPink p-4 rounded-xl">
+                                <li>469 / 16 = 29.3125 ⬅️ الصحيح = 29، الكسر = 0.3125 ⬅️ الباقي = 16 * 0.3125 = <strong>5</strong></li>
+                                <li>29 / 16 = 1.8125 ⬅️ الصحيح = 1، الكسر = 0.8125 ⬅️ الباقي = 16 * 0.8125 = 13 ⬅️ في Hex يساوي <strong>D</strong></li>
+                                <li>1 / 16 = 0.0625 ⬅️ الصحيح = 0 ⬅️ الباقي = <strong>1</strong></li>
+                            </ol>
+                            <p class="text-sm font-bold text-darkPink">النتيجة تقرأ من الأسفل للأعلى: (469)₁₀ = (1D5)₁₆</p>
+
+                            <h3 class="text-base font-bold text-darkPink mt-4">مثال 2: تحويل 1513 إلى Hex:</h3>
+                            <ol class="list-decimal list-inside space-y-2 text-xs font-code bg-bgPink p-4 rounded-xl">
+                                <li>1513 / 16 = 94.5625 ⬅️ الباقي = 16 * 0.5625 = <strong>9</strong></li>
+                                <li>94 / 16 = 5.875 ⬅️ الباقي = 16 * 0.875 = 14 ⬅️ في Hex يساوي <strong>E</strong></li>
+                                <li>5 / 16 ⬅️ الباقي = <strong>5</strong></li>
+                            </ol>
+                            <p class="text-sm font-bold text-darkPink">النتيجة: (1513)₁₀ = (5E9)₁₆</p>
+
+                            <h3 class="text-base font-bold text-darkPink mt-4">مثال 3: تحويل 479 إلى Hex:</h3>
+                            <ol class="list-decimal list-inside space-y-2 text-xs font-code bg-bgPink p-4 rounded-xl">
+                                <li>479 / 16 = 29.9375 ⬅️ الباقي = 16 * 0.9375 = 15 ⬅️ يساوي <strong>F</strong></li>
+                                <li>29 / 16 = 1.8125 ⬅️ الباقي = 13 ⬅️ يساوي <strong>D</strong></li>
+                                <li>1 / 16 ⬅️ الباقي = <strong>1</strong></li>
+                            </ol>
+                            <p class="text-sm font-bold text-darkPink">النتيجة: (479)₁₀ = (1DF)₁₆</p>
+                        `,
+                        quizQuestion: "عند تحويل الرقم العشري 469 إلى Hex تكون النتيجة:",
+                        quizOptions: ["1D5", "5E9", "1DF", "2A4"],
+                        quizAnswer: 0,
+                        quizExplanation: "469 / 16 يطعي بواقي: 5 ثم 13 (D) ثم 1 ⬅️ 1D5."
+                    },
+                    {
+                        id: "1-6",
+                        title: "1.6 التحويل من السادس عشر Hex إلى العشري Decimal",
+                        subtitle: "طريقة الضرب في أُسس الرقم 16",
+                        content: `
+                            <p>للتحويل العكسي من Hex إلى Decimal، بنقوم بضرب كل خانة في القيمة المكانية المخصصة لها (16⁰, 16¹, 16²...):</p>
+                            
+                            <h3 class="text-base font-bold text-darkPink mt-4">مثال: تحويل 1D5 إلى Decimal:</h3>
+                            <div class="bg-bgPink p-4 rounded-xl space-y-2 text-xs font-code">
+                                <p>الخانة الأولى (يمين): 5 * 16⁰ = 5 * 1 = 5</p>
+                                <p>الخانة الثانية: D * 16¹ = 13 * 16 = 208</p>
+                                <p>الخانة الثالثة: 1 * 16² = 1 * 256 = 256</p>
+                                <hr class="border-pastelPink">
+                                <p class="font-bold text-sm">المجموع: 5 + 208 + 256 = <strong>469</strong></p>
+                            </div>
+                        `,
+                        quizQuestion: "ما القيمة العشرية للرقم Hex المسجل كـ 1D5؟",
+                        quizOptions: ["469", "513", "479", "1000"],
+                        quizAnswer: 0,
+                        quizExplanation: "5*1 + 13*16 + 1*256 = 5 + 208 + 256 = 469."
+                    },
+                    {
+                        id: "1-7",
+                        title: "1.7 التحويل التقليدي بين Hex و Binary (خطوتين عبر Decimal)",
+                        subtitle: "الطريقة الأولى المشروحة في المحاضرة الأولى",
+                        content: `
+                            <p>في المحاضرة الأولى شرحنا الطريقة العامة من خطوتين:</p>
+                            <ol class="list-decimal list-inside space-y-2 text-sm bg-highlightPink p-4 rounded-2xl border border-pastelPink">
+                                <li><strong>الخطوة الأولى:</strong> تحويل الرقم الهكساديسيمال لـ Decimal (زي ما اتعلمنا بالضرب في 16⁰, 16¹...).</li>
+                                <li><strong>الخطوة الثانية:</strong> أخذ النتيجة العشرية وتحويلها إلى Binary (بالقسمة على 2 أو بطريقة الأوزان 1, 2, 4, 8, 16, 32, 64, 128, 256...).</li>
+                            </ol>
+                            <p class="text-xs text-secondaryText mt-2">ملاحظة: في المحاضرة الثالثة هنشوف طريقة أسرع بكتير من غير ما نمر بالعشري خالص!</p>
+                        `,
+                        quizQuestion: "في الطريقة التقليدية ذات الخطوتين للتحويل من Hex إلى Binary، ما هي الوسيطة التي نمر بها؟",
+                        quizOptions: ["النظام الثنائي", "النظام العشري (Decimal)", "النظام الثماني", "الألوان"],
+                        quizAnswer: 1,
+                        quizExplanation: "بنحول من Hex لـ Decimal الأول وبعدها من Decimal لـ Binary."
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "المحاضرة الثانية: أجزاء البايت (Byte Parts)",
+                description: "التعرف التفصيلي على Bit, Crumb, Nibble, Byte، والعلاقات بينها، مفهوم LSB و MSB وUpper/Lower Nibble.",
+                icon: "💡",
+                lessons: [
+                    {
+                        id: "2-1",
+                        title: "2.1 مصطلحات أجزاء البايت الرئيسية (Bit, Crumb, Nibble, Byte)",
+                        subtitle: "تقسيم وحدات البيانات الرقمية الأصغر في الحاسب",
+                        content: `
+                            <p>بشمهندس عبدالرحمن بيوضحلك إن البيانات في الكمبيوتر بتتكون من وحدات بناء أساسية متدرجة كالتالي:</p>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-4">
+                                <div class="bg-white p-4 rounded-2xl border border-pastelPink shadow-sm space-y-2">
+                                    <span class="badge-pink px-2.5 py-1 rounded-lg text-xs font-bold">1. البت (Bit)</span>
+                                    <p class="text-xs text-secondaryText">أصغر وحدة تخزين في الكمبيوتر، وبتحمل إما 0 (إطفاء) أو 1 (تشغيل).</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-2xl border border-pastelPink shadow-sm space-y-2">
+                                    <span class="badge-pink px-2.5 py-1 rounded-lg text-xs font-bold">2. الكرامب (Crumb)</span>
+                                    <p class="text-xs text-secondaryText">عبارة عن تجميع <strong>2 bits</strong> مع بعض.</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-2xl border border-pastelPink shadow-sm space-y-2">
+                                    <span class="badge-pink px-2.5 py-1 rounded-lg text-xs font-bold">3. النيبل (Nibble)</span>
+                                    <p class="text-xs text-secondaryText">عبارة عن تجميع <strong>4 bits</strong> مع بعض (يعني نصف بايت بالضبط ½ Byte).</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-2xl border border-pastelPink shadow-sm space-y-2">
+                                    <span class="badge-pink px-2.5 py-1 rounded-lg text-xs font-bold">4. البايت (Byte)</span>
+                                    <p class="text-xs text-secondaryText">عبارة عن تجميع <strong>8 bits</strong> مع بعض.</p>
+                                </div>
+                            </div>
+                        `,
+                        quizQuestion: "كم عدد البتات (Bits) في النيبل (Nibble) الواحد؟",
+                        quizOptions: ["2 Bits", "4 Bits", "8 Bits", "16 Bits"],
+                        quizAnswer: 1,
+                        quizExplanation: "النيبل يتكون من 4 بتات معاً (نصف بايت)."
+                    },
+                    {
+                        id: "2-2",
+                        title: "2.2 العلاقات الحسابية والنسب بين الوحدات الرقمية",
+                        subtitle: "الإجابات النموذجية الكاملة للأسئلة الـ 12 من المحاضرة الثانيّة",
+                        content: `
+                            <p>إليكِ ملخص العلاقات والأسئلة الشاملة المرفقة بالمحاضرة:</p>
+
+                            <div class="space-y-3 text-xs bg-highlightPink p-5 rounded-2xl border border-pastelPink">
+                                <p><strong>1. ما هو البت (Bit)؟</strong> أصغر وحدة بيانات ثنائية (0 أو 1).</p>
+                                <p><strong>2. ما هو الكرامب (Crumb)؟</strong> مجموع بتين معاً (2 bits).</p>
+                                <p><strong>3. ما هو النيبل (Nibble)؟</strong> مجموع 4 بتات معاً (4 bits = ½ Byte).</p>
+                                <p><strong>4. ما هو البايت (Byte)؟</strong> مجموع 8 بتات معاً (8 bits).</p>
+                                <p><strong>5. كم بت في البايت؟</strong> 8 bits.</p>
+                                <p><strong>6. كم كرامب في البايت؟</strong> 4 Crumbs (لأن 8 / 2 = 4).</p>
+                                <p><strong>7. كم نيبل في البايت؟</strong> 2 Nibbles (لأن 8 / 4 = 2).</p>
+                                <p><strong>8. كم كرامب في النيبل؟</strong> 2 Crumbs (لأن 4 / 2 = 2).</p>
+                            </div>
+                        `,
+                        quizQuestion: "كم عدد الكرامب (Crumbs) الموجودة في البايت (Byte) الواحد؟",
+                        quizOptions: ["2 Crumbs", "4 Crumbs", "8 Crumbs", "16 Crumbs"],
+                        quizAnswer: 1,
+                        quizExplanation: "البايت به 8 بتات وكل كرامب به بتين، إذن 8 / 2 = 4 Crumbs."
+                    },
+                    {
+                        id: "2-3",
+                        title: "2.3 النيبل العلوي والسفلي (Upper Nibble vs Lower Nibble)",
+                        subtitle: "تقسيم البايت إلى نصفين متساويين",
+                        content: `
+                            <p>البايت (8 بتات) بيتم تقسيمه من المنتصف إلى نيبلين:</p>
+
+                            <div class="bg-white p-4 rounded-2xl border border-pastelPink space-y-3">
+                                <div class="flex items-center justify-between bg-bgPink p-3 rounded-xl">
+                                    <span class="font-bold text-darkPink">Upper Nibble (النيبل العلوي)</span>
+                                    <span class="font-code text-xs">الـ 4 بتات الشمال (Bits 7, 6, 5, 4)</span>
+                                </div>
+                                <div class="flex items-center justify-between bg-bgPink p-3 rounded-xl">
+                                    <span class="font-bold text-darkPink">Lower Nibble (النيبل السفلي)</span>
+                                    <span class="font-code text-xs">الـ 4 بتات اليمين (Bits 3, 2, 1, 0)</span>
+                                </div>
+                            </div>
+                        `,
+                        quizQuestion: "ما هي بتات النيبل السفلي (Lower Nibble) في البايت؟",
+                        quizOptions: ["الـ 4 بتات على اليمين", "الـ 4 بتات على اليسار", "أول بت فقط", "آخر بت فقط"],
+                        quizAnswer: 0,
+                        quizExplanation: "Lower Nibble يمثل الأربعة بتات الأولى على جهة اليمين."
+                    },
+                    {
+                        id: "2-4",
+                        title: "2.4 البت الأكثر والأقل أهمية (LSB vs MSB)",
+                        subtitle: "أعلى وأقل وزن في خانات البايت",
+                        content: `
+                            <div class="space-y-4">
+                                <div class="bg-white p-4 rounded-2xl border border-pastelPink space-y-2">
+                                    <h4 class="font-bold text-darkPink">LSB (Least / Lowest Significant Bit) - البت الأقل أهمية:</h4>
+                                    <p class="text-xs text-secondaryText">هو أقصى بت جهة اليمين (Bit 0). سمي بذلك لأن وزنه الأقل على الإطلاق = 2⁰ = 1.</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-2xl border border-pastelPink space-y-2">
+                                    <h4 class="font-bold text-darkPink">MSB (Most Significant Bit) - البت الأكثر أهمية:</h4>
+                                    <p class="text-xs text-secondaryText">هو أقصى بت جهة اليسار (Bit 7 في البايت). سمي بذلك لأن وزنه الأعلى على الإطلاق = 2⁷ = 128.</p>
+                                </div>
+                            </div>
+                        `,
+                        quizQuestion: "ما القيمة الوزنية لبت الـ MSB في بايت مكون من 8 بتات؟",
+                        quizOptions: ["1", "8", "64", "128"],
+                        quizAnswer: 3,
+                        quizExplanation: "الـ MSB هو جهة اليسار ووزنه 2^7 = 128."
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "المحاضرة الثالثة: التحويل السريع المباشر (Hexadecimal - Part 2)",
+                description: "التحويل المباشر والعبقري بين Hex و Binary باستخدام طريقة النيبلز السريعة بدون المرور بالنظام العشري.",
+                icon: "⚡",
+                lessons: [
+                    {
+                        id: "3-1",
+                        title: "3.1 التحويل المباشر من Hex إلى Binary (طريقة النيبلز 4-bits)",
+                        subtitle: "سر السرعة: فك كل حرف لـ 4 بتات باينري",
+                        content: `
+                            <p>بشمهندس عبدالرحمن بيشرحلك الطريقة السحرية المباشرة (Direct Conversion) السريعة جداً:</p>
+                            
+                            <div class="bg-highlightPink p-4 rounded-2xl border border-pastelPink space-y-2 text-sm">
+                                <span class="font-bold text-darkPink block">القاعدة الذهبية:</span>
+                                كل حرف أو رقم في Hex بينزل مكانه بالضبط 4 بتات (1 Nibble) في Binary!
+                            </div>
+
+                            <h3 class="text-base font-bold text-primaryText mt-4">مثال 1: تحويل 1D5 لـ Binary مباشرة:</h3>
+                            <div class="bg-bgPink p-4 rounded-xl space-y-2 text-xs font-code">
+                                <p>الرقم 5 ⬅️ يتحول لـ 4 بتات: <strong>0101</strong></p>
+                                <p>الحرف D (يساوي 13) ⬅️ يتحول لـ 4 بتات: <strong>1101</strong></p>
+                                <p>الرقم 1 ⬅️ يتحول لـ 4 بتات: <strong>0001</strong></p>
+                                <hr class="border-pastelPink">
+                                <p class="font-bold text-sm text-darkPink">النتيجة النهائية بالترتيب: 0001 1101 0101</p>
+                            </div>
+
+                            <h3 class="text-base font-bold text-primaryText mt-4">مثال 2: تحويل 5E9 لـ Binary مباشرة:</h3>
+                            <div class="bg-bgPink p-4 rounded-xl space-y-2 text-xs font-code">
+                                <p>9 ⬅️ <strong>1001</strong></p>
+                                <p>E (يساوي 14) ⬅️ <strong>1110</strong></p>
+                                <p>5 ⬅️ <strong>0101</strong></p>
+                                <hr class="border-pastelPink">
+                                <p class="font-bold text-sm text-darkPink">النتيجة: 0101 1110 1001</p>
+                            </div>
+
+                            <h3 class="text-base font-bold text-primaryText mt-4">مثال 3: تحويل 1DF لـ Binary مباشرة:</h3>
+                            <div class="bg-bgPink p-4 rounded-xl space-y-2 text-xs font-code">
+                                <p>F (يساوي 15) ⬅️ <strong>1111</strong></p>
+                                <p>D (يساوي 13) ⬅️ <strong>1101</strong></p>
+                                <p>1 ⬅️ <strong>0001</strong></p>
+                                <hr class="border-pastelPink">
+                                <p class="font-bold text-sm text-darkPink">النتيجة: 0001 1101 1111</p>
+                            </div>
+                        `,
+                        quizQuestion: "عند تحويل حرف F الهكساديسيمال إلى ثنائي باينري مباشرة، يتحول لـ:",
+                        quizOptions: ["1010", "1100", "1110", "1111"],
+                        quizAnswer: 3,
+                        quizExplanation: "F تساوي 15 وفي 4 بتات باينري تكتب 1111."
+                    },
+                    {
+                        id: "3-2",
+                        title: "3.2 التحويل المباشر من Binary إلى Hex (تجميع كل 4 بتات)",
+                        subtitle: "من اليمين لليسار، جمعي كل 4 بتات وحوليهم لحرف Hex",
+                        content: `
+                            <p>عكس العملية الأولى تماماً وبنفس السرعة!</p>
+
+                            <div class="bg-highlightPink p-4 rounded-2xl border border-pastelPink space-y-2 text-sm">
+                                <span class="font-bold text-darkPink block">الخطوات:</span>
+                                1. قسّمي الرقم الثنائي إلى مجموعات كل مجموعة 4 بتات بدءاً من جهة اليمين (Lower Nibble).<br>
+                                2. استبدلي كل 4 بتات بالحرف أو الرقم المكافئ لها في Hex.
+                            </div>
+
+                            <h3 class="text-base font-bold text-primaryText mt-4">مثال: تحويل 000111010101 لـ Hex:</h3>
+                            <div class="bg-bgPink p-4 rounded-xl space-y-2 text-xs font-code">
+                                <p>المجموعة الأولى من اليمين: 0101 ⬅️ تساوي 5</p>
+                                <p>المجموعة الثانية: 1101 ⬅️ تساوي 13 أي D</p>
+                                <p>المجموعة الثالثة: 0001 ⬅️ تساوي 1</p>
+                                <hr class="border-pastelPink">
+                                <p class="font-bold text-sm text-darkPink">النتيجة الهكساديسيمال: 1D5</p>
+                            </div>
+                        `,
+                        quizQuestion: "عند تقسيم الرقم الثنائي للتحويل المباشر إلى Hex، من أي جهة نبدأ التجميع؟",
+                        quizOptions: ["من جهة اليمين (LSB)", "من جهة اليسار (MSB)", "من المنتصف", "من أي مكان"],
+                        quizAnswer: 0,
+                        quizExplanation: "دائماً نبدأ التجميع أربعة أربعة بدءاً من اليمين (جهة البت الأقل أهمية LSB)."
+                    },
+                    {
+                        id: "3-3",
+                        title: "3.3 الحلول الكاملة لتمارين المحاضرة الثالثة (Homework Solutions)",
+                        subtitle: "حلول واجب المحاضرة 3 المرفقة بالملف الأصلي",
+                        content: `
+                            <p>إليكِ الإجابات والحلول النموذجية للواجب المذكور بالمحاضرة لتأكيد الفهم:</p>
+
+                            <div class="space-y-4">
+                                <div class="bg-white p-4 rounded-2xl border border-pastelPink text-xs font-code space-y-1">
+                                    <h4 class="font-bold text-darkPink font-cairo">1- تحويل Hex لـ Binary مباشر:</h4>
+                                    <p>• 12A4 ⬅️ 0001 0010 1010 0100</p>
+                                    <p>• 1C35 ⬅️ 0001 1100 0011 0101</p>
+                                    <p>• 100 ⬅️ 0001 0000 0000</p>
+                                    <p>• 115C ⬅️ 0001 0001 0101 1100</p>
+                                </div>
+
+                                <div class="bg-white p-4 rounded-2xl border border-pastelPink text-xs font-code space-y-1">
+                                    <h4 class="font-bold text-darkPink font-cairo">2- تحويل Binary لـ Hex مباشر:</h4>
+                                    <p>• 0001 0010 1010 0100 ⬅️ 12A4</p>
+                                    <p>• 0001 1100 0011 0101 ⬅️ 1C35</p>
+                                    <p>• 0001 0000 0000 ⬅️ 100</p>
+                                    <p>• 0001 0001 0101 1100 ⬅️ 115C</p>
+                                </div>
+                            </div>
+                        `,
+                        quizQuestion: "الرقم الثنائي 0001 0000 0000 يكافئ في Hex الرقم:",
+                        quizOptions: ["100", "200", "10A", "FFF"],
+                        quizAnswer: 0,
+                        quizExplanation: "0001=1, 0000=0, 0000=0 ⬅️ 100."
+                    }
+                ]
+            }
+        ];
+
+        
+        // =========================================================================
+        // 2. STATE MANAGEMENT & LOCALSTORAGE ENGINE
+        // =========================================================================
+        const STORAGE_KEY = 'abdulrahman_edu_progress_v1';
+
+        let userProgress = {
+            completedLessons: [],
+            quizScores: {},
+            totalXP: 0,
+            lastLessonId: "1-1"
+        };
+
+        function loadProgress() {
+            try {
+                const data = localStorage.getItem(STORAGE_KEY);
+                if (data) {
+                    userProgress = JSON.parse(data);
+                }
+            } catch(e) {
+                console.warn('Could not load localStorage', e);
+            }
+            updateUIProgress();
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(userProgress));
+            } catch(e) {
+                console.warn('Could not save to localStorage', e);
+            }
+            updateUIProgress();
+        }
+
+        function updateUIProgress() {
+            // Calculate Total Lessons across 3 lectures
+            let totalLessonsCount = 0;
+            LECTURES_DATA.forEach(lec => totalLessonsCount += lec.lessons.length);
+
+            const completedCount = userProgress.completedLessons.length;
+            const percent = Math.round((completedCount / totalLessonsCount) * 100) || 0;
+
+            const progressBar = document.getElementById('overall-progress-bar');
+            const progressText = document.getElementById('overall-progress-text');
+            const statCompleted = document.getElementById('stat-completed-lessons');
+            const statQuizzes = document.getElementById('stat-quizzes-taken');
+            const userXpBadge = document.getElementById('user-xp');
+
+            if (progressBar) progressBar.style.width = percent + '%';
+            if (progressText) progressText.innerText = percent + '%';
+            if (statCompleted) statCompleted.innerText = `${completedCount}/${totalLessonsCount}`;
+            if (statQuizzes) statQuizzes.innerText = `${Object.keys(userProgress.quizScores).length}/4`;
+            if (userXpBadge) userXpBadge.innerText = `${userProgress.totalXP} نقاط`;
+            
+            const gameScoreBadge = document.getElementById('game-score-badge');
+            if (gameScoreBadge) gameScoreBadge.innerText = `🏆 النقاط: ${userProgress.totalXP}`;
+        }
+
+        function confirmResetProgress() {
+            document.getElementById('reset-modal').classList.remove('hidden');
+        }
+
+        function closeResetModal() {
+            document.getElementById('reset-modal').classList.add('hidden');
+        }
+
+        function executeResetProgress() {
+            userProgress = {
+                completedLessons: [],
+                quizScores: {},
+                totalXP: 0,
+                lastLessonId: "1-1"
+            };
+            saveProgress();
+            closeResetModal();
+            renderLecturesDirectory();
+            navigateTo('home');
+        }
+
+
+        // =========================================================================
+        // 3. NAVIGATION & SPA ROUTING LOGIC
+        // =========================================================================
+        let currentActiveView = 'home';
+        let currentLessonId = '1-1';
+
+        function navigateTo(viewId) {
+            // Hide all view sections
+            ['home', 'lectures', 'lesson', 'sandbox', 'games', 'quizzes'].forEach(id => {
+                const el = document.getElementById(`view-${id}`);
+                if (el) el.classList.add('hidden');
+            });
+
+            // Update active nav links
+            document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
+            const activeNavBtn = document.getElementById(`nav-${viewId}`);
+            if (activeNavBtn) activeNavBtn.classList.add('active');
+
+            // Show selected view
+            const target = document.getElementById(`view-${viewId}`);
+            if (target) {
+                target.classList.remove('hidden');
+                currentActiveView = viewId;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            if (viewId === 'lectures') {
+                renderLecturesDirectory();
+            } else if (viewId === 'home') {
+                renderHomeLectureCards();
+            } else if (viewId === 'sandbox') {
+                initBitSwitches();
+            }
+        }
+
+        // =========================================================================
+        // 4. HOME & LECTURES DIRECTORY RENDERING
+        // =========================================================================
+        function renderHomeLectureCards() {
+            const container = document.getElementById('home-lecture-cards');
+            if (!container) return;
+
+            container.innerHTML = LECTURES_DATA.map(lec => {
+                const completedInLec = lec.lessons.filter(l => userProgress.completedLessons.includes(l.id)).length;
+                const percent = Math.round((completedInLec / lec.lessons.length) * 100);
+
+                return `
+                    <div class="bg-white rounded-3xl p-6 border border-pastelPink shadow-soft flex flex-col justify-between space-y-4 hover:shadow-floating transition">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-3xl">${lec.icon}</span>
+                                <span class="badge-pink px-3 py-1 rounded-xl text-xs font-bold">${completedInLec}/${lec.lessons.length} مكتمل</span>
+                            </div>
+                            <h4 class="text-xl font-black text-primaryText">${lec.title}</h4>
+                            <p class="text-xs text-secondaryText leading-relaxed">${lec.description}</p>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="w-full bg-bgPink rounded-full h-2 overflow-hidden border border-pastelPink/40">
+                                <div class="bg-darkPink h-full transition-all duration-300" style="width: ${percent}%"></div>
+                            </div>
+                            <button onclick="openLesson('${lec.lessons[0].id}')" class="w-full pink-gradient-btn text-white text-xs font-bold py-3 rounded-xl shadow-soft">
+                                ابدأ المحاضرة 📖
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderLecturesDirectory() {
+            const container = document.getElementById('lectures-accordion-container');
+            if (!container) return;
+
+            container.innerHTML = LECTURES_DATA.map(lec => {
+                const lessonsHTML = lec.lessons.map(les => {
+                    const isDone = userProgress.completedLessons.includes(les.id);
+                    return `
+                        <div onclick="openLesson('${les.id}')" class="flex items-center justify-between p-4 bg-bgPink/60 hover:bg-highlightPink rounded-2xl border border-pastelPink/40 transition cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <span class="${isDone ? 'text-green-500 font-bold' : 'text-secondaryText'} text-lg">${isDone ? '✅' : '⚪'}</span>
+                                <div>
+                                    <h5 class="text-sm font-bold text-primaryText">${les.title}</h5>
+                                    <span class="text-xs text-secondaryText">${les.subtitle}</span>
+                                </div>
+                            </div>
+                            <span class="text-xs font-extrabold text-darkPink">قراءة الدرس ←</span>
+                        </div>
+                    `;
+                }).join('');
+
+                return `
+                    <div class="bg-white rounded-3xl p-6 border border-pastelPink shadow-soft space-y-4">
+                        <div class="flex items-center gap-3 border-b border-pastelPink/40 pb-4">
+                            <span class="text-3xl">${lec.icon}</span>
+                            <div>
+                                <h3 class="text-xl font-black text-primaryText">${lec.title}</h3>
+                                <p class="text-xs text-secondaryText">${lec.description}</p>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            ${lessonsHTML}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Search functionality across content
+        function handleSearch() {
+            const query = document.getElementById('search-input').value.trim().toLowerCase();
+            const resultsContainer = document.getElementById('search-results-container');
+            const resultsList = document.getElementById('search-results');
+
+            if (!query) {
+                resultsContainer.classList.add('hidden');
+                return;
+            }
+
+            let matches = [];
+            LECTURES_DATA.forEach(lec => {
+                lec.lessons.forEach(les => {
+                    if (les.title.toLowerCase().includes(query) || les.content.toLowerCase().includes(query) || les.subtitle.toLowerCase().includes(query)) {
+                        matches.push({ lesson: les, lectureTitle: lec.title });
+                    }
+                });
+            });
+
+            resultsContainer.classList.remove('hidden');
+
+            if (matches.length === 0) {
+                resultsList.innerHTML = `<p class="text-xs text-secondaryText">لم يتم العثور على أي نتائج تطابق "${query}".</p>`;
+            } else {
+                resultsList.innerHTML = matches.map(m => `
+                    <div onclick="openLesson('${m.lesson.id}')" class="p-3 bg-highlightPink rounded-xl border border-pastelPink flex items-center justify-between cursor-pointer hover:bg-pastelPink/40">
+                        <div>
+                            <span class="text-xs text-darkPink font-bold block">${m.lectureTitle}</span>
+                            <span class="text-sm font-black text-primaryText">${m.lesson.title}</span>
+                        </div>
+                        <span class="text-xs text-darkPink font-bold">انتقال ←</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+
+        // =========================================================================
+        // 5. LESSON VIEW & INTERACTIVE ACTIVITY ENGINE
+        // =========================================================================
+        function openLesson(lessonId) {
+            currentLessonId = lessonId;
+            userProgress.lastLessonId = lessonId;
+
+            // Find lesson object
+            let foundLesson = null;
+            let foundLecture = null;
+
+            for (const lec of LECTURES_DATA) {
+                const les = lec.lessons.find(l => l.id === lessonId);
+                if (les) {
+                    foundLesson = les;
+                    foundLecture = lec;
+                    break;
+                }
+            }
+
+            if (!foundLesson) return;
+
+            document.getElementById('lesson-parent-title').innerText = foundLecture.title;
+            document.getElementById('lesson-title').innerText = foundLesson.title;
+            document.getElementById('lesson-subtitle').innerText = foundLesson.subtitle;
+            document.getElementById('lesson-content-body').innerHTML = foundLesson.content;
+
+            // Completion Button State
+            updateLessonCompletionBtnState(foundLesson.id);
+
+            // Populate Lesson Quick Quiz
+            renderLessonQuiz(foundLesson);
+
+            navigateTo('lesson');
+        }
+
+        function updateLessonCompletionBtnState(id) {
+            const btnText = document.getElementById('complete-btn-text');
+            const isDone = userProgress.completedLessons.includes(id);
+
+            if (isDone) {
+                btnText.innerText = "درس مكتمل ✅";
+            } else {
+                btnText.innerText = "تعليم كـ مكتمل";
+            }
+        }
+
+        function toggleCurrentLessonCompletion() {
+            const id = currentLessonId;
+            const index = userProgress.completedLessons.indexOf(id);
+
+            if (index > -1) {
+                userProgress.completedLessons.splice(index, 1);
+            } else {
+                userProgress.completedLessons.push(id);
+                userProgress.totalXP += 10;
+            }
+            saveProgress();
+            updateLessonCompletionBtnState(id);
+        }
+
+        function navigateLesson(direction) {
+            // Flat list of all lessons
+            let allLessons = [];
+            LECTURES_DATA.forEach(lec => {
+                lec.lessons.forEach(l => allLessons.push(l.id));
+            });
+
+            const currentIndex = allLessons.indexOf(currentLessonId);
+            const targetIndex = currentIndex + direction;
+
+            if (targetIndex >= 0 && targetIndex < allLessons.length) {
+                openLesson(allLessons[targetIndex]);
+            }
+        }
+
+        function renderLessonQuiz(lesson) {
+            const container = document.getElementById('lesson-quiz-content');
+            if (!container || !lesson.quizQuestion) {
+                container.innerHTML = "<p class='text-xs text-secondaryText'>لا يوجد سؤال تفاعلي لهذا الدرس.</p>";
+                return;
+            }
+
+            container.innerHTML = `
+                <p class="text-sm font-bold text-primaryText">${lesson.quizQuestion}</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2" id="lesson-opts-box">
+                    ${lesson.quizOptions.map((opt, i) => `
+                        <button onclick="checkLessonQuizAnswer(${i}, ${lesson.quizAnswer}, '${escapeQuotes(lesson.quizExplanation)}')" class="p-3 bg-white hover:bg-bgPink border border-pastelPink rounded-xl text-xs font-bold text-primaryText text-right transition">
+                            ${opt}
+                        </button>
+                    `).join('')}
+                </div>
+                <div id="lesson-quiz-feedback" class="hidden text-xs p-3 rounded-xl mt-2"></div>
+            `;
+        }
+
+        function escapeQuotes(str) {
+            return (str || '').replace(/'/g, "\\'");
+        }
+
+        function checkLessonQuizAnswer(selectedIndex, correctIndex, explanation) {
+            const feedbackBox = document.getElementById('lesson-quiz-feedback');
+            feedbackBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+
+            if (selectedIndex === correctIndex) {
+                feedbackBox.classList.add('bg-green-100', 'text-green-800');
+                feedbackBox.innerHTML = `<strong>إجابة صحيحة! 🎉</strong> ${explanation}`;
+                userProgress.totalXP += 5;
+                saveProgress();
+            } else {
+                feedbackBox.classList.add('bg-red-100', 'text-red-800');
+                feedbackBox.innerHTML = `<strong>حاولي مرة ثانية! ❌</strong> ${explanation}`;
+            }
+        }
+
+
+        // =========================================================================
+        // 6. INTERACTIVE SANDBOX & CONVERTER LOGIC
+        // =========================================================================
+        let bitsState = [0, 0, 0, 0, 0, 0, 0, 0]; // 8 bits
+
+        function initBitSwitches() {
+            const container = document.getElementById('bit-switches');
+            if (!container) return;
+
+            container.innerHTML = bitsState.map((b, i) => `
+                <button onclick="toggleBit(${i})" class="interactive-bit ${b ? 'on' : ''} h-16 rounded-2xl border-2 border-pastelPink bg-bgPink font-code font-black text-2xl flex items-center justify-center">
+                    ${b}
+                </button>
+            `).join('');
+
+            calculateSandboxValues();
+        }
+
+        function toggleBit(index) {
+            bitsState[index] = bitsState[index] === 1 ? 0 : 1;
+            initBitSwitches();
+        }
+
+        function calculateSandboxValues() {
+            // calculate decimal value
+            let dec = 0;
+            const weights = [128, 64, 32, 16, 8, 4, 2, 1];
+            bitsState.forEach((b, idx) => {
+                dec += b * weights[idx];
+            });
+
+            // calculate Hex
+            const hex = dec.toString(16).toUpperCase().padStart(2, '0');
+
+            // Nibbles
+            const upperNibbleBits = bitsState.slice(0, 4).join('');
+            const lowerNibbleBits = bitsState.slice(4, 8).join('');
+
+            document.getElementById('sandbox-dec').innerText = dec;
+            document.getElementById('sandbox-hex').innerText = `0x${hex}`;
+            document.getElementById('sandbox-nibbles').innerText = `${upperNibbleBits} | ${lowerNibbleBits}`;
+            document.getElementById('sandbox-msb-lsb').innerText = `MSB: ${bitsState[0]} | LSB: ${bitsState[7]}`;
+        }
+
+        function updateColorSandbox() {
+            const r = parseInt(document.getElementById('range-r').value);
+            const g = parseInt(document.getElementById('range-g').value);
+            const b = parseInt(document.getElementById('range-b').value);
+
+            const rHex = r.toString(16).toUpperCase().padStart(2, '0');
+            const gHex = g.toString(16).toUpperCase().padStart(2, '0');
+            const bHex = b.toString(16).toUpperCase().padStart(2, '0');
+
+            const fullHex = `#${rHex}${gHex}${bHex}`;
+
+            document.getElementById('hex-r-val').innerText = rHex;
+            document.getElementById('hex-g-val').innerText = gHex;
+            document.getElementById('hex-b-val').innerText = bHex;
+
+            document.getElementById('color-preview-box').style.backgroundColor = fullHex;
+            document.getElementById('color-hex-code').innerText = fullHex;
+            document.getElementById('color-rgb-code').innerText = `rgb(${r}, ${g}, ${b})`;
+        }
+
+
+        // =========================================================================
+        // 7. EDUCATIONAL GAMES SUITE ENGINE
+        // =========================================================================
+        let currentGameTimer = null;
+        let gameTimeLeft = 30;
+
+        function startGame(gameId) {
+            document.getElementById('active-game-container').classList.remove('hidden');
+            const titleEl = document.getElementById('game-title');
+            const viewport = document.getElementById('game-viewport');
+
+            clearInterval(currentGameTimer);
+            gameTimeLeft = 30;
+            updateGameTimerDisplay();
+
+            currentGameTimer = setInterval(() => {
+                gameTimeLeft--;
+                updateGameTimerDisplay();
+                if (gameTimeLeft <= 0) {
+                    clearInterval(currentGameTimer);
+                    endGameTimeout();
+                }
+            }, 1000);
+
+            if (gameId === 1) {
+                titleEl.innerText = "⚡ تحدي التحويل المباشر السريع";
+                renderGameDirectConversion(viewport);
+            } else if (gameId === 2) {
+                titleEl.innerText = "🧩 لعبة توصيل المصطلحات بالتعاريف";
+                renderGameMatching(viewport);
+            } else if (gameId === 3) {
+                titleEl.innerText = "🔍 اكتشاف الخطأ في المعلومة أو الكود";
+                renderGameBugHunter(viewport);
+            }
+        }
+
+        function updateGameTimerDisplay() {
+            document.getElementById('game-timer').innerText = `⏱️ 00:${gameTimeLeft < 10 ? '0' : ''}${gameTimeLeft}`;
+        }
+
+        function closeActiveGame() {
+            clearInterval(currentGameTimer);
+            document.getElementById('active-game-container').classList.add('hidden');
+        }
+
+        function endGameTimeout() {
+            const viewport = document.getElementById('game-viewport');
+            viewport.innerHTML = `
+                <div class="text-center space-y-4 py-6">
+                    <span class="text-5xl">⏰</span>
+                    <h4 class="text-2xl font-black text-primaryText">انتهى الوقت!</h4>
+                    <p class="text-sm text-secondaryText">حاول ممارسة السرعة في التحويل المباشر لجمع المزيد من النقاط.</p>
+                    <button onclick="closeActiveGame()" class="pink-gradient-btn text-white text-xs font-bold px-6 py-3 rounded-xl shadow-soft">العودة بقائمة الألعاب</button>
+                </div>
+            `;
+        }
+
+        // Game 1: Fast Direct Conversion
+        function renderGameDirectConversion(container) {
+            const questions = [
+                { hex: "1D5", ans: "000111010101", opts: ["000111010101", "010111101001", "000111011111", "111100001111"] },
+                { hex: "5E9", ans: "010111101001", opts: ["010111101001", "000111010101", "110000110101", "000100101010"] },
+                { hex: "1DF", ans: "000111011111", opts: ["000111011111", "000111010101", "000100000000", "010111101001"] },
+                { hex: "A5", ans: "10100101", opts: ["10100101", "11000101", "10101111", "00001010"] }
+            ];
+
+            const q = questions[Math.floor(Math.random() * questions.length)];
+
+            container.innerHTML = `
+                <div class="text-center space-y-4">
+                    <p class="text-sm font-bold text-secondaryText">ما هو التمثيل الثنائي المباشر (Direct Binary) للرقم الهكساديسيمال التالي؟</p>
+                    <div class="text-4xl font-black font-code text-darkPink bg-highlightPink py-4 rounded-2xl border border-pastelPink inline-block px-8 shadow-inner">
+                        ${q.hex}
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4">
+                        ${q.opts.map(opt => `
+                            <button onclick="checkGame1Answer('${opt}', '${q.ans}')" class="p-4 bg-bgPink hover:bg-pastelPink border border-pastelPink font-code font-bold text-sm rounded-2xl text-primaryText transition shadow-sm">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkGame1Answer(selected, correct) {
+            clearInterval(currentGameTimer);
+            const viewport = document.getElementById('game-viewport');
+
+            if (selected === correct) {
+                userProgress.totalXP += 20;
+                saveProgress();
+                viewport.innerHTML = `
+                    <div class="text-center space-y-4 py-6">
+                        <span class="text-5xl">🎉</span>
+                        <h4 class="text-2xl font-black text-green-600">إجابة سريعة وصحيحة! +20 نقطة</h4>
+                        <button onclick="startGame(1)" class="pink-gradient-btn text-white text-xs font-bold px-6 py-3 rounded-xl shadow-soft">تحدي آخر 🚀</button>
+                    </div>
+                `;
+            } else {
+                viewport.innerHTML = `
+                    <div class="text-center space-y-4 py-6">
+                        <span class="text-5xl">❌</span>
+                        <h4 class="text-2xl font-black text-red-600">إجابة خاطئة!</h4>
+                        <p class="text-xs text-secondaryText">الإجابة الصحيحة هي: <code class="font-code font-bold">${correct}</code></p>
+                        <button onclick="startGame(1)" class="pink-gradient-btn text-white text-xs font-bold px-6 py-3 rounded-xl shadow-soft">حاولي مجدداً 🔄</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Game 2: Matching
+        function renderGameMatching(container) {
+            container.innerHTML = `
+                <div class="space-y-4 text-xs">
+                    <p class="font-bold text-secondaryText text-center">انقري على المصطلح ثم انقري على تعريفه المناسب:</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <span class="font-bold text-darkPink block">المصطلحات:</span>
+                            <button onclick="selectMatchItem('crumb')" id="term-crumb" class="w-full p-3 bg-bgPink border border-pastelPink rounded-xl font-bold text-right hover:bg-pastelPink">1. Crumb</button>
+                            <button onclick="selectMatchItem('nibble')" id="term-nibble" class="w-full p-3 bg-bgPink border border-pastelPink rounded-xl font-bold text-right hover:bg-pastelPink">2. Nibble</button>
+                            <button onclick="selectMatchItem('lsb')" id="term-lsb" class="w-full p-3 bg-bgPink border border-pastelPink rounded-xl font-bold text-right hover:bg-pastelPink">3. LSB</button>
+                            <button onclick="selectMatchItem('msb')" id="term-msb" class="w-full p-3 bg-bgPink border border-pastelPink rounded-xl font-bold text-right hover:bg-pastelPink">4. MSB</button>
+                        </div>
+                        <div class="space-y-2">
+                            <span class="font-bold text-darkPink block">التعاريف:</span>
+                            <button onclick="matchDef('nibble')" class="w-full p-3 bg-white border border-pastelPink rounded-xl text-right hover:bg-highlightPink">أ. تجميع 4 بتات (نصف بايت)</button>
+                            <button onclick="matchDef('crumb')" class="w-full p-3 bg-white border border-pastelPink rounded-xl text-right hover:bg-highlightPink">ب. تجميع بتين معاً (2 bits)</button>
+                            <button onclick="matchDef('msb')" class="w-full p-3 bg-white border border-pastelPink rounded-xl text-right hover:bg-highlightPink">ج. البت الأكثر أهمية أقصى اليسار</button>
+                            <button onclick="matchDef('lsb')" class="w-full p-3 bg-white border border-pastelPink rounded-xl text-right hover:bg-highlightPink">د. البت الأقل أهمية أقصى اليمين</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        let selectedTerm = null;
+        function selectMatchItem(term) {
+            selectedTerm = term;
+            ['crumb', 'nibble', 'lsb', 'msb'].forEach(t => {
+                const btn = document.getElementById(`term-${t}`);
+                if (btn) btn.classList.remove('ring-2', 'ring-darkPink');
+            });
+            const selectedBtn = document.getElementById(`term-${term}`);
+            if (selectedBtn) selectedBtn.classList.add('ring-2', 'ring-darkPink');
+        }
+
+        function matchDef(targetTerm) {
+            if (!selectedTerm) return;
+
+            if (selectedTerm === targetTerm) {
+                userProgress.totalXP += 15;
+                saveProgress();
+                alert('توصيل صحيح! ممتاز جداً 🎉');
+                startGame(2);
+            } else {
+                alert('توصيل خاطئ، حاولي مرة أخرى!');
+            }
+        }
+
+        // Game 3: Bug Hunter
+        function renderGameBugHunter(container) {
+            const bugs = [
+                { code: "CSS Color Code: #FF0000000", msg: "كود الألوان بـ Hex بيحتوي على 6 أرقام فقط #RRGGBB وليس 9 أرقام!" },
+                { code: "1 Byte = 4 Bits", msg: "الـ Byte بيحتوي على 8 Bits (الـ Nibble هو اللي 4 Bits)." },
+                { code: "Nibble in Hex = 4 letters", msg: "الـ Nibble بيتكتب بحرف واحد بس في Hex (لأن الخانة الواحدة بـ Hex بتشيل 4 bits)." }
+            ];
+
+            const b = bugs[Math.floor(Math.random() * bugs.length)];
+
+            container.innerHTML = `
+                <div class="space-y-4 text-center">
+                    <p class="text-sm font-bold text-secondaryText">اكتشفي الخطأ العلمي أو البرمجي في الكود / العبارة التالية:</p>
+                    <div class="bg-primaryText text-pastelPink font-code p-4 rounded-2xl text-lg inline-block">
+                        ${b.code}
+                    </div>
+                    <div>
+                        <button onclick="revealBugFix('${escapeQuotes(b.msg)}')" class="pink-gradient-btn text-white text-xs font-bold px-6 py-3 rounded-xl shadow-soft">
+                            كشف الخطأ والتصحيح 🔍
+                        </button>
+                    </div>
+                    <div id="bug-fix-box" class="hidden text-xs bg-highlightPink p-4 rounded-2xl border border-pastelPink font-bold text-darkPink"></div>
+                </div>
+            `;
+        }
+
+        function revealBugFix(msg) {
+            const box = document.getElementById('bug-fix-box');
+            box.classList.remove('hidden');
+            box.innerText = `💡 الخطأ هو: ${msg}`;
+            userProgress.totalXP += 10;
+            saveProgress();
+        }
+
+
+        // =========================================================================
+        // 8. QUIZZES & EXAMINATION ENGINE
+        // =========================================================================
+        const QUIZZES = {
+            1: {
+                title: "اختبار المحاضرة الأولى: أنظمة العد والـ Hex",
+                questions: [
+                    { q: "كم عدد الأرقام والحروف المستخدمة في نظام Hexadecimal الأساس 16؟", opts: ["10", "12", "16", "2"], ans: 2, exp: "نظام Base 16 بيتكون من 16 عنصر (الأرقام 0-9 والحروف A-F)." },
+                    { q: "الحرف C في نظام Hex يُكافئ في النظام العشري الرقم:", opts: ["10", "11", "12", "13"], ans: 2, exp: "A=10, B=11, C=12." },
+                    { q: "ما هي البادئة (Prefix) المستخدمة في HTML/CSS لكتابة قيم Hex الألوان؟", opts: ["0x", "#", "&#", "U+"], ans: 1, exp: "تكتب الألوان في CSS مثل #FF0000." },
+                    { q: "التحويل العشري للرقم Hex المسجل كـ 1D5 هو:", opts: ["469", "512", "256", "100"], ans: 0, exp: "1*256 + 13*16 + 5*1 = 469." }
+                ]
+            },
+            2: {
+                title: "اختبار المحاضرة الثانية: أجزاء البايت (Byte Parts)",
+                questions: [
+                    { q: "تجميع بتين معاً (2 bits) يُطلق عليه اسم:", opts: ["Bit", "Crumb", "Nibble", "Byte"], ans: 1, exp: "Crumb = 2 bits." },
+                    { q: "النيبل (Nibble) يساوي كم من البايت؟", opts: ["ربع بايت", "نصف بايت (1/2)", "بايت كامل", "بايتين"], ans: 1, exp: "النيبل = 4 بتات، والبايت = 8 بتات، إذن النيبل نصف بايت." },
+                    { q: "بت الـ LSB يكون موجوداً في أي اتجاه؟", opts: ["أقصى اليسار", "أقصى اليمين", "المنتصف", "غير محدد"], ans: 1, exp: "LSB (Least Significant Bit) هو بت جهة اليمين وزنه 1." },
+                    { q: "كم عدد النيبلز (Nibbles) في البايت الواحد؟", opts: ["2", "4", "8", "16"], ans: 0, exp: "8 bits / 4 bits = 2 Nibbles." }
+                ]
+            },
+            3: {
+                title: "اختبار المحاضرة الثالثة: التحويل السريع المباشر",
+                questions: [
+                    { q: "في التحويل المباشر، كل رقم في Hex ينزل مكانه كم بت في Binary؟", opts: ["2 bits", "4 bits", "8 bits", "16 bits"], ans: 1, exp: "كل خانة Hex بتفك مباشرة لـ 4 بتات باينري (Nibble)." },
+                    { q: "تحويل الرقم Hex المسجل كـ A5 إلى ثنائي مباشر يكون:", opts: ["10100101", "11110000", "00010001", "11001100"], ans: 0, exp: "A=10 (1010), 5 (0101) ⬅️ 10100101." },
+                    { q: "عند تحويل Binary لـ Hex، نقسم البتات إلى مجموعات كل مجموعة بها كم بت؟", opts: ["بتين", "3 بتات", "4 بتات", "8 بتات"], ans: 2, exp: "نجمع كل 4 بتات بدءاً من اليمين." }
+                ]
+            },
+            'final': {
+                title: "الامتحان النهائي المتكامل - جميع المحاضرات",
+                questions: [
+                    { q: "الحرف F في نظام Hex يساوي أي رقم عشري؟", opts: ["14", "15", "16", "10"], ans: 1, exp: "F هو أعلى خانة مفردة وتساوي 15." },
+                    { q: "كم عدد البتات (Bits) في البايت الواحد؟", opts: ["4", "8", "16", "32"], ans: 1, exp: "1 Byte = 8 Bits." },
+                    { q: "ما هو وزن بت الـ MSB في البايت المكون من 8 بتات؟", opts: ["1", "64", "128", "256"], ans: 2, exp: "2^7 = 128." },
+                    { q: "تحويل الرقم العشري 469 لـ Hex يعطي:", opts: ["1D5", "5E9", "1DF", "ABC"], ans: 0, exp: "469 / 16 يطعي بواقي تترتب كـ 1D5." },
+                    { q: "الرمز U+C2A4 هو بادئة تستخدم في أي تكنولوجيا؟", opts: ["HTML Colors", "C++ Variables", "Unicode Characters", "XML Tags"], ans: 2, exp: "U+ هو Prefix الـ Unicode." }
+                ]
+            }
+        };
+
+        let activeQuizData = null;
+        let userQuizAnswers = [];
+
+        function startQuiz(quizKey) {
+            activeQuizData = QUIZZES[quizKey];
+            if (!activeQuizData) return;
+
+            userQuizAnswers = new Array(activeQuizData.questions.length).fill(null);
+
+            document.getElementById('active-quiz-container').classList.remove('hidden');
+            document.getElementById('quiz-result-container').classList.add('hidden');
+            document.getElementById('active-quiz-title').innerText = activeQuizData.title;
+
+            renderQuizQuestion(0);
+        }
+
+        function cancelActiveQuiz() {
+            document.getElementById('active-quiz-container').classList.add('hidden');
+        }
+
+        function renderQuizQuestion(index) {
+            const container = document.getElementById('quiz-question-body');
+            const counter = document.getElementById('quiz-question-counter');
+
+            const q = activeQuizData.questions[index];
+            counter.innerText = `سؤال ${index + 1} من ${activeQuizData.questions.length}`;
+
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <h4 class="text-lg font-black text-primaryText">${q.q}</h4>
+                    <div class="space-y-2">
+                        ${q.opts.map((opt, optIdx) => `
+                            <button onclick="selectQuizOption(${index}, ${optIdx})" class="w-full p-4 text-right rounded-2xl border ${userQuizAnswers[index] === optIdx ? 'border-darkPink bg-highlightPink font-bold' : 'border-pastelPink bg-white'} hover:bg-bgPink transition text-xs sm:text-sm font-semibold text-primaryText">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div class="flex justify-between items-center pt-4">
+                        ${index > 0 ? `<button onclick="renderQuizQuestion(${index - 1})" class="bg-bgPink text-primaryText text-xs font-bold px-5 py-2.5 rounded-xl">السابق</button>` : '<div></div>'}
+                        ${index < activeQuizData.questions.length - 1 
+                            ? `<button onclick="renderQuizQuestion(${index + 1})" class="pink-gradient-btn text-white text-xs font-bold px-6 py-2.5 rounded-xl shadow-soft">التالي</button>` 
+                            : `<button onclick="submitQuiz()" class="bg-darkPink hover:bg-primaryText text-white text-xs font-bold px-8 py-2.5 rounded-xl shadow-soft">إنهاء وتسليم الاختبار 🎓</button>`
+                        }
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectQuizOption(qIdx, optIdx) {
+            userQuizAnswers[qIdx] = optIdx;
+            renderQuizQuestion(qIdx);
+        }
+
+        function submitQuiz() {
+            let correctCount = 0;
+            activeQuizData.questions.forEach((q, idx) => {
+                if (userQuizAnswers[idx] === q.ans) {
+                    correctCount++;
+                }
+            });
+
+            const total = activeQuizData.questions.length;
+            const percent = Math.round((correctCount / total) * 100);
+
+            // Save score
+            userProgress.quizScores[activeQuizData.title] = percent;
+            userProgress.totalXP += (correctCount * 10);
+            saveProgress();
+
+            document.getElementById('active-quiz-container').classList.add('hidden');
+            document.getElementById('quiz-result-container').classList.remove('hidden');
+
+            document.getElementById('quiz-score-percent').innerText = `${percent}%`;
+            document.getElementById('quiz-score-raw').innerText = `(${correctCount} من ${total})`;
+
+            const feedback = document.getElementById('quiz-feedback-text');
+            if (percent >= 80) {
+                feedback.innerText = "ممتازة جداً يا بطلة! استيعاب كامل ومبهر للمادة.";
+            } else if (percent >= 50) {
+                feedback.innerText = "جيد جداً! راجعي النقاط المشروحة بالأسفل لتصلي للدرجة النهائية.";
+            } else {
+                feedback.innerText = "محاولة جيدة، ننصح بإعادة قراءة الدرس وتجربة المعمل التفاعلي أولاً.";
+            }
+
+            // Render detailed review
+            const reviewList = document.getElementById('quiz-review-list');
+            reviewList.innerHTML = activeQuizData.questions.map((q, idx) => {
+                const userAns = userQuizAnswers[idx];
+                const isCorrect = userAns === q.ans;
+                return `
+                    <div class="p-4 rounded-2xl border ${isCorrect ? 'border-green-300 bg-green-50' : 'border-red-300 bg-red-50'} text-xs space-y-2">
+                        <div class="flex items-center justify-between font-bold">
+                            <span class="text-primaryText">${idx + 1}. ${q.q}</span>
+                            <span>${isCorrect ? '✅ إجابة صحيحة' : '❌ إجابة خاطئة'}</span>
+                        </div>
+                        <p class="text-secondaryText">إجابتك: <strong>${userAns !== null ? q.opts[userAns] : 'لم تجبي'}</strong> | الإجابة الصحيحة: <strong>${q.opts[q.ans]}</strong></p>
+                        <p class="text-darkPink font-semibold">💡 التوضيح العلمي: ${q.exp}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+
+        // Initialize application on window load
+        window.onload = function() {
+            loadProgress();
+            renderHomeLectureCards();
+            updateColorSandbox();
+        };
+    </script>
+</body>
+</html>
