@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة اختبار المفاهيم الرقمية والحاسوبية التفاعلية</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                            700: '#1e40af',
+                            800: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f8fafc;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            body {
+                background: white;
+                color: black;
+            }
+            .print-card {
+                box-shadow: none !important;
+                border: 1px solid #e2e8f0 !important;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body class="text-slate-800 bg-slate-50 min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="no-print bg-gradient-to-r from-slate-900 via-brand-900 to-slate-900 text-white shadow-lg sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('welcome')">
+                <div class="w-10 h-10 rounded-xl bg-brand-500/20 border border-brand-400/30 flex items-center justify-center text-brand-300 shadow-inner">
+                    <i class="fa-solid fa-microchip text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-base sm:text-lg leading-tight tracking-wide">اختبار المفاهيم الرقمية والحاسوبية</h1>
+                    <p class="text-xs text-slate-300 font-light hidden sm:block">Digital Electronics & Computer Concepts Quiz</p>
+                </div>
+            </div>
+
+            <!-- Navigation Mode Badges -->
+            <div class="flex items-center gap-2">
+                <button onclick="switchView('student-setup')" id="nav-student-btn" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-2 bg-brand-600 text-white shadow-md hover:bg-brand-500">
+                    <i class="fa-solid fa-user-graduate"></i>
+                    <span>وضع الطالب</span>
+                </button>
+                <button onclick="openTeacherAuthModal()" id="nav-teacher-btn" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-2 border border-slate-700">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                    <span>قسم المدرس</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- 1. WELCOME / SETUP VIEW -->
+        <section id="view-welcome" class="max-w-3xl mx-auto space-y-6">
+            <div class="bg-white rounded-2xl p-6 sm:p-10 shadow-xl border border-slate-100 text-center relative overflow-hidden">
+                <div class="absolute -top-12 -left-12 w-40 h-40 bg-brand-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="absolute -bottom-12 -right-12 w-40 h-40 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+                <div class="w-20 h-20 bg-brand-50 text-brand-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm border border-brand-100">
+                    <i class="fa-solid fa-graduation-cap text-4xl"></i>
+                </div>
+
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">مرحباً بك في الاختبار التفاعلي الشامل</h2>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-8 max-w-xl mx-auto">
+                    اختبار شامل يغطي 30 سؤالاً مقسمة على 4 أجزاء رئيسية في النظام الثنائي، الوحدات التخزينية، والإشارات التناظرية والرقمية.
+                </p>
+
+                <!-- Section Cards Summary -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8 text-right">
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm shrink-0">1</span>
+                        <div class="text-xs">
+                            <h4 class="font-bold text-slate-800">Analog and Digital</h4>
+                            <p class="text-slate-500">8 أسئلة (الكميات والرقمنة)</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm shrink-0">2</span>
+                        <div class="text-xs">
+                            <h4 class="font-bold text-slate-800">Bits and Bytes</h4>
+                            <p class="text-slate-500">10 أسئلة (البت، الاحتمالات)</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-sm shrink-0">3</span>
+                        <div class="text-xs">
+                            <h4 class="font-bold text-slate-800">Data Storage Units</h4>
+                            <p class="text-slate-500">5 أسئلة (KB, MB, GB, TB)</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-sm shrink-0">4</span>
+                        <div class="text-xs">
+                            <h4 class="font-bold text-slate-800">Decimal & Binary Systems</h4>
+                            <p class="text-slate-500">7 أسئلة (الأنظمة والتحويلات)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Inputs -->
+                <div class="max-w-md mx-auto space-y-4 mb-8 text-right">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5" for="student-name-input">
+                            <i class="fa-solid fa-user text-brand-500 ml-1"></i> اسم الطالب (اختياري)
+                        </label>
+                        <input type="text" id="student-name-input" placeholder="اكتب اسمك الثلاثي هنا..." class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition text-sm">
+                    </div>
+                    
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800 flex items-start gap-2.5">
+                        <i class="fa-solid fa-shield-halved text-amber-600 text-base mt-0.5"></i>
+                        <div>
+                            <strong class="block font-bold">تنبيه حماية الاختبار:</strong>
+                            تم خلط ترتيب خيارات الإجابة لجميع الأسئلة عشوائياً. لن تُعرض الإجابات والتفسيرات إلا بعد تسليم الاختبار كاملاً.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Start Button -->
+                <button onclick="startStudentExam()" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-500 hover:to-brand-600 text-white font-extrabold rounded-xl shadow-lg hover:shadow-xl transition transform active:scale-95 text-base flex items-center justify-center gap-3 mx-auto">
+                    <span>بدء الامتحان الآن</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- 2. STUDENT EXAM VIEW -->
+        <section id="view-exam" class="hidden space-y-6">
+            <!-- Exam Status Bar -->
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4 sticky top-20 z-30">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-brand-100 text-brand-700 font-bold flex items-center justify-center">
+                        <i class="fa-solid fa-file-pen text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm" id="exam-student-title">امتحان المفاهيم الرقمية</h3>
+                        <p class="text-xs text-slate-500" id="exam-progress-text">تم إجابة 0 من 30 سؤالاً</p>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full sm:w-48 bg-slate-100 rounded-full h-3 overflow-hidden border border-slate-200">
+                    <div id="exam-progress-bar" class="bg-brand-600 h-full w-0 transition-all duration-300"></div>
+                </div>
+
+                <!-- Submit Button -->
+                <button onclick="confirmSubmitExamModal()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-sm transition flex items-center gap-2 shadow-sm active:scale-95">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>تسليم الاختبار النهائي</span>
+                </button>
+            </div>
+
+            <!-- Main Exam Layout Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <!-- Sidebar Question Navigator (Desktop) -->
+                <div class="lg:col-span-1 order-2 lg:order-1">
+                    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 sticky top-40">
+                        <h4 class="font-bold text-slate-700 text-xs mb-3 flex items-center justify-between">
+                            <span>فهرس الأسئلة (30)</span>
+                            <span class="text-slate-400 font-normal">انقر للانتقال</span>
+                        </h4>
+                        <div id="question-navigator-grid" class="grid grid-cols-5 gap-2 text-xs">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questions List Area -->
+                <div class="lg:col-span-3 space-y-6 order-1 lg:order-2" id="exam-questions-container">
+                    <!-- Questions Rendered by JS -->
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 3. POST-EXAM RESULTS VIEW -->
+        <section id="view-results" class="hidden space-y-6">
+            <!-- Summary Score Header -->
+            <div class="bg-gradient-to-br from-slate-900 via-brand-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+                <div class="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-right">
+                    <div>
+                        <span id="results-grade-badge" class="inline-block px-3 py-1 bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 rounded-full text-xs font-bold mb-3">
+                            تم إنهاء الامتحان بنجاح
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold mb-1" id="results-student-name">نتيجة الطالب</h2>
+                        <p class="text-slate-300 text-xs sm:text-sm">مراجعة شاملة لجميع الإجابات والتفسيرات العلمية باللغة العربية</p>
+                    </div>
+
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/10 text-center min-w-[160px]">
+                        <span class="text-xs uppercase tracking-wider text-slate-300 font-semibold block mb-1">الدرجة النهائية</span>
+                        <div class="text-4xl font-black text-amber-400" id="results-score-display">0 / 30</div>
+                        <div class="text-xs text-emerald-300 font-bold mt-1" id="results-percentage-display">0%</div>
+                    </div>
+                </div>
+
+                <!-- Section Performance Breakdown -->
+                <div class="mt-8 pt-6 border-t border-white/10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                    <div class="bg-white/5 p-3 rounded-xl border border-white/5">
+                        <span class="text-slate-300 block mb-1">القسم 1: Analog & Digital</span>
+                        <div class="font-bold text-sm text-white" id="sec-1-score">0 / 8</div>
+                    </div>
+                    <div class="bg-white/5 p-3 rounded-xl border border-white/5">
+                        <span class="text-slate-300 block mb-1">القسم 2: Bits & Bytes</span>
+                        <div class="font-bold text-sm text-white" id="sec-2-score">0 / 10</div>
+                    </div>
+                    <div class="bg-white/5 p-3 rounded-xl border border-white/5">
+                        <span class="text-slate-300 block mb-1">القسم 3: Storage Units</span>
+                        <div class="font-bold text-sm text-white" id="sec-3-score">0 / 5</div>
+                    </div>
+                    <div class="bg-white/5 p-3 rounded-xl border border-white/5">
+                        <span class="text-slate-300 block mb-1">القسم 4: Systems & Conversion</span>
+                        <div class="font-bold text-sm text-white" id="sec-4-score">0 / 7</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Actions Bar -->
+            <div class="flex flex-wrap items-center justify-between gap-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                <h3 class="font-extrabold text-slate-800 text-base flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-brand-600"></i>
+                    <span>تفسير ومراجعة الأسئلة</span>
+                </h3>
+                <div class="flex items-center gap-2">
+                    <button onclick="retakeExam()" class="px-4 py-2 bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold rounded-xl text-xs transition flex items-center gap-2 border border-brand-200">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        <span>إعادة الاختبار (بإجابات عشوائية)</span>
+                    </button>
+                    <button onclick="window.print()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition flex items-center gap-2 border border-slate-300">
+                        <i class="fa-solid fa-print"></i>
+                        <span>طباعة التقرير</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Detailed Answers Review Container -->
+            <div id="results-questions-container" class="space-y-6">
+                <!-- Populated via JS -->
+            </div>
+        </section>
+
+
+        <!-- 4. TEACHER PORTAL VIEW -->
+        <section id="view-teacher" class="hidden space-y-6">
+            <!-- Teacher Portal Header Bar -->
+            <div class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/20 border border-amber-400/30 text-amber-300 rounded-full text-xs font-bold mb-3">
+                            <i class="fa-solid fa-key"></i>
+                            <span>قسم المعلم المصرح (رمز الدخول: 20112010)</span>
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-black">بنك الأسئلة والإجابات والنموذج الإرشادي</h2>
+                        <p class="text-slate-300 text-xs sm:text-sm mt-1">يحتوي هذا القسم على كافة الأسئلة والخيارات والحلول النموذجية المرفقة بالتوضيح العربي الشامل.</p>
+                    </div>
+
+                    <div class="flex items-center gap-2 no-print">
+                        <button onclick="window.print()" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-xs transition flex items-center gap-2 shadow-lg">
+                            <i class="fa-solid fa-print"></i>
+                            <span>طباعة النموذج/تصدير PDF</span>
+                        </button>
+                        <button onclick="logoutTeacher()" class="px-4 py-2.5 bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/40 font-bold rounded-xl text-xs transition flex items-center gap-2">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>قفل القسم</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters Bar -->
+            <div class="no-print bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <i class="fa-solid fa-filter text-slate-400 text-sm"></i>
+                    <select id="teacher-section-filter" onchange="renderTeacherQuestions()" class="bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl focus:ring-brand-500 focus:border-brand-500 p-2.5 outline-none font-semibold">
+                        <option value="ALL">جميع الأقسام (30 سؤالاً)</option>
+                        <option value="1">Section 1: Analog and Digital (8 أسئلة)</option>
+                        <option value="2">Section 2: Bits and Bytes (10 أسئلة)</option>
+                        <option value="3">Section 3: Data Storage Units (5 أسئلة)</option>
+                        <option value="4">Section 4: Decimal and Binary Systems (7 أسئلة)</option>
+                    </select>
+                </div>
+
+                <div class="w-full sm:w-72 relative">
+                    <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3 text-slate-400 text-xs"></i>
+                    <input type="text" id="teacher-search-input" onkeyup="renderTeacherQuestions()" placeholder="بحث في نص السؤال أو التوضيح..." class="w-full pr-9 pl-4 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-brand-500 focus:border-brand-500 outline-none">
+                </div>
+            </div>
+
+            <!-- Teacher Questions Render Container -->
+            <div id="teacher-questions-container" class="space-y-6">
+                <!-- Rendered via JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="no-print bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>منصة مفاهيم الإلكترونيات الرقمية والحاسوبية التفاعلية &copy; 2026 - جميع الحقوق محفوظة للمعلم</p>
+        </div>
+    </footer>
+
+
+    <!-- MODAL 1: TEACHER PASSWORD AUTHENTICATION -->
+    <div id="modal-teacher-auth" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-5 animate-in fade-in zoom-in duration-200">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-3 border border-amber-100 shadow-inner">
+                    <i class="fa-solid fa-lock text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-black text-slate-900">دخول قسم المدرس</h3>
+                <p class="text-slate-500 text-xs mt-1">يرجى إدخال كلمة المرور المخصصة للمعلم للوصول للإجابات والتوضيح العربي.</p>
+            </div>
+
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1" for="teacher-password-input">كلمة المرور</label>
+
+                    <div class="relative">
+                        <input type="password" id="teacher-password-input" placeholder="أدخل كلمة المرور..." class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition text-center tracking-widest font-bold text-lg">
+                    </div>
+                </div>
+
+                <div id="teacher-auth-error" class="hidden bg-red-50 border border-red-200 text-red-600 p-2.5 rounded-xl text-xs text-center font-bold">
+                    <i class="fa-solid fa-circle-exclamation ml-1"></i> كلمة المرور غير صحيحة! يرجى المحاولة مرة أخرى.
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 pt-2">
+                <button onclick="verifyTeacherPassword()" class="flex-1 py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-xl text-sm transition shadow-md active:scale-95">
+                    تأكيد الدخول
+                </button>
+                <button onclick="closeTeacherAuthModal()" class="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-sm transition">
+                    إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MODAL 2: CONFIRM SUBMIT EXAM -->
+    <div id="modal-confirm-submit" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-5">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-3 border border-emerald-100">
+                    <i class="fa-solid fa-paper-plane text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-black text-slate-900">تأكيد تسليم الاختبار</h3>
+                <p id="confirm-submit-msg" class="text-slate-600 text-xs sm:text-sm mt-2 leading-relaxed">
+                    هل أنت متأكد من تسليم إجاباتك النهائية وحساب الدرجة؟
+                </p>
+            </div>
+
+            <div id="unanswered-warning-box" class="hidden bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded-xl text-xs flex items-start gap-2">
+                <i class="fa-solid fa-triangle-exclamation text-amber-600 text-base mt-0.5"></i>
+                <div>
+                    <strong class="font-bold block">تنبيه أسئلة غير مجابة:</strong>
+                    يوجد <span id="unanswered-count-num" class="font-bold underline">0</span> سؤال لم تقم بالإجابة عليها بعد.
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 pt-2">
+                <button onclick="processFinalSubmission()" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-sm transition shadow-md active:scale-95">
+                    تأكيد التسليم وعرض النتيجة
+                </button>
+                <button onclick="closeConfirmModal()" class="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-sm transition">
+                    متابعة الحل
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // MASTER DATASET (30 QUESTIONS + ARABIC EXPLANATIONS)
+        const rawQuestionsData = [
+            // SECTION 1: Analog and Digital
+            {
+                id: 1,
+                sectionId: 1,
+                sectionTitleEn: "Section 1: Analog and Digital",
+                sectionTitleAr: "القسم الأول: الإشارات التناظرية والرقمية (Analog and Digital)",
+                questionText: "Quantities that are measured continuously and with fine precision (like mass or temperature) are called:",
+                options: [
+                    { id: "A", text: "Digital" },
+                    { id: "B", text: "Analog" },
+                    { id: "C", text: "Binary" },
+                    { id: "D", text: "Discrete" }
+                ],
+                correctOriginalId: "B",
+                explanationAr: "الكميات المقاسة بشكل مستمر وبدقة متناهية دون انقطاع (مثل الكتلة أو درجة الحرارة) تسمى كميات تناظرية (Analog)."
+            },
+            {
+                id: 2,
+                sectionId: 1,
+                sectionTitleEn: "Section 1: Analog and Digital",
+                sectionTitleAr: "القسم الأول: الإشارات التناظرية والرقمية (Analog and Digital)",
+                questionText: "Which of the following is an example of analog data?",
+                options: [
+                    { id: "A", text: "Temperature" },
+                    { id: "B", text: "A text file" },
+                    { id: "C", text: "A binary code" },
+                    { id: "D", text: "A digital image" }
+                ],
+                correctOriginalId: "A",
+                explanationAr: "درجة الحرارة (Temperature) تتغير بشكل مستمر ومتصل في الطبيعة، بخلاف النصوص والأكواد والصور الرقمية التي تعتبر بيانات رقمية منفصلة."
+            },
+            {
+                id: 3,
+                sectionId: 1,
+                sectionTitleEn: "Section 1: Analog and Digital",
+                sectionTitleAr: "القسم الأول: الإشارات التناظرية والرقمية (Analog and Digital)",
+                questionText: "Quantities that continuously change and are represented numerically by segmenting at regular intervals are called:",
+                options: [
+                    { id: "A", text: "Analog" },
+                    { id: "B", text: "Digital" },
+                    { id: "C", text: "Continuous" },
+                    { id: "D", text: "Physical" }
+                ],
+                correctOriginalId: "B",
+                explanationAr: "الكميات التي تتغير باستمرار ويتم تمثيلها عددياً عن طريق أخذ عينات وتجزئتها عند فترات منتظمة تسمى بيانات رقمية (Digital)."
+            },
+            {
+                id: 4,
+                sectionId: 1,
+                sectionTitleEn: "Section 1: Analog and Digital",
+                sectionTitleAr: "القسم الأول: الإشارات التناظرية والرقمية (Analog and Digital)",
+                questionText: "What is the process of converting analog data into digital data?",
+                options: [
+                    { id: "A", text: "D/A conversion" },
+                    { id: "B", text: "A/D conversion (digitization)" },
+                    { id: "C", text: "Binary multiplication" },
+                    { id: "D", text: "Data storage" }
+                ],
+                correctOriginalId: "B",
+                explanationAr: "عملية تحويل البيانات من تناظرية إلى رقمية تسمى A/D conversion (Analog-to-Digital) أو عملية الرقمنة (Digitization)."
+            },
+            {
+                id: 5,
+                sectionId: 1,
+                sectionTitleEn: "Section 1: Analog and Digital",
+                sectionTitleAr: "القسم الأول: الإشارات التناظرية والرقمية (Analog and Digital)",
+                questionText: "What is the process of converting digital data into analog data?",
+                options: [
+                    { id: "A", text: "A/D conversion" },
+                    { id: "B", text: "D/A conversion" },
+                    { id: "C", text: "Digitization" },
+                    { id: "D", text: "Segmentation" }
+                ],
+                correctOriginalId: "B",
+                explanationAr: "عملية تحويل البيانات من رقمية إلى تناظرية تسمى D/A conversion (Digital-to-Analog conversion)."
+            },
+            {
+                id: 6,
+                sectionId: 1,
+                sectionTitleEn: "Section 1: Analog and Digital",
+                sectionTitleAr: "القسم الأول: الإشارات التناظرية والرقمية (Analog and Digital)",
+                questionText: "Which of the following is NOT an advantage of digital data?",
+                options: [
+                    { id: "A", text: "It can be duplicated without degradation." },
+                    { id: "B", text: "It is easy to modify and edit." },
+                    { id: "C", text: "It degrades every time it is copied." },
+                    { id: "D", text: "It can combine various media types." }
+                ],
+                correctOriginalId: "C",
+                explanationAr: "من أهم مميزات البيانات الرقمية أنها لا تفقد جودتها إطلاقاً عند تكرار النسخ، لذا فإن القول بأنها 'تتدهور كلما تم نسخها' ليس من ميزاتها بل عبارة خاطئة."
+            },
+            {
+                id: 7,
+                sectionId: 1,
+                sectionTitleEn: "Section 1: Analog and Digital",
+                sectionTitleAr: "القسم الأول: الإشارات التناظرية والرقمية (Analog and Digital)",
+                questionText: "Digital data can be accumulated or duplicated without:",
+                options: [
+                    { id: "A", text: "Bits" },
+                    { id: "B", text: "Storage" },
+                    { id: "C", text: "Degradation" },
+                    { id: "D", text: "Electricity" }
+                ],
+                correctOriginalId: "C",
+                explanationAr: "يمكن تجميع وتكرار نسخ البيانات الرقمية دون حدوث أي تدهور (Degradation) في جودة البيانات الأصلية."
+            },
+            {
+                id: 8,
+                sectionId: 1,
+                sectionTitleEn: "Section 1: Analog and Digital",
+                sectionTitleAr: "القسم الأول: الإشارات التناظرية والرقمية (Analog and Digital)",
+                questionText: "In computers, all information (numbers, text, images, audio) is represented in:",
+                options: [
+                    { id: "A", text: "Decimal" },
+                    { id: "B", text: "Analog" },
+                    { id: "C", text: "Binary" },
+                    { id: "D", text: "Continuous signals" }
+                ],
+                correctOriginalId: "C",
+                explanationAr: "تُُمثل جميع أشكال المعلومات (أرقام، نصوص، صور، صوت) داخل أجهزة الحاسوب في النهاية بالنظام الثنائي (Binary) الذي يتكون من 0 و 1."
+            },
+
+            // SECTION 2: Bits and Bytes
+            {
+                id: 9,
+                sectionId: 2,
+                sectionTitleEn: "Section 2: Bits and Bytes",
+                sectionTitleAr: "القسم الثاني: البت والبايت (Bits and Bytes)",
+                questionText: "What is the smallest unit of information in a computer?",
+                options: [
+                    { id: "A", text: "Byte" },
+                    { id: "B", text: "Bit" },
+                    { id: "C", text: "Kilobyte" },
+                    { id: "D", text: "Megabyte" }
+                ],
+                correctOriginalId: "B",
+                explanationAr: "البت (Bit) هو أصغر وحدة لقياس وتمثيل وتخزين المعلومات في الحاسوب."
+            },
+            {
+                id: 10,
+                sectionId: 2,
+                sectionTitleEn: "Section 2: Bits and Bytes",
+                sectionTitleAr: "القسم الثاني: البت والبايت (Bits and Bytes)",
+                questionText: "How many states can a single bit represent?",
+                options: [
+                    { id: "A", text: "1" },
+                    { id: "B", text: "2" },
+                    { id: "C", text: "8" },
+                    { id: "D", text: "10" }
+                ],
+                correctOriginalId: "B",
+                explanationAr: "يمكن لبت واحد فقط أن يمثل حالتين منفصلتين (إما 0 وإما 1)."
+            },
+            {
+                id: 11,
+                sectionId: 2,
+                sectionTitleEn: "Section 2: Bits and Bytes",
+                sectionTitleAr: "القسم الثاني: البت والبايت (Bits and Bytes)",
+                questionText: "Which two digits represent the states of a bit?",
+                options: [
+                    { id: "A", text: "1 and 2" },
+                    { id: "B", text: "0 and 1" },
+                    { id: "C", text: "0 and 10" },
+                    { id: "D", text: "1 and 10" }
+                ],
+                correctOriginalId: "B",
+                explanationAr: "حالات البت تُعبر عنها خانتان فقط هما 0 و 1."
+            },
+            {
+                id: 12,
+                sectionId: 2,
+                sectionTitleEn: "Section 2: Bits and Bytes",
+                sectionTitleAr: "القسم الثاني: البت والبايت (Bits and Bytes)",
+                questionText: "How many different pieces of information can n bits represent?",
+                options: [
+                    { id: "A", text: "2 × n" },
+                    { id: "B", text: "n²" },
+                    { id: "C", text: "2ⁿ" },
+                    { id: "D", text: "n + 2" }
+                ],
+                correctOriginalId: "C",
+                explanationAr: "القانون الرياضي لعدد الاحتمالات المختلفة التي يمكن لعدد n من البتات تمثيلها هو 2 مرفوعة للقوة n أي (2ⁿ)."
+            },
+            {
+                id: 13,
+                sectionId: 2,
+                sectionTitleEn: "Section 2: Bits and Bytes",
+                sectionTitleAr: "القسم الثاني: البت والبايت (Bits and Bytes)",
+                questionText: "How many possibilities can 2 bits represent?",
+                options: [
+                    { id: "A", text: "2" },
+                    { id: "B", text: "4" },
+                    { id: "C", text: "8" },
+                    { id: "D", text: "16" }
+                ],
+                correctOriginalId: "B",
+                explanationAr: "باستخدام 2 بت، يكون عدد الاحتمالات هو 2² = 4 وهي: (00, 01, 10, 11)."
+            },
+            {
+                id: 14,
+                sectionId: 2,
+                sectionTitleEn: "Section 2: Bits and Bytes",
+                sectionTitleAr: "القسم الثاني: البت والبايت (Bits and Bytes)",
+                questionText: "How many possibilities can 3 bits represent?",
+                options: [
+                    { id: "A", text: "3" },
+                    { id: "B", text: "6" },
+                    { id: "C", text: "8" },
+                    { id: "D", text: "12" }
+                ],
+                correctOriginalId: "C",
+                explanationAr: "باستخدام 3 بت، يكون عدد الاحتمالات هو 2³ = 8 احتمالات مختلفة."
+            },
+            {
+                id: 15,
+                sectionId: 2,
+                sectionTitleEn: "Section 2: Bits and Bytes",
+                sectionTitleAr: "القسم الثاني: البت والبايت (Bits and Bytes)",
+                questionText: "One Byte (1 B) consists of how many bits?",
+                options: [
+                    { id: "A", text: "2 bits" },
+                    { id: "B", text: "4 bits" },
+                    { id: "C", text: "8 bits" },
+                    { id: "D", text: "16 bits" }
+                ],
+                correctOriginalId: "C",
+                explanationAr: "يتكون البايت الواحد (1 Byte) دائماً من 8 بتات (8 bits)."
+            },
+            {
+                id: 16,
+                sectionId: 2,
+                sectionTitleEn: "Section 2: Bits and Bytes",
+                sectionTitleAr: "القسم الثاني: البت والبايت (Bits and Bytes)",
+                questionText: "How many possibilities can 1 Byte represent?",
+                options: [
+                    { id: "A", text: "8" },
+                    { id: "B", text: "128" },
+                    { id: "C", text: "256" },
+                    { id: "D", text: "1,024" }
+                ],
+                correctOriginalId: "C",
+                explanationAr: "بما أن البايت يحتوي على 8 بت، فإن عدد الاحتمالات هو 2⁸ = 256 احتمالاً مختلفاً (قيم من 0 إلى 255)."
+            },
+            {
+                id: 17,
+                sectionId: 2,
+                sectionTitleEn: "Section 2: Bits and Bytes",
+                sectionTitleAr: "القسم الثاني: البت والبايت (Bits and Bytes)",
+                questionText: "What is the notation symbol used for Byte?",
+                options: [
+                    { id: "A", text: "b" },
+                    { id: "B", text: "B" },
+                    { id: "C", text: "BY" },
+                    { id: "D", text: "bit" }
+                ],
+                correctOriginalId: "B",
+                explanationAr: "يُرمز للبايت (Byte) بالحرف الكبير 'B' بينما يُرمز للبت (Bit) بالحرف الصغير 'b'."
+            },
+            {
+                id: 18,
+                sectionId: 2,
+                sectionTitleEn: "Section 2: Bits and Bytes",
+                sectionTitleAr: "القسم الثاني: البت والبايت (Bits and Bytes)",
+                questionText: "The unit of information changes every _____ times.",
+                options: [
+                    { id: "A", text: "10" },
+                    { id: "B", text: "100" },
+                    { id: "C", text: "1,000" },
+                    { id: "D", text: "1,024" }
+                ],
+                correctOriginalId: "D",
+                explanationAr: "تتضاعف وتنتقل وحدات قياس التخزين للوحدة الأعلى بضرب القيمة في 1,024 (2¹⁰)."
+            },
+
+            // SECTION 3: Data Storage Units
+            {
+                id: 19,
+                sectionId: 3,
+                sectionTitleEn: "Section 3: Data Storage Units",
+                sectionTitleAr: "القسم الثالث: وحدات تخزين البيانات (Data Storage Units)",
+                questionText: "1 Kilobyte (1 KB) is equal to:",
+                options: [
+                    { id: "A", text: "1,024 Bits" },
+                    { id: "B", text: "1,024 Bytes" },
+                    { id: "C", text: "1,000 Bytes" },
+                    { id: "D", text: "10 Bytes" }
+                ],
+                correctOriginalId: "B",
+                explanationAr: "1 كيلوبايت (1 KB) يساوي 1,024 بايت (1,024 Bytes)."
+            },
+            {
+                id: 20,
+                sectionId: 3,
+                sectionTitleEn: "Section 3: Data Storage Units",
+                sectionTitleAr: "القسم الثالث: وحدات تخزين البيانات (Data Storage Units)",
+                questionText: "1 Megabyte (1 MB) is equal to:",
+                options: [
+                    { id: "A", text: "1,024 Bytes" },
+                    { id: "B", text: "1,024 KB" },
+                    { id: "C", text: "1,024 GB" },
+                    { id: "D", text: "1,024 TB" }
+                ],
+                correctOriginalId: "B",
+                explanationAr: "1 ميجابايت (1 MB) يساوي 1,024 كيلوبايت (1,024 KB)."
+            },
+            {
+                id: 21,
+                sectionId: 3,
+                sectionTitleEn: "Section 3: Data Storage Units",
+                sectionTitleAr: "القسم الثالث: وحدات تخزين البيانات (Data Storage Units)",
+                questionText: "1 Gigabyte (1 GB) is equal to:",
+                options: [
+                    { id: "A", text: "1,024 KB" },
+                    { id: "B", text: "1,024 MB" },
+                    { id: "C", text: "1,024 TB" },
+                    { id: "D", text: "1,024 Bytes" }
+                ],
+                correctOriginalId: "B",
+                explanationAr: "1 جيجابايت (1 GB) يساوي 1,024 ميجابايت (1,024 MB)."
+            },
+            {
+                id: 22,
+                sectionId: 3,
+                sectionTitleEn: "Section 3: Data Storage Units",
+                sectionTitleAr: "القسم الثالث: وحدات تخزين البيانات (Data Storage Units)",
+                questionText: "1 Terabyte (1 TB) is equal to:",
+                options: [
+                    { id: "A", text: "1,024 MB" },
+                    { id: "B", text: "1,024 GB" },
+                    { id: "C", text: "1,024 KB" },
+                    { id: "D", text: "1,024 B" }
+                ],
+                correctOriginalId: "B",
+                explanationAr: "1 تيرابايت (1 TB) يساوي 1,024 جيجابايت (1,024 GB)."
+            },
+            {
+                id: 23,
+                sectionId: 3,
+                sectionTitleEn: "Section 3: Data Storage Units",
+                sectionTitleAr: "القسم الثالث: وحدات تخزين البيانات (Data Storage Units)",
+                questionText: "Which of the following units is the largest?",
+                options: [
+                    { id: "A", text: "KB" },
+                    { id: "B", text: "MB" },
+                    { id: "C", text: "GB" },
+                    { id: "D", text: "TB" }
+                ],
+                correctOriginalId: "D",
+                explanationAr: "التيرابايت (TB) هي أكبر وحدة قياس تخزين بين الخيارات المذكورة (TB > GB > MB > KB)."
+            },
+
+            // SECTION 4: Decimal and Binary Systems & Conversions
+            {
+                id: 24,
+                sectionId: 4,
+                sectionTitleEn: "Section 4: Decimal and Binary Systems & Conversions",
+                sectionTitleAr: "القسم الرابع: الأنظمة العشرية والثنائية والتحويلات",
+                questionText: "The Decimal system uses how many digits (0 to 9)?",
+                options: [
+                    { id: "A", text: "2" },
+                    { id: "B", text: "8" },
+                    { id: "C", text: "10" },
+                    { id: "D", text: "16" }
+                ],
+                correctOriginalId: "C",
+                explanationAr: "النظام العشري (Decimal) يعتمد على الأساس 10 وتتكون أرقامه من 10 خانات من 0 إلى 9."
+            },
+            {
+                id: 25,
+                sectionId: 4,
+                sectionTitleEn: "Section 4: Decimal and Binary Systems & Conversions",
+                sectionTitleAr: "القسم الرابع: الأنظمة العشرية والثنائية والتحويلات",
+                questionText: "The Binary system uses how many digits (0 and 1)?",
+                options: [
+                    { id: "A", text: "2" },
+                    { id: "B", text: "8" },
+                    { id: "C", text: "10" },
+                    { id: "D", text: "16" }
+                ],
+                correctOriginalId: "A",
+                explanationAr: "النظام الثنائي (Binary) يعتمد على الأساس 2 ويتكون من رقمين فقط وهما 0 و 1."
+            },
+            {
+                id: 26,
+                sectionId: 4,
+                sectionTitleEn: "Section 4: Decimal and Binary Systems & Conversions",
+                sectionTitleAr: "القسم الرابع: الأنظمة العشرية والثنائية والتحويلات",
+                questionText: "Binary numbers are often written with a subscript of:",
+                options: [
+                    { id: "A", text: "(10)" },
+                    { id: "B", text: "(2)" },
+                    { id: "C", text: "(8)" },
+                    { id: "D", text: "(16)" }
+                ],
+                correctOriginalId: "B",
+                explanationAr: "تُكتب الأرقام الثنائية بوضع الدليل السفلي (2) بجانب الرقم لميزه عن الأنظمة الأخرى مثل 1011₂."
+            },
+            {
+                id: 27,
+                sectionId: 4,
+                sectionTitleEn: "Section 4: Decimal and Binary Systems & Conversions",
+                sectionTitleAr: "القسم الرابع: الأنظمة العشرية والثنائية والتحويلات",
+                questionText: "To convert binary to decimal, you multiply each digit starting from the right by powers of:",
+                options: [
+                    { id: "A", text: "10" },
+                    { id: "B", text: "2" },
+                    { id: "C", text: "8" },
+                    { id: "D", text: "1,024" }
+                ],
+                correctOriginalId: "B",
+                explanationAr: "للتحويل من ثنائي إلى عشري، نضرب كل خانة من اليمين في قوى العدد 2 المتصاعدة (2⁰, 2¹, 2², ...)."
+            },
+            {
+                id: 28,
+                sectionId: 4,
+                sectionTitleEn: "Section 4: Decimal and Binary Systems & Conversions",
+                sectionTitleAr: "القسم الرابع: الأنظمة العشرية والثنائية والتحويلات",
+                questionText: "What is the decimal value of the binary number 1011₂?",
+                options: [
+                    { id: "A", text: "9" },
+                    { id: "B", text: "10" },
+                    { id: "C", text: "11" },
+                    { id: "D", text: "13" }
+                ],
+                correctOriginalId: "C",
+                explanationAr: "حساب قيمة 1011₂ بالعشري: (1 × 2⁰) + (1 × 2¹) + (0 × 2²) + (1 × 2³) = 1 + 2 + 0 + 8 = 11."
+            },
+            {
+                id: 29,
+                sectionId: 4,
+                sectionTitleEn: "Section 4: Decimal and Binary Systems & Conversions",
+                sectionTitleAr: "القسم الرابع: الأنظمة العشرية والثنائية والتحويلات",
+                questionText: "To convert a decimal number to binary, you keep dividing the number by:",
+                options: [
+                    { id: "A", text: "10" },
+                    { id: "B", text: "8" },
+                    { id: "C", text: "2" },
+                    { id: "D", text: "16" }
+                ],
+                correctOriginalId: "C",
+                explanationAr: "للتحويل من نظام عشري إلى ثنائي، نستمر بتمثيل القسمة المتكررة على العدد 2 وتجميع بواقي القسمة."
+            },
+            {
+                id: 30,
+                sectionId: 4,
+                sectionTitleEn: "Section 4: Decimal and Binary Systems & Conversions",
+                sectionTitleAr: "القسم الرابع: الأنظمة العشرية والثنائية والتحويلات",
+                questionText: "What is the binary representation of the decimal number 6?",
+                options: [
+                    { id: "A", text: "100₂" },
+                    { id: "B", text: "101₂" },
+                    { id: "C", text: "110₂" },
+                    { id: "D", text: "111₂" }
+                ],
+                correctOriginalId: "C",
+                explanationAr: "العدد 6 بالعشري يساوي 4 + 2 = (1 × 4) + (1 × 2) + (0 × 1)، وبالتالي يُكتب بالثنائي 110₂."
+            }
+        ];
+
+        // STATE APP VARIABLES
+        let activeExamQuestions = []; // Contains shuffled option order per question
+        let studentAnswers = {}; // Key: qId -> Value: Selected Option Text string
+        let isTeacherAuthenticated = false;
+        let studentName = "";
+
+        // UTILITY: Fisher-Yates Array Shuffle
+        function shuffleArray(array) {
+            let cloned = JSON.parse(JSON.stringify(array));
+            for (let i = cloned.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cloned[i], cloned[j]] = [cloned[j], cloned[i]];
+            }
+            return cloned;
+        }
+
+        // VIEW SWITCHER
+        function switchView(viewName) {
+            const views = ['welcome', 'exam', 'results', 'teacher'];
+            views.forEach(v => {
+                const el = document.getElementById(`view-${v}`);
+                if (el) el.classList.add('hidden');
+            });
+
+            const targetView = document.getElementById(`view-${viewName}`);
+            if (targetView) targetView.classList.remove('hidden');
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // START STUDENT EXAM SESSION
+        function startStudentExam() {
+            const nameInput = document.getElementById('student-name-input').value.trim();
+            studentName = nameInput !== "" ? nameInput : "الطالب";
+            studentAnswers = {};
+
+            // SHUFFLE OPTIONS RANDOMLY FOR EACH QUESTION (CRITICAL ANTI-CHEATING REQUIREMENT)
+            activeExamQuestions = rawQuestionsData.map(q => {
+                // Find correct text originally
+                const originalCorrectObj = q.options.find(o => o.id === q.correctOriginalId);
+                const correctText = originalCorrectObj ? originalCorrectObj.text : "";
+
+                // Shuffle options
+                const shuffledOpts = shuffleArray(q.options);
+
+                return {
+                    ...q,
+                    shuffledOptions: shuffledOpts,
+                    correctText: correctText
+                };
+            });
+
+            renderExamQuestions();
+            updateExamProgress();
+            switchView('exam');
+        }
+
+        // RENDER EXAM QUESTIONS IN EXAM VIEW
+        function renderExamQuestions() {
+            const container = document.getElementById('exam-questions-container');
+            const navGrid = document.getElementById('question-navigator-grid');
+            
+            container.innerHTML = '';
+            navGrid.innerHTML = '';
+
+            document.getElementById('exam-student-title').textContent = `اختبار الطالب: ${studentName}`;
+
+            let currentSection = 0;
+
+            activeExamQuestions.forEach((q, index) => {
+                // Check if new section header needed
+                if (q.sectionId !== currentSection) {
+                    currentSection = q.sectionId;
+                    const secHeader = document.createElement('div');
+                    secHeader.className = "bg-slate-800 text-white p-4 rounded-2xl shadow-sm font-bold text-sm sm:text-base flex items-center justify-between mt-6 first:mt-0";
+                    secHeader.innerHTML = `
+                        <div class="flex items-center gap-2">
+                            <span class="w-7 h-7 rounded-lg bg-brand-500/20 text-brand-300 flex items-center justify-center text-xs font-black">${q.sectionId}</span>
+                            <span>${q.sectionTitleAr}</span>
+                        </div>
+                        <span class="text-xs text-slate-400 font-normal hidden sm:inline">${q.sectionTitleEn}</span>
+                    `;
+                    container.appendChild(secHeader);
+                }
+
+                // Question Card
+                const qCard = document.createElement('div');
+                qCard.id = `q-card-${q.id}`;
+                qCard.className = "bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 space-y-4 scroll-mt-24 transition hover:border-slate-300";
+
+                const labels = ['A', 'B', 'C', 'D'];
+
+                let optionsHTML = '';
+                q.shuffledOptions.forEach((opt, optIdx) => {
+                    const label = labels[optIdx];
+                    const isSelected = studentAnswers[q.id] === opt.text;
+
+                    optionsHTML += `
+                        <div onclick="selectAnswer(${q.id}, '${opt.text.replace(/'/g, "\\'")}')" 
+                             class="option-btn-${q.id} p-3.5 sm:p-4 rounded-xl border-2 transition cursor-pointer flex items-center gap-3.5 group ${isSelected ? 'border-brand-600 bg-brand-50/60 shadow-sm' : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'}">
+                            <span class="w-8 h-8 rounded-lg font-bold text-xs flex items-center justify-center shrink-0 transition ${isSelected ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-600 group-hover:bg-slate-200'}">
+                                ${label}
+                            </span>
+                            <span class="text-sm font-semibold text-slate-800 flex-grow">${opt.text}</span>
+                            <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center ${isSelected ? 'border-brand-600 bg-brand-600 text-white' : 'border-slate-300'}">
+                                ${isSelected ? '<i class="fa-solid fa-check text-xs"></i>' : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                qCard.innerHTML = `
+                    <div class="flex items-start justify-between gap-3">
+                        <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 text-xs font-extrabold shrink-0">
+                            سؤال ${index + 1} من 30
+                        </span>
+                    </div>
+                    <h4 class="text-slate-900 font-bold text-base sm:text-lg leading-relaxed">${q.questionText}</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                        ${optionsHTML}
+                    </div>
+                `;
+
+                container.appendChild(qCard);
+
+                // Navigator button
+                const navBtn = document.createElement('button');
+                navBtn.id = `nav-btn-${q.id}`;
+                navBtn.onclick = () => {
+                    document.getElementById(`q-card-${q.id}`).scrollIntoView({ behavior: 'smooth' });
+                };
+                navBtn.className = `p-2 rounded-xl text-center font-bold text-xs transition border ${studentAnswers[q.id] ? 'bg-brand-600 text-white border-brand-600' : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'}`;
+                navBtn.textContent = index + 1;
+                navGrid.appendChild(navBtn);
+            });
+        }
+
+        // SELECT ANSWER IN EXAM
+        function selectAnswer(questionId, selectedOptionText) {
+            studentAnswers[questionId] = selectedOptionText;
+            renderExamQuestions();
+            updateExamProgress();
+        }
+
+        // UPDATE PROGRESS BAR
+        function updateExamProgress() {
+            const answeredCount = Object.keys(studentAnswers).length;
+            const progressPercent = Math.round((answeredCount / 30) * 100);
+
+            document.getElementById('exam-progress-text').textContent = `تم إجابة ${answeredCount} من 30 سؤالاً`;
+            document.getElementById('exam-progress-bar').style.width = `${progressPercent}%`;
+        }
+
+        // CONFIRM SUBMISSION MODAL
+        function confirmSubmitExamModal() {
+            const answeredCount = Object.keys(studentAnswers).length;
+            const unanswered = 30 - answeredCount;
+
+            const warningBox = document.getElementById('unanswered-warning-box');
+            if (unanswered > 0) {
+                document.getElementById('unanswered-count-num').textContent = unanswered;
+                warningBox.classList.remove('hidden');
+            } else {
+                warningBox.classList.add('hidden');
+            }
+
+            document.getElementById('modal-confirm-submit').classList.remove('hidden');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('modal-confirm-submit').classList.add('hidden');
+        }
+
+        // PROCESS FINAL EXAM SUBMISSION & GRADE
+        function processFinalSubmission() {
+            closeConfirmModal();
+
+            let score = 0;
+            let sectionScores = { 1: 0, 2: 0, 3: 0, 4: 0 };
+
+            activeExamQuestions.forEach(q => {
+                const userAns = studentAnswers[q.id];
+                if (userAns === q.correctText) {
+                    score++;
+                    sectionScores[q.sectionId]++;
+                }
+            });
+
+            // Calculate percentage
+            const percentage = Math.round((score / 30) * 100);
+
+            // Populate Results UI
+            document.getElementById('results-student-name').textContent = `نتيجة الاختبار: ${studentName}`;
+            document.getElementById('results-score-display').textContent = `${score} / 30`;
+            document.getElementById('results-percentage-display').textContent = `${percentage}% المجموع المئوي`;
+
+            // Badge status
+            const badge = document.getElementById('results-grade-badge');
+            if (percentage >= 90) {
+                badge.className = "inline-block px-3 py-1 bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 rounded-full text-xs font-bold mb-3";
+                badge.textContent = "ممتاز جداً 🌟 (تفوق عالي)";
+            } else if (percentage >= 75) {
+                badge.className = "inline-block px-3 py-1 bg-blue-500/20 border border-blue-400/40 text-blue-300 rounded-full text-xs font-bold mb-3";
+                badge.textContent = "جيد جداً 👍 (أداء متميز)";
+            } else if (percentage >= 50) {
+                badge.className = "inline-block px-3 py-1 bg-amber-500/20 border border-amber-400/40 text-amber-300 rounded-full text-xs font-bold mb-3";
+                badge.textContent = "ناجح 👏 (يمكن التحسين)";
+            } else {
+                badge.className = "inline-block px-3 py-1 bg-red-500/20 border border-red-400/40 text-red-300 rounded-full text-xs font-bold mb-3";
+                badge.textContent = "بحاجة لمراجعة المادة 📚";
+            }
+
+            // Section Score Updates
+            document.getElementById('sec-1-score').textContent = `${sectionScores[1]} / 8 أسئلة`;
+            document.getElementById('sec-2-score').textContent = `${sectionScores[2]} / 10 أسئلة`;
+            document.getElementById('sec-3-score').textContent = `${sectionScores[3]} / 5 أسئلة`;
+            document.getElementById('sec-4-score').textContent = `${sectionScores[4]} / 7 أسئلة`;
+
+            // Render Results Review Cards
+            renderResultsReview();
+            switchView('results');
+        }
+
+        // RENDER DETAILED RESULTS REVIEW WITH ARABIC EXPLANATIONS
+        function renderResultsReview() {
+            const container = document.getElementById('results-questions-container');
+            container.innerHTML = '';
+
+            activeExamQuestions.forEach((q, index) => {
+                const userAns = studentAnswers[q.id];
+                const isCorrect = userAns === q.correctText;
+
+                const reviewCard = document.createElement('div');
+                reviewCard.className = `bg-white rounded-2xl p-5 sm:p-6 shadow-sm border ${isCorrect ? 'border-emerald-200 bg-emerald-50/10' : 'border-red-200 bg-red-50/10'} space-y-4 print-card`;
+
+                let optionsHTML = '';
+                const labels = ['A', 'B', 'C', 'D'];
+
+                q.shuffledOptions.forEach((opt, optIdx) => {
+                    const label = labels[optIdx];
+                    const isUserPick = userAns === opt.text;
+                    const isTrueCorrect = opt.text === q.correctText;
+
+                    let optionStyle = "border-slate-200 bg-white";
+                    let badgeHTML = "";
+
+                    if (isTrueCorrect) {
+                        optionStyle = "border-emerald-500 bg-emerald-50 text-emerald-900 font-bold";
+                        badgeHTML = `<span class="px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px] font-extrabold mr-auto"><i class="fa-solid fa-check ml-1"></i> الإجابة الصحيحة</span>`;
+                    } else if (isUserPick && !isCorrect) {
+                        optionStyle = "border-red-500 bg-red-50 text-red-900 font-bold";
+                        badgeHTML = `<span class="px-2 py-0.5 rounded bg-red-600 text-white text-[10px] font-extrabold mr-auto"><i class="fa-solid fa-xmark ml-1"></i> إجابتك الخاطئة</span>`;
+                    }
+
+                    optionsHTML += `
+                        <div class="p-3.5 rounded-xl border-2 flex items-center gap-3 text-sm ${optionStyle}">
+                            <span class="w-7 h-7 rounded-lg text-xs font-bold flex items-center justify-center shrink-0 ${isTrueCorrect ? 'bg-emerald-600 text-white' : (isUserPick ? 'bg-red-600 text-white' : 'bg-slate-100 text-slate-600')}">
+                                ${label}
+                            </span>
+                            <span class="flex-grow">${opt.text}</span>
+                            ${badgeHTML}
+                        </div>
+                    `;
+                });
+
+                reviewCard.innerHTML = `
+                    <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                        <span class="text-xs font-bold text-slate-500">سؤال ${index + 1} - ${q.sectionTitleAr}</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-black ${isCorrect ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}">
+                            ${isCorrect ? '<i class="fa-solid fa-circle-check ml-1"></i> إجابة صحيحة' : '<i class="fa-solid fa-circle-xmark ml-1"></i> إجابة خاطئة'}
+                        </span>
+                    </div>
+
+                    <h4 class="text-slate-900 font-bold text-base leading-relaxed">${q.questionText}</h4>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                        ${optionsHTML}
+                    </div>
+
+                    <!-- ARABIC EXPLANATION CALLOUT BOX -->
+                    <div class="bg-blue-50/80 border border-blue-200 rounded-xl p-4 text-xs sm:text-sm text-blue-950 space-y-1">
+                        <div class="font-extrabold text-blue-800 flex items-center gap-2 mb-1">
+                            <i class="fa-solid fa-lightbulb text-amber-500 text-base"></i>
+                            <span>التوضيح بالعربي:</span>
+                        </div>
+                        <p class="leading-relaxed font-semibold text-slate-700">${q.explanationAr}</p>
+                    </div>
+                `;
+
+                container.appendChild(reviewCard);
+            });
+        }
+
+        // RETAKE EXAM
+        function retakeExam() {
+            startStudentExam();
+        }
+
+
+        // TEACHER PORTAL AUTHENTICATION
+        function openTeacherAuthModal() {
+            if (isTeacherAuthenticated) {
+                switchView('teacher');
+                renderTeacherQuestions();
+            } else {
+                document.getElementById('teacher-password-input').value = '';
+                document.getElementById('teacher-auth-error').classList.add('hidden');
+                document.getElementById('modal-teacher-auth').classList.remove('hidden');
+            }
+        }
+
+        function closeTeacherAuthModal() {
+            document.getElementById('modal-teacher-auth').classList.add('hidden');
+        }
+
+        function verifyTeacherPassword() {
+            const input = document.getElementById('teacher-password-input').value;
+            // HARDCODED PASSWORD REQUIRED: 20112010
+            if (input === '20112010') {
+                isTeacherAuthenticated = true;
+                closeTeacherAuthModal();
+                switchView('teacher');
+                renderTeacherQuestions();
+            } else {
+                document.getElementById('teacher-auth-error').classList.remove('hidden');
+            }
+        }
+
+        function logoutTeacher() {
+            isTeacherAuthenticated = false;
+            switchView('welcome');
+        }
+
+
+        // RENDER TEACHER PORTAL QUESTIONS & EXPLANATIONS
+        function renderTeacherQuestions() {
+            const container = document.getElementById('teacher-questions-container');
+            const secFilter = document.getElementById('teacher-section-filter').value;
+            const searchText = document.getElementById('teacher-search-input').value.toLowerCase().trim();
+
+            container.innerHTML = '';
+
+            let filtered = rawQuestionsData.filter(q => {
+                const matchSec = secFilter === 'ALL' || q.sectionId.toString() === secFilter;
+                const matchSearch = searchText === '' || 
+                                    q.questionText.toLowerCase().includes(searchText) || 
+                                    q.explanationAr.toLowerCase().includes(searchText);
+                return matchSec && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white p-8 rounded-2xl text-center text-slate-500 font-bold border border-slate-200">
+                        لا توجد نتائج تطابق خيارات البحث المطلوبة.
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(q => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 space-y-4 print-card";
+
+                let optionsHTML = '';
+                q.options.forEach(opt => {
+                    const isCorrect = opt.id === q.correctOriginalId;
+                    optionsHTML += `
+                        <div class="p-3 rounded-xl border flex items-center justify-between text-xs sm:text-sm ${isCorrect ? 'border-emerald-500 bg-emerald-50 font-bold text-emerald-900' : 'border-slate-200 bg-slate-50 text-slate-700'}">
+                            <div class="flex items-center gap-2">
+                                <span class="w-6 h-6 rounded flex items-center justify-center font-bold text-xs ${isCorrect ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-700'}">${opt.id}</span>
+                                <span>${opt.text}</span>
+                            </div>
+                            ${isCorrect ? '<span class="px-2 py-0.5 bg-emerald-600 text-white text-[10px] rounded font-bold"><i class="fa-solid fa-check ml-1"></i> الإجابة النموذجية</span>' : ''}
+                        </div>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                        <span class="px-2.5 py-1 rounded bg-indigo-50 text-indigo-700 font-extrabold text-xs">
+                            سؤال #${q.id} - ${q.sectionTitleEn}
+                        </span>
+                    </div>
+
+                    <h4 class="text-slate-900 font-bold text-base leading-relaxed">${q.questionText}</h4>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        ${optionsHTML}
+                    </div>
+
+                    <div class="bg-indigo-50/70 border border-indigo-200 rounded-xl p-4 text-xs sm:text-sm text-indigo-950">
+                        <strong class="font-extrabold text-indigo-800 block mb-1">
+                            <i class="fa-solid fa-chalkboard-user text-indigo-600 ml-1"></i> التوضيح والتعليل العلمي باللغة العربية:
+                        </strong>
+                        <p class="leading-relaxed font-semibold text-slate-700">${q.explanationAr}</p>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // Initialize view on page load
+        window.onload = function() {
+            switchView('welcome');
+        };
+    </script>
+</body>
+</html>
