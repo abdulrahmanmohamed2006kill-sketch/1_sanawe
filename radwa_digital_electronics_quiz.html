@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RADWA - Digital Electronics & Computer Concepts Platform</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Great+Vibes&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind Custom Color Palette -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        radwa: {
+                            50: '#fff0f5',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                            800: '#9f1239',
+                            900: '#881337',
+                            gold: '#f59e0b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        calligraphy: ['Great Vibes', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 35%, #f472b6 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Modern Glassmorphic Card Styling */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 182, 193, 0.5);
+            box-shadow: 0 20px 40px rgba(225, 29, 72, 0.12);
+        }
+
+        .glass-card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px rgba(225, 29, 72, 0.22);
+        }
+
+        /* Dynamic Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1.5deg); }
+        }
+
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(244, 114, 182, 0.8)); }
+            50% { transform: scale(1.08) rotate(1deg); filter: drop-shadow(0 0 35px rgba(225, 29, 72, 0.9)); }
+        }
+
+        .shaks-text {
+            animation: pulseGlow 0.4s infinite alternate;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fce7f3;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f472b6;
+            border-radius: 9999px;
+        }
+
+        /* Background Canvas */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Print formatting */
+        @media print {
+            body { background: white !important; color: black !important; }
+            #particleCanvas, .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            .glass-card { background: none !important; box-shadow: none !important; border: 1px solid #ccc !important; }
+        }
+    </style>
+</head>
+<body class="text-slate-800 relative min-h-screen flex flex-col justify-between">
+
+    <!-- Interactive Canvas Background for Particles & Sparks -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Header Section -->
+    <header class="relative z-10 w-full py-4 px-6 no-print">
+        <div class="max-w-6xl mx-auto flex justify-between items-center bg-white/70 backdrop-blur-md border border-pink-200/80 rounded-3xl px-6 py-3 shadow-lg">
+            
+            <div class="flex items-center gap-3 cursor-pointer" onclick="goHome()">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pink-500 to-rose-600 flex items-center justify-center text-white text-2xl shadow-md animate-bounce">
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+                <div>
+                    <h1 class="font-calligraphy text-3xl font-bold bg-gradient-to-r from-pink-600 via-rose-600 to-purple-700 bg-clip-text text-transparent leading-none">
+                        RADWA
+                    </h1>
+                    <p class="text-xs text-rose-600 font-bold tracking-wide mt-0.5">Digital Electronics & Computer Concepts</p>
+                </div>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="flex items-center gap-3">
+                <button onclick="openTeacherModal()" class="flex items-center gap-2 bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold text-sm py-2 px-4 rounded-2xl transition shadow-sm border border-rose-300">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span class="hidden sm:inline">Teacher Portal</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="relative z-10 max-w-5xl mx-auto px-4 py-6 flex-grow w-full">
+
+        <!-- VIEW 1: LANDING PAGE -->
+        <div id="landingView" class="text-center space-y-8 py-4">
+            <div class="glass-card rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+                <div class="absolute -top-10 -left-10 w-40 h-40 bg-pink-300/30 rounded-full blur-2xl"></div>
+                <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-purple-300/30 rounded-full blur-2xl"></div>
+
+                <!-- Calligraphic Badge -->
+                <div class="inline-block px-4 py-1.5 rounded-full bg-pink-100/90 text-rose-600 text-xs font-bold mb-4 border border-pink-200">
+                    ✨ Smart Assessment Platform 2026 ✨
+                </div>
+
+                <h1 class="text-3xl sm:text-5xl font-black text-slate-800 tracking-tight leading-tight mb-4">
+                    Welcome to the Digital Examination <br>
+                    <span class="font-calligraphy text-6xl sm:text-8xl bg-gradient-to-r from-pink-600 via-rose-500 to-purple-700 bg-clip-text text-transparent inline-block my-2">RADWA</span>
+                </h1>
+
+                <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
+                    An interactive, comprehensive assessment in <strong class="text-rose-600">Digital Electronics and Computer Concepts</strong>. 
+                    Evaluates Analog vs. Digital signals, Bits & Bytes, Data Storage Units, and Binary Conversions!
+                </p>
+
+                <!-- Exam Topics Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10 text-left">
+                    <div class="bg-white/80 p-4 rounded-2xl border border-pink-100 shadow-sm text-center">
+                        <i class="fa-solid fa-wave-square text-rose-500 text-2xl mb-2"></i>
+                        <h4 class="font-bold text-sm text-slate-800">Analog & Digital</h4>
+                        <p class="text-xs text-rose-500 font-semibold mt-1">8 Questions</p>
+                    </div>
+                    <div class="bg-white/80 p-4 rounded-2xl border border-pink-100 shadow-sm text-center">
+                        <i class="fa-solid fa-microchip text-rose-500 text-2xl mb-2"></i>
+                        <h4 class="font-bold text-sm text-slate-800">Bits & Bytes</h4>
+                        <p class="text-xs text-rose-500 font-semibold mt-1">10 Questions</p>
+                    </div>
+                    <div class="bg-white/80 p-4 rounded-2xl border border-pink-100 shadow-sm text-center">
+                        <i class="fa-solid fa-hard-drive text-rose-500 text-2xl mb-2"></i>
+                        <h4 class="font-bold text-sm text-slate-800">Data Storage Units</h4>
+                        <p class="text-xs text-rose-500 font-semibold mt-1">5 Questions</p>
+                    </div>
+                    <div class="bg-white/80 p-4 rounded-2xl border border-pink-100 shadow-sm text-center">
+                        <i class="fa-solid fa-calculator text-rose-500 text-2xl mb-2"></i>
+                        <h4 class="font-bold text-sm text-slate-800">Number Systems</h4>
+                        <p class="text-xs text-rose-500 font-semibold mt-1">7 Questions</p>
+                    </div>
+                </div>
+
+                <!-- Custom Start Button -->
+                <div class="relative inline-block group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-pink-500 via-rose-500 to-purple-600 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+                    <button id="startBtn" onclick="triggerEasterEggAndStart()" class="relative px-8 py-5 bg-gradient-to-r from-pink-500 via-rose-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-extrabold text-lg sm:text-2xl rounded-full shadow-2xl transition duration-300 transform group-hover:scale-105 active:scale-95 flex items-center justify-center gap-3">
+                        <span>متمسكنيش من ايدي امسكني من وسطي ليه متوضيه</span>
+                        <i class="fa-solid fa-wand-magic-sparkles text-yellow-300 animate-spin"></i>
+                    </button>
+                </div>
+
+                <div class="mt-4 text-xs text-slate-500 font-medium">
+                    <i class="fa-solid fa-shield-halved text-rose-500"></i> Anti-cheat Fisher-Yates randomization enabled for questions and options
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 2: QUIZ SCREEN -->
+        <div id="quizView" class="hidden space-y-6">
+            
+            <!-- Exam Header & Progress Bar -->
+            <div class="glass-card rounded-3xl p-6">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
+                    <div>
+                        <span id="currentSectionBadge" class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-pink-100 text-pink-700 border border-pink-200 mb-1">
+                            Section 1
+                        </span>
+                        <h2 id="currentSectionTitle" class="text-xl font-bold text-slate-800">
+                            Analog vs. Digital Signals
+                        </h2>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-right">
+                            <p class="text-xs text-slate-500">Current Question</p>
+                            <p class="text-lg font-black text-rose-600"><span id="qIndexText">1</span> / <span id="qTotalText">30</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full bg-pink-100 rounded-full h-3 overflow-hidden border border-pink-200">
+                    <div id="progressBar" class="bg-gradient-to-r from-pink-500 to-rose-600 h-3 rounded-full transition-all duration-300 w-0"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="glass-card rounded-3xl p-6 sm:p-8 space-y-6 relative">
+                <div class="flex items-start gap-4">
+                    <span class="w-10 h-10 rounded-2xl bg-rose-500 text-white font-black text-lg flex items-center justify-center flex-shrink-0 shadow-md" id="questionNumBox">
+                        1
+                    </span>
+                    <h3 id="questionText" class="text-lg sm:text-xl font-bold text-slate-800 leading-relaxed pt-1">
+                        Loading question...
+                    </h3>
+                </div>
+
+                <!-- Options List -->
+                <div id="optionsContainer" class="grid grid-cols-1 gap-4 pt-2">
+                    <!-- Dynamic Options Inserted Here -->
+                </div>
+            </div>
+
+            <!-- Bottom Navigation Controls -->
+            <div class="flex justify-between items-center gap-4 pt-2">
+                <button id="prevBtn" onclick="navigateQuestion(-1)" class="px-6 py-3 rounded-2xl bg-white/80 hover:bg-white text-slate-700 font-bold border border-pink-200 shadow-sm transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i> Previous Question
+                </button>
+
+                <button id="nextBtn" onclick="navigateQuestion(1)" class="px-8 py-3 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-bold shadow-md transition flex items-center gap-2">
+                    Next Question <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+                <button id="submitExamBtn" onclick="confirmSubmitExam()" class="hidden px-8 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold shadow-lg transition animate-pulse flex items-center gap-2">
+                    Submit Exam <i class="fa-solid fa-check-double"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- VIEW 3: RESULTS & REVIEW -->
+        <div id="resultsView" class="hidden space-y-8">
+            
+            <!-- Summary Header Box -->
+            <div class="glass-card rounded-3xl p-8 text-center relative overflow-hidden">
+                <div class="inline-block p-4 rounded-full bg-pink-100 text-rose-600 text-3xl mb-4 shadow-inner">
+                    🎓
+                </div>
+
+                <h2 class="text-3xl font-extrabold text-slate-800 mb-2">Assessment Results</h2>
+                <p class="text-slate-600 text-sm mb-6">Candidate Name: <span class="font-calligraphy text-2xl font-bold text-rose-600">RADWA</span></p>
+
+                <!-- Score Gauge -->
+                <div class="flex justify-center items-center my-6">
+                    <div class="relative w-48 h-48 rounded-full bg-gradient-to-tr from-pink-500 via-rose-500 to-purple-600 p-2 shadow-xl flex items-center justify-center">
+                        <div class="w-full h-full bg-white rounded-full flex flex-col items-center justify-center p-4">
+                            <span id="finalScoreText" class="text-4xl sm:text-5xl font-black text-rose-600">0 / 30</span>
+                            <span id="finalPercentText" class="text-lg font-bold text-slate-600 mt-1">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="gradeBadge" class="inline-block px-6 py-2 rounded-full text-lg font-bold text-white bg-rose-500 shadow-md mb-6">
+                    Outstanding Performance 🌟
+                </div>
+
+                <!-- Section Performance Breakdown -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left max-w-3xl mx-auto mt-6">
+                    <div class="bg-white/80 p-4 rounded-2xl border border-pink-100">
+                        <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                            <span>1. Analog & Digital Signals</span>
+                            <span id="sec1Score">0/8</span>
+                        </div>
+                        <div class="w-full bg-pink-100 h-2 rounded-full overflow-hidden">
+                            <div id="sec1Bar" class="bg-rose-500 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="bg-white/80 p-4 rounded-2xl border border-pink-100">
+                        <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                            <span>2. Bits, Bytes & Representation</span>
+                            <span id="sec2Score">0/10</span>
+                        </div>
+                        <div class="w-full bg-pink-100 h-2 rounded-full overflow-hidden">
+                            <div id="sec2Bar" class="bg-rose-500 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="bg-white/80 p-4 rounded-2xl border border-pink-100">
+                        <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                            <span>3. Data Storage Units</span>
+                            <span id="sec3Score">0/5</span>
+                        </div>
+                        <div class="w-full bg-pink-100 h-2 rounded-full overflow-hidden">
+                            <div id="sec3Bar" class="bg-rose-500 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="bg-white/80 p-4 rounded-2xl border border-pink-100">
+                        <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                            <span>4. Number Systems & Conversions</span>
+                            <span id="sec4Score">0/7</span>
+                        </div>
+                        <div class="w-full bg-pink-100 h-2 rounded-full overflow-hidden">
+                            <div id="sec4Bar" class="bg-rose-500 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-4 mt-8">
+                    <button onclick="restartExam()" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-600 text-white font-bold shadow-md hover:from-pink-600 hover:to-rose-700 transition flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i> Retake Exam
+                    </button>
+                    <button onclick="scrollToReview()" class="px-6 py-3 rounded-2xl bg-white text-rose-600 border border-rose-300 font-bold shadow-sm hover:bg-rose-50 transition flex items-center gap-2">
+                        <i class="fa-solid fa-list-check"></i> Review Answer Explanations
+                    </button>
+                </div>
+            </div>
+
+            <!-- Detailed Question-by-Question Review -->
+            <div id="reviewContainer" class="space-y-6 pt-4">
+                <h3 class="text-2xl font-bold text-slate-800 border-l-4 border-rose-500 pl-3">
+                    Detailed Solution Guide & Scientific Explanations
+                </h3>
+                <div id="reviewList" class="space-y-4">
+                    <!-- Dynamic Answer Items -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 py-6 text-center text-xs text-rose-800/80 no-print font-medium">
+        <p>Specially crafted for <span class="font-calligraphy text-lg font-bold text-rose-600">RADWA</span> - All Rights Reserved © 2026</p>
+    </footer>
+
+    <!-- EASTER EGG OVERLAY -->
+    <div id="shaksOverlay" class="fixed inset-0 z-50 bg-gradient-to-br from-pink-600 via-rose-500 via-purple-600 to-amber-500 animate-pulse flex flex-col items-center justify-center hidden text-center px-4 overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-yellow-300/30 via-pink-500/20 to-transparent animate-ping opacity-40"></div>
+        
+        <div class="shaks-text space-y-6 relative z-10 max-w-3xl">
+            <div class="text-7xl sm:text-9xl animate-bounce flex justify-center gap-4">
+                <span>💃</span><span>✨</span><span>🎶</span><span>💃</span>
+            </div>
+            <h1 class="text-5xl sm:text-8xl font-black text-yellow-300 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] tracking-wider animate-pulse">
+                شكسسسسسسسسسس 🔥💃
+            </h1>
+            <h2 class="text-2xl sm:text-5xl font-extrabold text-white drop-shadow-[0_5px_5px_rgba(0,0,0,0.5)] leading-tight">
+                هييييييييييييي هييييييييييييييي هيييييييييييييييي 💃✨
+            </h2>
+            <p class="text-yellow-200 text-sm sm:text-lg font-bold bg-black/30 px-6 py-2 rounded-full inline-block backdrop-blur-md">
+                Preparing RADWA's Digital Electronics Exam... Stay Focused!
+            </p>
+        </div>
+    </div>
+
+    <!-- TEACHER PORTAL MODAL -->
+    <div id="teacherModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="glass-card bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-pink-200 overflow-hidden">
+            
+            <!-- Modal Header -->
+            <div class="p-6 bg-gradient-to-r from-rose-500 to-purple-600 text-white flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-user-shield text-2xl"></i>
+                    <div>
+                        <h3 class="text-xl font-bold">Teacher Portal & Answer Key</h3>
+                        <p class="text-xs text-rose-100">Master Question Bank & Detailed Explanations</p>
+                    </div>
+                </div>
+                <button onclick="closeTeacherModal()" class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Password Lock Screen -->
+            <div id="teacherAuthBox" class="p-8 text-center space-y-4 my-auto">
+                <div class="w-16 h-16 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-2xl mx-auto shadow-inner">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h4 class="text-xl font-bold text-slate-800">Enter Teacher Access Password</h4>
+                <p class="text-xs text-slate-500">Authorized instructor portal to view answer guide</p>
+                
+                <div class="max-w-xs mx-auto flex gap-2">
+                    <input type="password" id="teacherPassInput" placeholder="Password" class="w-full px-4 py-2.5 rounded-xl border border-pink-300 focus:outline-none focus:ring-2 focus:ring-rose-500 text-center font-bold">
+                    <button onclick="checkTeacherPassword()" class="px-5 py-2.5 rounded-xl bg-rose-600 text-white font-bold hover:bg-rose-700 transition">
+                        Unlock
+                    </button>
+                </div>
+                <p id="teacherAuthErr" class="text-xs text-red-500 hidden font-bold">Incorrect Password!</p>
+            </div>
+
+            <!-- Teacher Content Box -->
+            <div id="teacherContentBox" class="hidden flex-col flex-grow overflow-hidden p-6 space-y-4">
+                
+                <!-- Filters & Search Controls -->
+                <div class="flex flex-col sm:flex-row justify-between gap-3 no-print">
+                    <div class="flex-grow">
+                        <input type="text" id="teacherSearch" oninput="renderTeacherBank()" placeholder="Search question text or explanation..." class="w-full px-4 py-2 rounded-xl border border-pink-200 focus:ring-2 focus:ring-rose-400 text-sm">
+                    </div>
+                    <div class="flex gap-2">
+                        <select id="teacherSectionFilter" onchange="renderTeacherBank()" class="px-4 py-2 rounded-xl border border-pink-200 text-sm font-bold bg-white text-slate-700">
+                            <option value="ALL">All Sections (30 Questions)</option>
+                            <option value="1">Section 1: Analog & Digital Signals</option>
+                            <option value="2">Section 2: Bits & Bytes</option>
+                            <option value="3">Section 3: Storage Units</option>
+                            <option value="4">Section 4: Number Systems</option>
+                        </select>
+                        <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white rounded-xl text-sm font-bold hover:bg-slate-900 transition flex items-center gap-2">
+                            <i class="fa-solid fa-print"></i> Print
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Questions Bank List -->
+                <div id="teacherBankList" class="flex-grow overflow-y-auto space-y-4 pr-1 text-left">
+                    <!-- Dynamic Question Items -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- APPLICATION LOGIC & DATA -->
+    <script>
+        /* ==========================================================================
+           1. MASTER QUESTION BANK (30 Complete Questions in English)
+           ========================================================================== */
+        const rawQuestions = [
+            // --- SECTION 1: Analog and Digital Signals (8 Questions) ---
+            {
+                id: 1,
+                section: 1,
+                sectionTitle: "Analog vs. Digital Signals",
+                question: "What is the defining physical characteristic of an Analog signal?",
+                options: [
+                    "Continuous and can assume an infinite number of values over time",
+                    "Discrete and takes only two logic levels (0 and 1)",
+                    "Changes strictly in step function jumps",
+                    "Requires modern microprocessor transistors to exist"
+                ],
+                correctIndex: 0,
+                explanation: "Analog signals vary continuously over time and are represented as smooth waves (like sine waves), capturing continuous physical phenomena such as sound and temperature."
+            },
+            {
+                id: 2,
+                section: 1,
+                sectionTitle: "Analog vs. Digital Signals",
+                question: "Digital signals represent information using discrete binary logic levels, typically corresponding to:",
+                options: [
+                    "High voltage (1 / HIGH) and Low voltage (0 / LOW)",
+                    "Continuous voltages ranging smoothly from 0V to 100V",
+                    "Infinite fractional frequency modulation points",
+                    "Three distinct physical state levels (0, 1, and 2)"
+                ],
+                correctIndex: 0,
+                explanation: "Digital circuits use binary logic where HIGH voltage represents logic '1' and LOW voltage (ground) represents logic '0'."
+            },
+            {
+                id: 3,
+                section: 1,
+                sectionTitle: "Analog vs. Digital Signals",
+                question: "Which of the following is a classic example of an Analog device?",
+                options: [
+                    "A traditional mercury-in-glass thermometer",
+                    "A digital wristwatch with an LED segment display",
+                    "A modern computer LCD monitor",
+                    "An MP3 audio sound file"
+                ],
+                correctIndex: 0,
+                explanation: "The mercury level rises continuously in response to temperature change without jumping in discrete digital steps."
+            },
+            {
+                id: 4,
+                section: 1,
+                sectionTitle: "Analog vs. Digital Signals",
+                question: "Which component converts real-world sound waves (analog) into binary data (digital) for a computer?",
+                options: [
+                    "Analog-to-Digital Converter (ADC)",
+                    "Digital-to-Analog Converter (DAC)",
+                    "Graphics Processing Unit (GPU)",
+                    "Hard Disk Controller"
+                ],
+                correctIndex: 0,
+                explanation: "An ADC samples continuous analog signals at set intervals and quantizes them into binary bitstreams."
+            },
+            {
+                id: 5,
+                section: 1,
+                sectionTitle: "Analog vs. Digital Signals",
+                question: "Why do modern computing systems process data digitally rather than analogically?",
+                options: [
+                    "Digital signals are highly immune to noise and easy to store and process",
+                    "Digital signals always require much more physical cable bandwidth",
+                    "Analog signals transmit data faster over optical fibers",
+                    "Digital logic operates completely without electrical energy"
+                ],
+                correctIndex: 0,
+                explanation: "Digital signals can be easily regenerated and cleaned of noise because circuits only need to distinguish between two discrete voltage bands."
+            },
+            {
+                id: 6,
+                section: 1,
+                sectionTitle: "Analog vs. Digital Signals",
+                question: "Circuits designed to process discrete logic voltage levels (such as 0V and 5V) are known as:",
+                options: [
+                    "Digital Logic Circuits",
+                    "Pure Mechanical Relays",
+                    "Analog Resonant Networks",
+                    "Thermal Capacitive Arrays"
+                ],
+                correctIndex: 0,
+                explanation: "Digital logic circuits, constructed from gates like AND, OR, and NOT, process binary inputs to produce binary outputs."
+            },
+            {
+                id: 7,
+                section: 1,
+                sectionTitle: "Analog vs. Digital Signals",
+                question: "A traditional mechanical wall clock with continuously moving hands represents what type of system?",
+                options: [
+                    "An Analog system because the hands sweep continuously through angles",
+                    "A Digital system because numbers are painted on the dial",
+                    "A Quantum magnetic system",
+                    "A Pure software algorithm"
+                ],
+                correctIndex: 0,
+                explanation: "The angular displacement of clock hands changes continuously with time, characteristic of an analog display."
+            },
+            {
+                id: 8,
+                section: 1,
+                sectionTitle: "Analog vs. Digital Signals",
+                question: "When playing audio through digital speakers, a DAC (Digital-to-Analog Converter) is used to:",
+                options: [
+                    "Convert binary digital data back into continuous analog signals for speaker drivers",
+                    "Multiply home Wi-Fi broadband speeds",
+                    "Format the computer hard disk",
+                    "Translate audio into text documents"
+                ],
+                correctIndex: 0,
+                explanation: "Human ears perceive continuous pressure waves, so digital binary audio must be reconstructed into analog waves via a DAC."
+            },
+
+            // --- SECTION 2: Bits and Bytes (10 Questions) ---
+            {
+                id: 9,
+                section: 2,
+                sectionTitle: "Bits, Bytes & Digital Representation",
+                question: "What is the smallest fundamental unit of data in computing?",
+                options: [
+                    "Bit (Binary Digit)",
+                    "Byte",
+                    "Nibble",
+                    "Kilobyte (KB)"
+                ],
+                correctIndex: 0,
+                explanation: "A bit (short for binary digit) is the single atomic unit of data, representing either a 0 or a 1."
+            },
+            {
+                id: 10,
+                section: 2,
+                sectionTitle: "Bits, Bytes & Digital Representation",
+                question: "How many bits make up 1 standard Byte?",
+                options: [
+                    "8 bits",
+                    "4 bits",
+                    "10 bits",
+                    "16 bits"
+                ],
+                correctIndex: 0,
+                explanation: "By standard definition, 1 Byte = 8 bits. It is the typical space needed to store a single character."
+            },
+            {
+                id: 11,
+                section: 2,
+                sectionTitle: "Bits, Bytes & Digital Representation",
+                question: "A group consisting of exactly 4 bits is technically known as a:",
+                options: [
+                    "Nibble (half-byte)",
+                    "Gigabyte",
+                    "Word",
+                    "Register"
+                ],
+                correctIndex: 0,
+                explanation: "4 bits equal 1 Nibble, which directly corresponds to one single hexadecimal character."
+            },
+            {
+                id: 12,
+                section: 2,
+                sectionTitle: "Bits, Bytes & Digital Representation",
+                question: "A single standard ASCII character (such as 'A') occupies how much memory?",
+                options: [
+                    "1 Byte (8 bits)",
+                    "1 Bit",
+                    "1 Kilobyte",
+                    "4 Bytes"
+                ],
+                correctIndex: 0,
+                explanation: "Standard ASCII encodes characters into an 8-bit binary pattern, taking up exactly 1 Byte."
+            },
+            {
+                id: 13,
+                section: 2,
+                sectionTitle: "Bits, Bytes & Digital Representation",
+                question: "In a microchip transistor acting as a switch, binary state '1' represents:",
+                options: [
+                    "Current flowing (ON / Closed circuit state)",
+                    "Current blocked (OFF / Open circuit state)",
+                    "System standby mode",
+                    "Ground potential"
+                ],
+                correctIndex: 0,
+                explanation: "A closed switch allowing current flow denotes logic HIGH or binary '1'."
+            },
+            {
+                id: 14,
+                section: 2,
+                sectionTitle: "Bits, Bytes & Digital Representation",
+                question: "How many bits are needed at minimum to encode 4 unique states (e.g., North, South, East, West)?",
+                options: [
+                    "2 bits (since 2^2 = 4 states)",
+                    "1 bit",
+                    "4 bits",
+                    "8 bits"
+                ],
+                correctIndex: 0,
+                explanation: "With 2 bits, we can form 2^2 = 4 unique combinations: 00, 01, 10, and 11."
+            },
+            {
+                id: 15,
+                section: 2,
+                sectionTitle: "Bits, Bytes & Digital Representation",
+                question: "How many distinct values can be represented using 8 bits (1 Byte)?",
+                options: [
+                    "256 values (0 through 255)",
+                    "128 values",
+                    "8 values",
+                    "1024 values"
+                ],
+                correctIndex: 0,
+                explanation: "The total number of unique patterns for N bits is 2^N. For 8 bits: 2^8 = 256 states."
+            },
+            {
+                id: 16,
+                section: 2,
+                sectionTitle: "Bits, Bytes & Digital Representation",
+                question: "What mathematical formula gives the total number of unique combinations for N bits?",
+                options: [
+                    "2^N",
+                    "N * 2",
+                    "N^2",
+                    "N + 8"
+                ],
+                correctIndex: 0,
+                explanation: "Since each bit has 2 possible binary choices (0 or 1), N bits yield 2 * 2 * ... = 2^N combinations."
+            },
+            {
+                id: 17,
+                section: 2,
+                sectionTitle: "Bits, Bytes & Digital Representation",
+                question: "In 24-bit True Color RGB image encoding, if Red, Green, and Blue each take 8 bits, total bits per pixel is:",
+                options: [
+                    "24 bits (3 Bytes)",
+                    "8 bits",
+                    "16 bits",
+                    "64 bits"
+                ],
+                correctIndex: 0,
+                explanation: "3 color channels * 8 bits per channel = 24 bits per pixel, yielding 16.7 million colors."
+            },
+            {
+                id: 18,
+                section: 2,
+                sectionTitle: "Bits, Bytes & Digital Representation",
+                question: "With 3 contiguous binary bits, how many unique combinations can be formed?",
+                options: [
+                    "8 combinations (000 to 111)",
+                    "3 combinations",
+                    "6 combinations",
+                    "16 combinations"
+                ],
+                correctIndex: 0,
+                explanation: "2^3 = 8 possible combinations: 000, 001, 010, 011, 100, 101, 110, 111."
+            },
+
+            // --- SECTION 3: Data Storage Units (5 Questions) ---
+            {
+                id: 19,
+                section: 3,
+                sectionTitle: "Data Storage Units",
+                question: "In binary computer storage architecture, 1 Kilobyte (KB) is exactly:",
+                options: [
+                    "1024 Bytes",
+                    "1000 Bytes",
+                    "800 Bytes",
+                    "2048 Bytes"
+                ],
+                correctIndex: 0,
+                explanation: "Binary prefix standard uses powers of two: 1 KB = 2^10 Bytes = 1024 Bytes."
+            },
+            {
+                id: 20,
+                section: 3,
+                sectionTitle: "Data Storage Units",
+                question: "One Megabyte (1 MB) is equivalent to:",
+                options: [
+                    "1024 Kilobytes (KB)",
+                    "100 Kilobytes",
+                    "10000 Bytes",
+                    "1024 Gigabytes"
+                ],
+                correctIndex: 0,
+                explanation: "Moving up each binary prefix step requires multiplying by 1024 (1 MB = 1024 KB)."
+            },
+            {
+                id: 21,
+                section: 3,
+                sectionTitle: "Data Storage Units",
+                question: "Which of the following lists data storage units from smallest to largest?",
+                options: [
+                    "Byte < KB < MB < GB < TB",
+                    "TB < GB < MB < KB < Byte",
+                    "Byte < MB < KB < GB < TB",
+                    "Bit < Byte < GB < MB < TB"
+                ],
+                correctIndex: 0,
+                explanation: "Standard ascending order: Byte, Kilobyte, Megabyte, Gigabyte, Terabyte."
+            },
+            {
+                id: 22,
+                section: 3,
+                sectionTitle: "Data Storage Units",
+                question: "Approximately how many Bytes are contained in 1 Gigabyte (1 GB)?",
+                options: [
+                    "Approximately 1 Billion Bytes (1,073,741,824 Bytes)",
+                    "Approximately 1 Million Bytes",
+                    "Approximately 1 Thousand Bytes",
+                    "Approximately 1 Trillion Bytes"
+                ],
+                correctIndex: 0,
+                explanation: "1 GB = 1024 * 1024 * 1024 Bytes = 1,073,741,824 Bytes (~1 Billion Bytes)."
+            },
+            {
+                id: 23,
+                section: 3,
+                sectionTitle: "Data Storage Units",
+                question: "A high-resolution image file measuring 2 Megabytes (2 MB) contains how many Kilobytes?",
+                options: [
+                    "2048 KB",
+                    "2000 KB",
+                    "1024 KB",
+                    "512 KB"
+                ],
+                correctIndex: 0,
+                explanation: "2 MB * 1024 KB/MB = 2048 KB."
+            },
+
+            // --- SECTION 4: Decimal & Binary Systems (7 Questions) ---
+            {
+                id: 24,
+                section: 4,
+                sectionTitle: "Number Systems & Conversions",
+                question: "The Decimal Number System used in daily life operates on a base of:",
+                options: [
+                    "Base 10 (Digits 0 through 9)",
+                    "Base 2 (Digits 0 and 1)",
+                    "Base 8 (Digits 0 through 7)",
+                    "Base 16"
+                ],
+                correctIndex: 0,
+                explanation: "Base 10 uses ten digits (0,1,2,3,4,5,6,7,8,9) with place values in powers of 10."
+            },
+            {
+                id: 25,
+                section: 4,
+                sectionTitle: "Number Systems & Conversions",
+                question: "The Binary Number System used by digital logic processors operates on a base of:",
+                options: [
+                    "Base 2 (Digits 0 and 1)",
+                    "Base 10 (Digits 0 through 9)",
+                    "Base 16 (Digits 0 through F)",
+                    "Base 8"
+                ],
+                correctIndex: 0,
+                explanation: "Base 2 uses only two binary digits (0 and 1), matching dual electrical states."
+            },
+            {
+                id: 26,
+                section: 4,
+                sectionTitle: "Number Systems & Conversions",
+                question: "Converting the binary number (101)_2 to decimal gives:",
+                options: [
+                    "5",
+                    "3",
+                    "6",
+                    "7"
+                ],
+                correctIndex: 0,
+                explanation: "(1 * 2^2) + (0 * 2^1) + (1 * 2^0) = 4 + 0 + 1 = 5."
+            },
+            {
+                id: 27,
+                section: 4,
+                sectionTitle: "Number Systems & Conversions",
+                question: "Converting the decimal number (12)_10 into binary yields:",
+                options: [
+                    "1100",
+                    "1010",
+                    "1110",
+                    "1001"
+                ],
+                correctIndex: 0,
+                explanation: "12 = 8 + 4 = (1 * 2^3) + (1 * 2^2) + (0 * 2^1) + (0 * 2^0) -> 1100."
+            },
+            {
+                id: 28,
+                section: 4,
+                sectionTitle: "Number Systems & Conversions",
+                question: "The binary number (1111)_2 represents what decimal value?",
+                options: [
+                    "15",
+                    "16",
+                    "14",
+                    "12"
+                ],
+                correctIndex: 0,
+                explanation: "8 + 4 + 2 + 1 = 15."
+            },
+            {
+                id: 29,
+                section: 4,
+                sectionTitle: "Number Systems & Conversions",
+                question: "Positional weights of binary digits from right to left follow which power sequence?",
+                options: [
+                    "1, 2, 4, 8, 16, 32, 64...",
+                    "1, 10, 100, 1000...",
+                    "0, 1, 2, 3, 4, 5...",
+                    "2, 4, 6, 8, 10..."
+                ],
+                correctIndex: 0,
+                explanation: "Binary positions represent powers of two: 2^0=1, 2^1=2, 2^2=4, 2^3=8, 2^4=16, and so on."
+            },
+            {
+                id: 30,
+                section: 4,
+                sectionTitle: "Number Systems & Conversions",
+                question: "The decimal number (8)_10 in a 4-bit binary representation is written as:",
+                options: [
+                    "1000",
+                    "0100",
+                    "1100",
+                    "0001"
+                ],
+                correctIndex: 0,
+                explanation: "8 = (1 * 8) + (0 * 4) + (0 * 2) + (0 * 1) -> 1000."
+            }
+        ];
+
+        /* ==========================================================================
+           2. STATE MANAGEMENT
+           ========================================================================== */
+        let activeQuestions = [];
+        let currentQuestionIdx = 0;
+        let userAnswers = {}; // Maps question ID to selected answer text
+
+        /* ==========================================================================
+           3. INITIALIZATION & CANVAS PARTICLES
+           ========================================================================== */
+        window.onload = function() {
+            initCanvas();
+            prepareExamQuestions();
+        };
+
+        function initCanvas() {
+            const canvas = document.getElementById('particleCanvas');
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            const particles = [];
+            const particleCount = 30;
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 12 + 6,
+                    speedY: Math.random() * 0.8 + 0.3,
+                    speedX: Math.sin(Math.random() * Math.PI) * 0.4,
+                    opacity: Math.random() * 0.5 + 0.25,
+                    color: ['#f472b6', '#fb7185', '#ec4899', '#f59e0b', '#c084fc'][Math.floor(Math.random() * 5)]
+                });
+            }
+
+            function drawSparkle(ctx, x, y, size, color, opacity) {
+                ctx.save();
+                ctx.globalAlpha = opacity;
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                const d = size;
+                ctx.moveTo(x, y);
+                ctx.bezierCurveTo(x - d / 2, y - d / 2, x - d, y + d / 3, x, y + d);
+                ctx.bezierCurveTo(x + d, y + d / 3, x + d / 2, y - d / 2, x, y);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach(p => {
+                    p.y -= p.speedY;
+                    p.x += Math.sin(p.y * 0.02) * 0.4;
+
+                    if (p.y < -20) {
+                        p.y = canvas.height + 20;
+                        p.x = Math.random() * canvas.width;
+                    }
+
+                    drawSparkle(ctx, p.x, p.y, p.size, p.color, p.opacity);
+                });
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        /* ==========================================================================
+           4. ANTI-CHEATING SHUFFLE ALGORITHM
+           ========================================================================== */
+        function shuffleArray(arr) {
+            const array = [...arr];
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function prepareExamQuestions() {
+            userAnswers = {};
+            currentQuestionIdx = 0;
+
+            activeQuestions = rawQuestions.map(q => {
+                const originalCorrectOptionText = q.options[q.correctIndex];
+                const shuffledOptions = shuffleArray(q.options);
+                const newCorrectIndex = shuffledOptions.indexOf(originalCorrectOptionText);
+
+                return {
+                    ...q,
+                    options: shuffledOptions,
+                    correctIndex: newCorrectIndex,
+                    correctOptionText: originalCorrectOptionText
+                };
+            });
+        }
+
+        /* ==========================================================================
+           5. SOUND EFFECTS & EASTER EGG OVERLAY
+           ========================================================================== */
+        function playChime(freq = 523.25, type = 'sine') {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (AudioCtx) {
+                    const ctx = new AudioCtx();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.25);
+                }
+            } catch(e) {}
+        }
+
+        function triggerEasterEggAndStart() {
+            const overlay = document.getElementById('shaksOverlay');
+            overlay.classList.remove('hidden');
+
+            // Speech Synthesis Vocalization
+            try {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel(); // Clear any previous queue
+                    const utterance = new SpeechSynthesisUtterance("شكسسسسسسسسسس! هييييييييييييي هييييييييييييييي هيييييييييييييييي!");
+                    utterance.lang = 'ar-EG';
+                    utterance.pitch = 1.3;
+                    utterance.rate = 1.1;
+                    window.speechSynthesis.speak(utterance);
+                }
+            } catch (e) {
+                console.error("Speech Synthesis Error:", e);
+            }
+
+            // Web Audio API Drum Beats & Festive Music
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (AudioCtx) {
+                    const ctx = new AudioCtx();
+
+                    // Oriental Dum/Tak Drum Pattern Simulation
+                    const beatTimes = [0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5];
+                    beatTimes.forEach((t, i) => {
+                        setTimeout(() => {
+                            const osc = ctx.createOscillator();
+                            const gain = ctx.createGain();
+                            const freq = (i % 2 === 0) ? 130 : 240;
+                            osc.type = 'sine';
+                            osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                            osc.frequency.exponentialRampToValueAtTime(30, ctx.currentTime + 0.15);
+                            
+                            gain.gain.setValueAtTime(0.35, ctx.currentTime);
+                            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+                            
+                            osc.connect(gain);
+                            gain.connect(ctx.destination);
+                            osc.start();
+                            osc.stop(ctx.currentTime + 0.15);
+                        }, t * 1000);
+                    });
+
+                    // Festive Arpeggio Melody
+                    const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
+                    notes.forEach((f, i) => {
+                        setTimeout(() => {
+                            const osc = ctx.createOscillator();
+                            const gain = ctx.createGain();
+                            osc.type = 'triangle';
+                            osc.frequency.setValueAtTime(f, ctx.currentTime);
+                            gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                            osc.connect(gain);
+                            gain.connect(ctx.destination);
+                            osc.start();
+                            osc.stop(ctx.currentTime + 0.3);
+                        }, i * 200);
+                    });
+                }
+            } catch(e) {}
+
+            // Transition to exam view after 2.8 seconds
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                document.getElementById('landingView').classList.add('hidden');
+                document.getElementById('quizView').classList.remove('hidden');
+                renderCurrentQuestion();
+            }, 2800);
+        }
+
+        /* ==========================================================================
+           6. QUIZ RENDER & NAVIGATION LOGIC
+           ========================================================================== */
+        function renderCurrentQuestion() {
+            const q = activeQuestions[currentQuestionIdx];
+
+            document.getElementById('currentSectionBadge').innerText = `Section ${q.section}`;
+            document.getElementById('currentSectionTitle').innerText = q.sectionTitle;
+            document.getElementById('qIndexText').innerText = currentQuestionIdx + 1;
+            document.getElementById('qTotalText').innerText = activeQuestions.length;
+            document.getElementById('questionNumBox').innerText = currentQuestionIdx + 1;
+            document.getElementById('questionText').innerText = q.question;
+
+            const progressPct = ((currentQuestionIdx + 1) / activeQuestions.length) * 100;
+            document.getElementById('progressBar').style.width = `${progressPct}%`;
+
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+
+            const optionLetters = ['A', 'B', 'C', 'D'];
+
+            q.options.forEach((optText, idx) => {
+                const isSelected = userAnswers[q.id] === optText;
+
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-4 rounded-2xl border transition-all duration-200 flex items-center gap-4 ${
+                    isSelected 
+                        ? 'bg-rose-500 text-white border-rose-600 shadow-lg scale-[1.01]' 
+                        : 'bg-white/80 hover:bg-rose-50 text-slate-800 border-pink-200 hover:border-pink-300 shadow-sm'
+                }`;
+
+                btn.onclick = () => {
+                    playChime(440 + idx * 80);
+                    selectOption(q.id, optText);
+                };
+
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0 ${
+                        isSelected ? 'bg-white text-rose-600' : 'bg-pink-100 text-rose-700'
+                    }">
+                        ${optionLetters[idx]}
+                    </span>
+                    <span class="text-sm sm:text-base font-semibold flex-grow">${optText}</span>
+                    ${isSelected ? '<i class="fa-solid fa-circle-check text-xl"></i>' : ''}
+                `;
+
+                container.appendChild(btn);
+            });
+
+            document.getElementById('prevBtn').disabled = (currentQuestionIdx === 0);
+
+            if (currentQuestionIdx === activeQuestions.length - 1) {
+                document.getElementById('nextBtn').classList.add('hidden');
+                document.getElementById('submitExamBtn').classList.remove('hidden');
+            } else {
+                document.getElementById('nextBtn').classList.remove('hidden');
+                document.getElementById('submitExamBtn').classList.add('hidden');
+            }
+        }
+
+        function selectOption(qId, selectedText) {
+            userAnswers[qId] = selectedText;
+            renderCurrentQuestion();
+        }
+
+        function navigateQuestion(direction) {
+            const newIndex = currentQuestionIdx + direction;
+            if (newIndex >= 0 && newIndex < activeQuestions.length) {
+                currentQuestionIdx = newIndex;
+                renderCurrentQuestion();
+            }
+        }
+
+        /* ==========================================================================
+           7. SUBMIT EXAM & RESULTS GENERATION
+           ========================================================================== */
+        function confirmSubmitExam() {
+            const answeredCount = Object.keys(userAnswers).length;
+            if (answeredCount < activeQuestions.length) {
+                const proceed = confirm(`You have answered ${answeredCount} out of 30 questions. Are you sure you want to submit?`);
+                if (!proceed) return;
+            } else {
+                if (!confirm("Confirm exam submission?")) return;
+            }
+
+            calculateAndShowResults();
+        }
+
+        function calculateAndShowResults() {
+            let score = 0;
+            const sectionScores = { 1: 0, 2: 0, 3: 0, 4: 0 };
+            const sectionTotals = { 1: 8, 2: 10, 3: 5, 4: 7 };
+
+            activeQuestions.forEach(q => {
+                const userChoice = userAnswers[q.id];
+                if (userChoice === q.correctOptionText) {
+                    score++;
+                    sectionScores[q.section]++;
+                }
+            });
+
+            const percent = Math.round((score / activeQuestions.length) * 100);
+
+            let grade = "";
+            let badgeClass = "";
+            if (percent >= 90) { grade = "Outstanding Distinction 🌟🎓"; badgeClass = "bg-emerald-500"; }
+            else if (percent >= 80) { grade = "Excellent Performance ⭐️"; badgeClass = "bg-teal-500"; }
+            else if (percent >= 70) { grade = "Very Good Job 👍"; badgeClass = "bg-blue-500"; }
+            else if (percent >= 60) { grade = "Satisfactory Pass 🌸"; badgeClass = "bg-amber-500"; }
+            else { grade = "Needs Revision & Study 💡"; badgeClass = "bg-rose-500"; }
+
+            document.getElementById('finalScoreText').innerText = `${score} / 30`;
+            document.getElementById('finalPercentText').innerText = `${percent}%`;
+
+            const badgeElem = document.getElementById('gradeBadge');
+            badgeElem.innerText = grade;
+            badgeElem.className = `inline-block px-6 py-2 rounded-full text-lg font-bold text-white shadow-md mb-6 ${badgeClass}`;
+
+            for (let s = 1; s <= 4; s++) {
+                const sScore = sectionScores[s];
+                const sTotal = sectionTotals[s];
+                const sPct = Math.round((sScore / sTotal) * 100);
+                document.getElementById(`sec${s}Score`).innerText = `${sScore}/${sTotal}`;
+                document.getElementById(`sec${s}Bar`).style.width = `${sPct}%`;
+            }
+
+            renderDetailedReview();
+
+            document.getElementById('quizView').classList.add('hidden');
+            document.getElementById('resultsView').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderDetailedReview() {
+            const list = document.getElementById('reviewList');
+            list.innerHTML = '';
+
+            activeQuestions.forEach((q, idx) => {
+                const userChoice = userAnswers[q.id] || "No answer selected";
+                const isCorrect = userChoice === q.correctOptionText;
+
+                const card = document.createElement('div');
+                card.className = `glass-card p-6 rounded-3xl border-2 transition ${
+                    isCorrect ? 'border-emerald-200 bg-emerald-50/40' : 'border-rose-200 bg-rose-50/40'
+                }`;
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-4 mb-3">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-xl ${isCorrect ? 'bg-emerald-500' : 'bg-rose-500'} text-white font-black text-sm flex items-center justify-center">
+                                ${idx + 1}
+                            </span>
+                            <span class="text-xs font-bold text-slate-500">Section ${q.section}: ${q.sectionTitle}</span>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold text-white ${isCorrect ? 'bg-emerald-500' : 'bg-rose-500'}">
+                            ${isCorrect ? 'Correct ✓' : 'Incorrect ✗'}
+                        </span>
+                    </div>
+
+                    <h4 class="text-base sm:text-lg font-bold text-slate-800 mb-4">${q.question}</h4>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm mb-4">
+                        <div class="p-3 rounded-xl ${isCorrect ? 'bg-emerald-100/80 text-emerald-900' : 'bg-rose-100/80 text-rose-900'} font-medium">
+                            <strong>Your Selection:</strong> ${userChoice}
+                        </div>
+                        <div class="p-3 rounded-xl bg-emerald-100/80 text-emerald-900 font-medium">
+                            <strong>Correct Answer:</strong> ${q.correctOptionText}
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-white/90 border border-pink-200 text-xs sm:text-sm text-slate-700 leading-relaxed">
+                        <strong class="text-rose-600 block mb-1">💡 Scientific Explanation:</strong>
+                        ${q.explanation}
+                    </div>
+                `;
+
+                list.appendChild(card);
+            });
+        }
+
+        function scrollToReview() {
+            document.getElementById('reviewContainer').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function restartExam() {
+            prepareExamQuestions();
+            document.getElementById('resultsView').classList.add('hidden');
+            document.getElementById('landingView').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goHome() {
+            if (confirm("Return to home screen?")) {
+                restartExam();
+            }
+        }
+
+        /* ==========================================================================
+           8. TEACHER PORTAL & AUTHENTICATION
+           ========================================================================== */
+        function openTeacherModal() {
+            document.getElementById('teacherModal').classList.remove('hidden');
+        }
+
+        function closeTeacherModal() {
+            document.getElementById('teacherModal').classList.add('hidden');
+        }
+
+        function checkTeacherPassword() {
+            const pass = document.getElementById('teacherPassInput').value;
+            const err = document.getElementById('teacherAuthErr');
+
+            if (pass === '20112010') {
+                err.classList.add('hidden');
+                document.getElementById('teacherAuthBox').classList.add('hidden');
+                document.getElementById('teacherContentBox').classList.remove('hidden');
+                document.getElementById('teacherContentBox').classList.add('flex');
+                renderTeacherBank();
+            } else {
+                err.classList.remove('hidden');
+            }
+        }
+
+        function renderTeacherBank() {
+            const filterSec = document.getElementById('teacherSectionFilter').value;
+            const searchText = document.getElementById('teacherSearch').value.toLowerCase();
+            const container = document.getElementById('teacherBankList');
+            container.innerHTML = '';
+
+            let count = 0;
+
+            rawQuestions.forEach((q) => {
+                if (filterSec !== 'ALL' && q.section.toString() !== filterSec) return;
+
+                const matchSearch = q.question.toLowerCase().includes(searchText) || q.explanation.toLowerCase().includes(searchText);
+                if (!matchSearch) return;
+
+                count++;
+                const card = document.createElement('div');
+                card.className = "p-5 rounded-2xl bg-white border border-pink-200 shadow-sm space-y-3";
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-center border-b border-pink-100 pb-2">
+                        <span class="font-bold text-rose-600 text-xs sm:text-sm">Question #${q.id} (Section ${q.section})</span>
+                        <span class="text-xs bg-pink-100 text-pink-700 font-bold px-2.5 py-1 rounded-full">${q.sectionTitle}</span>
+                    </div>
+
+                    <h4 class="font-bold text-slate-800 text-sm sm:text-base">${q.question}</h4>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        ${q.options.map((opt, oIdx) => `
+                            <div class="p-2 rounded-lg ${oIdx === q.correctIndex ? 'bg-emerald-100 font-bold text-emerald-800 border border-emerald-300' : 'bg-slate-50 text-slate-600'}">
+                                ${oIdx === q.correctIndex ? '✓ ' : ''}${opt}
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="p-3 bg-rose-50/70 rounded-xl text-xs text-rose-900 border border-rose-100">
+                        <strong>Scientific Note:</strong> ${q.explanation}
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            if (count === 0) {
+                container.innerHTML = `<p class="text-center text-slate-400 py-8">No questions match your query.</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
