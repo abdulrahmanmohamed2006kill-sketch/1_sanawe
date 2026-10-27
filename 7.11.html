@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة أساسيات البرمجة وعلوم الحاسوب التفاعلية</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Cairo & Fira Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Canvas Confetti CDN for interactive achievements -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cute: {
+                            50: '#fff0f5',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                        },
+                        pastel: {
+                            purple: '#f3e8ff',
+                            purpleDark: '#9333ea',
+                            pink: '#fce7f3',
+                            pinkDark: '#db2777',
+                            amber: '#fef3c7',
+                            amberDark: '#d97706',
+                            teal: '#ccfbf1',
+                            tealDark: '#0d9488',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #fff5f7;
+            background-image: 
+                radial-gradient(#fbcfe8 1px, transparent 1px), 
+                radial-gradient(#f472b6 1px, #fff5f7 1px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+        }
+
+        /* Glassmorphism utility */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(251, 113, 133, 0.2);
+        }
+
+        .glass-header {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(16px);
+            border-bottom: 2px solid rgba(251, 113, 133, 0.15);
+        }
+
+        .cute-glow {
+            box-shadow: 0 10px 30px -5px rgba(244, 63, 94, 0.25);
+        }
+
+        .cute-glow-purple {
+            box-shadow: 0 10px 30px -5px rgba(147, 51, 234, 0.25);
+        }
+
+        /* Animations */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
+        }
+
+        .animate-float {
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .animate-pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #ffe4e6;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fb7185;
+            border-radius: 999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #e11d48;
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased min-h-screen flex flex-col justify-between selection:bg-rose-200 selection:text-rose-800">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-gradient-to-r from-rose-500 via-pink-500 to-purple-500 text-white text-center py-2.5 px-4 text-xs sm:text-sm font-bold shadow-md flex items-center justify-center gap-2">
+        <i class="fa-solid fa-sparkles animate-spin"></i>
+        <span>المنصة التفاعلية الشاملة لأساسيات البرمجة وعلوم الحاسوب</span>
+        <span class="hidden md:inline-block bg-white/20 px-2 py-0.5 rounded-full text-[11px] font-mono">النسخة التفاعلية 2.0</span>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="glass-header sticky top-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
+            
+            <!-- Logo & Title -->
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-gradient-to-tr from-rose-400 to-pink-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg shadow-rose-200 animate-float">
+                    <i class="fa-solid fa-laptop-code"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600">
+                        أساسيات البرمجة والحاسوب
+                    </h1>
+                    <p class="text-xs font-semibold text-rose-500 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-ping"></span>
+                        بيئة تعليمية تفاعلية بصرية
+                    </p>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs Buttons -->
+            <nav class="flex items-center gap-1.5 bg-rose-50/80 p-1.5 rounded-2xl border border-rose-200/60 overflow-x-auto max-w-full">
+                <button onclick="switchTab('lec8')" id="btn-lec8" class="nav-tab text-xs font-bold px-3.5 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-md">
+                    <i class="fa-solid fa-hashtag"></i>
+                    <span>1. النظام الثماني</span>
+                </button>
+                <button onclick="switchTab('lec10')" id="btn-lec10" class="nav-tab text-xs font-bold px-3.5 py-2 rounded-xl text-gray-600 hover:text-rose-600 hover:bg-white/80 transition-all duration-200 flex items-center gap-2">
+                    <i class="fa-solid fa-network-wired"></i>
+                    <span>2. شبكات الحاسوب</span>
+                </button>
+                <button onclick="switchTab('lec11')" id="btn-lec11" class="nav-tab text-xs font-bold px-3.5 py-2 rounded-xl text-gray-600 hover:text-rose-600 hover:bg-white/80 transition-all duration-200 flex items-center gap-2">
+                    <i class="fa-solid fa-code"></i>
+                    <span>3. مستويات اللغات</span>
+                </button>
+                <button onclick="switchTab('lec12')" id="btn-lec12" class="nav-tab text-xs font-bold px-3.5 py-2 rounded-xl text-gray-600 hover:text-rose-600 hover:bg-white/80 transition-all duration-200 flex items-center gap-2">
+                    <i class="fa-solid fa-gears"></i>
+                    <span>4. المترجم والمفسر</span>
+                </button>
+                <button onclick="switchTab('homework')" id="btn-homework" class="nav-tab text-xs font-bold px-3.5 py-2 rounded-xl text-gray-600 hover:text-rose-600 hover:bg-white/80 transition-all duration-200 flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-check text-rose-500"></i>
+                    <span>الواجب والتمارين</span>
+                </button>
+            </nav>
+
+        </div>
+    </header>
+
+    <!-- Main Content Body Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow space-y-8 w-full">
+
+        <!-- Notification Toast Box -->
+        <div id="toast" class="fixed bottom-6 left-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-gray-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-pink-500/30">
+            <div id="toast-icon" class="text-rose-400 text-lg"><i class="fa-solid fa-circle-info"></i></div>
+            <div id="toast-message" class="text-xs sm:text-sm font-semibold">تنبيه!</div>
+        </div>
+
+        <!-- ==================== LECTURE 08: OCTAL SYSTEM ==================== -->
+        <section id="tab-lec8" class="tab-content block space-y-8 animate-fadeIn">
+            
+            <!-- Hero Banner Card -->
+            <div class="bg-gradient-to-br from-rose-500 via-pink-500 to-purple-600 rounded-3xl p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden cute-glow">
+                <div class="absolute -left-10 -bottom-10 opacity-15 text-9xl font-black font-mono select-none">Base-8</div>
+                <div class="relative z-10 max-w-3xl space-y-4">
+                    <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide border border-white/30">
+                        <i class="fa-solid fa-layer-group"></i> المحاضرة الأولى: أنظمة العد
+                    </div>
+                    <h2 class="text-3xl sm:text-5xl font-black leading-tight">النظام الثماني في الحاسوب (Octal System)</h2>
+                    <p class="text-rose-100 text-sm sm:text-base leading-relaxed">
+                        دليل شامل لفهم النظام الثماني، أوزان الخانات، طريقة التحويل المباشر لـ 3-bit Binary، وتاريخ استخدامه في العتاد القديم مقابل النظام السداسي عشر Hexadecimal.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Content Layout Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Main Theoretical Cards (2 Cols) -->
+                <div class="lg:col-span-2 space-y-6">
+                    
+                    <!-- Card 1: System Definition -->
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-sm space-y-5">
+                        <div class="flex items-center gap-3 border-b border-rose-100 pb-4">
+                            <span class="w-11 h-11 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold text-xl shadow-inner">1</span>
+                            <div>
+                                <h3 class="text-xl font-extrabold text-gray-800">أساسيات النظام الثماني (Base-8)</h3>
+                                <p class="text-xs text-gray-500">القواعد الرئيسية ومكونات النظام</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-rose-50/70 border border-rose-200/80 p-4 rounded-2xl space-y-2">
+                                <div class="flex items-center gap-2 text-rose-700 font-bold text-sm">
+                                    <i class="fa-solid fa-calculator"></i> الأرقام المتاحة
+                                </div>
+                                <p class="text-xs text-gray-600 leading-relaxed">
+                                    يتكون من 8 رموز فقط: <strong class="font-mono text-rose-600 text-sm">0, 1, 2, 3, 4, 5, 6, 7</strong>. لا يوجد الرقم 8 أو 9 مطلقاً في هذا النظام.
+                                </p>
+                            </div>
+
+                            <div class="bg-purple-50/70 border border-purple-200/80 p-4 rounded-2xl space-y-2">
+                                <div class="flex items-center gap-2 text-purple-700 font-bold text-sm">
+                                    <i class="fa-solid fa-weight-scale"></i> أوزان الخانات
+                                </div>
+                                <p class="text-xs text-gray-600 font-mono leading-relaxed">
+                                    قوى العدد 8:<br>
+                                    8⁰ = 1, 8¹ = 8, 8² = 64, 8³ = 512, 8⁴ = 4096...
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Mathematical Expansion Example -->
+                        <div class="bg-gray-900 text-rose-300 p-5 rounded-2xl font-mono text-xs space-y-2 border border-rose-500/20 shadow-inner">
+                            <div class="flex justify-between items-center text-gray-400 border-b border-gray-800 pb-2">
+                                <span><i class="fa-solid fa-code"></i> مثال توضيحي للفك الرياضي:</span>
+                                <span class="text-rose-400">512₈ ➔ Decimal</span>
+                            </div>
+                            <p class="text-gray-200">Value = (2 × 8⁰) + (1 × 8¹) + (5 × 8²)</p>
+                            <p class="text-gray-200">Value = (2 × 1) + (1 × 8) + (5 × 64)</p>
+                            <p class="text-emerald-400 font-bold">Value = 2 + 8 + 320 = 330₁₀</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Binary Octal 3-bit Relationship -->
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-sm space-y-5">
+                        <div class="flex items-center gap-3 border-b border-rose-100 pb-4">
+                            <span class="w-11 h-11 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-xl shadow-inner">2</span>
+                            <div>
+                                <h3 class="text-xl font-extrabold text-gray-800">العلاقة بين الثنائي والثماني (3-Bit Grouping)</h3>
+                                <p class="text-xs text-gray-500">لماذا تم استخدام النظام الثماني في الحاسوب؟</p>
+                            </div>
+                        </div>
+
+                        <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                            لأن <strong class="text-rose-600 font-mono">2³ = 8</strong>، فإن كل رقم ثماني واحد يمثل بدقة مجموعة من <strong>3 بتات ثنائية (3-bits)</strong>. هذا جعل التحويل بينهما سهلاً وسريعاً جداً دون الحاجة لعمليات قسمة طويلة.
+                        </p>
+
+                        <!-- Visual 3-bit mapping table -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-center text-xs border-collapse">
+                                <thead>
+                                    <tr class="bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold">
+                                        <th class="p-2.5 rounded-r-xl">الرقم الثماني (Octal)</th>
+                                        <th class="p-2.5">التمثيل الثنائي (3-Bit Binary)</th>
+                                        <th class="p-2.5 rounded-l-xl">التمثيل العشري (Decimal)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-rose-100 font-mono text-gray-700">
+                                    <tr class="hover:bg-rose-50/50"><td>0</td><td class="text-rose-600 font-bold">000</td><td>0</td></tr>
+                                    <tr class="hover:bg-rose-50/50"><td>1</td><td class="text-rose-600 font-bold">001</td><td>1</td></tr>
+                                    <tr class="hover:bg-rose-50/50"><td>2</td><td class="text-rose-600 font-bold">010</td><td>2</td></tr>
+                                    <tr class="hover:bg-rose-50/50"><td>3</td><td class="text-rose-600 font-bold">011</td><td>3</td></tr>
+                                    <tr class="hover:bg-rose-50/50"><td>4</td><td class="text-rose-600 font-bold">100</td><td>4</td></tr>
+                                    <tr class="hover:bg-rose-50/50"><td>5</td><td class="text-rose-600 font-bold">101</td><td>5</td></tr>
+                                    <tr class="hover:bg-rose-50/50"><td>6</td><td class="text-rose-600 font-bold">110</td><td>6</td></tr>
+                                    <tr class="hover:bg-rose-50/50"><td>7</td><td class="text-rose-600 font-bold">111</td><td>7</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Historical Context vs Hexadecimal -->
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-sm space-y-4 border-l-4 border-l-purple-500">
+                        <h3 class="text-lg font-bold text-purple-900 flex items-center gap-2">
+                            <i class="fa-solid fa-clock-rotate-left text-purple-600"></i>
+                            لماذا يقل استخدام النظام الثماني حالياً؟ (Octal vs Hex)
+                        </h3>
+                        <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                            قديمةً، كانت المعالجات تعتمد على كلمات بحجم 12-bit أو 18-bit أو 36-bit (وهي مضاعفات الرقم 3)، فكان النظام الثماني مثالياً. أما اليوم، فتعتمد المعالجات على البايت القياسي (8-bit, 16-bit, 32-bit, 64-bit) وهي مضاعفات الرقم 4، لذلك أصبح <strong>النظام السداسي عشر Hexadecimal (4-bit nibbles)</strong> هو النظام الأكثر انتشاراً في تمثيل عناوين الذاكرة والألوان (HEX Codes).
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- Interactive Sidebar Tools & Quiz (1 Col) -->
+                <div class="space-y-6">
+                    
+                    <!-- Interactive Octal Converter Utility -->
+                    <div class="bg-gradient-to-br from-rose-500 to-pink-600 rounded-3xl p-6 text-white shadow-xl cute-glow space-y-4">
+                        <div class="flex items-center justify-between border-b border-rose-300/40 pb-3">
+                            <div class="font-black text-base flex items-center gap-2">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> المحول الثماني المباشر
+                            </div>
+                            <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-mono">Live Tool</span>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div>
+                                <label class="text-xs font-semibold block mb-1">أدخل رقماً عشرياً (Decimal):</label>
+                                <input type="number" id="dec-input" value="469" oninput="runOctalConverter()" class="w-full px-3.5 py-2.5 rounded-xl text-gray-900 font-mono text-sm border-2 border-transparent focus:border-rose-200 focus:outline-none shadow-inner">
+                            </div>
+
+                            <div class="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl space-y-2 text-xs font-mono border border-white/20">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-rose-100">بالثماني (Octal):</span>
+                                    <strong id="out-oct" class="text-white bg-white/20 px-2 py-0.5 rounded text-sm">725</strong>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-rose-100">بالثنائي (Binary):</span>
+                                    <strong id="out-bin" class="text-white bg-white/20 px-2 py-0.5 rounded text-[11px] tracking-wider">111010101</strong>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-rose-100">بالسداسي عشر (Hex):</span>
+                                    <strong id="out-hex" class="text-amber-300 bg-white/20 px-2 py-0.5 rounded text-sm">1D5</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mini Game 1: Octal Challenge -->
+                    <div class="glass-card rounded-3xl p-6 shadow-md space-y-4 border-2 border-rose-200">
+                        <div class="flex items-center justify-between border-b border-rose-100 pb-3">
+                            <h3 class="font-extrabold text-gray-800 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-gamepad text-rose-500 text-lg"></i> تحدي التحويل الثماني
+                            </h3>
+                            <span id="g1-score" class="bg-rose-100 text-rose-700 px-3 py-1 rounded-full text-xs font-black">النقاط: 0</span>
+                        </div>
+
+                        <div class="space-y-4 text-center">
+                            <p class="text-xs text-gray-600 font-semibold">حول الرقم التالي للتمثيل الثماني الصحيح:</p>
+                            
+                            <div id="g1-question" class="text-3xl font-black text-rose-600 bg-rose-50 p-4 rounded-2xl border border-rose-200 font-mono tracking-widest shadow-inner">
+                                --
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2.5" id="g1-options">
+                                <!-- Options dynamically rendered -->
+                            </div>
+
+                            <div id="g1-feedback" class="text-xs font-bold min-h-[20px] transition-all"></div>
+
+                            <button onclick="nextOctalQuestion()" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-rotate-right"></i> سؤال جديد
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==================== LECTURE 10: NETWORKS PART I ==================== -->
+        <section id="tab-lec10" class="tab-content hidden space-y-8 animate-fadeIn">
+            
+            <!-- Hero Banner -->
+            <div class="bg-gradient-to-br from-purple-500 via-pink-500 to-rose-500 rounded-3xl p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden cute-glow-purple">
+                <div class="absolute -left-10 -bottom-10 opacity-15 text-9xl font-black font-mono select-none">NET-101</div>
+                <div class="relative z-10 max-w-3xl space-y-4">
+                    <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide border border-white/30">
+                        <i class="fa-solid fa-network-wired"></i> المحاضرة الثانية: شبكات الحاسوب
+                    </div>
+                    <h2 class="text-3xl sm:text-5xl font-black leading-tight">أساسيات شبكات الحاسوب (Networks Part I)</h2>
+                    <p class="text-purple-100 text-sm sm:text-base leading-relaxed">
+                        مفهوم الشبكات، فوائد الاتصال ومشاركة الموارد، المقارنة بين LAN و WAN، وسائط الاتصال السلكية واللاسلكية، البروتوكولات، ومعنى كلمة Wi-Fi.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Theoretical Content (2 Cols) -->
+                <div class="lg:col-span-2 space-y-6">
+                    
+                    <!-- Definition Card -->
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-sm space-y-5">
+                        <h3 class="text-xl font-extrabold text-gray-800 flex items-center gap-2 border-b border-rose-100 pb-3">
+                            <i class="fa-solid fa-diagram-project text-purple-600"></i> ما هي شبكة الحاسوب (Computer Network)؟
+                        </h3>
+                        <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                            هي ربط جهازين أو أكثر معاً عبر وسيط أجهزة سلكي أو لاسلكي بغرض تبادل البيانات ومشاركة الموارد (مثل المطبوعات والتخزين) والتواصل والتفاعل.
+                        </p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-purple-50 p-4 rounded-2xl border border-purple-100 space-y-2">
+                                <h4 class="font-bold text-purple-800 text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-house-signal"></i> الشبكة المحلية (LAN)
+                                </h4>
+                                <p class="text-xs text-gray-600">
+                                    <strong>Local Area Network:</strong> تغطي مساحة جغرافية صغيرة محدودة مثل المنزل، المعمل، أو المكتب. تتميز بسرعات فائقة وأمان عالٍ.
+                                </p>
+                            </div>
+
+                            <div class="bg-rose-50 p-4 rounded-2xl border border-rose-100 space-y-2">
+                                <h4 class="font-bold text-rose-800 text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-globe"></i> الشبكة الموسعة (WAN)
+                                </h4>
+                                <p class="text-xs text-gray-600">
+                                    <strong>Wide Area Network:</strong> تربط شبكات محلية متعددة عبر مدن أو دول كاملة. أكبر مثال حي عليها هو شبكة <strong>الإنترنت (Internet)</strong>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Connection Mediums & Wi-Fi -->
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-sm space-y-5">
+                        <h3 class="text-xl font-extrabold text-gray-800 flex items-center gap-2 border-b border-rose-100 pb-3">
+                            <i class="fa-solid fa-wifi text-rose-500"></i> وسائط التوصيل وحقيقة كلمة Wi-Fi
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                            <div class="border border-gray-200 p-4 rounded-2xl space-y-2">
+                                <span class="font-bold text-gray-800 block text-sm">1. الاتصال السلكي (Wired Connection):</span>
+                                <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                    <li>كابلات الإيثرنت (Ethernet Cables / Twisted Pair).</li>
+                                    <li>كابلات الألياف الضوئية (Fiber Optics) ذات السرعة الخيالية.</li>
+                                </ul>
+                            </div>
+                            <div class="border border-gray-200 p-4 rounded-2xl space-y-2">
+                                <span class="font-bold text-gray-800 block text-sm">2. الاتصال اللاسلكي (Wireless Connection):</span>
+                                <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                    <li>موجات الراديو والواي فاي (Wi-Fi).</li>
+                                    <li>البلوتوث (Bluetooth) والأقمار الصناعية (Satellites).</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl space-y-2 text-xs">
+                            <span class="font-bold text-amber-900 flex items-center gap-1.5 text-sm">
+                                <i class="fa-solid fa-lightbulb text-amber-500"></i> المعلومة الهامة: ماذا يعني اختصار Wi-Fi؟
+                            </span>
+                            <p class="text-gray-700 leading-relaxed">
+                                ترمز كلمة Wi-Fi رسمياً إلى <strong>Wireless Fidelity</strong> (الأمان أو الدقة اللاسلكية)، وهو مصطلح تسويقي تم ابتكاره للتعبير عن معايير الاتصال اللاسلكي IEEE 802.11.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Interactive Network Topology Canvas Simulator -->
+                <div class="space-y-6">
+                    <div class="glass-card rounded-3xl p-6 shadow-md space-y-4 border-2 border-purple-200">
+                        <div class="flex items-center justify-between border-b border-purple-100 pb-3">
+                            <h3 class="font-extrabold text-gray-800 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-network-wired text-purple-600"></i> محاكي شبكة المنزل الذكي
+                            </h3>
+                            <span id="net-packet-count" class="bg-purple-100 text-purple-700 px-2.5 py-0.5 rounded-full text-xs font-mono font-bold">Packets: 0</span>
+                        </div>
+
+                        <p class="text-xs text-gray-600">اضغط على زر الإرسال لمعاينة حركة حزم البيانات عبر الراوتر:</p>
+
+                        <!-- Interactive Canvas Topology -->
+                        <div class="relative bg-gray-900 rounded-2xl overflow-hidden border border-purple-900 shadow-inner h-64">
+                            <canvas id="netCanvas" class="w-full h-full block"></canvas>
+                        </div>
+
+                        <div class="space-y-2">
+                            <button onclick="triggerNetworkPacket()" class="w-full bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white font-bold py-3 rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-paper-plane"></i> إرسال حزمة (Send Data Stream)
+                            </button>
+                            <p id="net-log" class="text-[11px] font-mono text-center text-purple-600 min-h-[16px]">جاهز لإرسال البيانات عبر الراوتر...</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==================== LECTURE 11: PROGRAMMING LANGUAGES ==================== -->
+        <section id="tab-lec11" class="tab-content hidden space-y-8 animate-fadeIn">
+            
+            <!-- Hero Banner -->
+            <div class="bg-gradient-to-br from-pink-500 via-rose-500 to-purple-600 rounded-3xl p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden cute-glow">
+                <div class="absolute -left-10 -bottom-10 opacity-15 text-9xl font-black font-mono select-none">CODE</div>
+                <div class="relative z-10 max-w-3xl space-y-4">
+                    <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide border border-white/30">
+                        <i class="fa-solid fa-code"></i> المحاضرة الثالثة: مستويات البرمجة
+                    </div>
+                    <h2 class="text-3xl sm:text-5xl font-black leading-tight">مستويات لغات البرمجة (Language Levels)</h2>
+                    <p class="text-pink-100 text-sm sm:text-base leading-relaxed">
+                        فهم التدرج في لغات البرمجة من لغة الآلة والتجميع إلى اللغات عالية المستوى والسكربتات، ومقاييس القرب من العتاد والسهولة والسرعة.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Theoretical Content (2 Cols) -->
+                <div class="lg:col-span-2 space-y-6">
+                    
+                    <!-- Language Hierarchy Levels Card -->
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-sm space-y-5">
+                        <h3 class="text-xl font-extrabold text-gray-800 flex items-center gap-2 border-b border-rose-100 pb-3">
+                            <i class="fa-solid fa-cubes text-rose-500"></i> التصنيف الثلاثي لمستويات اللغات
+                        </h3>
+
+                        <div class="space-y-4">
+                            <!-- Level 1 -->
+                            <div class="bg-red-50/80 border border-red-200 p-4 rounded-2xl space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="font-bold text-red-700 text-sm flex items-center gap-2">
+                                        <i class="fa-solid fa-microchip"></i> 1. لغات متدنية المستوى (Low-Level Languages)
+                                    </h4>
+                                    <span class="text-[10px] bg-red-200 text-red-800 font-bold px-2 py-0.5 rounded-full">أقرب للعتاد</span>
+                                </div>
+                                <p class="text-xs text-gray-600 leading-relaxed">
+                                    • <strong>لغة الآلة (Machine Language):</strong> الشفرة الثنائية (010101) المفضلة للـ CPU مباشرة دون ترجمة.<br>
+                                    • <strong>لغة التجميع (Assembly Language):</strong> تستخدم اختصارات رمزية (Mnemonics) مثل `MOV`, `ADD`, `SUB`.
+                                </p>
+                            </div>
+
+                            <!-- Level 2 -->
+                            <div class="bg-amber-50/80 border border-amber-200 p-4 rounded-2xl space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="font-bold text-amber-800 text-sm flex items-center gap-2">
+                                        <i class="fa-solid fa-code-commit"></i> 2. لغات عالية المستوى (High-Level Languages)
+                                    </h4>
+                                    <span class="text-[10px] bg-amber-200 text-amber-800 font-bold px-2 py-0.5 rounded-full">سهلة للبشر</span>
+                                </div>
+                                <p class="text-xs text-gray-600 leading-relaxed">
+                                    تستخدم كلمات إنجليزية قريبة لفهم الإنسان وتراكيب رياضية. أمثلة: <strong class="font-mono text-amber-900">C++, Java, C#</strong>. تتطلب مترجماً لتحويلها إلى آلة.
+                                </p>
+                            </div>
+
+                            <!-- Level 3 -->
+                            <div class="bg-emerald-50/80 border border-emerald-200 p-4 rounded-2xl space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="font-bold text-emerald-800 text-sm flex items-center gap-2">
+                                        <i class="fa-solid fa-bolt"></i> 3. لغات السكربت (Scripting Languages)
+                                    </h4>
+                                    <span class="text-[10px] bg-emerald-200 text-emerald-800 font-bold px-2 py-0.5 rounded-full">سرعة التطوير</span>
+                                </div>
+                                <p class="text-xs text-gray-600 leading-relaxed">
+                                    لغات عالية المستوى جداً وتُنفذ غالباً عبر مفسر (Interpreter) سطر بسطر. أمثلة: <strong class="font-mono text-emerald-900">Python, JavaScript, PHP</strong>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Source Code vs Object Code -->
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">
+                        <h3 class="text-lg font-bold text-gray-800 border-b border-rose-100 pb-3">
+                            المصطلحات المحورية: Source Code vs Object Code
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                            <div class="bg-gray-900 text-rose-300 p-4 rounded-2xl space-y-2 border border-rose-500/20 font-mono">
+                                <span class="text-white font-bold block border-b border-gray-800 pb-1">📄 Source Code (الشفرة المصدرية)</span>
+                                <p class="text-gray-300 text-[11px] leading-relaxed">
+                                    الكود النصي المكتوب بلغة برمجية يفهمها المبرمج البشري (مثل ملف main.cpp أو script.py).
+                                </p>
+                            </div>
+                            <div class="bg-gray-900 text-emerald-300 p-4 rounded-2xl space-y-2 border border-emerald-500/20 font-mono">
+                                <span class="text-white font-bold block border-b border-gray-800 pb-1">⚙️ Object Code (الشفرة الهدف)</span>
+                                <p class="text-gray-300 text-[11px] leading-relaxed">
+                                    الكود المترجم بلغة الآلة الثنائية (Binary) الجاهز ليفهمه المعالج مباشرة ويُحفظ كـ binary أو .exe.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Interactive Code Level Viewer Sidebar -->
+                <div class="space-y-6">
+                    <div class="glass-card rounded-3xl p-6 shadow-md space-y-4 border-2 border-rose-200">
+                        <div class="flex items-center justify-between border-b border-rose-100 pb-3">
+                            <h3 class="font-extrabold text-gray-800 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-sliders text-rose-500"></i> مصعد مستويات البرمجة
+                            </h3>
+                            <span id="level-indicator" class="bg-rose-100 text-rose-700 px-2.5 py-0.5 rounded-full text-xs font-bold">Python (High)</span>
+                        </div>
+
+                        <p class="text-xs text-gray-600">اختر المستوى لترى كيف تبدو طباعة جملة "Hello" على الشاشة:</p>
+
+                        <!-- Level Switcher Buttons -->
+                        <div class="grid grid-cols-3 gap-2 text-[11px] font-bold">
+                            <button onclick="setLangLevel('high')" id="lvl-high" class="py-2 rounded-xl bg-rose-500 text-white shadow-sm transition-all">عالي المستوى</button>
+                            <button onclick="setLangLevel('asm')" id="lvl-asm" class="py-2 rounded-xl bg-gray-100 text-gray-700 hover:bg-rose-100 transition-all">Assembly</button>
+                            <button onclick="setLangLevel('machine')" id="lvl-machine" class="py-2 rounded-xl bg-gray-100 text-gray-700 hover:bg-rose-100 transition-all">لغة الآلة</button>
+                        </div>
+
+                        <!-- Code Viewer Window -->
+                        <div class="bg-gray-900 p-4 rounded-2xl font-mono text-xs space-y-2 border border-rose-500/20 min-h-[140px] flex flex-col justify-center">
+                            <div class="text-gray-400 text-[10px] border-b border-gray-800 pb-1 flex justify-between">
+                                <span>Code Representation:</span>
+                                <span id="lang-tag" class="text-rose-400">Python 3</span>
+                            </div>
+                            <pre id="code-snippet-box" class="text-emerald-400 font-bold whitespace-pre-wrap leading-relaxed">print("Hello World!")</pre>
+                        </div>
+
+                        <p id="lang-desc" class="text-[11px] text-gray-500 leading-relaxed bg-rose-50/50 p-2.5 rounded-xl border border-rose-100">
+                            لغة سهلة القراءة والكتابة، تختصر التعقيدات الهيكلية.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==================== LECTURE 12: COMPILER VS INTERPRETER ==================== -->
+        <section id="tab-lec12" class="tab-content hidden space-y-8 animate-fadeIn">
+            
+            <!-- Hero Banner -->
+            <div class="bg-gradient-to-br from-amber-500 via-rose-500 to-pink-600 rounded-3xl p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden cute-glow">
+                <div class="absolute -left-10 -bottom-10 opacity-15 text-9xl font-black font-mono select-none">EXE</div>
+                <div class="relative z-10 max-w-3xl space-y-4">
+                    <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide border border-white/30">
+                        <i class="fa-solid fa-gears"></i> المحاضرة الرابعة: الترجمة والتفسير
+                    </div>
+                    <h2 class="text-3xl sm:text-5xl font-black leading-tight">المترجم والمفسر (Compiler vs Interpreter)</h2>
+                    <p class="text-amber-100 text-sm sm:text-base leading-relaxed">
+                        دورة حياة الكود، الفرق بين تجميع الكود دفعة واحدة المخرج لملفات `.exe` وبين التفسير التتابعي خطوة بخطوة، والفرق مع الـ Assembler.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Theoretical Content (2 Cols) -->
+                <div class="lg:col-span-2 space-y-6">
+                    
+                    <!-- Side by Side Comparison Table -->
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-sm space-y-5">
+                        <h3 class="text-xl font-extrabold text-gray-800 flex items-center gap-2 border-b border-rose-100 pb-3">
+                            <i class="fa-solid fa-scale-balanced text-amber-600"></i> المقارنة التفصيلية المباشرة
+                        </h3>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-right border-collapse">
+                                <thead>
+                                    <tr class="bg-gray-900 text-white">
+                                        <th class="p-3 rounded-r-xl">وجه المقارنة</th>
+                                        <th class="p-3 text-rose-300">المترجم (Compiler)</th>
+                                        <th class="p-3 text-emerald-300 rounded-l-xl">المفسر (Interpreter)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-rose-100 text-gray-700 font-semibold">
+                                    <tr class="hover:bg-rose-50/50">
+                                        <td class="p-3 font-bold text-gray-900">طريقة العمل</td>
+                                        <td class="p-3 text-rose-700">يترجم البرنامج بالكامل دفعة واحدة</td>
+                                        <td class="p-3 text-emerald-700">ينفذ الكود سطرًا بسطر مباشرة</td>
+                                    </tr>
+                                    <tr class="hover:bg-rose-50/50">
+                                        <td class="p-3 font-bold text-gray-900">إنتاج ملف تنفيذي (.exe)</td>
+                                        <td class="p-3 text-emerald-600 font-bold">نعم (يُخزن Object Code بالقرص)</td>
+                                        <td class="p-3 text-rose-600 font-bold">لا (لا ينشئ ملفات مستقلة)</td>
+                                    </tr>
+                                    <tr class="hover:bg-rose-50/50">
+                                        <td class="p-3 font-bold text-gray-900">سرعة التنفيذ اللاحقة</td>
+                                        <td class="p-3 text-emerald-600 font-bold">سريعة جداً (Machine Code جاهز)</td>
+                                        <td class="p-3 text-amber-600 font-bold">أبطأ نسبياً (يترجم كل مرة)</td>
+                                    </tr>
+                                    <tr class="hover:bg-rose-50/50">
+                                        <td class="p-3 font-bold text-gray-900">اكتشاف الأخطاء</td>
+                                        <td class="p-3">يعرض كافة الأخطاء بعد فحص الملف كاملًا</td>
+                                        <td class="p-3">يتوقف فورًا عند أول سطر يحتوي خطأ</td>
+                                    </tr>
+                                    <tr class="hover:bg-rose-50/50">
+                                        <td class="p-3 font-bold text-gray-900">أمثلة اللغات</td>
+                                        <td class="p-3 font-mono">C, C++, Rust, Swift</td>
+                                        <td class="p-3 font-mono">Python, JavaScript, Ruby</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Assembler Definition Card -->
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-sm space-y-3 border-r-4 border-r-purple-500">
+                        <h4 class="font-bold text-purple-900 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-gear text-purple-600"></i> ما هو برنامج المجمّع (Assembler)؟
+                        </h4>
+                        <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                            هو برنامج مُترجم خاص باللغات متدنية المستوى، وظيفته المحددة هي تحويل الشفرة الرمزية المكتوبة بلغة التجميع (Assembly Language) إلى لغة الآلة الثنائية (Machine Code).
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- Execution Race Simulator Sidebar -->
+                <div class="space-y-6">
+                    <div class="glass-card rounded-3xl p-6 shadow-md space-y-4 border-2 border-amber-200">
+                        <div class="flex items-center justify-between border-b border-amber-100 pb-3">
+                            <h3 class="font-extrabold text-gray-800 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-bolt text-amber-500"></i> محاكي سرعة التنفيذ
+                            </h3>
+                            <span class="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full">Interactive Engine</span>
+                        </div>
+
+                        <p class="text-xs text-gray-600">شاهد كيفية معالجة المترجم مقابل المفسر حياً:</p>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="runCompilerSimulation()" class="bg-rose-500 hover:bg-rose-600 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-play"></i> تشغيل المترجم
+                            </button>
+                            <button onclick="runInterpreterSimulation()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-terminal"></i> تشغيل المفسر
+                            </button>
+                        </div>
+
+                        <!-- Console Simulation Output -->
+                        <div id="sim-console" class="bg-gray-900 text-rose-300 p-4 rounded-2xl font-mono text-xs min-h-[160px] space-y-1.5 border border-amber-500/20 shadow-inner overflow-y-auto max-h-48">
+                            <span class="text-gray-500 text-[11px]">// اختر وضع التشغيل لبدء المحاكاة البرمجية...</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==================== HOMEWORK & QUIZ HUB ==================== -->
+        <section id="tab-homework" class="tab-content hidden space-y-8 animate-fadeIn">
+            
+            <!-- Hero Banner -->
+            <div class="bg-gradient-to-br from-rose-600 via-purple-600 to-pink-500 rounded-3xl p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden cute-glow">
+                <div class="relative z-10 max-w-3xl space-y-4">
+                    <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide border border-white/30">
+                        <i class="fa-solid fa-pen-ruler"></i> مركز الواجبات التفاعلي
+                    </div>
+                    <h2 class="text-3xl sm:text-5xl font-black leading-tight">حلول واجبات المحاضرات والأرقام</h2>
+                    <p class="text-rose-100 text-sm sm:text-base leading-relaxed">
+                        تجميع كامل لجميع أسئلة الواجب والمسائل المذكورة في الشرح مع إمكانية إظهار الإجابات النموذجية التفصيلية بضغطة زر.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Homework Accordions Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Homework 1: Octal -->
+                <div class="glass-card rounded-3xl p-6 shadow-md space-y-4 border border-rose-200">
+                    <div class="flex items-center justify-between border-b border-rose-100 pb-3">
+                        <h3 class="font-extrabold text-rose-700 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-hashtag"></i> واجب المحاضرة 1: النظام الثماني
+                        </h3>
+                        <span class="text-[10px] bg-rose-100 text-rose-700 font-bold px-2.5 py-1 rounded-full">3 مسائل</span>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <!-- Q1 -->
+                        <div class="bg-rose-50/70 p-3.5 rounded-2xl border border-rose-100 space-y-2">
+                            <p class="font-bold text-gray-800">س1: حول الأرقام الثمانية (100₈ و 512₈) إلى النظام العشري؟</p>
+                            <button onclick="toggleAnswer('hw1-a1')" class="text-rose-600 font-bold hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-eye"></i> عرض الحل النموذجي
+                            </button>
+                            <div id="hw1-a1" class="hidden font-mono bg-white p-3 rounded-xl border border-rose-200 text-gray-700 leading-relaxed">
+                                • 100₈ = (0×8⁰) + (0×8¹) + (1×8²) = 64₁₀<br>
+                                • 512₈ = (2×8⁰) + (1×8¹) + (5×8²) = 2 + 8 + 320 = 330₁₀
+                            </div>
+                        </div>
+
+                        <!-- Q2 -->
+                        <div class="bg-rose-50/70 p-3.5 rounded-2xl border border-rose-100 space-y-2">
+                            <p class="font-bold text-gray-800">س2: حول الأرقام العشرية (64₁₀ و 330₁₀) إلى ثماني؟</p>
+                            <button onclick="toggleAnswer('hw1-a2')" class="text-rose-600 font-bold hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-eye"></i> عرض الحل النموذجي
+                            </button>
+                            <div id="hw1-a2" class="hidden font-mono bg-white p-3 rounded-xl border border-rose-200 text-gray-700 leading-relaxed">
+                                • 64 ÷ 8 = 8 (الباقي 0) ➔ 8 ÷ 8 = 1 (الباقي 0) ➔ 1 ÷ 8 = 0 (الباقي 1) ➔ <strong>100₈</strong><br>
+                                • 330 ÷ 8 = 41 (الباقي 2) ➔ 41 ÷ 8 = 5 (الباقي 1) ➔ 5 ÷ 8 = 0 (الباقي 5) ➔ <strong>512₈</strong>
+                            </div>
+                        </div>
+
+                        <!-- Q3 -->
+                        <div class="bg-rose-50/70 p-3.5 rounded-2xl border border-rose-100 space-y-2">
+                            <p class="font-bold text-gray-800">س3: حول الثماني (100₈ و 512₈) إلى ثنائي مباشر (3-Bit)؟</p>
+                            <button onclick="toggleAnswer('hw1-a3')" class="text-rose-600 font-bold hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-eye"></i> عرض الحل النموذجي
+                            </button>
+                            <div id="hw1-a3" class="hidden font-mono bg-white p-3 rounded-xl border border-rose-200 text-gray-700 leading-relaxed">
+                                • 100₈ ➔ 1(001) | 0(000) | 0(000) = <strong>001000000₂ (أو 1000000₂)</strong><br>
+                                • 512₈ ➔ 5(101) | 1(001) | 2(010) = <strong>101001010₂</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Homework 2: Networks -->
+                <div class="glass-card rounded-3xl p-6 shadow-md space-y-4 border border-purple-200">
+                    <div class="flex items-center justify-between border-b border-purple-100 pb-3">
+                        <h3 class="font-extrabold text-purple-700 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-network-wired"></i> واجب المحاضرة 2: الشبكات
+                        </h3>
+                        <span class="text-[10px] bg-purple-100 text-purple-700 font-bold px-2.5 py-1 rounded-full">2 سؤالين</span>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="bg-purple-50/70 p-3.5 rounded-2xl border border-purple-100 space-y-2">
+                            <p class="font-bold text-gray-800">What is Network & Why do we need it?</p>
+                            <button onclick="toggleAnswer('hw2-a1')" class="text-purple-600 font-bold hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-eye"></i> عرض الحل النموذجي
+                            </button>
+                            <div id="hw2-a1" class="hidden bg-white p-3 rounded-xl border border-purple-200 text-gray-700 leading-relaxed">
+                                الشبكة هي مجموعة من الأجهزة المرتبطة معاً بوسيط سلكي أو لاسلكي. نحتاجها لنقل البيانات بسرعة، مشاركة الأجهزة الملحقة (الطابعات/السيرفرات)، والتواصل الفوري بين النظم.
+                            </div>
+                        </div>
+
+                        <div class="bg-purple-50/70 p-3.5 rounded-2xl border border-purple-100 space-y-2">
+                            <p class="font-bold text-gray-800">LAN vs WAN & Wi-Fi Meaning:</p>
+                            <button onclick="toggleAnswer('hw2-a2')" class="text-purple-600 font-bold hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-eye"></i> عرض الحل النموذجي
+                            </button>
+                            <div id="hw2-a2" class="hidden bg-white p-3 rounded-xl border border-purple-200 text-gray-700 leading-relaxed">
+                                • LAN: شبكة محلية لمبنى أو منزل محدود.<br>
+                                • WAN: شبكة موسعة ترتبط بها شبكات حول العالم كالانترنت.<br>
+                                • Wi-Fi: اختصار مصطلح Wireless Fidelity.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Homework 3: Languages -->
+                <div class="glass-card rounded-3xl p-6 shadow-md space-y-4 border border-amber-200">
+                    <div class="flex items-center justify-between border-b border-amber-100 pb-3">
+                        <h3 class="font-extrabold text-amber-700 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-code"></i> واجب المحاضرة 3: مستويات اللغات
+                        </h3>
+                        <span class="text-[10px] bg-amber-100 text-amber-700 font-bold px-2.5 py-1 rounded-full">مفاهيم</span>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="bg-amber-50/70 p-3.5 rounded-2xl border border-amber-100 space-y-2">
+                            <p class="font-bold text-gray-800">Source Code vs Object Code & Readability vs Speed:</p>
+                            <button onclick="toggleAnswer('hw3-a1')" class="text-amber-600 font-bold hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-eye"></i> عرض الحل النموذجي
+                            </button>
+                            <div id="hw3-a1" class="hidden bg-white p-3 rounded-xl border border-amber-200 text-gray-700 leading-relaxed">
+                                • Source Code هو الكود البشري المكتوب بلغة برمجة، بينما Object Code هو الكود المترجم إلى ثنائي الآلة.<br>
+                                • كلما كانت اللغة أكثر قراءة للبشر (Human Readable) كلما ابتعدت عن العتاد وتطلبت ترجمة أكبر، وكلما اقتربت من الآلة (Assembly/Machine) كانت أسرع في التنفيذ المباشر.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Homework 4: Compiler & Interpreter -->
+                <div class="glass-card rounded-3xl p-6 shadow-md space-y-4 border border-rose-200">
+                    <div class="flex items-center justify-between border-b border-rose-100 pb-3">
+                        <h3 class="font-extrabold text-rose-700 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-gears"></i> واجب المحاضرة 4: M.C.Q الأسئلة السريعة
+                        </h3>
+                        <span class="text-[10px] bg-rose-100 text-rose-700 font-bold px-2.5 py-1 rounded-full">اختبار سريع</span>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="bg-rose-50/70 p-3.5 rounded-2xl border border-rose-100 space-y-2">
+                            <p class="font-bold text-gray-800">خلاصة الأسئلة المقارنة:</p>
+                            <button onclick="toggleAnswer('hw4-a1')" class="text-rose-600 font-bold hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-eye"></i> عرض الحل النموذجي
+                            </button>
+                            <div id="hw4-a1" class="hidden bg-white p-3 rounded-xl border border-rose-200 text-gray-700 leading-relaxed space-y-1">
+                                • هل يُنتج المفسر ملف exe؟ <strong>لا.</strong><br>
+                                • هل يحفظ المفسر Machine Code على القرص؟ <strong>لا.</strong><br>
+                                • هل يُنتج المترجم ملف exe؟ <strong>نعم.</strong><br>
+                                • أيهما أسرع بالتنفيذ التكراري؟ <strong>اللغات المترجمة (Compiled).</strong><br>
+                                • ما هو الـ Assembler؟ <strong>برنامج يترجم لغة التجميع إلى لغة الآلة.</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white/80 backdrop-blur-md border-t border-rose-200/60 py-6 text-center text-xs text-gray-500 font-semibold space-y-2 mt-12">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p class="flex items-center gap-2 text-gray-700">
+                <span class="w-7 h-7 bg-rose-500 text-white rounded-xl flex items-center justify-center text-xs shadow"><i class="fa-solid fa-code"></i></span>
+                منصة أساسيات البرمجة وعلوم الحاسوب - الشرح التفاعلي والشامل
+            </p>
+            <p class="text-rose-500 font-mono text-[11px]">Designed with interactive HTML5 & Tailwind CSS</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Core Logic -->
+    <script>
+        // --- Tab Switching Logic ---
+        function switchTab(tabId) {
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+
+            // Show current content
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            if(activeTab) {
+                activeTab.classList.remove('hidden');
+                activeTab.classList.add('block');
+            }
+
+            // Update Nav Buttons Styles
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.className = "nav-tab text-xs font-bold px-3.5 py-2 rounded-xl text-gray-600 hover:text-rose-600 hover:bg-white/80 transition-all duration-200 flex items-center gap-2";
+            });
+
+            const currentBtn = document.getElementById(`btn-${tabId}`);
+            if(currentBtn) {
+                currentBtn.className = "nav-tab text-xs font-bold px-3.5 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-md";
+            }
+
+            // Canvas resize check if switching to Network tab
+            if(tabId === 'lec10') {
+                setTimeout(resizeNetCanvas, 100);
+            }
+        }
+
+        // --- Toast Notification Helper ---
+        function showToast(msg, icon = 'fa-circle-info') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.innerText = msg;
+            toastIcon.innerHTML = `<i class="fa-solid ${icon}"></i>`;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // --- Lecture 08: Octal Converter ---
+        function runOctalConverter() {
+            const inputVal = parseInt(document.getElementById('dec-input').value);
+            if (isNaN(inputVal) || inputVal < 0) {
+                document.getElementById('out-oct').innerText = "0o0";
+                document.getElementById('out-bin').innerText = "0b0";
+                document.getElementById('out-hex').innerText = "0x0";
+                return;
+            }
+
+            document.getElementById('out-oct').innerText = inputVal.toString(8);
+            document.getElementById('out-bin').innerText = inputVal.toString(2);
+            document.getElementById('out-hex').innerText = inputVal.toString(16).toUpperCase();
+        }
+
+        // --- Lecture 08: Mini Game 1 ---
+        let octalScore = 0;
+        let currentOctalDec = 0;
+
+        function nextOctalQuestion() {
+            currentOctalDec = Math.floor(Math.random() * 200) + 10;
+            const correctOctal = currentOctalDec.toString(8);
+            document.getElementById('g1-question').innerText = `${currentOctalDec}₁₀ = ?₈`;
+            document.getElementById('g1-feedback').innerText = '';
+
+            // Generate options
+            let options = [correctOctal];
+            while(options.length < 4) {
+                let fake = (currentOctalDec + Math.floor(Math.random() * 30) - 15).toString(8);
+                if(fake !== correctOctal && !options.includes(fake) && !fake.includes('8') && !fake.includes('9') && parseInt(fake) > 0) {
+                    options.push(fake);
+                }
+            }
+
+            // Shuffle
+            options.sort(() => Math.random() - 0.5);
+
+            const optionsContainer = document.getElementById('g1-options');
+            optionsContainer.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'bg-rose-50 hover:bg-rose-500 hover:text-white border border-rose-200 text-rose-700 font-mono font-bold py-2.5 rounded-xl text-xs transition-all shadow-sm';
+                btn.innerText = opt;
+                btn.onclick = () => checkOctalAnswer(opt, correctOctal);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkOctalAnswer(selected, correct) {
+            const fb = document.getElementById('g1-feedback');
+            if(selected === correct) {
+                octalScore += 10;
+                fb.className = 'text-xs font-bold text-emerald-600 animate-bounce';
+                fb.innerText = 'إجابة صحيحة! +10 نقاط ✨';
+                document.getElementById('g1-score').innerText = `النقاط: ${octalScore}`;
+                if(typeof confetti === 'function') confetti({ particleCount: 30, spread: 60, origin: { y: 0.8 } });
+                setTimeout(nextOctalQuestion, 1200);
+            } else {
+                fb.className = 'text-xs font-bold text-rose-600';
+                fb.innerText = 'إجابة خاطئة! حاول مجدداً';
+            }
+        }
+
+        // --- Lecture 10: Network Simulator Canvas ---
+        let netCanvas, ctx;
+        let packets = [];
+        let packetCounter = 0;
+
+        const devices = [
+            { id: 'router', label: 'Router (الراوتر)', x: 0.5, y: 0.5, icon: '📡' },
+            { id: 'phone', label: 'Phone', x: 0.2, y: 0.25, icon: '📱' },
+            { id: 'pc', label: 'Laptop', x: 0.8, y: 0.25, icon: '💻' },
+            { id: 'tv', label: 'Smart TV', x: 0.2, y: 0.75, icon: '📺' },
+            { id: 'server', label: 'Cloud Server', x: 0.8, y: 0.75, icon: '☁️' }
+        ];
+
+        function initNetCanvas() {
+            netCanvas = document.getElementById('netCanvas');
+            if(!netCanvas) return;
+            ctx = netCanvas.getContext('2d');
+            resizeNetCanvas();
+            requestAnimationFrame(animateNetwork);
+        }
+
+        function resizeNetCanvas() {
+            if(!netCanvas || !netCanvas.parentElement) return;
+            netCanvas.width = netCanvas.parentElement.clientWidth;
+            netCanvas.height = netCanvas.parentElement.clientHeight;
+        }
+
+        function triggerNetworkPacket() {
+            packetCounter++;
+            document.getElementById('net-packet-count').innerText = `Packets: ${packetCounter}`;
+            document.getElementById('net-log').innerText = `جاري نقل البيانات من الهاتف إلى خادم السحاب...`;
+
+            // Create packet moving from Phone to Router to Server
+            const phone = devices.find(d => d.id === 'phone');
+            const router = devices.find(d => d.id === 'router');
+            const server = devices.find(d => d.id === 'server');
+
+            packets.push({
+                sx: phone.x, sy: phone.y,
+                tx: router.x, ty: router.y,
+                progress: 0,
+                nextTarget: server,
+                color: '#ec4899'
+            });
+
+            showToast('تم إرسال حزمة بيانات جديدة بنجاح!', 'fa-paper-plane');
+        }
+
+        function animateNetwork() {
+            if(!ctx) return;
+            const width = netCanvas.width;
+            const height = netCanvas.height;
+
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw Connection Lines
+            const router = devices.find(d => d.id === 'router');
+            const rx = router.x * width;
+            const ry = router.y * height;
+
+            devices.forEach(dev => {
+                if(dev.id !== 'router') {
+                    const dx = dev.x * width;
+                    const dy = dev.y * height;
+                    ctx.beginPath();
+                    ctx.moveTo(rx, ry);
+                    ctx.lineTo(dx, dy);
+                    ctx.strokeStyle = '#374151';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([4, 4]);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+            });
+
+            // Draw Devices
+            devices.forEach(dev => {
+                const dx = dev.x * width;
+                const dy = dev.y * height;
+
+                ctx.beginPath();
+                ctx.arc(dx, dy, 22, 0, Math.PI * 2);
+                ctx.fillStyle = dev.id === 'router' ? '#8b5cf6' : '#1f2937';
+                ctx.fill();
+                ctx.strokeStyle = '#f43f5e';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.font = '16px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(dev.icon, dx, dy);
+
+                ctx.font = '10px Cairo';
+                ctx.fillStyle = '#9ca3af';
+                ctx.fillText(dev.label, dx, dy + 32);
+            });
+
+            // Update & Draw Packets
+            for(let i = packets.length - 1; i >= 0; i--) {
+                let p = packets[i];
+                p.progress += 0.025;
+
+                const startX = p.sx * width;
+                const startY = p.sy * height;
+                const targetX = p.tx * width;
+                const targetY = p.ty * height;
+
+                const cx = startX + (targetX - startX) * p.progress;
+                const cy = startY + (targetY - startY) * p.progress;
+
+                ctx.beginPath();
+                ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+
+                if(p.progress >= 1) {
+                    if(p.nextTarget) {
+                        // Move from router to final destination
+                        p.sx = p.tx;
+                        p.sy = p.ty;
+                        p.tx = p.nextTarget.x;
+                        p.ty = p.nextTarget.y;
+                        p.progress = 0;
+                        p.nextTarget = null;
+                        p.color = '#10b981';
+                    } else {
+                        packets.splice(i, 1);
+                        document.getElementById('net-log').innerText = `تم استلام حزمة البيانات بنجاح ✅`;
+                    }
+                }
+            }
+
+            requestAnimationFrame(animateNetwork);
+        }
+
+        // --- Lecture 11: Code Level Elevator ---
+        const codeSnippets = {
+            high: {
+                tag: 'Python 3',
+                indicator: 'Python (High-Level)',
+                code: 'print("Hello World!")',
+                desc: 'لغة سهلة القراءة والكتابة بالنسبة للبشر، تختصر المعالجة وتتكفل بإدارة الذاكرة.'
+            },
+            asm: {
+                tag: 'Assembly (x86)',
+                indicator: 'Assembly (Low-Level)',
+                code: 'MOV AH, 09h\nLEA DX, msg\nINT 21h\nmsg DB "Hello World!$"',
+                desc: 'لغة متدنية تترجم الأوامر مباشرة إلى اختصارات رمزية (Mnemonics) قريبة لمعمارية المعالج.'
+            },
+            machine: {
+                tag: 'Machine Code (Binary)',
+                indicator: 'Machine Code (0-1)',
+                code: '01001000 01100101 01101100 01101100\n01101111 00100000 01010111 01101111\n01110010 01101100 01100100 00100001',
+                desc: 'اللغة الوحيدة التي يفهمها المعالج مباشرة دون مترجم، وتتكون من أصفار وآحاد ثنائية.'
+            }
+        };
+
+        function setLangLevel(lvl) {
+            const data = codeSnippets[lvl];
+            document.getElementById('lang-tag').innerText = data.tag;
+            document.getElementById('level-indicator').innerText = data.indicator;
+            document.getElementById('code-snippet-box').innerText = data.code;
+            document.getElementById('lang-desc').innerText = data.desc;
+
+            // Reset buttons highlight
+            ['high', 'asm', 'machine'].forEach(key => {
+                const btn = document.getElementById(`lvl-${key}`);
+                if(key === lvl) {
+                    btn.className = 'py-2 rounded-xl bg-rose-500 text-white shadow-sm transition-all';
+                } else {
+                    btn.className = 'py-2 rounded-xl bg-gray-100 text-gray-700 hover:bg-rose-100 transition-all';
+                }
+            });
+        }
+
+        // --- Lecture 12: Compiler vs Interpreter Simulator ---
+        function runCompilerSimulation() {
+            const consoleBox = document.getElementById('sim-console');
+            consoleBox.innerHTML = '<span class="text-rose-400">🔍 فحص كامل الكود (Scanning Entire Program)...</span><br>';
+
+            setTimeout(() => {
+                consoleBox.innerHTML += '<span class="text-emerald-400">✅ لا يوجد أخطاء سياقية!</span><br>';
+                consoleBox.innerHTML += '<span class="text-amber-400">🔒 إنشاء ملف Object Code وحفظه على القرص...</span><br>';
+            }, 600);
+
+            setTimeout(() => {
+                consoleBox.innerHTML += '<span class="text-purple-400">🧩 تشغيل الـ Linker لربط المكتبات البرمجية...</span><br>';
+                consoleBox.innerHTML += '<span class="text-rose-300 font-bold">تم تكوين ملف Application.exe بنجاح! ⚡ (جاهز للتشغيل بأسرع كفاءة)</span><br>';
+                showToast('تم بناء ملف exe بواسطة المترجم!', 'fa-circle-check');
+            }, 1400);
+        }
+
+        function runInterpreterSimulation() {
+            const consoleBox = document.getElementById('sim-console');
+            consoleBox.innerHTML = '<span class="text-emerald-400">🚀 بدء التفسير التتابعي (Line-by-Line)...</span><br>';
+
+            setTimeout(() => {
+                consoleBox.innerHTML += '<span class="text-gray-300">▶ Line 1: Executing print("Start")... OK</span><br>';
+            }, 400);
+
+            setTimeout(() => {
+                consoleBox.innerHTML += '<span class="text-gray-300">▶ Line 2: Executing x = 10 + 20... OK</span><br>';
+            }, 900);
+
+            setTimeout(() => {
+                consoleBox.innerHTML += '<span class="text-rose-400 font-bold">❌ Line 3: SyntaxError: Unexpected token!</span><br>';
+                consoleBox.innerHTML += '<span class="text-rose-500 font-bold">توقف التنفيذ فوراً عند السطر رقم 3 دون إكمال باقي الملف.</span><br>';
+                showToast('توقف المفسر عند اكتشاف الخطأ!', 'fa-triangle-exclamation');
+            }, 1500);
+        }
+
+        // --- Homework Toggle Helper ---
+        function toggleAnswer(ansId) {
+            const el = document.getElementById(ansId);
+            if(el) {
+                el.classList.toggle('hidden');
+            }
+        }
+
+        // Initialization on Load
+        window.onload = function() {
+            runOctalConverter();
+            nextOctalQuestion();
+            initNetCanvas();
+            window.addEventListener('resize', resizeNetCanvas);
+        };
+    </script>
+</body>
+</html>
