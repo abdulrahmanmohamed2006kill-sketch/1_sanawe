@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تعلم المتغيرات في C++ | رحلة تفاعلية</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- SweetAlert2 (For nice modals instead of alert) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#8b5cf6',
+                        darkBg: '#0f172a',
+                        darkCard: '#1e293b'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Animations and Styles */
+        body { font-family: 'Tajawal', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        .code-font { font-family: 'Fira Code', monospace; }
+        
+        .fade-in { animation: fadeIn 0.5s ease-in-out forwards; }
+        .slide-up { animation: slideUp 0.5s ease-out forwards; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Interactive Box Styles */
+        .var-box {
+            position: relative;
+            width: 250px;
+            height: 200px;
+            margin: 0 auto;
+            perspective: 1000px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .var-box:hover { transform: scale(1.05); }
+        .var-box-inner {
+            width: 100%; height: 100%; position: relative;
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            border-radius: 16px; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; border: 4px solid #2563eb;
+        }
+        .var-lid {
+            position: absolute; top: -20px; left: 5%; width: 90%; height: 40px;
+            background: #2563eb; border-radius: 10px; z-index: 10;
+            display: flex; justify-content: center; align-items: center;
+            font-weight: bold; box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+            transition: top 0.3s, transform 0.3s;
+        }
+        .var-box.open .var-lid { top: -60px; transform: rotateX(45deg); }
+        .var-content { font-size: 2rem; font-weight: bold; opacity: 0; transition: opacity 0.3s; }
+        .var-box.open .var-content { opacity: 1; }
+        .var-type { position: absolute; bottom: 10px; font-size: 0.9rem; background: rgba(0,0,0,0.3); padding: 2px 10px; border-radius: 12px;}
+
+        /* Interactive Code Parts */
+        .code-part {
+            cursor: pointer; padding: 2px 6px; border-radius: 4px; transition: all 0.2s; border-bottom: 2px dashed transparent;
+        }
+        .code-part:hover { background-color: rgba(59, 130, 246, 0.2); border-color: #3b82f6; }
+        
+        .dark .code-part:hover { background-color: rgba(96, 165, 250, 0.2); border-color: #60a5fa; }
+        
+        .active-section { display: block; }
+        .hidden-section { display: none; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark ::-webkit-scrollbar-track { background: #1e293b; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-darkBg dark:text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="bg-white dark:bg-darkCard shadow-md sticky top-0 z-50 transition-colors duration-300">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-code text-primary text-2xl"></i>
+                <span class="font-bold text-xl tracking-wide">C++ Variables</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex items-center gap-2 text-sm font-semibold text-slate-500 dark:text-slate-400">
+                    <span id="progress-text">التقدم: 0%</span>
+                    <div class="w-32 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="h-full bg-gradient-to-r from-primary to-secondary w-0 transition-all duration-500"></div>
+                    </div>
+                </div>
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition">
+                    <i class="fa-solid fa-moon text-lg dark:hidden"></i>
+                    <i class="fa-solid fa-sun text-lg hidden dark:block text-yellow-400"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="flex-grow flex flex-col md:flex-row max-w-7xl mx-auto w-full p-4 gap-6">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="w-full md:w-64 bg-white dark:bg-darkCard rounded-xl shadow-lg p-4 h-fit md:sticky md:top-20 hidden md:block">
+            <h3 class="font-bold text-lg mb-4 border-b pb-2 dark:border-slate-700">محتويات الدورة</h3>
+            <ul id="nav-menu" class="space-y-2">
+                <!-- Populated by JS -->
+            </ul>
+        </aside>
+
+        <!-- Mobile Menu Select -->
+        <div class="md:hidden w-full mb-4">
+            <select id="mobile-menu" class="w-full p-3 rounded-lg border dark:border-slate-700 dark:bg-darkCard bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                <!-- Populated by JS -->
+            </select>
+        </div>
+
+        <!-- Content Area -->
+        <div class="flex-grow bg-white dark:bg-darkCard rounded-xl shadow-lg p-6 md:p-10 relative overflow-hidden min-h-[600px]">
+            
+            <!-- Section 1: Intro -->
+            <section id="sec-1" class="lesson-section active-section slide-up">
+                <h1 class="text-3xl font-bold mb-4 text-primary">مقدمة: ما هو المتغير Variable؟</h1>
+                <p class="text-lg mb-6 leading-relaxed">
+                    تخيل إنك بتنقل لبيت جديد، وعندك صناديق كتير عشان تحط فيها حاجاتك. المتغير (Variable) في البرمجة بالظبط زي <strong class="text-secondary">الصندوق</strong> ده. بنستخدمه عشان نحفظ جواه قيمة (Value) معينة في ذاكرة الكمبيوتر عشان نستخدمها بعدين.
+                </p>
+                <div class="bg-blue-50 dark:bg-blue-900/20 border-r-4 border-primary p-4 rounded-lg mb-8">
+                    <p class="font-semibold mb-2">أي صندوق (متغير) لازم يكون له 3 حاجات أساسية:</p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>نوع (Data Type):</strong> بيحدد إيه اللي ينفع يتحط جوه الصندوق (أرقام، نصوص، حروف).</li>
+                        <li><strong>اسم (Name):</strong> عشان نقدر نلاقي الصندوق ده بسهولة وسط صناديق كتير.</li>
+                        <li><strong>قيمة (Value):</strong> الشيء اللي بنخزنه فعلياً جوه الصندوق.</li>
+                    </ul>
+                </div>
+
+                <div class="text-center mb-8">
+                    <p class="mb-4 text-slate-600 dark:text-slate-300 font-semibold">اضغط على الصندوق عشان تشوف اللي جواه!</p>
+                    <div class="var-box" id="intro-box" onclick="this.classList.toggle('open')">
+                        <div class="var-lid" id="intro-box-lid">age (الاسم)</div>
+                        <div class="var-box-inner">
+                            <span class="var-content">20</span>
+                            <span class="var-type">int (النوع)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-lg mb-4">في لغة C++، بنكتب كود إنشاء الصندوق ده بالشكل التالي:</p>
+                
+                <div class="bg-slate-800 text-white p-6 rounded-xl code-font text-xl ltr text-left mb-6 shadow-inner relative overflow-hidden">
+                    <span class="code-part text-blue-400" onclick="showInfo('int: Data Type (نوع البيانات)', 'بيحدد إن المتغير ده هيشيل أرقام صحيحة بس (بدون كسور).')">int</span>
+                    <span class="code-part text-yellow-300" onclick="showInfo('age: Variable Name (اسم المتغير)', 'الاسم اللي بنختاره عشان ننادي بيه المتغير بعدين.')">age</span>
+                    <span class="code-part text-white" onclick="showInfo('= : Assignment Operator (علامة الإسناد)', 'مش معناها (يساوي) زي الرياضة، دي معناها (حط القيمة اللي على اليمين جوه المتغير اللي على الشمال).')">=</span>
+                    <span class="code-part text-green-400" onclick="showInfo('20: Value (القيمة)', 'دي القيمة الفعلية اللي اتخزنت جوه المتغير.')">20</span>
+                    <span class="code-part text-white" onclick="showInfo('; : Semicolon (الفصلة المنقوطة)', 'دي زي النقطة في آخر السطر في العربي، بتعرف الكمبيوتر إن الأمر ده خلص هنا.')">;</span>
+                </div>
+                <p class="text-sm text-slate-500 text-center mb-8"><i class="fa-solid fa-hand-pointer"></i> اضغط على أي جزء من الكود فوق عشان تفهم معناه.</p>
+            </section>
+
+            <!-- Section 2: Declaration -->
+            <section id="sec-2" class="lesson-section hidden-section">
+                <h1 class="text-3xl font-bold mb-4 text-primary">إزاي نعرف متغير؟ (Variable Declaration)</h1>
+                <p class="text-lg mb-6 leading-relaxed">
+                    عشان تعرف متغير جديد في C++، فيه قاعدة أساسية بنمشي عليها من الشمال لليمين:
+                </p>
+                <div class="bg-slate-100 dark:bg-slate-800 p-6 rounded-xl text-center mb-8 ltr code-font font-bold text-2xl flex flex-wrap justify-center gap-4">
+                    <span class="text-blue-500">DataType</span>
+                    <span class="text-yellow-500">VariableName</span>
+                    <span class="text-slate-500">=</span>
+                    <span class="text-green-500">Value</span>
+                    <span class="text-slate-500">;</span>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white dark:bg-slate-800 p-5 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm">
+                        <h3 class="font-bold text-lg mb-3 text-secondary">الطريقة الأولى: التعريف ثم الإسناد</h3>
+                        <p class="mb-3 text-sm">بنعمل الصندوق الأول، وبعدين نحط فيه القيمة في سطر تاني.</p>
+                        <div class="bg-slate-800 text-white p-4 rounded code-font ltr text-left">
+                            <span class="text-blue-400">int</span> <span class="text-yellow-300">age</span>;<br>
+                            <span class="text-yellow-300">age</span> = <span class="text-green-400">20</span>;
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-5 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm">
+                        <h3 class="font-bold text-lg mb-3 text-secondary">الطريقة التانية: كله في سطر واحد</h3>
+                        <p class="mb-3 text-sm">بنعمل الصندوق ونحط فيه القيمة في نفس الوقت (ودي الطريقة الأفضل والأكثر استخداماً).</p>
+                        <div class="bg-slate-800 text-white p-4 rounded code-font ltr text-left">
+                            <span class="text-blue-400">int</span> <span class="text-yellow-300">age</span> = <span class="text-green-400">20</span>;
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-yellow-50 dark:bg-yellow-900/30 border-r-4 border-yellow-400 p-4 rounded-lg">
+                    <h4 class="font-bold text-yellow-700 dark:text-yellow-400 flex items-center gap-2 mb-2">
+                        <i class="fa-solid fa-triangle-exclamation"></i> تحذير مهم جداً
+                    </h4>
+                    <p class="text-sm">لو عملت متغير وماحطيتش فيه قيمة ابتدائية (زي السطر الأول في الطريقة الأولى)، الكمبيوتر بيحط فيه قيمة عشوائية (Garbage Value) من الذاكرة. <strong>ممنوع</strong> تستخدم المتغير أو تقرأ قيمته قبل ما تحط فيه قيمة صريحة بنفسك!</p>
+                </div>
+            </section>
+
+            <!-- Section 3: int -->
+            <section id="sec-3" class="lesson-section hidden-section">
+                <h1 class="text-3xl font-bold mb-4 text-blue-500">النوع الأول: int (Integer)</h1>
+                <p class="text-lg mb-4">نوع البيانات <code class="bg-slate-200 dark:bg-slate-700 px-1 rounded">int</code> مخصص للأعداد الصحيحة فقط. يعني أرقام مفيهاش أي كسور عشرية، سواء كانت موجبة أو سالبة أو صفر.</p>
+                
+                <h3 class="font-bold text-xl mb-3 mt-6">أمثلة صحيحة:</h3>
+                <div class="bg-slate-800 text-white p-4 rounded-xl code-font ltr text-left mb-6">
+                    <span class="text-blue-400">int</span> <span class="text-yellow-300">students</span> = <span class="text-green-400">30</span>; <span class="text-slate-400 text-sm ml-4">// عدد صحيح موجب</span><br>
+                    <span class="text-blue-400">int</span> <span class="text-yellow-300">temperature</span> = <span class="text-green-400">-5</span>; <span class="text-slate-400 text-sm ml-4">// عدد صحيح سالب</span>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl p-6 mb-6">
+                    <h3 class="font-bold text-lg mb-4 text-center">اختبر نفسك: أي من القيم دي تنفع تكون int؟</h3>
+                    <div class="flex flex-wrap gap-4 justify-center" id="int-quiz-container">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: double -->
+            <section id="sec-4" class="lesson-section hidden-section">
+                <h1 class="text-3xl font-bold mb-4 text-blue-500">النوع الثاني: double</h1>
+                <p class="text-lg mb-4">نوع البيانات <code class="bg-slate-200 dark:bg-slate-700 px-1 rounded">double</code> بيستخدم لتخزين الأرقام اللي فيها كسور عشرية، وسموه كدة عشان هو بيوفر دقة مضاعفة (Double Precision) في تخزين الكسور.</p>
+                
+                <h3 class="font-bold text-xl mb-3 mt-6">أمثلة لاستخدام double:</h3>
+                <div class="bg-slate-800 text-white p-4 rounded-xl code-font ltr text-left mb-6">
+                    <span class="text-blue-400">double</span> <span class="text-yellow-300">salary</span> = <span class="text-green-400">15000.75</span>;<br>
+                    <span class="text-blue-400">double</span> <span class="text-yellow-300">height</span> = <span class="text-green-400">175.5</span>;<br>
+                    <span class="text-blue-400">double</span> <span class="text-yellow-300">price</span> = <span class="text-green-400">99.99</span>;
+                </div>
+
+                <div class="bg-green-50 dark:bg-green-900/20 border-r-4 border-green-500 p-4 rounded-lg">
+                    <h4 class="font-bold mb-2"><i class="fa-solid fa-lightbulb text-green-500"></i> معلومة عالماشي</h4>
+                    <p>عادي جداً تحط رقم صحيح جوه <code class="font-mono">double</code> (مثلاً <code class="font-mono">double x = 10;</code>)، الكمبيوتر هيعامله كأنه <code class="font-mono">10.0</code>.</p>
+                </div>
+            </section>
+
+            <!-- Section 5: float -->
+            <section id="sec-5" class="lesson-section hidden-section">
+                <h1 class="text-3xl font-bold mb-4 text-blue-500">النوع الثالث: float</h1>
+                <p class="text-lg mb-4">الـ <code class="bg-slate-200 dark:bg-slate-700 px-1 rounded">float</code> أخو الـ <code class="bg-slate-200 dark:bg-slate-700 px-1 rounded">double</code> الصغير. بيخزن برضه أرقام عشرية، بس بدقة أقل، وبياخد مساحة أصغر في الذاكرة.</p>
+                
+                <p class="text-lg mb-4"><strong>الشرط الأساسي:</strong> عشان تعرف الكمبيوتر إن الرقم ده <code class="font-mono">float</code> مش <code class="font-mono">double</code>، لازم تحط حرف <code class="text-red-500 font-bold">f</code> أو <code class="text-red-500 font-bold">F</code> في آخر الرقم.</p>
+
+                <div class="bg-slate-800 text-white p-4 rounded-xl code-font ltr text-left mb-8">
+                    <span class="text-blue-400">float</span> <span class="text-yellow-300">temperature</span> = <span class="text-green-400">36.5<span class="text-red-400 font-bold">f</span></span>;<br>
+                    <span class="text-blue-400">float</span> <span class="text-yellow-300">price</span> = <span class="text-green-400">15.75<span class="text-red-400 font-bold">f</span></span>;
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4 text-center">
+                    <div class="border border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-900/10 p-4 rounded-xl">
+                        <h4 class="font-bold text-xl text-blue-600 dark:text-blue-400 mb-2">float</h4>
+                        <ul class="text-sm space-y-2">
+                            <li>دقة أقل (حوالي 7 أرقام عشرية)</li>
+                            <li>مساحة أقل في الذاكرة (عادة 4 بايت)</li>
+                            <li><strong class="text-red-500">لازم ينتهي بحرف f</strong></li>
+                        </ul>
+                    </div>
+                    <div class="border border-purple-200 dark:border-purple-900 bg-purple-50/50 dark:bg-purple-900/10 p-4 rounded-xl">
+                        <h4 class="font-bold text-xl text-purple-600 dark:text-purple-400 mb-2">double</h4>
+                        <ul class="text-sm space-y-2">
+                            <li>دقة أعلى (حوالي 15 رقم عشري)</li>
+                            <li>مساحة أكبر في الذاكرة (عادة 8 بايت)</li>
+                            <li><strong class="text-green-500">لا يحتاج أي حروف في النهاية</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 6: string -->
+            <section id="sec-6" class="lesson-section hidden-section">
+                <h1 class="text-3xl font-bold mb-4 text-blue-500">النوع الرابع: string</h1>
+                <p class="text-lg mb-4">بنستخدم <code class="bg-slate-200 dark:bg-slate-700 px-1 rounded">string</code> عشان نحفظ نصوص (كلمة، جملة، أو حتى نص فاضي). </p>
+                <p class="text-lg mb-4"><strong>قاعدة مهمة:</strong> أي نص لازم يتحط بين علامتين تنصيص مزدوجتين <code class="text-red-500 font-bold text-2xl">" "</code> (Double Quotes).</p>
+
+                <div class="bg-slate-800 text-white p-4 rounded-xl code-font ltr text-left mb-6">
+                    <span class="text-blue-400">string</span> <span class="text-yellow-300">name</span> = <span class="text-green-400">"Abdulrahman"</span>;<br>
+                    <span class="text-blue-400">string</span> <span class="text-yellow-300">city</span> = <span class="text-green-400">"Mansoura"</span>;<br>
+                    <span class="text-blue-400">string</span> <span class="text-yellow-300">message</span> = <span class="text-green-400">"Hello World"</span>;
+                </div>
+
+                <div class="bg-red-50 dark:bg-red-900/20 border-r-4 border-red-500 p-4 rounded-lg mb-6">
+                    <h4 class="font-bold mb-2">إيه الفرق لو مكتبناش علامات التنصيص؟</h4>
+                    <p class="text-sm mb-2">الكمبيوتر هيفتكر إن الكلمة دي اسم <strong>متغير تاني</strong> مش نص، وهيطلعلك خطأ (Error) لو المتغير ده مش موجود!</p>
+                    <code class="block bg-red-100 dark:bg-red-900/50 p-2 text-left ltr font-mono mt-2 rounded">
+                        string name = Abdulrahman; <span class="text-red-600 dark:text-red-400">// ❌ ERROR</span>
+                    </code>
+                </div>
+
+                <div class="bg-slate-100 dark:bg-slate-800 p-5 rounded-xl border border-slate-300 dark:border-slate-600">
+                    <h4 class="font-bold text-lg mb-2"><i class="fa-solid fa-wrench text-slate-500"></i> تجهيز الـ string</h4>
+                    <p class="text-sm mb-3">عشان نقدر نستخدم <code class="font-mono">string</code> في C++ بسهولة، لازم نكتب السطرين دول في أول الملف بتاعنا فوق خالص:</p>
+                    <div class="bg-slate-900 text-white p-3 rounded code-font ltr text-left text-sm">
+                        <span class="text-purple-400">#include</span> <span class="text-green-400">&lt;string&gt;</span><br>
+                        <span class="text-blue-400">using namespace</span> <span class="text-white">std;</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 7: char -->
+            <section id="sec-7" class="lesson-section hidden-section">
+                <h1 class="text-3xl font-bold mb-4 text-blue-500">النوع الخامس: char (Character)</h1>
+                <p class="text-lg mb-4">الـ <code class="bg-slate-200 dark:bg-slate-700 px-1 rounded">char</code> بيشيل <strong>حرف واحد فقط لا غير</strong>. ممكن يكون حرف إنجليزي، رقم، أو رمز.</p>
+                <p class="text-lg mb-4"><strong>قاعدة مهمة:</strong> الحرف لازم يتحط بين علامتين تنصيص مفردتين <code class="text-red-500 font-bold text-2xl">' '</code> (Single Quotes).</p>
+
+                <div class="bg-slate-800 text-white p-4 rounded-xl code-font ltr text-left mb-8">
+                    <span class="text-blue-400">char</span> <span class="text-yellow-300">grade</span> = <span class="text-green-400">'A'</span>; <span class="text-slate-400 text-sm ml-4">// حرف</span><br>
+                    <span class="text-blue-400">char</span> <span class="text-yellow-300">gender</span> = <span class="text-green-400">'M'</span>; <span class="text-slate-400 text-sm ml-4">// حرف</span><br>
+                    <span class="text-blue-400">char</span> <span class="text-yellow-300">symbol</span> = <span class="text-green-400">'#'</span>; <span class="text-slate-400 text-sm ml-4">// رمز</span><br>
+                    <span class="text-blue-400">char</span> <span class="text-yellow-300">numberAsChar</span> = <span class="text-green-400">'7'</span>; <span class="text-slate-400 text-sm ml-4">// رقم يُعامل كحرف وليس قيمة رياضية</span>
+                </div>
+
+                <h3 class="font-bold text-xl mb-4 text-center border-b pb-2 dark:border-slate-700">مقارنة بصرية: char ضد string</h3>
+                <div class="flex flex-col md:flex-row gap-6 justify-center items-center">
+                    <div class="text-center">
+                        <div class="w-32 h-32 bg-indigo-100 dark:bg-indigo-900 border-4 border-indigo-400 rounded-full flex items-center justify-center text-4xl font-bold text-indigo-700 dark:text-indigo-300 mb-2">
+                            'A'
+                        </div>
+                        <span class="bg-indigo-500 text-white px-3 py-1 rounded-full text-sm font-mono">char</span>
+                        <p class="text-sm mt-2 text-slate-500">حرف واحد، single quotes</p>
+                    </div>
+                    <div class="text-2xl font-bold text-slate-400">VS</div>
+                    <div class="text-center">
+                        <div class="w-48 h-32 bg-pink-100 dark:bg-pink-900 border-4 border-pink-400 rounded-xl flex items-center justify-center text-4xl font-bold text-pink-700 dark:text-pink-300 mb-2">
+                            "A"
+                        </div>
+                        <span class="bg-pink-500 text-white px-3 py-1 rounded-full text-sm font-mono">string</span>
+                        <p class="text-sm mt-2 text-slate-500">نص (حتى لو مكون من حرف)، double quotes</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 8: Playground -->
+            <section id="sec-8" class="lesson-section hidden-section">
+                <h1 class="text-3xl font-bold mb-2 text-primary"><i class="fa-solid fa-flask"></i> مختبر المتغيرات (Variable Playground)</h1>
+                <p class="text-slate-600 dark:text-slate-400 mb-6">جرب تعمل متغيرات بنفسك وشوف الكود بيتكون إزاي، وهل هو صح ولا غلط!</p>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Controls -->
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-4">
+                        <div>
+                            <label class="block text-sm font-bold mb-2">1. اختار نوع البيانات (Data Type)</label>
+                            <select id="pg-type" class="w-full p-3 rounded-lg border dark:border-slate-600 dark:bg-slate-700 font-mono focus:ring-2 focus:ring-primary focus:outline-none">
+                                <option value="int">int</option>
+                                <option value="double">double</option>
+                                <option value="float">float</option>
+                                <option value="string">string</option>
+                                <option value="char">char</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-2">2. اكتب اسم المتغير (Name)</label>
+                            <input type="text" id="pg-name" placeholder="مثال: age" class="w-full p-3 rounded-lg border dark:border-slate-600 dark:bg-slate-700 font-mono focus:ring-2 focus:ring-primary focus:outline-none ltr text-left">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-2">3. اكتب القيمة (Value)</label>
+                            <input type="text" id="pg-value" placeholder="مثال: 20" class="w-full p-3 rounded-lg border dark:border-slate-600 dark:bg-slate-700 font-mono focus:ring-2 focus:ring-primary focus:outline-none ltr text-left">
+                        </div>
+                    </div>
+
+                    <!-- Output -->
+                    <div class="flex flex-col gap-4">
+                        <div class="bg-slate-900 p-6 rounded-xl shadow-inner min-h-[120px] flex items-center justify-center relative">
+                            <span class="absolute top-2 left-2 text-xs text-slate-500 font-mono">C++ Code Preview</span>
+                            <div id="pg-code" class="text-2xl font-mono ltr text-left break-all">
+                                <!-- Generated Code -->
+                            </div>
+                        </div>
+                        
+                        <div id="pg-feedback" class="p-4 rounded-xl text-center font-bold min-h-[60px] flex items-center justify-center transition-colors">
+                            <!-- Feedback Messages -->
+                            ابدأ في الكتابة عشان تشوف النتيجة هنا.
+                        </div>
+
+                        <!-- Visual Box representation -->
+                        <div class="mt-auto hidden" id="pg-visual-box">
+                            <div class="var-box !w-full !h-24 !cursor-default" style="transform: none;">
+                                <div class="var-box-inner !border-2">
+                                    <div class="absolute -top-3 bg-white dark:bg-slate-800 px-2 text-sm font-mono text-primary font-bold rounded" id="pg-box-name">name</div>
+                                    <span class="var-content !opacity-100 !text-xl" id="pg-box-value">value</span>
+                                    <span class="var-type !bottom-1 !text-xs" id="pg-box-type">type</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 9: Game -->
+            <section id="sec-9" class="lesson-section hidden-section">
+                <h1 class="text-3xl font-bold mb-2 text-primary"><i class="fa-solid fa-gamepad"></i> لعبة: اختار النوع الصح!</h1>
+                <p class="text-slate-600 dark:text-slate-400 mb-6">هنوريك موقف أو معلومة من الحقيقة، وأنت تختار أنسب Data Type عشان نخزنها بيه.</p>
+
+                <div class="max-w-2xl mx-auto text-center bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-700">
+                    <div class="mb-4 flex justify-between items-center text-sm font-bold text-slate-500">
+                        <span>السؤال: <span id="game-q-num">1</span>/5</span>
+                        <span>النقاط: <span id="game-score" class="text-green-500 text-lg">0</span></span>
+                    </div>
+                    
+                    <div class="min-h-[100px] flex items-center justify-center mb-8">
+                        <h2 id="game-scenario" class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">تحميل...</h2>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-3" id="game-options">
+                        <button class="game-btn bg-slate-100 dark:bg-slate-700 hover:bg-primary hover:text-white transition p-3 rounded-lg font-mono font-bold" data-type="int">int</button>
+                        <button class="game-btn bg-slate-100 dark:bg-slate-700 hover:bg-primary hover:text-white transition p-3 rounded-lg font-mono font-bold" data-type="double">double</button>
+                        <button class="game-btn bg-slate-100 dark:bg-slate-700 hover:bg-primary hover:text-white transition p-3 rounded-lg font-mono font-bold" data-type="float">float</button>
+                        <button class="game-btn bg-slate-100 dark:bg-slate-700 hover:bg-primary hover:text-white transition p-3 rounded-lg font-mono font-bold" data-type="string">string</button>
+                        <button class="game-btn bg-slate-100 dark:bg-slate-700 hover:bg-primary hover:text-white transition p-3 rounded-lg font-mono font-bold" data-type="char">char</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 10: Error Finding -->
+            <section id="sec-10" class="lesson-section hidden-section">
+                <h1 class="text-3xl font-bold mb-2 text-primary"><i class="fa-solid fa-bug"></i> تحدي اكتشاف الأخطاء (Bugs)</h1>
+                <p class="text-slate-600 dark:text-slate-400 mb-6">الأكواد اللي تحت دي فيها أخطاء برمجية، اقرأ الكود وحاول تعرف إيه المشكلة.</p>
+
+                <div id="bugs-container" class="space-y-6">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+
+            <!-- Section 11: Final Exam -->
+            <section id="sec-11" class="lesson-section hidden-section">
+                <div id="exam-intro" class="text-center py-10">
+                    <i class="fa-solid fa-graduation-cap text-6xl text-primary mb-4"></i>
+                    <h1 class="text-4xl font-bold mb-4">الاختبار النهائي</h1>
+                    <p class="text-lg text-slate-600 dark:text-slate-400 mb-8 max-w-lg mx-auto">
+                        وصلنا لنهاية الرحلة! الاختبار ده مكون من 20 سؤال بيقيس فهمك لكل اللي اتعلمناه. ركز كويس وجاوب بثقة.
+                    </p>
+                    <button onclick="startExam()" class="bg-gradient-to-r from-primary to-secondary text-white px-8 py-3 rounded-full text-xl font-bold hover:shadow-lg hover:scale-105 transition transform">ابدأ الاختبار الآن</button>
+                </div>
+
+                <div id="exam-area" class="hidden">
+                    <div class="flex justify-between items-center mb-6 bg-slate-100 dark:bg-slate-800 p-4 rounded-xl">
+                        <span class="font-bold text-lg text-slate-600 dark:text-slate-300">سؤال <span id="exam-current-q">1</span> من 20</span>
+                        <span id="exam-difficulty" class="text-xs px-3 py-1 rounded-full font-bold"></span>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-6 md:p-8 rounded-2xl shadow-sm min-h-[250px] mb-6">
+                        <h2 id="exam-question-text" class="text-2xl font-bold mb-6 text-center leading-relaxed">جاري التحميل...</h2>
+                        <div id="exam-code-snippet" class="hidden bg-slate-800 text-white p-4 rounded-xl code-font ltr text-left mb-6 text-xl text-center"></div>
+                        <div id="exam-options" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Options generated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="exam-results" class="hidden text-center py-10">
+                    <div id="exam-circle-wrap" class="relative w-40 h-40 mx-auto mb-6 flex justify-center items-center rounded-full bg-slate-100 dark:bg-slate-800 border-8 border-slate-200 dark:border-slate-700">
+                        <span id="exam-final-score" class="text-4xl font-bold text-primary">0%</span>
+                    </div>
+                    <h2 id="exam-msg" class="text-3xl font-bold mb-2">النتيجة</h2>
+                    <p id="exam-sub-msg" class="text-slate-500 mb-8">تفاصيل</p>
+                    
+                    <button onclick="resetExam()" class="bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-white px-6 py-2 rounded-lg font-bold transition mr-2">إعادة الاختبار</button>
+                    
+                    <div class="text-left mt-10 bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <h3 class="font-bold text-xl mb-4 text-center">مراجعة الأخطاء:</h3>
+                        <div id="exam-mistakes" class="space-y-4 text-sm">
+                            <!-- Mistakes populated here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Navigation Buttons -->
+            <div class="mt-10 pt-6 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center" id="bottom-nav">
+                <button id="btn-prev" class="px-5 py-2 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 transition font-bold disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-arrow-right ml-2"></i> السابق
+                </button>
+                <button id="btn-next" class="px-5 py-2 rounded-lg bg-primary hover:bg-blue-600 text-white transition font-bold shadow-md shadow-blue-500/30">
+                    التالي <i class="fa-solid fa-arrow-left mr-2"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- Data & State ---
+        const sections = [
+            { id: 'sec-1', title: 'مقدمة' },
+            { id: 'sec-2', title: 'تعريف المتغيرات' },
+            { id: 'sec-3', title: 'نوع int' },
+            { id: 'sec-4', title: 'نوع double' },
+            { id: 'sec-5', title: 'نوع float' },
+            { id: 'sec-6', title: 'نوع string' },
+            { id: 'sec-7', title: 'نوع char' },
+            { id: 'sec-8', title: 'مختبر المتغيرات' },
+            { id: 'sec-9', title: 'لعبة: اختار النوع' },
+            { id: 'sec-10', title: 'تحدي الأخطاء' },
+            { id: 'sec-11', title: 'الاختبار النهائي' }
+        ];
+
+        let currentSectionIndex = parseInt(localStorage.getItem('cpp_var_progress')) || 0;
+        
+        // Ensure index is valid
+        if(currentSectionIndex < 0 || currentSectionIndex >= sections.length) currentSectionIndex = 0;
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initMenu();
+            initTheme();
+            showSection(currentSectionIndex);
+            
+            // Int Quiz
+            initIntQuiz();
+            
+            // Playground logic
+            setupPlayground();
+
+            // Game Logic
+            initGame();
+
+            // Bugs Logic
+            initBugs();
+        });
+
+        // --- Navigation Logic ---
+        function initMenu() {
+            const navMenu = document.getElementById('nav-menu');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            sections.forEach((sec, index) => {
+                // Desktop
+                const li = document.createElement('li');
+                li.className = `cursor-pointer p-2 rounded-lg transition-colors flex items-center gap-2 ${index === currentSectionIndex ? 'bg-blue-50 dark:bg-blue-900/30 text-primary font-bold border-r-4 border-primary' : 'hover:bg-slate-100 dark:hover:bg-slate-800'}`;
+                li.onclick = () => showSection(index);
+                
+                let icon = 'fa-file-lines';
+                if(index === 7) icon = 'fa-flask';
+                if(index === 8) icon = 'fa-gamepad';
+                if(index === 9) icon = 'fa-bug';
+                if(index === 10) icon = 'fa-graduation-cap';
+
+                li.innerHTML = `<i class="fa-solid ${icon} w-5 text-center"></i> <span>${sec.title}</span>`;
+                navMenu.appendChild(li);
+
+                // Mobile
+                const option = document.createElement('option');
+                option.value = index;
+                option.text = sec.title;
+                if(index === currentSectionIndex) option.selected = true;
+                mobileMenu.appendChild(option);
+            });
+
+            mobileMenu.addEventListener('change', (e) => {
+                showSection(parseInt(e.target.value));
+            });
+
+            document.getElementById('btn-prev').addEventListener('click', () => {
+                if(currentSectionIndex > 0) showSection(currentSectionIndex - 1);
+            });
+            document.getElementById('btn-next').addEventListener('click', () => {
+                if(currentSectionIndex < sections.length - 1) showSection(currentSectionIndex + 1);
+            });
+        }
+
+        function showSection(index) {
+            // Hide all
+            document.querySelectorAll('.lesson-section').forEach(el => {
+                el.classList.remove('active-section', 'slide-up');
+                el.classList.add('hidden-section');
+            });
+            
+            // Show target
+            const target = document.getElementById(sections[index].id);
+            target.classList.remove('hidden-section');
+            target.classList.add('active-section', 'slide-up');
+
+            currentSectionIndex = index;
+            localStorage.setItem('cpp_var_progress', index);
+
+            updateMenuUI();
+            updateProgress();
+            updateButtons();
+
+            // Reset specific section states if needed
+            if(index === 10 && !examStarted) {
+                document.getElementById('exam-intro').classList.remove('hidden');
+                document.getElementById('exam-area').classList.add('hidden');
+                document.getElementById('exam-results').classList.add('hidden');
+            }
+        }
+
+        function updateMenuUI() {
+            const items = document.getElementById('nav-menu').children;
+            for(let i=0; i<items.length; i++) {
+                if(i === currentSectionIndex) {
+                    items[i].className = `cursor-pointer p-2 rounded-lg transition-colors flex items-center gap-2 bg-blue-50 dark:bg-blue-900/30 text-primary font-bold border-r-4 border-primary`;
+                } else {
+                    items[i].className = `cursor-pointer p-2 rounded-lg transition-colors flex items-center gap-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border-r-4 border-transparent`;
+                }
+            }
+            document.getElementById('mobile-menu').value = currentSectionIndex;
+        }
+
+        function updateProgress() {
+            const percentage = Math.round((currentSectionIndex / (sections.length - 1)) * 100);
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('progress-text').innerText = `التقدم: ${percentage}%`;
+        }
+
+        function updateButtons() {
+            const btnPrev = document.getElementById('btn-prev');
+            const btnNext = document.getElementById('btn-next');
+            const bottomNav = document.getElementById('bottom-nav');
+
+            btnPrev.disabled = currentSectionIndex === 0;
+            
+            if(currentSectionIndex === sections.length - 1) {
+                btnNext.style.display = 'none';
+            } else {
+                btnNext.style.display = 'block';
+            }
+
+            // Hide bottom nav in exam if started
+            if(currentSectionIndex === 10 && examStarted) {
+                 bottomNav.classList.add('hidden');
+            } else {
+                 bottomNav.classList.remove('hidden');
+            }
+        }
+
+        // --- Theme Logic ---
+        function initTheme() {
+            const toggle = document.getElementById('theme-toggle');
+            const html = document.documentElement;
+            
+            // Check local storage or system preference
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                html.classList.add('dark');
+            } else {
+                html.classList.remove('dark');
+            }
+
+            toggle.addEventListener('click', () => {
+                html.classList.toggle('dark');
+                if (html.classList.contains('dark')) {
+                    localStorage.theme = 'dark';
+                } else {
+                    localStorage.theme = 'light';
+                }
+            });
+        }
+
+        // --- Alerts / Info ---
+        function showInfo(title, text) {
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: 'info',
+                confirmButtonText: 'فهمت',
+                confirmButtonColor: '#3b82f6',
+                customClass: {
+                    popup: 'font-sans rounded-2xl dark:bg-slate-800 dark:text-white',
+                    title: 'font-sans dark:text-white',
+                    htmlContainer: 'font-sans'
+                }
+            });
+        }
+
+        // --- Section 3: Int Quiz ---
+        function initIntQuiz() {
+            const container = document.getElementById('int-quiz-container');
+            const values = [
+                { val: '25', isInt: true },
+                { val: '25.5', isInt: false },
+                { val: '-10', isInt: true },
+                { val: '"Ali"', isInt: false },
+                { val: '0', isInt: true },
+                { val: '3.14', isInt: false }
+            ];
+
+            values.forEach(item => {
+                const btn = document.createElement('button');
+                btn.className = 'font-mono text-xl px-6 py-3 bg-slate-100 dark:bg-slate-700 rounded-lg hover:shadow-md transition ltr border-2 border-transparent';
+                btn.innerText = item.val;
+                btn.onclick = () => {
+                    if(item.isInt) {
+                        btn.classList.remove('bg-slate-100', 'dark:bg-slate-700');
+                        btn.classList.add('bg-green-100', 'text-green-700', 'border-green-500', 'dark:bg-green-900', 'dark:text-green-300');
+                        Swal.fire({icon: 'success', title: 'ممتاز!', text: `${item.val} هو عدد صحيح (بدون كسور) فمناسب جداً للـ int.`, confirmButtonColor: '#22c55e'});
+                    } else {
+                        btn.classList.remove('bg-slate-100', 'dark:bg-slate-700');
+                        btn.classList.add('bg-red-100', 'text-red-700', 'border-red-500', 'dark:bg-red-900', 'dark:text-red-300');
+                        setTimeout(()=> {
+                            btn.classList.remove('bg-red-100', 'text-red-700', 'border-red-500', 'dark:bg-red-900', 'dark:text-red-300');
+                            btn.classList.add('bg-slate-100', 'dark:bg-slate-700');
+                        }, 2000);
+                        Swal.fire({icon: 'error', title: 'خطأ!', text: `${item.val} غير مناسب للـ int لأنه بيحتوي على كسور أو حروف.`, confirmButtonColor: '#ef4444'});
+                    }
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        // --- Section 8: Playground ---
+        function setupPlayground() {
+            const typeSel = document.getElementById('pg-type');
+            const nameIn = document.getElementById('pg-name');
+            const valIn = document.getElementById('pg-value');
+            const codeOut = document.getElementById('pg-code');
+            const feedback = document.getElementById('pg-feedback');
+            const visBox = document.getElementById('pg-visual-box');
+
+            function update() {
+                const type = typeSel.value;
+                const name = nameIn.value.trim();
+                const value = valIn.value.trim();
+
+                // Build code string visually
+                let nameHTML = name === '' ? '<span class="text-slate-500 italic">Name</span>' : `<span class="text-yellow-300">${name}</span>`;
+                let valHTML = value === '' ? '<span class="text-slate-500 italic">Value</span>' : `<span class="text-green-400">${value}</span>`;
+                
+                codeOut.innerHTML = `<span class="text-blue-400">${type}</span> ${nameHTML} = ${valHTML};`;
+
+                if(name === '' || value === '') {
+                    feedback.className = 'p-4 rounded-xl text-center font-bold min-h-[60px] flex items-center justify-center transition-colors bg-slate-100 dark:bg-slate-800 text-slate-500';
+                    feedback.innerHTML = 'اكتب اسم وقيمة عشان نقيم الكود.';
+                    visBox.classList.add('hidden');
+                    return;
+                }
+
+                // Validation Logic
+                let error = null;
+                
+                // Name check (starts with letter/underscore, alphanumeric)
+                if(!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(name)) {
+                    error = "اسم المتغير غير صحيح. لازم يبدأ بحرف إنجليزي أو '_' وميكونش فيه مسافات أو رموز تانية.";
+                } else if(type === 'int') {
+                    if(!/^-?\d+$/.test(value)) error = "الـ int بيقبل أرقام صحيحة بس (بدون كسور أو حروف).";
+                } else if(type === 'double') {
+                    if(!/^-?\d+(\.\d+)?$/.test(value)) error = "الـ double محتاج رقم (صحيح أو عشري) مش نصوص.";
+                } else if(type === 'float') {
+                    if(!/^-?\d+(\.\d+)?f$/.test(value) && !/^-?\d+(\.\d+)?F$/.test(value)) {
+                        error = "الـ float بيحتاج رقم عشري وفي آخره حرف f، مثلاً 10.5f";
+                    }
+                } else if(type === 'char') {
+                    if(!/^'[^']{1}'$/.test(value) && value !== "''") {
+                        error = "الـ char بيقبل حرف واحد بس، ولازم يكون بين علامتين تنصيص مفردتين ' ' (مثال: 'A')";
+                    }
+                } else if(type === 'string') {
+                    if(!/^".*"$/.test(value)) {
+                        error = "الـ string بيحتاج نص محطوط بين علامتين تنصيص مزدوجتين \" \" (مثال: \"Ali\")";
+                    }
+                }
+
+                if(error) {
+                    feedback.className = 'p-4 rounded-xl text-center font-bold min-h-[60px] flex items-center justify-center transition-colors bg-red-100 text-red-700 border border-red-300 dark:bg-red-900/30 dark:border-red-800 dark:text-red-300';
+                    feedback.innerHTML = `<i class="fa-solid fa-triangle-exclamation ml-2"></i> ${error}`;
+                    visBox.classList.add('hidden');
+                } else {
+                    feedback.className = 'p-4 rounded-xl text-center font-bold min-h-[60px] flex items-center justify-center transition-colors bg-green-100 text-green-700 border border-green-300 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300';
+                    feedback.innerHTML = `<i class="fa-solid fa-check-circle ml-2"></i> كود سليم 100%! المتغير اتعمل بنجاح.`;
+                    
+                    // Show Box
+                    visBox.classList.remove('hidden');
+                    document.getElementById('pg-box-name').innerText = name;
+                    document.getElementById('pg-box-value').innerText = value;
+                    document.getElementById('pg-box-type').innerText = type;
+                }
+            }
+
+            typeSel.addEventListener('change', update);
+            nameIn.addEventListener('input', update);
+            valIn.addEventListener('input', update);
+        }
+
+        // --- Section 9: Game ---
+        const gameScenarios = [
+            { text: "عمر شخص (مثال: 25)", ans: "int" },
+            { text: "اسم الطالب الأول", ans: "string" },
+            { text: "فصيلة الدم (مثال: 'O' أو 'A')", ans: "char" },
+            { text: "سعر منتج بالقرش (مثال: 199.99)", ans: "double" },
+            { text: "درجة حرارة دقيقة بتاخد مساحة صغيرة (تنتهي بـ f)", ans: "float" },
+            { text: "عدد سكان مدينة", ans: "int" },
+            { text: "رسالة ترحيبية للمستخدم", ans: "string" }
+        ];
+        let currentGameIndex = 0;
+        let gameScore = 0;
+
+        function initGame() {
+            currentGameIndex = 0;
+            gameScore = 0;
+            // Shuffle
+            gameScenarios.sort(() => Math.random() - 0.5);
+            loadGameQuestion();
+
+            document.querySelectorAll('.game-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const selected = e.target.getAttribute('data-type');
+                    checkGameAnswer(selected);
+                });
+            });
+        }
+
+        function loadGameQuestion() {
+            if(currentGameIndex >= 5) {
+                Swal.fire({
+                    title: 'خلصت اللعبة!',
+                    text: `جبت ${gameScore} من 5`,
+                    icon: gameScore >= 3 ? 'success' : 'info',
+                    confirmButtonText: 'إعادة اللعب',
+                    confirmButtonColor: '#3b82f6',
+                }).then(() => { initGame(); });
+                return;
+            }
+            document.getElementById('game-q-num').innerText = currentGameIndex + 1;
+            document.getElementById('game-score').innerText = gameScore;
+            document.getElementById('game-scenario').innerText = gameScenarios[currentGameIndex].text;
+            
+            // Reset buttons
+            document.querySelectorAll('.game-btn').forEach(btn => {
+                btn.disabled = false;
+                btn.className = 'game-btn bg-slate-100 dark:bg-slate-700 hover:bg-primary hover:text-white transition p-3 rounded-lg font-mono font-bold';
+            });
+        }
+
+        function checkGameAnswer(selected) {
+            const correct = gameScenarios[currentGameIndex].ans;
+            const buttons = document.querySelectorAll('.game-btn');
+            
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if(btn.getAttribute('data-type') === correct) {
+                    btn.classList.replace('bg-slate-100', 'bg-green-500');
+                    btn.classList.replace('dark:bg-slate-700', 'dark:bg-green-600');
+                    btn.classList.add('text-white');
+                } else if(btn.getAttribute('data-type') === selected && selected !== correct) {
+                    btn.classList.replace('bg-slate-100', 'bg-red-500');
+                    btn.classList.replace('dark:bg-slate-700', 'dark:bg-red-600');
+                    btn.classList.add('text-white');
+                }
+            });
+
+            if(selected === correct) {
+                gameScore++;
+                Swal.fire({toast: true, position: 'top-end', icon: 'success', title: 'إجابة صحيحة!', showConfirmButton: false, timer: 1500});
+            } else {
+                Swal.fire({
+                    icon: 'error', title: 'للأسف خطأ',
+                    text: `الإجابة الصح هي ${correct} لأننا بنخزن ${gameScenarios[currentGameIndex].text.split(' ')[0]}`,
+                    confirmButtonText: 'كمل',
+                    confirmButtonColor: '#3b82f6',
+                });
+            }
+
+            setTimeout(() => {
+                currentGameIndex++;
+                loadGameQuestion();
+            }, 2000);
+        }
+
+        // --- Section 10: Bugs ---
+        const bugsData = [
+            {
+                code: `int age = "20";`,
+                options: [
+                    "الـ int لا يقبل قيم نصية بين علامات تنصيص.",
+                    "كلمة age مكتوبة غلط.",
+                    "ناقص حرف f في الآخر."
+                ],
+                correct: 0,
+                exp: 'القيمة "20" عبارة عن string عشان محطوطة بين " ". الـ int بيقبل أرقام بس بدون علامات تنصيص.'
+            },
+            {
+                code: `string name = 'Ahmed';`,
+                options: [
+                    "الاسم طويل جداً.",
+                    "الـ string بيحتاج double quotes \" \" مش single quotes ' '.",
+                    "الـ string مينفعش تخزن فيه حروف كابيتال."
+                ],
+                correct: 1,
+                exp: 'في C++، الـ Single quotes بنستخدمها لـ char بس (حرف واحد). الـ string لازم " ".'
+            },
+            {
+                code: `float price = 10.5;`,
+                options: [
+                    "لازم نحط علامة $.",
+                    "الـ float مش بيقبل كسور.",
+                    "عشان نعرفه كـ float لازم نحط حرف f في الآخر (10.5f) وإلا هيعتبره double."
+                ],
+                correct: 2,
+                exp: 'الرقم العشري بدون f بيعتبر double في C++. عشان نخليه float صريح لازم نكتب 10.5f.'
+            }
+        ];
+
+        function initBugs() {
+            const container = document.getElementById('bugs-container');
+            container.innerHTML = '';
+
+            bugsData.forEach((bug, index) => {
+                const bugCard = document.createElement('div');
+                bugCard.className = 'bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm';
+                
+                let optionsHTML = '';
+                bug.options.forEach((opt, optIdx) => {
+                    optionsHTML += `<button class="block w-full text-right p-3 my-2 rounded border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition bug-opt-${index}" onclick="checkBug(${index}, ${optIdx}, this)">${opt}</button>`;
+                });
+
+                bugCard.innerHTML = `
+                    <div class="bg-slate-900 text-red-400 p-4 rounded-lg code-font ltr text-left text-xl mb-4 relative">
+                        <i class="fa-solid fa-bug absolute top-2 right-2 text-red-500 opacity-50"></i>
+                        ${bug.code}
+                    </div>
+                    <h3 class="font-bold mb-3">إيه الغلطة هنا؟</h3>
+                    ${optionsHTML}
+                    <div id="bug-exp-${index}" class="mt-4 p-3 rounded bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hidden text-sm font-bold border-r-4 border-blue-500"></div>
+                `;
+                container.appendChild(bugCard);
+            });
+        }
+
+        function checkBug(bugIdx, optIdx, btnEl) {
+            const bug = bugsData[bugIdx];
+            const allBtns = document.querySelectorAll(`.bug-opt-${bugIdx}`);
+            
+            // disable all
+            allBtns.forEach(b => { b.disabled = true; b.classList.add('opacity-50', 'cursor-not-allowed'); });
+            
+            btnEl.classList.remove('opacity-50', 'hover:bg-slate-50', 'dark:hover:bg-slate-700');
+            
+            if(optIdx === bug.correct) {
+                btnEl.classList.add('bg-green-100', 'border-green-500', 'text-green-800', 'dark:bg-green-900/50', 'dark:text-green-300');
+                btnEl.innerHTML += ' <i class="fa-solid fa-check ml-2"></i>';
+            } else {
+                btnEl.classList.add('bg-red-100', 'border-red-500', 'text-red-800', 'dark:bg-red-900/50', 'dark:text-red-300');
+                btnEl.innerHTML += ' <i class="fa-solid fa-xmark ml-2"></i>';
+                // highlight correct
+                allBtns[bug.correct].classList.remove('opacity-50');
+                allBtns[bug.correct].classList.add('bg-green-100', 'border-green-500', 'text-green-800', 'dark:bg-green-900/50', 'dark:text-green-300');
+            }
+
+            const exp = document.getElementById(`bug-exp-${bugIdx}`);
+            exp.innerText = bug.exp;
+            exp.classList.remove('hidden');
+        }
+
+        // --- Section 11: Final Exam ---
+        // 20 Questions
+        const examData = [
+            // Easy
+            { q: "أي نوع بيانات مناسب لتخزين العمر (مثال 20)؟", opts: ["int", "double", "string", "char"], ans: 0, diff: "سهل" },
+            { q: "إيه هي علامة الإسناد (Assignment Operator) اللي بنحط بيها قيمة جوه المتغير؟", opts: ["==", "+", "=", ":"], ans: 2, diff: "سهل" },
+            { q: "كل سطر كود في C++ لازم ينتهي بـ إيه؟", opts: ["نقطة .", "فصلة ,", "فصلة منقوطة ;", "علامة تعجب !"], ans: 2, diff: "سهل" },
+            { q: "لتعريف متغير بيشيل حرف واحد بس بنستخدم:", opts: ["string", "word", "char", "letter"], ans: 2, diff: "سهل" },
+            { q: "لتعريف متغير بيشيل كلمة بنستخدم:", opts: ["char", "text", "string", "words"], ans: 2, diff: "سهل" },
+            { q: "الـ char بيحتاج علامات تنصيص شكلها إيه؟", opts: ["مفردة ' '", "مزدوجة \" \"", "أقواس ( )", "بدون علامات"], ans: 0, diff: "سهل" },
+            { q: "الـ string بيحتاج علامات تنصيص شكلها إيه؟", opts: ["مفردة ' '", "مزدوجة \" \"", "أقواس ( )", "بدون علامات"], ans: 1, diff: "سهل" },
+            
+            // Medium
+            { q: "ما الخطأ في هذا الكود؟", code: `int score = 95.5;`, opts: ["score كلمة محجوزة", "الـ int لا يقبل كسور عشرية", "ناقص حرف f", "لا يوجد خطأ"], ans: 1, diff: "متوسط" },
+            { q: "لو عايزين نخزن رقم زي 3.14159 بدقة عالية، نختار إيه؟", opts: ["int", "float", "double", "char"], ans: 2, diff: "متوسط" },
+            { q: "ايه الحرف اللي بنميز بيه قيمة الـ float؟", opts: ["d", "c", "s", "f"], ans: 3, diff: "متوسط" },
+            { q: "ما هو الكود الصحيح لتعريف حرف؟", opts: ["char x = 'A';", "char x = \"A\";", "char x = A;", "string x = 'A';"], ans: 0, diff: "متوسط" },
+            { q: "هل ينفع نعرف متغير من غير ما نديله قيمة مبدئية؟ (مثال: int age;)", opts: ["لا، بيطلع Error فوراً", "أيوة، بس هياخد قيمة عشوائية (Garbage) من الذاكرة", "أيوة، وهيكون قيمته صفر تلقائياً", "أيوة، بس للـ string فقط"], ans: 1, diff: "متوسط" },
+            { q: "ما الخطأ هنا؟", code: "string city = Cairo;", opts: ["city مش نوع صحيح", "Cairo لازم تكون بين \" \"", "لازم تكون 'Cairo'", "الكود صحيح 100%"], ans: 1, diff: "متوسط" },
+            
+            // Hard
+            { q: "أي من أسماء المتغيرات دي صح في C++؟", opts: ["1st_name", "first name", "first_name", "first-name"], ans: 2, diff: "صعب" }, // Starts with digit, spaces, hyphens not allowed.
+            { q: "إيه الفرق الجوهري بين float و double؟", opts: ["float للأرقام الموجبة بس", "double بيوفر دقة أعلى (أرقام عشرية أكتر) وبياخد مساحة أكبر", "double للحروف و float للأرقام", "مفيش فرق خالص"], ans: 1, diff: "صعب" },
+            { q: "كود هيشتغل ولا لأ؟", code: `double x = 10;`, opts: ["هيشتغل وهيعتبرها 10.0", "مش هيشتغل لأن 10 رقم صحيح", "هيشتغل بس هيطبع Error تحذيري", "هيشتغل ويفقد الدقة"], ans: 0, diff: "صعب" },
+            { q: "عشان نقدر نستخدم النوع string بدون مشاكل في البرنامج، بنحتاج نعمل إيه فوق؟", opts: ["#include <char>", "#include <string> و using namespace std;", "مبنحتاجش نعمل حاجة", "بنعمل #include <iostream> بس"], ans: 1, diff: "صعب" },
+            { q: "إيه نوع البيانات المناسب للمتغير ده؟", code: `_____ isMarried = 'Y';`, opts: ["string", "bool", "char", "int"], ans: 2, diff: "صعب" },
+            { q: "لو حاولت تخزن 'AB' في متغير char إيه اللي هيحصل؟", opts: ["هيتخزن عادي", "هيطلع Error لأن char بيشيل حرف واحد", "هيتخزن كـ string تلقائي", "هياخد أول حرف بس ويتجاهل التاني"], ans: 1, diff: "صعب" },
+            { q: "ايه الترتيب الصحيح لتعريف متغير؟", opts: ["Value = Name DataType;", "Name DataType = Value;", "DataType Name = Value;", "DataType Value = Name;"], ans: 2, diff: "صعب" }
+        ];
+
+        let examStarted = false;
+        let examCurrentQ = 0;
+        let examScore = 0;
+        let userMistakes = []; // {q: obj, userAns: idx}
+
+        function startExam() {
+            examStarted = true;
+            examCurrentQ = 0;
+            examScore = 0;
+            userMistakes = [];
+            
+            document.getElementById('exam-intro').classList.add('hidden');
+            document.getElementById('exam-area').classList.remove('hidden');
+            document.getElementById('exam-results').classList.add('hidden');
+            
+            // Hide bottom navigation completely during exam to avoid skipping
+            document.getElementById('bottom-nav').classList.add('hidden');
+            
+            loadExamQuestion();
+        }
+
+        function loadExamQuestion() {
+            if(examCurrentQ >= examData.length) {
+                finishExam();
+                return;
+            }
+
+            const qObj = examData[examCurrentQ];
+            document.getElementById('exam-current-q').innerText = examCurrentQ + 1;
+            
+            const diffEl = document.getElementById('exam-difficulty');
+            diffEl.innerText = qObj.diff;
+            diffEl.className = 'text-xs px-3 py-1 rounded-full font-bold text-white';
+            if(qObj.diff === 'سهل') diffEl.classList.add('bg-green-500');
+            else if(qObj.diff === 'متوسط') diffEl.classList.add('bg-yellow-500');
+            else diffEl.classList.add('bg-red-500');
+
+            document.getElementById('exam-question-text').innerText = qObj.q;
+
+            const codeSnippet = document.getElementById('exam-code-snippet');
+            if(qObj.code) {
+                codeSnippet.innerText = qObj.code;
+                codeSnippet.classList.remove('hidden');
+            } else {
+                codeSnippet.classList.add('hidden');
+            }
+
+            const optionsContainer = document.getElementById('exam-options');
+            optionsContainer.innerHTML = '';
+            
+            qObj.opts.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-right p-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-primary hover:bg-blue-50 dark:hover:bg-slate-700 transition font-semibold text-lg';
+                btn.innerText = opt;
+                btn.onclick = () => handleExamAnswer(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function handleExamAnswer(selectedIdx, btnEl) {
+            const qObj = examData[examCurrentQ];
+            const isCorrect = selectedIdx === qObj.ans;
+
+            // disable all
+            const btns = document.getElementById('exam-options').children;
+            for(let b of btns) {
+                b.disabled = true;
+                b.classList.remove('hover:border-primary', 'hover:bg-blue-50', 'dark:hover:bg-slate-700');
+            }
+
+            if(isCorrect) {
+                btnEl.classList.add('border-green-500', 'bg-green-50', 'text-green-700', 'dark:bg-green-900/30', 'dark:text-green-400');
+                examScore++;
+            } else {
+                btnEl.classList.add('border-red-500', 'bg-red-50', 'text-red-700', 'dark:bg-red-900/30', 'dark:text-red-400');
+                btns[qObj.ans].classList.add('border-green-500', 'bg-green-50', 'text-green-700', 'dark:bg-green-900/30', 'dark:text-green-400');
+                
+                userMistakes.push({
+                    qIndex: examCurrentQ,
+                    userAns: selectedIdx
+                });
+            }
+
+            setTimeout(() => {
+                examCurrentQ++;
+                loadExamQuestion();
+            }, 1000);
+        }
+
+        function finishExam() {
+            document.getElementById('exam-area').classList.add('hidden');
+            document.getElementById('exam-results').classList.remove('hidden');
+            
+            // Show bottom nav again
+            document.getElementById('bottom-nav').classList.remove('hidden');
+
+            const percentage = Math.round((examScore / examData.length) * 100);
+            document.getElementById('exam-final-score').innerText = percentage + '%';
+            
+            const msgEl = document.getElementById('exam-msg');
+            const subMsgEl = document.getElementById('exam-sub-msg');
+            const circle = document.getElementById('exam-circle-wrap');
+            
+            circle.classList.remove('border-green-500', 'border-yellow-500', 'border-red-500');
+
+            if(percentage >= 85) {
+                msgEl.innerText = "ممتاز جداً! أسطورة متغيرة";
+                msgEl.className = "text-3xl font-bold mb-2 text-green-500";
+                subMsgEl.innerText = `جبت ${examScore} من ${examData.length}. إنت فهمت المتغيرات بنسبة 100%.`;
+                circle.classList.add('border-green-500');
+            } else if (percentage >= 50) {
+                msgEl.innerText = "جيد جداً! خطوة ممتازة";
+                msgEl.className = "text-3xl font-bold mb-2 text-yellow-500";
+                subMsgEl.innerText = `جبت ${examScore} من ${examData.length}. محتاج مراجعة بسيطة.`;
+                circle.classList.add('border-yellow-500');
+            } else {
+                msgEl.innerText = "حاول تاني!";
+                msgEl.className = "text-3xl font-bold mb-2 text-red-500";
+                subMsgEl.innerText = `جبت ${examScore} من ${examData.length}. أنصحك تعيد الدروس من الأول وتقرأ بالراحة.`;
+                circle.classList.add('border-red-500');
+            }
+
+            // Render mistakes
+            const mistakesCont = document.getElementById('exam-mistakes');
+            mistakesCont.innerHTML = '';
+            if(userMistakes.length === 0) {
+                mistakesCont.innerHTML = '<p class="text-green-600 font-bold text-center">ولا غلطة! مبروك.</p>';
+            } else {
+                userMistakes.forEach(m => {
+                    const qObj = examData[m.qIndex];
+                    mistakesCont.innerHTML += `
+                        <div class="border-b dark:border-slate-700 pb-3 mb-3">
+                            <p class="font-bold mb-1">${qObj.q}</p>
+                            ${qObj.code ? `<div class="bg-slate-800 text-white p-2 text-left ltr code-font text-xs rounded mb-2">${qObj.code}</div>` : ''}
+                            <p class="text-red-500 line-through">إجابتك: ${qObj.opts[m.userAns]}</p>
+                            <p class="text-green-600 dark:text-green-400 font-bold">الصح: ${qObj.opts[qObj.ans]}</p>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        function resetExam() {
+            startExam();
+        }
+
+    </script>
+</body>
+</html>
