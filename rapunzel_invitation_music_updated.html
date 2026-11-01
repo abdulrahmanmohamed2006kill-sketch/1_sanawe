@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#1b1340">
+<title>Wedding Invitation • دعوة زفاف</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=IBM+Plex+Sans+Arabic:wght@300;400;500&family=Inter:wght@400;500&family=Great+Vibes&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+/* ===== style ===== */
+:root{--ivory:#FAF8F3;--champ:#E9DDCA;--soft:#D8C3A5;--gold:#B69A70;--esp:#493B32;--white:#fff;--taupe:#A99A88;--en:"Cormorant Garamond",serif;--ar:"Amiri",serif;--arb:"IBM Plex Sans Arabic","Tajawal",sans-serif}
+*{box-sizing:border-box;margin:0}html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--ivory) radial-gradient(circle at 20% 0,#fff 0,transparent 50%);color:var(--esp);font:300 1.0625rem/1.9 "Cormorant Garamond",var(--arb);overflow-x:hidden;min-height:100vh}
+[dir=rtl] body,[dir=rtl] button,[dir=rtl] input,[dir=rtl] textarea{font-family:var(--arb)}
+body.locked{overflow:hidden}
+h1,h2,.names,.quote,.mono{font-family:var(--en);font-weight:300}
+[dir=rtl] h1,[dir=rtl] h2,[dir=rtl] .names,[dir=rtl] .quote,[dir=rtl] .mono{font-family:var(--ar);font-weight:400}
+h2{font-size:clamp(1.9rem,6vw,3rem);text-align:center;margin-bottom:1.5rem;line-height:1.3}
+h2::after{content:"";display:block;width:56px;height:1px;background:var(--gold);margin:.9rem auto 0}
+section{padding:clamp(3.5rem,10vw,7rem) 1.25rem;max-width:960px;margin:auto;text-align:center}
+.orn{color:var(--gold);font-size:1.8rem}
+.btn,.link,.share,.lang button{cursor:pointer;font:500 .8rem/1 Inter,var(--arb);letter-spacing:.14em;border:1px solid var(--gold);background:transparent;color:var(--esp);padding:1rem 2rem;min-height:44px;text-decoration:none;display:inline-block;transition:.35s}
+[dir=rtl] .btn,[dir=rtl] .share,[dir=rtl] .lang button{letter-spacing:0;font-size:.95rem}
+.btn:hover,.btn:focus-visible{background:var(--esp);color:var(--ivory);border-color:var(--esp)}
+.link{border:0;padding:.6rem;color:var(--taupe);letter-spacing:.05em}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.bar{position:fixed;inset:0 0 auto 0;z-index:20;display:flex;justify-content:space-between;padding:.75rem 1rem;pointer-events:none}
+.bar>*{pointer-events:auto}.lang{display:flex;background:rgba(250,248,243,.85);backdrop-filter:blur(6px)}
+.lang button,.share{padding:.55rem 1rem;border-color:var(--soft);background:rgba(250,248,243,.85)}.lang button.on{background:var(--esp);color:var(--ivory);border-color:var(--esp)}
+#intro{position:fixed;inset:0;z-index:50;background:var(--champ);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.1rem;padding:1rem;transition:opacity .9s,visibility .9s}
+#intro.gone{opacity:0;visibility:hidden}#intro.opening .btn,#intro.opening .link,#intro.opening .eyebrow{opacity:0;pointer-events:none;transition:.5s}
+.eyebrow{font:400 .8rem Inter,var(--arb);letter-spacing:.3em;color:var(--esp)}[dir=rtl] .eyebrow{letter-spacing:0;font-size:1.1rem;font-family:var(--ar)}
+.env{position:relative;width:min(86vw,420px);aspect-ratio:1.5;background:linear-gradient(160deg,#EFE4D2,var(--soft));box-shadow:0 30px 60px -20px rgba(73,59,50,.45);border:1px solid var(--gold);perspective:900px;transition:transform 1.2s .9s}
+.card{position:absolute;inset:6% 7%;background:var(--ivory);border:1px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;padding:.5rem;transition:transform 1.2s .7s cubic-bezier(.2,.8,.2,1);z-index:1}
+.card .names{font-size:clamp(1.1rem,5vw,1.7rem);line-height:1.2}.small{font-size:.9rem;color:var(--taupe)}.card .dateLine{font-size:.85rem}
+.flap{position:absolute;inset:0 0 auto 0;height:58%;background:linear-gradient(#E4D4BB,#D8C3A5);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .9s;z-index:3}
+.env::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom right,transparent 49.6%,#E9DDCA 50.2%) bottom left/50% 55% no-repeat,linear-gradient(to bottom left,transparent 49.6%,#E9DDCA 50.2%) bottom right/50% 55% no-repeat;z-index:2;pointer-events:none}
+.seal{position:absolute;left:50%;top:50%;translate:-50% -50%;z-index:4;width:64px;height:64px;border-radius:50%;background:var(--gold);color:var(--ivory);display:grid;place-items:center;font:500 1rem var(--en);box-shadow:0 0 0 3px var(--champ),0 0 0 4px var(--gold);transition:opacity .4s}
+.env.open .flap{transform:rotateX(180deg);z-index:0}.env.open .seal{opacity:0}.env.open .card{transform:translateY(-62%) scale(1.12);z-index:5}.env.open{transform:translateY(12%)}
+.hero{max-width:1100px;padding-top:5rem;display:grid;gap:2rem}
+.frame{aspect-ratio:4/5;width:min(86%,460px);margin:auto;position:relative;overflow:hidden;outline:1px solid var(--gold);outline-offset:12px;background:var(--champ)}
+.frame img,.g img{width:100%;height:100%;object-fit:cover;display:block}
+.ph{display:grid;place-items:center;border:1px dashed var(--taupe);color:var(--taupe);background:repeating-linear-gradient(45deg,var(--champ),var(--champ) 12px,#EFE6D6 12px,#EFE6D6 24px);font:.85rem Inter,var(--arb)}
+h1{font-size:clamp(2.6rem,11vw,5.6rem);line-height:1.1}h1 span{display:block}.amp{display:block;font:italic 1.6rem "Playfair Display",serif;color:var(--gold);margin:.2rem 0}
+.lead{max-width:34ch;margin:1rem auto;font-size:1.2rem}.dateLine{color:var(--gold);letter-spacing:.12em}[dir=rtl] .dateLine{letter-spacing:0}
+.prose{max-width:52ch;margin:auto}.miles{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 2rem;margin-top:1.5rem;color:var(--taupe)}
+.miles li::before{content:"✦ ";color:var(--gold)}
+.count{background:var(--esp);color:var(--ivory);max-width:none}.count h2{color:var(--ivory)}
+.cd{display:flex;justify-content:center;gap:clamp(.5rem,3vw,2.5rem)}.cd div{min-width:64px;display:grid}
+.cd b{font:300 clamp(2.4rem,11vw,5rem)/1 var(--en);font-variant-numeric:tabular-nums;color:var(--soft)}[dir=rtl] .cd b{font-family:var(--ar)}
+.cd span{font-size:.85rem;opacity:.8}.done{font-size:1.5rem;color:var(--soft)}
+dl{display:grid;gap:1.6rem;margin:1rem 0 2.2rem}dt{font:500 .72rem Inter,var(--arb);letter-spacing:.25em;color:var(--gold)}[dir=rtl] dt{letter-spacing:0;font-size:.95rem}dd{font:300 1.6rem/1.4 var(--en)}[dir=rtl] dd{font-family:var(--ar)}
+.tl{max-width:640px}.tl ol{list-style:none;position:relative;text-align:start}.tl ol::before{content:"";position:absolute;inset-block:0;inset-inline-start:21px;width:1px;background:var(--soft)}
+.tl li{position:relative;padding-inline-start:64px;padding-bottom:2rem}.tl .ic{position:absolute;inset-inline-start:0;top:0;width:44px;height:44px;border:1px solid var(--gold);border-radius:50%;background:var(--ivory);display:grid;place-items:center;color:var(--gold)}
+.tl time{font:500 .8rem Inter;color:var(--gold);letter-spacing:.1em}.tl h3{font:400 1.5rem/1.3 var(--en)}[dir=rtl] .tl h3{font-family:var(--ar)}.tl p{color:var(--taupe);line-height:1.6}
+.gal{max-width:1100px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem}
+.g{border:0;padding:0;cursor:zoom-in;overflow:hidden;background:var(--champ);aspect-ratio:4/5;position:relative}.g:disabled{cursor:default}.g img{transition:transform 1s}.g:hover img{transform:scale(1.05)}
+.rsvp{max-width:540px;text-align:start}.rsvp form{display:grid;gap:.5rem}.rsvp label,legend{font-weight:500;margin-top:.8rem}em{color:var(--gold);font-style:normal}
+input:not([type=radio]),textarea{width:100%;padding:.85rem 1rem;font:inherit;font-size:1rem;color:var(--esp);background:var(--white);border:1px solid var(--soft);border-radius:0}
+input:focus,textarea:focus{border-color:var(--gold);outline:2px solid rgba(182,154,112,.35)}
+fieldset{border:0;padding:0;display:grid;gap:.5rem}.opt{display:flex;gap:.7rem;align-items:center;margin:0;padding:.8rem 1rem;border:1px solid var(--soft);background:var(--white);cursor:pointer;min-height:48px}
+.opt input{accent-color:var(--gold);width:18px;height:18px}.opt:has(input:checked){border-color:var(--gold);background:var(--champ)}
+.err{color:#9b3d2e;min-height:1.2em;font-size:.9rem}#send{margin-top:1rem;background:var(--esp);color:var(--ivory)}#send:disabled{opacity:.6}.ok{padding:1rem;border:1px solid var(--gold);background:var(--champ);text-align:center}
+.final{padding-bottom:8rem}.quote{font-size:clamp(1.6rem,6vw,2.6rem);line-height:1.5;max-width:22ch;margin:1rem auto}.mono{font-size:2.4rem;color:var(--gold);margin:1rem 0}
+.music{position:fixed;inset-block-end:1rem;inset-inline-end:1rem;z-index:30;width:48px;height:48px;border-radius:50%;border:1px solid var(--gold);background:var(--ivory);display:flex;gap:3px;align-items:center;justify-content:center;cursor:pointer}
+.music[hidden],.lb[hidden]{display:none}
+.music i{width:2px;height:8px;background:var(--gold)}.music.on i{animation:eq .9s infinite ease-in-out}.music.on i:nth-child(2){animation-delay:.2s}.music.on i:nth-child(3){animation-delay:.4s}
+.lb{position:fixed;inset:0;z-index:80;background:rgba(40,32,27,.96);display:flex;align-items:center;justify-content:center;flex-direction:column}
+.lb img{max-width:92vw;max-height:80vh;object-fit:contain}.lb p{color:var(--soft);margin-top:.8rem}.lb button{position:absolute;background:none;border:0;color:#fff;font-size:2.6rem;cursor:pointer;width:56px;height:56px}
+.x{top:.5rem;right:.5rem}.pv{left:.3rem}.nx{right:.3rem}
+
+/* ===== animations ===== */
+.rv{opacity:0;transform:translateY(24px);transition:opacity 1s,transform 1s}.rv.in{opacity:1;transform:none}
+.hero .frame{animation:reveal 1.8s cubic-bezier(.2,.8,.2,1) both}.hero .frame img{animation:zoom 14s ease-out both}
+.heroText{animation:fade 1.6s .5s both}
+.tick{animation:tick .45s}
+@keyframes reveal{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0)}}
+@keyframes zoom{from{transform:scale(1.12)}to{transform:scale(1)}}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}}
+@keyframes tick{from{opacity:.3;transform:translateY(-8px)}}
+@keyframes eq{50%{height:18px}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important;transition-delay:0s!important}.rv{opacity:1;transform:none}html{scroll-behavior:auto}}
+
+/* ===== rapunzel ===== */
+:root{--night:#2a1f4d;--violet:#5b3f93;--lav:#c9b8ec;--glow:#ffd98a}
+body{background:linear-gradient(#FFF9EC,#F7EFFA 50%,#FFF6E0) fixed}
+h2{color:var(--night)}.sun{width:46px;height:46px;stroke:var(--gold);fill:none;stroke-width:1.5;stroke-linecap:round}
+.hero{background:radial-gradient(circle at 50% 25%,rgba(255,217,138,.4),transparent 60%)}
+.hero h1,.card .names,.final .mono{font-family:"Great Vibes",cursive;font-weight:400;color:var(--night)}
+.hero h1{font-size:clamp(3.2rem,14vw,6.8rem);line-height:1.15}.final .mono{font-size:3.2rem}
+[dir=rtl] .hero h1,[dir=rtl] .card .names,[dir=rtl] .final .mono{font-family:var(--ar);font-weight:700}
+[dir=rtl] .hero h1{font-size:clamp(2.8rem,12vw,5.6rem)}
+.count{background:linear-gradient(#2a1f4d,#4a3470)}.count h2{color:#fff0c8}.cd b{color:var(--glow);text-shadow:0 0 18px rgba(255,217,138,.55)}
+.tl .ic,.seal{box-shadow:0 0 14px rgba(255,217,138,.45)}
+canvas#sky{position:fixed;inset:0;width:100%;height:100%;z-index:60;pointer-events:none}
+.music{z-index:70}body.locked .hero *{animation-play-state:paused}
+/* royal envelope + cinematic intro */
+#intro{overflow:hidden;background:radial-gradient(1.2px 1.2px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 28% 72%,#fff,transparent),radial-gradient(1.4px 1.4px at 44% 30%,#ffe9b0,transparent),radial-gradient(1px 1px at 63% 12%,#fff,transparent),radial-gradient(1.3px 1.3px at 78% 58%,#fff,transparent),radial-gradient(1px 1px at 90% 26%,#ffe9b0,transparent),radial-gradient(1px 1px at 8% 80%,#fff,transparent),radial-gradient(1.2px 1.2px at 55% 88%,#fff,transparent),radial-gradient(ellipse at 50% 105%,rgba(255,170,90,.45),transparent 55%),linear-gradient(#1b1340,#35266b 65%,#6a4b9c);transition:opacity 1.6s,visibility 1.6s}
+#intro::after{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(circle at 50% 42%,rgba(255,226,160,.95),rgba(255,226,160,0) 65%);opacity:0;transition:opacity 2.4s;pointer-events:none}
+#intro.glow::after{opacity:1}#intro>*{position:relative;z-index:1}
+.eyebrow{color:#f3e6c4}.hint{color:var(--lav);font:.85rem Inter,var(--arb);animation:pulse 2.4s infinite}[dir=rtl] .hint{font-size:1rem}
+#intro .btn{color:#f3e6c4;border-color:#d9b977;background:rgba(255,255,255,.06)}#intro .btn:hover,#intro .btn:focus-visible{background:var(--glow);color:var(--night)}#intro .link{color:var(--lav)}
+.env{cursor:pointer;background:linear-gradient(160deg,#5b3f93,#33225e);border-color:#d9b977;animation:bob 5s ease-in-out infinite;transition:transform 2s .4s;box-shadow:0 30px 70px -20px rgba(0,0,0,.6),inset 0 0 0 7px #33225e,inset 0 0 0 8px rgba(217,185,119,.7)}
+.env::after{background:linear-gradient(to bottom right,transparent 49.6%,rgba(217,185,119,.85) 49.8%,#4a3478 50.2%) bottom left/50% 55% no-repeat,linear-gradient(to bottom left,transparent 49.6%,rgba(217,185,119,.85) 49.8%,#4a3478 50.2%) bottom right/50% 55% no-repeat}
+.flap{background:linear-gradient(#6c4fa6,#4a3478)}.seal{background:radial-gradient(circle at 35% 30%,#ffe9a8,#c99a3e 70%);color:#4a3478;box-shadow:0 0 0 3px #33225e,0 0 0 4px #d9b977,0 0 22px rgba(255,217,138,.6)}
+.env.open{animation:none}.env.open .flap{transition:transform 1.8s cubic-bezier(.4,0,.2,1)}
+.env.open .card{transform:none;z-index:1}
+#intro.glow .card{z-index:5;transform:translateY(-68%) scale(1.4);box-shadow:0 0 70px 24px rgba(255,217,138,.7);transition:transform 2.6s,box-shadow 2.6s,z-index 0s 1s}
+#intro.opening .hint{opacity:0}
+@keyframes bob{50%{translate:0 -8px}}@keyframes pulse{50%{opacity:.4}}
+
+/* ===== responsive ===== */
+@media (max-width:360px){.btn{padding:.9rem 1.2rem}.cd div{min-width:54px}.seal{width:52px;height:52px}.share{padding:.5rem .7rem}}
+@media (min-width:700px){.grid{grid-template-columns:repeat(6,1fr);grid-auto-rows:150px;gap:.8rem}.g{aspect-ratio:auto}
+ .g0{grid-column:span 3;grid-row:span 3}.g1,.g2{grid-column:span 3;grid-row:span 2}.g3,.g4,.g5{grid-column:span 2;grid-row:span 2}
+ dl{grid-template-columns:1fr 1fr}}
+@media (min-width:900px){.hero{grid-template-columns:1fr 1fr;align-items:center;min-height:100vh;gap:4rem}.frame{width:min(100%,480px)}}
+/* phones & dynamic viewport */
+html{-webkit-tap-highlight-color:transparent}
+.bar{padding-top:max(.75rem,env(safe-area-inset-top));padding-inline:max(1rem,env(safe-area-inset-left))}
+.music{inset-block-end:max(1rem,env(safe-area-inset-bottom))}
+@media (max-width:600px){.hero{min-height:100svh;align-content:center;padding-top:5.5rem}.frame{width:min(78%,360px)}section{padding-inline:1rem}.cd{gap:.4rem}.cd div{min-width:0;flex:1}dd{font-size:1.35rem}.share{font-size:.8rem}}
+@media (max-width:520px){#intro.glow .card{transform:translateY(-68%) scale(1.1)}}
+@media (max-height:520px) and (orientation:landscape){.env{width:min(78vh,56vw)}.eyebrow,.hint{display:none}}
+/* bigger, phone-first typography */
+html{font-size:clamp(18px,4.9vw,21px)}
+body{font-size:1.2rem;line-height:1.85;font-weight:400}[dir=rtl] body{font-size:1.15rem}
+.lead{font-size:1.45rem}.prose{font-size:1.25rem}.small{font-size:1rem}
+h2{font-size:clamp(2.3rem,9vw,3.6rem)}
+dt{font-size:.9rem}[dir=rtl] dt{font-size:1.05rem}dd{font-size:1.9rem}
+.btn,.share,.lang button{font-size:.95rem;min-height:52px}[dir=rtl] .btn,[dir=rtl] .share,[dir=rtl] .lang button{font-size:1.1rem}
+.lang button,.share{padding:.65rem 1.1rem}
+.tl h3{font-size:1.8rem}.tl p{font-size:1.1rem;color:#7d6e5f}.tl time{font-size:1rem}
+.cd b{font-size:clamp(2.8rem,13vw,5.6rem)}.cd span{font-size:1.05rem}
+input:not([type=radio]),textarea{font-size:1.1rem;padding:1rem}.opt{min-height:56px}
+.quote{font-size:clamp(2rem,8vw,3.2rem)}
+.hero h1{font-size:clamp(3.8rem,17vw,8rem)}[dir=rtl] .hero h1{font-size:clamp(3.2rem,14vw,6.4rem)}
+.env{width:min(92vw,480px)}.seal{width:76px;height:76px;font-size:1.15rem}
+.card .names{font-size:clamp(1.6rem,7.5vw,2.4rem)}.card .small{font-size:1.05rem}.card .dateLine{font-size:1rem}
+.eyebrow{font-size:1rem}[dir=rtl] .eyebrow{font-size:1.5rem}.hint{font-size:1.05rem}[dir=rtl] .hint{font-size:1.2rem}
+@media (max-width:600px){section{padding:4.5rem 1.25rem}.btn{width:100%;max-width:360px}.frame{width:min(88%,400px)}.cd{gap:.2rem}.rsvp .btn{max-width:none}}
+</style>
+</head>
+<body class="locked">
+<script>
+/* ============ EDIT YOUR WEDDING DETAILS HERE ============ */
+const weddingConfig = {
+  brideName: { ar: "سانتي", en: "Santy" },
+  groomName: { ar: "محمد", en: "Mohamed" },
+  weddingDate: "2027-01-01T19:00:00",         // local time, ISO format
+  venueName:    { ar: "اسم القاعة", en: "Venue Name" },
+  venueAddress: { ar: "عنوان القاعة", en: "Venue Address" },
+  mapsUrl: "GOOGLE_MAPS_URL",                  // paste a real Google Maps link
+  defaultLanguage: "ar",
+  afterEvent: "ended",                         // "ended" or "celebrating" message once date passes
+  musicStyle: "romantic",                      // original, soft fairy-tale melody
+  introBride: "",                              // OPTIONAL: transparent PNG cut-out of the bride, full body, facing right (e.g. "assets/images/bride.png")
+  introGroom: "",                              // OPTIONAL: same for the groom. If empty, illustrated figures are used.
+  introFlip: false,                            // set true if your cut-outs face left
+  coupleImages: [],                            // e.g. ["assets/images/couple.jpg"] (first = hero)
+  galleryImages: [],                           // e.g. [{src:"assets/images/g1.jpg", caption:{ar:"",en:""}}]
+  backgroundMusic: "",   // "" = built-in original soft melody (no file needed). Or "assets/audio/music.mp3" for your own track.
+  invitationUrl: window.location.href.split("#")[0],
+  rsvpEndpoint: "",                            // your backend URL (POST JSON). Empty = demo mode, nothing saved.
+  story: [
+    { ar: "اللقاء الأول", en: "The first hello" },
+    { ar: "الخطوبة", en: "The engagement" },
+    { ar: "يوم الزفاف", en: "The wedding day" }
+  ],
+  timeline: [
+    { time: "6:00 PM", icon: "✧", ar: ["استقبال الضيوف", "نرحب بكم عند الوصول."], en: ["Guest Arrival", "We welcome you as you arrive."] },
+    { time: "6:45 PM", icon: "❀", ar: ["بداية الاستقبال", "مشروبات ولقاءات دافئة."], en: ["Welcome Reception", "Drinks and warm greetings."] },
+    { time: "7:30 PM", icon: "♡", ar: ["مراسم الزفاف", "لحظة العهد."], en: ["Wedding Ceremony", "The moment of our vows."] },
+    { time: "8:30 PM", icon: "◈", ar: ["جلسة التصوير", "ذكريات معكم."], en: ["Photography", "Memories with you."] },
+    { time: "9:15 PM", icon: "✦", ar: ["العشاء والاحتفال", "نحتفل معًا."], en: ["Dinner & Celebration", "Let us celebrate together."] }
+  ]
+};
+</script>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="sun" viewBox="0 0 48 48"><circle cx="24" cy="24" r="6"/><circle cx="24" cy="24" r="11" stroke-dasharray="2 3"/><path d="M24 3v10M24 35v10M3 24h10M35 24h10M9 9l7 7M32 32l7 7M39 9l-7 7M16 32l-7 7"/></symbol></svg>
+<canvas id="sky" aria-hidden="true"></canvas>
+<div id="intro" role="dialog" aria-label="Invitation">
+  <div class="env" id="env" role="button" tabindex="0" aria-label="Open">
+    <div class="card"><p class="small" data-i18n="cardLine"></p><h2 class="names" data-name="both"></h2><p class="dateLine" data-date></p></div>
+    <div class="flap"></div><div class="seal" data-initials></div>
+  </div>
+  <p class="eyebrow" data-i18n="invited"></p>
+  <p class="hint" data-i18n="tap"></p>
+  <button class="btn" id="openBtn" data-i18n="open"></button>
+  <button class="link" id="skipBtn" data-i18n="skip"></button>
+</div>
+
+<header class="bar">
+  <div class="lang" role="group" aria-label="Language"><button data-lang="ar" class="on">عربي</button><button data-lang="en">EN</button></div>
+  <button class="share" id="shareBtn" data-i18n="share"></button>
+</header>
+
+<main>
+<section class="hero" id="top">
+  <figure class="frame" data-photo="couple"></figure>
+  <div class="heroText">
+    <h1><span data-name="bride"></span><i class="amp">&amp;</i><span data-name="groom"></span></h1>
+    <p class="lead" data-i18n="heroSub"></p>
+    <p class="dateLine" data-date></p>
+  </div>
+</section>
+
+<section class="story">
+  <div class="orn" aria-hidden="true"><svg class="sun"><use href="#sun"/></svg></div>
+  <h2 data-i18n="storyH"></h2>
+  <p class="prose" data-i18n="storyP"></p>
+  <ul class="miles" id="miles"></ul>
+</section>
+
+<section class="count" aria-live="off">
+  <h2 data-i18n="countH"></h2>
+  <div class="cd" id="cd">
+    <div><b id="cdD">0</b><span data-i18n="days"></span></div><div><b id="cdH">0</b><span data-i18n="hours"></span></div>
+    <div><b id="cdM">0</b><span data-i18n="mins"></span></div><div><b id="cdS">0</b><span data-i18n="secs"></span></div>
+  </div>
+  <p class="done" id="cdDone" hidden></p>
+</section>
+
+<section class="details">
+  <h2 data-i18n="detailsH"></h2>
+  <dl>
+    <div><dt data-i18n="date"></dt><dd data-date="long"></dd></div>
+    <div><dt data-i18n="time"></dt><dd data-time></dd></div>
+    <div><dt data-i18n="venue"></dt><dd data-cfg="venueName"></dd></div>
+    <div><dt data-i18n="address"></dt><dd data-cfg="venueAddress"></dd></div>
+  </dl>
+  <a class="btn" id="mapBtn" target="_blank" rel="noopener" data-i18n="directions"></a>
+</section>
+
+<section class="tl"><h2 data-i18n="tlH"></h2><ol id="tl"></ol></section>
+
+<section class="gal"><h2 data-i18n="galH"></h2><div class="grid" id="grid"></div></section>
+
+<section class="rsvp">
+  <h2 data-i18n="rsvpH"></h2>
+  <form id="rsvp" novalidate>
+    <label for="name"><span data-i18n="fName"></span> <em aria-hidden="true">*</em></label>
+    <input id="name" name="name" autocomplete="name" required aria-describedby="eName"><small class="err" id="eName"></small>
+    <fieldset><legend><span data-i18n="fAtt"></span> <em aria-hidden="true">*</em></legend>
+      <label class="opt"><input type="radio" name="att" value="yes"><span data-i18n="yes"></span></label>
+      <label class="opt"><input type="radio" name="att" value="no"><span data-i18n="no"></span></label>
+      <small class="err" id="eAtt"></small></fieldset>
+    <label for="guests" data-i18n="fGuests"></label>
+    <input id="guests" name="guests" type="number" min="1" max="10" value="1" inputmode="numeric"><small class="err" id="eGuests"></small>
+    <label for="msg" data-i18n="fMsg"></label>
+    <textarea id="msg" name="msg" rows="3"></textarea>
+    <button class="btn" type="submit" id="send"><span data-i18n="send"></span></button>
+    <p class="ok" id="ok" role="status" hidden></p>
+  </form>
+</section>
+
+<section class="final">
+  <div class="orn" aria-hidden="true"><svg class="sun"><use href="#sun"/></svg></div>
+  <p class="quote" data-i18n="finalQ"></p>
+  <div class="mono" data-initials></div>
+  <p class="dateLine" data-date></p>
+</section>
+</main>
+
+<button class="music" id="music" aria-label="Music" aria-pressed="false" hidden><i></i><i></i><i></i></button>
+<audio id="bgm" loop preload="none"></audio>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" hidden>
+  <button class="x" id="lbX" aria-label="Close">×</button><button class="pv" id="lbP" aria-label="Previous">‹</button>
+  <img id="lbImg" alt=""><button class="nx" id="lbN" aria-label="Next">›</button><p id="lbCap"></p>
+</div>
+
+<script>
+/* ===== language ===== */
+const I18N = {
+ ar:{cardLine:"بكل حب ندعوكم",invited:"دعوة لحضور حفل زفاف",open:"افتح الدعوة",skip:"دخول مباشر",tap:"المس الظرف لفتح الدعوة",share:"مشاركة",
+  heroSub:"بكل حب، نتشرف بدعوتكم لمشاركتنا فرحتنا.",storyH:"حكايتنا",storyP:"هنا تُكتب حكايتنا: لقاء بسيط، وقلبان وجدا بعضهما، وبداية عمر جميل. (نص قابل للتعديل)",
+  countH:"العد التنازلي",days:"أيام",hours:"ساعات",mins:"دقائق",secs:"ثوانٍ",ended:"تمّ الحفل بحمد الله، شكرًا لكل من شاركنا.",celebrating:"اليوم نحتفل! يوم زفافنا.",
+  detailsH:"تفاصيل الحفل",date:"التاريخ",time:"الوقت",venue:"المكان",address:"العنوان",directions:"الاتجاهات على الخريطة",
+  tlH:"برنامج اليوم",galH:"لحظاتنا",rsvpH:"يسعدنا حضوركم ومشاركتنا فرحتنا",fName:"الاسم بالكامل",fAtt:"تأكيد الحضور",yes:"يشرفني الحضور",no:"أعتذر عن الحضور",
+  fGuests:"عدد الحضور",fMsg:"رسالة تهنئة (اختيارية)",send:"إرسال",sending:"جارٍ الإرسال…",eName:"يرجى كتابة الاسم.",eAtt:"يرجى اختيار الحضور.",eGuests:"أدخل عددًا من 1 إلى 10.",
+  okYes:"شكرًا لك! تم تأكيد حضورك.",okNo:"شكرًا لإخبارنا، سنفتقدك.",demo:" (وضع تجريبي: لم يُحفظ الرد)",fail:"تعذّر الإرسال، حاول مرة أخرى.",
+  finalQ:"وجودكم ومشاركتكم فرحتنا أجمل هدية.",placeholder:"استبدل الصورة",shareMsg:(n,d,u)=>`${n}
+بكل حب ندعوكم لحضور حفل زفافنا
+${d}
+${u}`},
+ en:{cardLine:"With love, we invite you",invited:"You are cordially invited",open:"Open your invitation",skip:"Enter directly",tap:"Tap the envelope to open",share:"Share",
+  heroSub:"Together with our families, we invite you to celebrate our wedding.",storyH:"Our Story",storyP:"Our story begins here: a simple meeting, two hearts that found each other, and a beautiful beginning. (Editable text)",
+  countH:"Counting down",days:"Days",hours:"Hours",mins:"Minutes",secs:"Seconds",ended:"Our celebration has taken place. Thank you for being part of it.",celebrating:"Today we celebrate. It is our wedding day!",
+  detailsH:"The Celebration",date:"Date",time:"Time",venue:"Venue",address:"Address",directions:"Get directions",
+  tlH:"The Day",galH:"Moments",rsvpH:"We would love to see you",fName:"Full name",fAtt:"Will you attend?",yes:"Joyfully accepts",no:"Regretfully declines",
+  fGuests:"Number of guests",fMsg:"Personal message (optional)",send:"Send",sending:"Sending…",eName:"Please enter your name.",eAtt:"Please choose an option.",eGuests:"Enter a number from 1 to 10.",
+  okYes:"Thank you! Your attendance is confirmed.",okNo:"Thank you for letting us know. You will be missed.",demo:" (Demo mode: reply not saved)",fail:"Could not send. Please try again.",
+  finalQ:"Your presence is the greatest gift we could ask for.",placeholder:"Replace photo",shareMsg:(n,d,u)=>`${n}
+With love, we invite you to our wedding
+${d}
+${u}`}
+};
+let LANG = localStorage.getItem("lang") || weddingConfig.defaultLanguage;
+const t = k => I18N[LANG][k];
+const ORD = new Date(weddingConfig.weddingDate);
+const loc = () => LANG === "ar" ? "ar-EG" : "en-GB";
+const fmtDate = long => new Intl.DateTimeFormat(loc(), long ? {weekday:"long",day:"numeric",month:"long",year:"numeric"} : {day:"numeric",month:"long",year:"numeric"}).format(ORD);
+const nm = w => weddingConfig[w + "Name"][LANG];
+const initials = () => weddingConfig.brideName.en[0] + " & " + weddingConfig.groomName.en[0];
+function applyLang(l){
+  LANG = l; try{localStorage.setItem("lang",l)}catch(e){}
+  const h = document.documentElement; h.lang = l; h.dir = l === "ar" ? "rtl" : "ltr";
+  document.querySelectorAll("[data-i18n]").forEach(e => e.textContent = t(e.dataset.i18n));
+  document.querySelectorAll("[data-name]").forEach(e => e.textContent = e.dataset.name === "both" ? nm("bride") + " & " + nm("groom") : nm(e.dataset.name));
+  document.querySelectorAll("[data-date]").forEach(e => e.textContent = fmtDate(e.dataset.date === "long"));
+  document.querySelectorAll("[data-time]").forEach(e => e.textContent = new Intl.DateTimeFormat(loc(), {hour:"numeric",minute:"2-digit"}).format(ORD));
+  document.querySelectorAll("[data-cfg]").forEach(e => e.textContent = weddingConfig[e.dataset.cfg][l]);
+  document.querySelectorAll("[data-initials]").forEach(e => e.textContent = initials());
+  document.querySelectorAll("[data-lang]").forEach(b => b.classList.toggle("on", b.dataset.lang === l));
+  document.title = nm("bride") + " & " + nm("groom");
+  document.dispatchEvent(new CustomEvent("langchange"));
+}
+
+/* ===== countdown ===== */
+(function(){
+  const els = {D:cdD,H:cdH,M:cdM,S:cdS};
+  function set(k,v){ const s = v.toLocaleString(loc(),{useGrouping:false}); if(els[k].textContent!==s){ els[k].textContent=s; els[k].classList.remove("tick"); void els[k].offsetWidth; els[k].classList.add("tick"); } }
+  function tick(){
+    const diff = Math.max(0, ORD - new Date());
+    const s = Math.floor(diff/1000);
+    set("D",Math.floor(s/86400)); set("H",Math.floor(s%86400/3600)); set("M",Math.floor(s%3600/60)); set("S",s%60);
+    const over = diff === 0; cd.hidden = over; cdDone.hidden = !over;
+    if(over) cdDone.textContent = t(weddingConfig.afterEvent === "celebrating" ? "celebrating" : "ended");
+  }
+  document.addEventListener("langchange", tick); setInterval(tick,1000); tick();
+})();
+
+/* ===== gallery ===== */
+(function(){
+  const cfg = weddingConfig, items = cfg.galleryImages;
+  let cur = 0, valid = [];
+  function ph(el){ el.classList.add("ph"); el.innerHTML = `<span>${t("placeholder")}</span>`; }
+  function photo(el, src){ if(!src){ ph(el); return; } const i = new Image(); i.alt = ""; i.decoding = "async"; i.onerror = () => ph(el); i.src = src; el.appendChild(i); }
+  function build(){
+    document.querySelectorAll("[data-photo=couple]").forEach(f => { f.className = "frame"; f.innerHTML = ""; photo(f, cfg.coupleImages[0]); });
+    grid.innerHTML = ""; valid = [];
+    const list = items.length ? items : Array.from({length:6}, () => ({src:""}));
+    list.forEach((g, i) => {
+      const b = document.createElement("button"); b.className = "g g" + (i % 6); b.setAttribute("aria-label", "Photo " + (i + 1));
+      photo(b, g.src); if(g.src){ const k = valid.push(g) - 1; b.onclick = () => show(k); } else b.disabled = true;
+      grid.appendChild(b);
+    });
+  }
+  function show(i){ cur = (i + valid.length) % valid.length; const g = valid[cur]; lb.hidden = false; lbImg.src = g.src; lbCap.textContent = g.caption ? g.caption[LANG] || "" : ""; lbX.focus(); }
+  const close = () => { lb.hidden = true; };
+  lbX.onclick = close; lbP.onclick = () => show(cur - 1); lbN.onclick = () => show(cur + 1);
+  lb.onclick = e => { if(e.target === lb) close(); };
+  document.addEventListener("keydown", e => { if(lb.hidden) return; if(e.key === "Escape") close(); if(e.key === "ArrowRight") show(cur + 1); if(e.key === "ArrowLeft") show(cur - 1); });
+  let x0 = null; lb.addEventListener("touchstart", e => x0 = e.touches[0].clientX, {passive:true});
+  lb.addEventListener("touchend", e => { if(x0 === null) return; const d = e.changedTouches[0].clientX - x0; if(Math.abs(d) > 50) show(cur + (d < 0 ? 1 : -1)); x0 = null; });
+  document.addEventListener("langchange", build); window.buildGallery = build;
+})();
+
+/* ===== rsvp ===== */
+(function(){
+  const f = rsvp;
+  function validate(){
+    let ok = true; const g = +f.guests.value;
+    eName.textContent = f.name.value.trim() ? "" : (ok = false, t("eName"));
+    eAtt.textContent = f.att.value ? "" : (ok = false, t("eAtt"));
+    eGuests.textContent = (g >= 1 && g <= 10) ? "" : (ok = false, t("eGuests"));
+    return ok;
+  }
+  f.addEventListener("submit", async e => {
+    e.preventDefault(); ok.hidden = true; if(!validate()) return;
+    const data = {name:f.name.value.trim(), attending:f.att.value === "yes", guests:+f.guests.value, message:f.msg.value.trim()};
+    send.disabled = true; send.firstElementChild.textContent = t("sending");
+    try{
+      /* BACKEND INTEGRATION POINT: POST JSON to weddingConfig.rsvpEndpoint */
+      if(weddingConfig.rsvpEndpoint){
+        const r = await fetch(weddingConfig.rsvpEndpoint, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(data)});
+        if(!r.ok) throw new Error(r.status);
+      } else await new Promise(r => setTimeout(r, 700));
+      ok.textContent = t(data.attending ? "okYes" : "okNo") + (weddingConfig.rsvpEndpoint ? "" : t("demo")); ok.hidden = false; f.reset(); f.guests.value = 1;
+    }catch(err){ ok.textContent = t("fail"); ok.hidden = false; }
+    send.disabled = false; send.firstElementChild.textContent = t("send");
+  });
+  f.addEventListener("input", () => { if(eName.textContent || eAtt.textContent || eGuests.textContent) validate(); });
+})();
+
+/* ===== music ===== */
+/* Original music (musicStyle "egyptian" = zaffa-style wedding rhythm, "romantic" = soft melody), generated live with Web Audio (no file, no copyright issues).
+   To use your own track instead, set backgroundMusic in config.js. Starts only after a user click. */
+(function(){
+  const AC=window.AudioContext||window.webkitAudioContext,file=weddingConfig.backgroundMusic;
+  let ctx,master,rev,nb,el,on=false,started=false,next=0,bar=0;
+  const EG=(weddingConfig.musicStyle||"romantic")==="egyptian",E=.275,BEAT=1.05,BAR=EG?8*E:4*BEAT;
+  const mf=m=>440*Math.pow(2,(m-69)/12);
+  // A gentle, original fairy-tale progression with a harp-like pluck and warm sustained notes.
+  const CH=[[53,57,60,64],[48,55,60,64],[50,55,59,62],[45,52,57,60]];
+  const ORDER=[0,1,2,3,0,1,3,2],ARP=[0,2,1,3,2,1,2,3];
+  const MEL=[[76,72,69,72],[74,72,67,69],[72,76,74,72],[69,72,76,72]];
+  function tone(m,t,d,type,v,a){const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=mf(m);
+    g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(v,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+    o.connect(g);g.connect(master);g.connect(rev);o.start(t);o.stop(t+d+.1)}
+  function playRo(t,b){const i=ORDER[b%8],c=CH[i];
+    c.forEach(m=>tone(m,t,4*BEAT+1.5,"sine",.018,1.8));
+    ARP.forEach((k,j)=>{const at=t+j*BEAT/2;tone(c[k]+12,at,1.35,"triangle",.045,.012);tone(c[k]+24,at,1.05,"sine",.009,.008)});
+    MEL[i].forEach((m,j)=>{const at=t+j*BEAT;tone(m,at,2.15,"sine",.045,.08);tone(m+12,at,1.4,"sine",.009,.05)})}
+  /* Egyptian wedding (zaffa) style: maqsum darbuka rhythm, claps, riq and a mizmar-like lead in maqam Hijaz on D. Original composition. */
+  const PH=[[[0,74,2],[2,72,1],[3,70,1],[4,69,2],[6,67,2]],[[0,66,1],[1,67,1],[2,69,2],[4,70,2],[6,69,2]],[[0,74,2],[2,75,1],[3,74,1],[4,72,2],[6,70,2]],[[0,69,2],[2,67,1],[3,66,1],[4,63,2],[6,62,2]]];
+  function nz(t,type,fr,q,pk,dec){const s=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain();s.buffer=nb;f.type=type;f.frequency.value=fr;f.Q.value=q;g.gain.setValueAtTime(pk,t);g.gain.exponentialRampToValueAtTime(.001,t+dec);s.connect(f);f.connect(g);g.connect(master);s.start(t);s.stop(t+dec+.05)}
+  function dum(t){const o=ctx.createOscillator(),g=ctx.createGain();o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(55,t+.12);g.gain.setValueAtTime(.9,t);g.gain.exponentialRampToValueAtTime(.001,t+.35);o.connect(g);g.connect(master);o.start(t);o.stop(t+.4)}
+  function lead(m,t,d){const o=ctx.createOscillator(),o2=ctx.createOscillator(),lf=ctx.createOscillator(),lg=ctx.createGain(),f=ctx.createBiquadFilter(),g=ctx.createGain(),g2=ctx.createGain();
+    o.type="sawtooth";o2.type="square";o.frequency.value=mf(m);o2.frequency.value=mf(m-12);lf.frequency.value=5.5;lg.gain.value=mf(m)*.012;lf.connect(lg);lg.connect(o.frequency);
+    f.type="lowpass";f.frequency.value=2400;g2.gain.value=.4;
+    g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.11,t+.03);g.gain.setValueAtTime(.11,t+d*.8);g.gain.exponentialRampToValueAtTime(.0001,t+d+.12);
+    o.connect(f);o2.connect(g2);g2.connect(f);f.connect(g);g.connect(master);g.connect(rev);[o,o2,lf].forEach(x=>{x.start(t);x.stop(t+d+.2)})}
+  function playEg(t,b){const k=b%4;
+    ["D","T","","T","D","","T",""].forEach((c,i)=>{const s=t+i*E;if(c=="D")dum(s);else if(c=="T")nz(s,"highpass",2200,1,.35,.07);if(i==2||i==6)nz(s,"bandpass",1500,1.2,.5,.12);nz(s,"highpass",6500,1,.07,.04)});
+    if(k==3)for(let i=0;i<4;i++)nz(t+6*E+i*E/2,"highpass",2200,1,.3,.05);
+    tone(38,t,8*E+.5,"triangle",.06,.3);
+    PH[k].forEach(([s,m,l])=>lead(m,t+s*E,l*E))}
+  const playBar=(t,b)=>EG?playEg(t,b):playRo(t,b);
+  function reverb(){const n=ctx.sampleRate*3,b=ctx.createBuffer(2,n,ctx.sampleRate);
+    for(let c=0;c<2;c++){const d=b.getChannelData(c);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2.5)}
+    const cv=ctx.createConvolver(),w=ctx.createGain();cv.buffer=b;w.gain.value=.55;cv.connect(w);w.connect(master);return cv}
+  function sched(){while(next<ctx.currentTime+3){playBar(next,bar++);next+=BAR}setTimeout(sched,800)}
+  function gen(){if(!AC)return;ctx=new AC();master=ctx.createGain();master.gain.value=0;const cp=ctx.createDynamicsCompressor();master.connect(cp);cp.connect(ctx.destination);nb=ctx.createBuffer(1,ctx.sampleRate,ctx.sampleRate);const nd=nb.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;rev=reverb();next=ctx.currentTime+.2;sched()}
+  function setOn(v){on=v;music.classList.toggle("on",v);music.setAttribute("aria-pressed",v);
+    if(el){v?el.play().catch(()=>{}):el.pause()}
+    else if(ctx){ctx.resume();master.gain.cancelScheduledValues(ctx.currentTime);master.gain.setTargetAtTime(v?.8:0,ctx.currentTime,v?1.5:.15)}}
+  function begin(){started=true;
+    if(file){el=new Audio(file);el.loop=true;el.volume=.7;el.onerror=()=>{el=null;gen();setOn(on)}}else gen();
+    setOn(true)}
+  music.hidden=false;
+  music.onclick=()=>started?setOn(!on):begin();            // mute / unmute button
+  window.startMusic=()=>{started?(!on&&setOn(true)):begin()};
+  document.addEventListener("visibilitychange",()=>{if(ctx)document.hidden?ctx.suspend():on&&ctx.resume()});
+})();
+
+/* ===== fx ===== */
+/* Lanterns, realistic butterflies, sparkles and the fairy-tale couple scene (canvas). */
+(function(){
+  const cv=document.getElementById("sky"),g=cv.getContext("2d"),calm=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W,H,D,last=0,pt=null,sc=null;const L=[],B=[],S=[],R=(a,b)=>a+Math.random()*(b-a),TAU=6.2832,cl=u=>Math.max(0,Math.min(1,u)),ease=u=>u*u*(3-2*u);
+  function size(){D=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*D;cv.height=H*D;g.setTransform(D,0,0,D,0,0)}
+  size();addEventListener("resize",size);
+  /* optional real photos (transparent PNG cut-outs) set in config.js: introBride / introGroom */
+  const IMG=["introBride","introGroom"].map(k=>{const s=weddingConfig[k];if(!s)return null;const im=new Image();im.src=s;return im});
+  /* lanterns */
+  const lantern=i=>({x:R(0,W),y:i?R(0,H):H+60,s:R(.5,1.1),v:R(14,28),p:R(0,6.3),a:R(.3,.6)});
+  for(let i=0;i<(W<600?6:10);i++)L.push(lantern(true));
+  function dL(l,t){const x=l.x+Math.sin(t*.5+l.p)*14,y=l.y,s=l.s*16,gr=g.createRadialGradient(x,y,0,x,y,s*3.2);
+    gr.addColorStop(0,`rgba(255,200,110,${l.a*.7})`);gr.addColorStop(1,"rgba(255,200,110,0)");g.fillStyle=gr;g.beginPath();g.arc(x,y,s*3.2,0,TAU);g.fill();
+    g.fillStyle=`rgba(255,214,140,${l.a+.25})`;g.beginPath();g.moveTo(x-s*.7,y-s);g.lineTo(x+s*.7,y-s);g.lineTo(x+s*.9,y+s*.9);g.lineTo(x-s*.9,y+s*.9);g.fill();
+    g.fillStyle=`rgba(255,246,214,${l.a+.1})`;g.beginPath();g.ellipse(x,y+s*.1,s*.35,s*.55,0,0,TAU);g.fill()}
+  /* butterfly wing sprites: [light, base, edge, spots] — monarch, morpho, pink, swallowtail, lavender, teal, crimson, cream, peach */
+  const PAL=[["#ffcf6e","#f08a1c","#2a1608","#fff4dc"],["#8fe4ff","#2a7de1","#0b1f4a","#d6f3ff"],["#ffd1e6","#ff7fb2","#6b1d4a","#fff0f7"],["#fff3a0","#f7d13a","#1d1608","#fffbe0"],["#e6d6ff","#a888e8","#3a2670","#ffffff"],["#c8fff0","#3fd1b0","#0c4a45","#f0fffb"],["#ffb4a8","#e0443a","#2c0d0d","#fff1ec"],["#ffffff","#f2e9d8","#8c7a5a","#ffffff"],["#ffe0c2","#ff9a6b","#5a2410","#fff3e8"]];
+  function sprite(c){const k=2,cn=document.createElement("canvas");cn.width=76*k;cn.height=96*k;const x=cn.getContext("2d");x.scale(k,k);x.translate(8,48);
+    const fw=new Path2D("M0,-2C8,-30 36,-38 44,-22C48,-10 28,-2 0,2Z"),hw=new Path2D("M0,0C28,-2 42,12 31,28C23,38 6,28 0,6Z");
+    for(const w of[fw,hw]){x.save();x.shadowColor=c[1];x.shadowBlur=7;x.fillStyle=c[1];x.fill(w);x.restore();
+      x.save();x.clip(w);const gr=x.createLinearGradient(0,0,46,-14);gr.addColorStop(0,c[0]);gr.addColorStop(.6,c[1]);gr.addColorStop(1,c[2]);x.fillStyle=gr;x.fillRect(-2,-40,60,90);
+      x.strokeStyle=c[2];x.lineWidth=7;x.stroke(w);x.strokeStyle="rgba(0,0,0,.28)";x.lineWidth=.7;
+      for(let i=0;i<7;i++){const a=-1.5+i*.5;x.beginPath();x.moveTo(0,0);x.lineTo(Math.cos(a)*50,Math.sin(a)*50);x.stroke()}
+      x.restore();x.strokeStyle=c[2];x.lineWidth=1;x.stroke(w)}
+    x.fillStyle=c[3];[[31,-26],[38,-18],[40,-9],[25,22],[17,28]].forEach(([a,b])=>{x.beginPath();x.arc(a,b,1.7,0,TAU);x.fill()});return cn}
+  const SP=PAL.map(sprite);
+  const bfly=(x,y,d)=>({x,y,h:0,v:R(55,100),p:R(0,TAU),q:R(0,TAU),f:R(3.2,5),s:R(.55,1),pat:0,born:performance.now()+d,a:0,tx:R(20,W-20),ty:R(20,H-20),nt:0,gl:performance.now()+R(500,2000),gliding:false,boost:150});
+  function sB(b,dt,now,t){if(now<b.born){b.a=0;return}let a=Math.min(1,(now-b.born)/900);if(b.out)a*=1-cl((now-b.out)/1200);b.a=a;if(b.out&&a<=0)b.dead=1;
+    if(now>b.gl){b.gliding=!b.gliding;b.gl=now+(b.gliding?R(400,1100):R(1500,4200))}
+    b.p+=dt*TAU*b.f*(b.gliding?.2:1);
+    if(t>b.nt||Math.hypot(b.tx-b.x,b.ty-b.y)<50){b.nt=t+R(1.5,4);
+      if(pt&&t-pt.t<2.5&&Math.random()<.6){b.tx=pt.x+R(-80,80);b.ty=pt.y+R(-80,80)}else{b.tx=R(20,W-20);b.ty=R(20,H-20)}}
+    let d=Math.atan2(b.ty-b.y,b.tx-b.x)-b.h;d=Math.atan2(Math.sin(d),Math.cos(d));
+    b.h+=Math.max(-2.4*dt,Math.min(2.4*dt,d))+(Math.sin(t*1.7+b.q)+Math.sin(t*3.9+b.q*2))*.8*dt;
+    b.boost*=Math.pow(.4,dt);const sp=(b.v+b.boost)*(b.gliding?.85:1+.45*Math.sin(b.p*2));
+    b.x+=Math.cos(b.h)*sp*dt;b.y+=Math.sin(b.h)*sp*dt+Math.sin(b.p*2)*10*dt}
+  function dB(b){if(b.a<=0)return;const fl=b.gliding?.62+.1*Math.sin(b.p*.6):.1+.9*Math.abs(Math.cos(b.p));
+    g.save();g.translate(b.x,b.y);g.rotate(b.h+1.5708);g.scale(b.s,b.s);g.globalAlpha=b.a;
+    for(const sd of[-1,1]){g.save();g.scale(sd*fl,1);g.drawImage(SP[b.pat],-8,-48,76,96);g.restore()}
+    g.fillStyle="#2a1c14";g.beginPath();g.ellipse(0,5,1.5,7,0,0,TAU);g.fill();g.beginPath();g.ellipse(0,-2,2.2,3.5,0,0,TAU);g.fill();g.beginPath();g.arc(0,-6.5,1.8,0,TAU);g.fill();
+    g.strokeStyle="#2a1c14";g.lineWidth=.7;g.beginPath();g.moveTo(-.8,-8);g.quadraticCurveTo(-4,-15,-7,-16);g.moveTo(.8,-8);g.quadraticCurveTo(4,-15,7,-16);g.stroke();g.restore()}
+  /* sparkles */
+  const spark=(x,y,v)=>S.push({x,y,vx:R(-v,v),vy:R(-v,v*.4)-8,l:0,d:R(1,2.4),s:R(1.5,4),c:Math.random()<.7?"255,225,150":"255,255,255"});
+  /* the couple: original fairy-tale bride (long golden hair) and prince, faceless silhouettes */
+  function fig(kind,x,y,u,ph,mode,t,al){
+    g.save();g.globalAlpha*=al;g.translate(x,y);g.scale(u,u);
+    g.fillStyle="rgba(20,10,40,.35)";g.beginPath();g.ellipse(0,0,22,3.5,0,0,TAU);g.fill();
+    const sw=Math.sin(ph),skin="#f0cdb4";g.translate(0,mode==2?0:-Math.abs(sw)*(mode?3:1.2));const im=IMG[kind];
+    if(im&&im.naturalWidth){const h=100,w=h*im.naturalWidth/im.naturalHeight;g.rotate((mode==1?.1:0)+(mode==2?0:Math.sin(ph)*.035));if(weddingConfig.introFlip)g.scale(-1,1);g.drawImage(im,-w/2,-h,w,h);g.restore();return}
+    g.lineCap="round";g.lineJoin="round";
+    if(kind==0){
+      const w=Math.sin(t*3+ph*.4)*(mode==1?5:3),hair=(c,lw,o)=>{g.strokeStyle=c;g.lineWidth=lw;g.beginPath();g.moveTo(-1,-90);g.bezierCurveTo(-16+o,-84,-18+w+o,-56,-24+w*1.5+o,-20);g.stroke()};
+      hair("#d9a233",11,0);hair("#f1c85c",7,2);hair("#fde9a5",2.4,3);
+      const hm=sw*3,gr=g.createLinearGradient(0,-54,0,0);gr.addColorStop(0,"#fff8ea");gr.addColorStop(1,"#e6cf9f");
+      g.fillStyle=gr;g.beginPath();g.moveTo(-7,-54);g.lineTo(7,-54);g.quadraticCurveTo(20,-28,26+hm,-3);g.quadraticCurveTo(0,3,-26+hm,-3);g.quadraticCurveTo(-20,-28,-7,-54);g.fill();
+      g.strokeStyle="#c9a45a";g.lineWidth=1.2;g.beginPath();g.moveTo(-26+hm,-3);g.quadraticCurveTo(0,3,26+hm,-3);g.stroke();
+      g.fillStyle="#c9a45a";[sw*6,-sw*6].forEach(fx=>{g.beginPath();g.ellipse(fx,-1,3.5,1.6,0,0,TAU);g.fill()});
+      g.fillStyle="#fff3dc";g.beginPath();g.moveTo(-6.5,-80);g.lineTo(6.5,-80);g.lineTo(5,-54);g.lineTo(-5,-54);g.fill();
+      g.strokeStyle=skin;g.lineWidth=3.2;g.beginPath();g.moveTo(0,-78);if(mode==2)g.lineTo(-15,-62);else g.lineTo(Math.sin(ph+3.14)*7,-57);g.stroke();
+      g.fillStyle=skin;g.beginPath();g.arc(0,-88,6.5,0,TAU);g.fill();
+      g.fillStyle="#e3b445";g.beginPath();g.arc(0,-89,7,Math.PI*.95,Math.PI*2.05);g.fill();
+      g.fillStyle="#fff";[[3,-96],[-1,-97.5],[-5,-96]].forEach(([a,b])=>{g.beginPath();g.arc(a,b,1.2,0,TAU);g.fill()});
+    }else{
+      const f=Math.sin(t*9)*(mode==1?5:1.2),run=mode==1;
+      g.fillStyle="#7a2e4a";g.beginPath();g.moveTo(-3,-82);g.quadraticCurveTo(-18+f,-68,-25+f*1.5,-36);g.quadraticCurveTo(-12,-44,-2,-50);g.fill();
+      const leg=(p,d)=>{const a=mode==2?d*.14:Math.sin(p)*(run?.95:.45),b=run?Math.max(0,-Math.cos(p))*1.1:0,kx=Math.sin(a)*24,ky=-50+Math.cos(a)*24;
+        g.beginPath();g.moveTo(0,-50);g.lineTo(kx,ky);g.lineTo(kx+Math.sin(a-b)*24,ky+Math.cos(a-b)*24);g.stroke()};
+      g.strokeStyle="#2b2250";g.lineWidth=6.5;leg(ph,1);leg(ph+Math.PI,-1);
+      g.fillStyle="#2f3f8f";g.beginPath();g.moveTo(-8,-84);g.lineTo(8,-84);g.lineTo(9.5,-47);g.lineTo(-9.5,-47);g.fill();
+      g.fillStyle="#d9b563";g.fillRect(-9.5,-56,19,3);
+      g.strokeStyle="#2f3f8f";g.lineWidth=5;const aa=Math.sin(ph+3.14)*(run?1.1:.5),ab=Math.sin(ph)*(run?1.1:.5);
+      g.beginPath();g.moveTo(0,-82);g.lineTo(Math.sin(aa)*22,-82+Math.cos(aa)*22);g.stroke();
+      g.beginPath();g.moveTo(0,-82);if(mode==2)g.lineTo(18,-64);else g.lineTo(Math.sin(ab)*22,-82+Math.cos(ab)*22);g.stroke();
+      g.fillStyle=skin;g.beginPath();g.arc(0,-92,6.8,0,TAU);g.fill();
+      g.fillStyle="#4a2f22";g.beginPath();g.arc(0,-93,7.4,Math.PI*.9,Math.PI*2.1);g.fill();g.beginPath();g.arc(-5,-91,3.4,0,TAU);g.fill();
+    }
+    g.restore()}
+  function startScene(env,cb){if(calm){setTimeout(cb,300);return}
+    const r=env.getBoundingClientRect(),base=Math.min(H*.0027,W*.0048);
+    sc={t0:performance.now(),sx:r.left+r.width/2,sy:r.top+r.height*.55,base,gy:H*.9,gap:base*30,cb,pb:0,pg:0,fade:1,done:false};
+    sc.ex=Math.min(W*.5+base*110,W-base*42)}
+  function drawScene(dt,now){if(!sc)return;const tt=(now-sc.t0)/1e3,TC=4.6,TG=1.5;
+    if(sc.out){sc.fade=1-(now-sc.out)/1200;if(sc.fade<=0){sc=null;return}}
+    const caught=tt>=TC;
+    if(caught&&!sc.done){sc.done=true;sc.hx=sc.ex-sc.gap/2;sc.hy=sc.gy-sc.base*62;sc.cb&&sc.cb()}
+    const ub=cl(tt/TC),ug=cl((tt-TG)/(TC-TG)),pos=(u,ex)=>({x:sc.sx+(ex-sc.sx)*u,y:sc.sy+(sc.gy-sc.sy)*ease(cl(u/.4)),k:.28+.72*ease(cl(u/.55))});
+    const pb=pos(ub,sc.ex),pg=pos(ug,sc.ex-sc.gap);
+    if(!caught){sc.pb+=dt*5.5;sc.pg+=dt*13}
+    g.save();g.globalAlpha=sc.fade;
+    if(caught){const a=cl((tt-TC)/1.2)*.55,cx=sc.ex-sc.gap/2,cy=sc.gy-sc.base*50,gr=g.createRadialGradient(cx,cy,0,cx,cy,sc.base*120);
+      gr.addColorStop(0,`rgba(255,226,160,${a})`);gr.addColorStop(1,"rgba(255,226,160,0)");g.fillStyle=gr;g.fillRect(0,0,W,H)}
+    if(tt>TG)fig(1,pg.x,pg.y,sc.base*pg.k,sc.pg,caught?2:1,now/1e3,cl((tt-TG)/.5));
+    fig(0,pb.x,pb.y,sc.base*pb.k,sc.pb,caught?2:0,now/1e3,cl(tt/.6));
+    g.restore()}
+  let lt=null;
+  function drawLight(now){if(!lt)return;const t=(now-lt.t0)/1e3,G=1.6;
+    if(t<G){const r=ease(cl(t/G))*Math.hypot(W,H)*1.5+6,gr=g.createRadialGradient(lt.x,lt.y,0,lt.x,lt.y,r);
+      gr.addColorStop(0,"rgba(255,252,240,1)");gr.addColorStop(.7,"rgba(255,240,200,.98)");gr.addColorStop(1,"rgba(255,226,160,0)");g.fillStyle=gr;g.fillRect(0,0,W,H)}
+    else{if(!lt.done){lt.done=true;lt.cb&&lt.cb()}const a=1-cl((t-G-.5)/1.4);if(a<=0){lt=null;return}g.fillStyle=`rgba(255,240,200,${a})`;g.fillRect(0,0,W,H)}}
+  function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-last)/1e3),t=now/1e3;last=now;g.clearRect(0,0,W,H);
+    for(const l of L){l.y-=l.v*dt;if(l.y<-80)Object.assign(l,lantern(false));dL(l,t)}
+    drawScene(dt,now);
+    if(api.amb&&Math.random()<dt*6)spark(R(0,W),R(0,H),6);
+    for(let i=B.length-1;i>=0;i--){const b=B[i];sB(b,dt,now,t);if(b.dead)B.splice(i,1);else dB(b)}
+    for(let i=S.length-1;i>=0;i--){const p=S[i];p.l+=dt;if(p.l>p.d){S.splice(i,1);continue}p.x+=p.vx*dt;p.y+=p.vy*dt;
+      const a=Math.sin(Math.PI*p.l/p.d);g.fillStyle=`rgba(${p.c},${a})`;g.fillRect(p.x-p.s,p.y-.5,p.s*2,1);g.fillRect(p.x-.5,p.y-p.s,1,p.s*2);g.beginPath();g.arc(p.x,p.y,p.s*.35,0,TAU);g.fill()}drawLight(now)}
+  const api=window.FX={amb:false,startScene,count:()=>B.length,hands:()=>({x:sc?sc.hx:W/2,y:sc?sc.hy:H/2}),
+    stopScene(){if(!sc)return;if(sc.done)sc.out=performance.now();else sc=null},
+    fadeButterflies(){const n=performance.now();B.forEach(b=>b.out=n)},
+    light(x,y,cb){if(calm){setTimeout(cb,300);return}lt={x,y,t0:performance.now(),cb,done:false}},
+    butterflies(x,y,n){n=n||(W<600?12:16);for(let i=0;i<n;i++){const b=bfly(x,y,i*180);b.pat=i%SP.length;b.h=-1.57+R(-1.6,1.6);B.push(b)}},
+    burst(x,y,n){for(let i=0;i<n;i++)spark(x,y,90)}};
+  addEventListener("pointermove",e=>pt={x:e.clientX,y:e.clientY,t:performance.now()/1e3},{passive:true});
+  addEventListener("pointerdown",e=>{pt={x:e.clientX,y:e.clientY,t:performance.now()/1e3};api.burst(e.clientX,e.clientY,6)},{passive:true});
+  if(!calm){last=performance.now();requestAnimationFrame(frame)}
+})();
+
+/* ===== main ===== */
+(function(){
+  function renderStatic(){
+    miles.innerHTML = weddingConfig.story.map(s => `<li>${s[LANG]}</li>`).join("");
+    tl.innerHTML = weddingConfig.timeline.map(e => { const c = e[LANG]; return `<li><span class="ic" aria-hidden="true">${e.icon}</span><time>${e.time}</time><h3>${c[0]}</h3><p>${c[1]}</p></li>`; }).join("");
+    const u = weddingConfig.mapsUrl; mapBtn.href = /^https?:/.test(u) ? u : "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(weddingConfig.venueName.en + " " + weddingConfig.venueAddress.en);
+  }
+  document.addEventListener("langchange", renderStatic);
+  applyLang(LANG); window.buildGallery();
+  document.querySelectorAll("[data-lang]").forEach(b => b.onclick = () => applyLang(b.dataset.lang));
+  shareBtn.onclick = () => { const txt = I18N[LANG].shareMsg(nm("bride") + " & " + nm("groom"), fmtDate(true), weddingConfig.invitationUrl); window.open("https://wa.me/?text=" + encodeURIComponent(txt), "_blank", "noopener"); };
+  let T = [], opened = false; const at = (f, ms) => T.push(setTimeout(f, ms));
+  function enter(){ T.forEach(clearTimeout); FX.stopScene(); intro.classList.add("gone"); document.body.classList.remove("locked"); setTimeout(() => intro.remove(), 1800); }
+  function openInvite(){ if(opened) return; opened = true; env.classList.add("open"); intro.classList.add("opening"); window.startMusic();
+    /* bride walks out, groom runs after her; he catches her: butterflies + names; then light grows from them and takes us to the invitation */
+    at(() => FX.startScene(env, () => { const p = FX.hands(); intro.classList.add("glow"); FX.burst(p.x, p.y, 70); FX.butterflies(p.x, p.y);
+      at(() => FX.fadeButterflies(), 3800); at(() => FX.light(p.x, p.y, enter), 4000); }), 1700); }
+  openBtn.onclick = openInvite; env.onclick = openInvite;
+  env.onkeydown = e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); openInvite(); } };
+  skipBtn.onclick = enter;
+  const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && (e.target.classList.add("in"), io.unobserve(e.target))), {threshold:.15});
+  document.querySelectorAll("section:not(.hero)").forEach(s => { s.classList.add("rv"); io.observe(s); });
+})();
+</script>
+</body></html>
