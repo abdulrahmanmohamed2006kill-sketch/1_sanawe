@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تعلم C++ | دليل التعليقات والسطر الجديد التفاعلي</title>
+    <style>
+        /* ==========================================
+           1. المتغيرات والتهيئة العامة (Design Tokens)
+           ========================================== */
+        :root {
+            /* الألوان الأساسية - الوضع الفاتح */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --border-color: #e2e8f0;
+            --accent-color: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-light: #eff6ff;
+            --code-bg: #1e293b;
+            --code-text: #f8fafc;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --header-bg: rgba(255, 255, 255, 0.85);
+
+            /* ألوان مخصصة للأكواد */
+            --kw-color: #93c5fd;
+            --str-color: #86efac;
+            --cmt-color: #94a3b8;
+            --num-color: #fca5a5;
+            --pp-color: #c084fc;
+
+            --transition-speed: 0.3s;
+        }
+
+        .dark {
+            /* الألوان الأساسية - الوضع الداكن */
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --accent-color: #3b82f6;
+            --accent-hover: #60a5fa;
+            --accent-light: #1e3a8a;
+            --code-bg: #090d16;
+            --code-text: #f8fafc;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+            --header-bg: rgba(15, 23, 42, 0.85);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            line-height: 1.7;
+            padding-bottom: 60px;
+        }
+
+        /* ==========================================
+           2. شريط الملاحة والهيدر (Navbar & Header)
+           ========================================== */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: var(--header-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color var(--transition-speed);
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .logo-badge {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+            padding: 5px 10px;
+            border-radius: 6px;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+            background-color: var(--bg-tertiary);
+        }
+
+        .theme-toggle-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: var(--bg-tertiary);
+            border-color: var(--accent-color);
+        }
+
+        /* ==========================================
+           3. التنسيق العام للحاويات والبطاقات
+           ========================================== */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border-radius: 16px;
+            margin-bottom: 2.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 1.5rem auto;
+        }
+
+        .hero-tags {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background-color: var(--accent-light);
+            color: var(--accent-color);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title span {
+            background-color: var(--accent-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card ul {
+            padding-right: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .card li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .alert-box {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-right: 4px solid #ef4444;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            color: var(--text-primary);
+        }
+
+        .alert-box.info {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-right-color: #3b82f6;
+        }
+
+        .alert-title {
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        /* ==========================================
+           4. عرض الأكواد الثابتة (Code Blocks)
+           ========================================== */
+        .code-block-container {
+            position: relative;
+            margin: 1rem 0;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .code-header {
+            background-color: #0f172a;
+            color: #94a3b8;
+            padding: 6px 12px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .copy-btn {
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-color);
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 1rem;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* ==========================================
+           5. جدول المقارنة (\n vs endl)
+           ========================================== */
+        .table-responsive {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: right;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ==========================================
+           6. محرر الكود التفاعلي والمحاكي
+           ========================================== */
+        .editor-wrapper {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+
+        .editor-toolbar {
+            background-color: var(--bg-tertiary);
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: #10b981;
+            color: white;
+        }
+        .btn-primary:hover { background-color: #059669; }
+
+        .btn-secondary {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        .btn-secondary:hover { background-color: var(--accent-hover); }
+
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+        }
+        .btn-danger:hover { background-color: #dc2626; }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        .btn-outline:hover { background-color: var(--bg-primary); }
+
+        .editor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 400px;
+        }
+
+        @media (max-width: 768px) {
+            .editor-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* المكون البرمجي للمحرر */
+        .code-input-container {
+            position: relative;
+            background-color: var(--code-bg);
+            display: flex;
+            direction: ltr;
+            text-align: left;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            border-left: 1px solid var(--border-color);
+        }
+
+        .line-numbers {
+            width: 40px;
+            padding: 1rem 0.5rem;
+            background-color: rgba(0,0,0,0.2);
+            color: #64748b;
+            text-align: right;
+            user-select: none;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .editor-textarea-wrapper {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        /* الطبقة الخلفية لتلوين النص (Highlighting) */
+        .code-highlight {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 1rem;
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: var(--code-text);
+            pointer-events: none;
+            font-family: inherit;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        /* مربع إدخال النص الشفاف فوق التظليل */
+        .code-textarea {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 1rem;
+            margin: 0;
+            background: transparent;
+            color: transparent;
+            caret-color: #ffffff;
+            border: none;
+            outline: none;
+            resize: none;
+            font-family: inherit;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        /* ألوان Syntax Highlight */
+        .hl-keyword { color: var(--kw-color); font-weight: bold; }
+        .hl-string { color: var(--str-color); }
+        .hl-comment { color: var(--cmt-color); font-style: italic; }
+        .hl-number { color: var(--num-color); }
+        .hl-preprocessor { color: var(--pp-color); font-weight: bold; }
+
+        /* شاشة المخرجات (Output Panel) */
+        .output-panel {
+            background-color: #090d16;
+            color: #38bdf8;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            direction: ltr;
+            text-align: left;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+        }
+
+        .output-header {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 0.3rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .output-console {
+            flex-grow: 1;
+            white-space: pre-wrap;
+            word-break: break-all;
+            color: #f1f5f9;
+            font-size: 0.95rem;
+            overflow-y: auto;
+            max-height: 350px;
+        }
+
+        .simulator-notice {
+            background-color: var(--bg-tertiary);
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ==========================================
+           7. التجاوب مع جميع الشاشات (Responsive)
+           ========================================== */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .hero h1 { font-size: 1.8rem; }
+            .editor-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .editor-actions {
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- شريط الملاحة العلوي -->
+    <header>
+        <nav class="navbar">
+            <a href="#" class="logo">
+                <span>C++ Basics</span>
+                <span class="logo-badge">دليل تفاعلي</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#comments">التعليقات (Comments)</a></li>
+                <li><a href="#newline">الفرق بين \n و endl</a></li>
+                <li><a href="#editor">المحرر التفاعلي</a></li>
+            </ul>
+            <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">
+                <span id="themeIcon">☀️</span>
+                <span id="themeText">الوضع الفاتح</span>
+            </button>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>دليل مفاهيم C++ الأساسية</h1>
+            <p>منصة تعليمية مبسطة تشرح المفاهيم الدقيقة في لغة C++ مع محرر كود ومحاكي تفاعلي للمخرجات.</p>
+            <div class="hero-tags">
+                <span class="tag"># C++</span>
+                <span class="tag"># التعليقات</span>
+                <span class="tag"># Buffer Flush</span>
+                <span class="tag"># Performance</span>
+            </div>
+        </section>
+
+        <!-- القسم الأول: التعليقات (Comments) -->
+        <section id="comments">
+            <h2 class="section-title"><span>1</span> التعليقات (Comments) في C++</h2>
+            
+            <div class="grid">
+                <!-- بطاقة الشرح -->
+                <div class="card">
+                    <h3>أهمية التعليقات وأنواعها</h3>
+                    <p>التعليقات هي نصوص يكتبها المبرمج داخل الكود ويقوم المترجم (Compiler) بتجاهلها كلياً أثناء التجميع. لا تؤثر على حجم البرنامج أو سرعة تنفيذه.</p>
+                    <br>
+                    <strong>لماذا نستخدم التعليقات؟</strong>
+                    <ul>
+                        <li>توضيح الغرض من الأكواد المعقدة والخوارزميات.</li>
+                        <li>تسهيل قراءة الكود وتعديله من قبل فريق العمل.</li>
+                        <li>تعطيل أجزاء من الكود مؤقتاً أثناء الفحص واكتشاف الأخطاء (Debugging).</li>
+                    </ul>
+                </div>
+
+                <!-- بطاقة الأنواع -->
+                <div class="card">
+                    <h3>أنواع التعليقات في C++</h3>
+                    <p><strong>1. تعليق السطر الواحد (Single-line):</strong> يبدأ بـ <code>//</code> ويستمر حتى نهاية السطر الحالي فقط.</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span>C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                        </div>
+                        <pre><code>int age = 25; // هذا تعليق يوضح متغير العمر</code></pre>
+                    </div>
+
+                    <p><strong>2. تعليق متعدد الأسطر (Multi-line):</strong> يبدأ بـ <code>/*</code> وينتهي بـ <code>*/</code> ويشمل كل ما بينهما.</p>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span>C++</span>
+                            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                        </div>
+                        <pre><code>/* هذا برنامج يقوم بتحليل البيانات
+   وتقديم النتائج النهائية
+   تطوير: فريق البرمجة */
+int result = 100;</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- أخطاء شائعة في التعليقات -->
+            <div class="card" style="margin-bottom: 2.5rem;">
+                <h3>⚠️ أخطاء شائعة: الكومنت المتداخل (Nested Comments)</h3>
+                <p>من الأخطاء الشهيرة محاولة تداخل تعليقات متعددة الأسطر <code>/* ... */</code> داخل بعضها البعض. المترجم ينهي التعليق الكلي عند أول <code>*/</code> يواجهها، مما يسبب خطأ برمجي في باقي الكود.</p>
+                
+                <div class="alert-box">
+                    <div class="alert-title">مثال لخطأ تداخل التعليقات:</div>
+                    <div class="code-block-container">
+                        <div class="code-header">
+                            <span>C++ Error Example</span>
+                            <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+                        </div>
+                        <pre><code>/* بداية التعليق الخارجي
+   /* تعليق داخلي */ <- سيتم إنهاء كل التعليق هنا!
+   cout << "Hello World"; // هذا السطر سيتسبب في خطأ Syntax Error!
+*/</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- القسم الثاني: الفرق بين \n و endl -->
+        <section id="newline">
+            <h2 class="section-title"><span>2</span> الفرق بين n\ و endl في C++</h2>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>الرمز <code>\n</code> (Newline Character)</h3>
+                    <p>هو حرف هروب (Escape Character) يخبر النظام بالانتقال إلى بداية سطر جديد فقط.</p>
+                    <ul>
+                        <li><strong>العملية:</strong> إضافة حرف سطر جديد للـ Buffer.</li>
+                        <li><strong>الأداء:</strong> سريع جداً لأنه لا يجبر النظام على تفريغ الـ Buffer فوراً.</li>
+                        <li><strong>الاستخدام:</strong> ممتاز داخل الحلقات التكرارية (Loops) والطباعة المكثفة.</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>المُعالج <code>std::endl</code></h3>
+                    <p>هو I/O Manipulator يقوم بوظيفتين: الانتقال لسطر جديد + إجبار الـ Buffer على التفريغ (Flush).</p>
+                    <ul>
+                        <li><strong>العملية:</strong> ينزل سطر جديد + ينفذ <code>std::cout.flush()</code>.</li>
+                        <li><strong>الأداء:</strong> أبطأ نسبياً عند استخدامه بكثرة.</li>
+                        <li><strong>الاستخدام:</strong> عند الحاجة لضمان كتابة البيانات فوراً على الشاشة/الملف (مثل سجلات الأخطاء Logs).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- توضيح مفهوم الـ Buffer -->
+            <div class="alert-box info">
+                <div class="alert-title">💡 ما هو الـ Stream Buffer ولماذا يؤثر على السرعة؟</div>
+                <p>عندما تطلب طباعة نص بواسطة <code>cout</code>، لا يتم إرسال البيانات للشاشة فوراً لكل حرف، بل تخزن مؤقتاً في ذاكرة وسيطة تسمى <strong>Buffer</strong>. إرسال البيانات للشاشة من أبطأ العمليات في الحاسوب. <code>\n</code> تنتظر حتى يمتلئ البفر وتطبعه دفعة واحدة، بينما <code>endl</code> تجبر النظام على التوقف وطباعة البفر فوراً في كل مرة تفصل بينهما بسرعة التنفيذ!</p>
+            </div>
+
+            <!-- جدول المقارنة -->
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>وجه المقارنة</th>
+                            <th><code>\n</code></th>
+                            <th><code>std::endl</code></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>الوظيفة الأساسية</strong></td>
+                            <td>إضافة سطر جديد (Newline Character)</td>
+                            <td>إضافة سطر جديد + تفريغ الـ Buffer (Flush)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>النوع البرمجي</strong></td>
+                            <td>حرف نصي (Character / String Constant)</td>
+                            <td>دالة مُعالج إدخال وإخراج (Manipulator)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>السرعة والأداء</strong></td>
+                            <td>سريع جداً (High Performance)</td>
+                            <td>أبطأ عند التكرار الكثيف (Performance Overhead)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>التطبيقات الأنسب</strong></td>
+                            <td>اللوبات الكبيرة، البرمجة التنافسية (Competitive Programming)</td>
+                            <td>سجلات الأخطاء (Logs)، التفاعل المباشر مع المستخدم</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- القسم الثالث: محرر الكود التفاعلي ومحاكي المخرجات -->
+        <section id="editor">
+            <h2 class="section-title"><span>3</span> محرر الكود التفاعلي ومحاكي C++</h2>
+            
+            <div class="editor-wrapper">
+                <!-- شريط أدوات المحرر -->
+                <div class="editor-toolbar">
+                    <div style="font-weight: bold;">📝 محرر كود C++ التفاعلي</div>
+                    <div class="editor-actions">
+                        <button class="btn btn-primary" onclick="runSimulation()">▶ تشغيل الكود</button>
+                        <button class="btn btn-secondary" onclick="loadExample('comments')">مثال التعليقات</button>
+                        <button class="btn btn-secondary" onclick="loadExample('newline')">مثال \n و endl</button>
+                        <button class="btn btn-outline" onclick="copyEditorCode()">📋 نسخ الكود</button>
+                        <button class="btn btn-danger" onclick="clearEditor()">🗑 مسح</button>
+                    </div>
+                </div>
+
+                <!-- مساحة الكتابة والمخرجات -->
+                <div class="editor-grid">
+                    <!-- جهة إدخال الكود -->
+                    <div class="code-input-container">
+                        <div class="line-numbers" id="lineNumbers">1</div>
+                        <div class="editor-textarea-wrapper">
+                            <pre class="code-highlight" id="codeHighlight" aria-hidden="true"></pre>
+                            <textarea 
+                                class="code-textarea" 
+                                id="codeArea" 
+                                spellcheck="false" 
+                                oninput="updateEditor()"
+                                onscroll="syncScroll()"
+                                onkeydown="handleKeyDown(event)"
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <!-- جهة عرض المخرجات -->
+                    <div class="output-panel">
+                        <div class="output-header">
+                            <span>نافذة المخرجات (Output Console)</span>
+                            <span id="runTimeText">جاهز</span>
+                        </div>
+                        <div class="output-console" id="outputConsole">// اضغط على "تشغيل الكود" لمشاهدة المخرجات هنا...</div>
+                    </div>
+                </div>
+
+                <!-- تنبيه توضيحي -->
+                <div class="simulator-notice">
+                    📌 <strong>ملاحظة هامة:</strong> هذا نافذة محاكي (Simulator) واجهة أمومية لترجمة تعليمات <code>std::cout</code> والسطور والتعليقات الأساسية فقط وليس كومبايلر C++ حقيقي كاملاً.
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- عنصر التنبيهات Toast -->
+    <div id="toast" class="toast">تم النسخ بنجاح!</div>
+
+    <!-- ==========================================
+       8. منطق السكريبت (JavaScript)
+       ========================================== -->
+    <script>
+        // الأكواد المسبقة للأمثلة
+        const EXAMPLES = {
+            comments: `#include <iostream>
+using namespace std;
+
+int main() {
+    // هذا تعليق سطر واحد لا يظهر بالمخرجات
+    cout << "مرحباً بك في درس التعليقات!" << endl;
+
+    /* هذا تعليق متعدد الأسطر
+       يمكننا كتابة شرح مطول هنا
+       بدون التأثير على الكود */
+    cout << "التعليقات تجعل كودك أكثر جودة." << endl;
+
+    return 0;
+}`,
+            newline: `#include <iostream>
+using namespace std;
+
+int main() {
+    // استخدام \\n للسطر الجديد
+    cout << "السطر الأول\\nالسطر الثاني\\nالسطر الثالث\\n";
+
+    cout << "------------------" << endl;
+
+    // استخدام endl للسطر الجديد وتفريغ البفر
+    cout << "سطر بواسطة endl 1" << endl;
+    cout << "سطر بواسطة endl 2" << endl;
+
+    return 0;
+}`
+        };
+
+        const codeArea = document.getElementById('codeArea');
+        const codeHighlight = document.getElementById('codeHighlight');
+        const lineNumbers = document.getElementById('lineNumbers');
+        const outputConsole = document.getElementById('outputConsole');
+        const runTimeText = document.getElementById('runTimeText');
+
+        // التهيئة عند تحميل الصفحة
+        window.onload = function() {
+            loadExample('comments');
+        };
+
+        // 1. تبديل الوضع الداكن والفاتح
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'الوضع الداكن';
+            } else {
+                html.classList.add('dark');
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'الوضع الفاتح';
+            }
+        }
+
+        // 2. تحديث محرر الكود وتنسيقه وتلوينه
+        function updateEditor() {
+            const text = codeArea.value;
+            
+            // تحديث أرقام الأسطر
+            const lines = text.split('\n').length;
+            let lineNumsHTML = '';
+            for (let i = 1; i <= lines; i++) {
+                lineNumsHTML += i + '<br>';
+            }
+            lineNumbers.innerHTML = lineNumsHTML;
+
+            // التلوين البرمجي البسيط (Syntax Highlighting)
+            let highlighted = escapeHTML(text);
+
+            // تلوين الموجهات (Include)
+            highlighted = highlighted.replace(/(#include\s+&lt;[^&gt;]+&gt;)/g, '<span class="hl-preprocessor">$1</span>');
+            
+            // تلوين الكلمات المفتاحية
+            const keywords = ['int', 'double', 'float', 'char', 'string', 'bool', 'void', 'return', 'using', 'namespace', 'std', 'if', 'else', 'for', 'while', 'cout', 'endl'];
+            keywords.forEach(kw => {
+                const reg = new RegExp('\\b(' + kw + ')\\b', 'g');
+                highlighted = highlighted.replace(reg, '<span class="hl-keyword">$1</span>');
+            });
+
+            // تلوين النصوص السلسلة "strings"
+            highlighted = highlighted.replace(/("(?:[^"\\]|\\.)*")/g, '<span class="hl-string">$1</span>');
+
+            // تلوين الأرقام
+            highlighted = highlighted.replace(/\b(\d+)\b/g, '<span class="hl-number">$1</span>');
+
+            // تلوين الكومنتات Single Line
+            highlighted = highlighted.replace(/(\/\/[^\n]*)/g, '<span class="hl-comment">$1</span>');
+            
+            // تلوين الكومنتات Multi Line
+            highlighted = highlighted.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="hl-comment">$1</span>');
+
+            codeHighlight.innerHTML = highlighted + '\n';
+        }
+
+        // تحويل رموز HTML الخاصة لمنع الـ Injection في التظليل
+        function escapeHTML(str) {
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        // المزامنة بين التمرير في الـ Textarea والـ Highlight
+        function syncScroll() {
+            codeHighlight.scrollTop = codeArea.scrollTop;
+            codeHighlight.scrollLeft = codeArea.scrollLeft;
+            lineNumbers.scrollTop = codeArea.scrollTop;
+        }
+
+        // التعامل مع مفتاح Tab ومفاتيح الكيبورد
+        function handleKeyDown(e) {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = codeArea.selectionStart;
+                const end = codeArea.selectionEnd;
+
+                // إضافة 4 مسافات عند ضغط Tab
+                codeArea.value = codeArea.value.substring(0, start) + "    " + codeArea.value.substring(end);
+                codeArea.selectionStart = codeArea.selectionEnd = start + 4;
+                updateEditor();
+            }
+        }
+
+        // 3. أزرار التحكم بالمحرر
+        function loadExample(type) {
+            if (EXAMPLES[type]) {
+                codeArea.value = EXAMPLES[type];
+                updateEditor();
+                outputConsole.textContent = '// اضغط "تشغيل الكود" للرؤية...';
+            }
+        }
+
+        function clearEditor() {
+            codeArea.value = '';
+            updateEditor();
+            outputConsole.textContent = '';
+        }
+
+        function copyEditorCode() {
+            copyToClipboard(codeArea.value);
+        }
+
+        function copyCode(button) {
+            const container = button.closest('.code-block-container');
+            const code = container.querySelector('code').innerText;
+            copyToClipboard(code);
+        }
+
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            showToast('تم نسخ النص إلى الحافظة!');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // 4. محاكاة مخرجات cout في C++
+        function runSimulation() {
+            const code = codeArea.value;
+            outputConsole.textContent = '';
+            runTimeText.textContent = 'جاري التشغيل...';
+
+            setTimeout(() => {
+                try {
+                    let output = '';
+                    
+                    // إزالة التعليقات متعددة الأسطر والسطر الواحد أولاً لكي لا تنفذ
+                    let cleanCode = code.replace(/\/\*[\s\S]*?\*\//g, '');
+                    cleanCode = cleanCode.replace(/\/\/[^\n]*/g, '');
+
+                    // البحث عن عبارات cout
+                    // نطابق كل عمليات cout وحين ينتهي السطر بـ ;
+                    const coutRegex = /cout\s*<<\s*([\s\S]*?);/g;
+                    let match;
+
+                    while ((match = coutRegex.exec(cleanCode)) !== null) {
+                        const statement = match[1];
+                        
+                        // تقسيم الأجزاء المفصولة بـ <<
+                        const parts = statement.split('<<');
+                        
+                        parts.forEach(part => {
+                            let trimmed = part.trim();
+                            
+                            if (trimmed === 'endl') {
+                                output += '\n';
+                            } else if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
+                                // نص عادي بين اقتباسات
+                                let str = trimmed.slice(1, -1);
+                                // معالجة رموز الهروب \n
+                                str = str.replace(/\\n/g, '\n');
+                                str = str.replace(/\\t/g, '\t');
+                                output += str;
+                            } else if (!isNaN(trimmed) && trimmed !== '') {
+                                // رقم
+                                output += trimmed;
+                            }
+                        });
+                    }
+
+                    if (output === '') {
+                        outputConsole.textContent = '[لم يتم العثور على مخرجات cout صالحة أو الكود يحتوي تعليقات فقط]';
+                    } else {
+                        outputConsole.textContent = output;
+                    }
+
+                    runTimeText.textContent = 'تم التنفيذ بنجاح';
+                } catch (err) {
+                    outputConsole.textContent = 'خطأ في المحاكاة: ' + err.message;
+                    runTimeText.textContent = 'حدث خطأ';
+                }
+            }, 200);
+        }
+    </script>
+</body>
+</html>
