@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>C++ من الصفر</title>
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== الألوان (عدّلها من هنا) ===== */
+:root{--bg:#eaf2ef;--card:#fff;--ink:#12302b;--mut:#4a655f;--ac:#0b7a6b;--onac:#fff;--ac2:#c27c0a;--bd:#c9dbd6;--ok:#157a3d;--bad:#b3261e;--code:#0e1f20;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1719;--card:#142427;--ink:#e3f1ee;--mut:#9bb5af;--ac:#45d3b7;--onac:#06201b;--ac2:#f0b429;--bd:#27403f;--ok:#5fd68a;--bad:#ff8a80;--code:#081213;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0c1719;--card:#142427;--ink:#e3f1ee;--mut:#9bb5af;--ac:#45d3b7;--onac:#06201b;--ac2:#f0b429;--bd:#27403f;--ok:#5fd68a;--bad:#ff8a80;--code:#081213;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.8 'Readex Pro',Tahoma,sans-serif;background-image:linear-gradient(var(--bd) 1px,transparent 1px),linear-gradient(90deg,var(--bd) 1px,transparent 1px);background-size:44px 44px;background-attachment:fixed}
+.wrap{max-width:860px;margin:auto;padding:0 14px 60px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:2px solid var(--bd);padding:10px 14px}
+.top{max-width:860px;margin:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+h1{margin:0;font-size:22px;flex:1}
+h1 code{direction:ltr;display:inline-block;color:var(--ac);font-family:Consolas,'JetBrains Mono',monospace}
+.chip{background:var(--card);border:2px solid var(--bd);border-radius:20px;padding:2px 12px;font-weight:600;font-size:14px}
+.pbar{max-width:860px;margin:8px auto 0;height:10px;background:var(--card);border:1px solid var(--bd);border-radius:6px;overflow:hidden}
+#bar{height:100%;width:0;background:var(--ac);transition:width .5s}
+nav{display:flex;gap:6px;overflow-x:auto;max-width:860px;margin:8px auto 0;padding-bottom:4px}
+nav button{white-space:nowrap}
+button{font:inherit;cursor:pointer}
+.btn,.tab{background:var(--card);color:var(--ink);border:2px solid var(--bd);border-radius:10px;padding:4px 14px;transition:transform .1s}
+.btn:hover,.tab:hover{border-color:var(--ac)}
+.tab.on,.btn.pri{background:var(--ac);color:var(--onac);border-color:var(--ac);font-weight:600}
+:focus-visible{outline:3px solid var(--ac2);outline-offset:2px}
+section{background:var(--card);border:2px solid var(--bd);border-radius:14px;padding:16px 18px;margin:16px 0}
+h2{margin:0 0 6px;font-size:20px}h3{margin:0 0 8px;font-size:17px;color:var(--ac)}
+.code{position:relative;background:var(--code);border-radius:10px;margin:10px 0}
+.code pre,.out{margin:0;padding:14px;overflow-x:auto;direction:ltr;text-align:left;font:14px/1.7 Consolas,'JetBrains Mono',monospace;color:#d6e6e3}
+.out{background:var(--code);border-radius:10px;margin:8px 0;min-height:40px}
+.cp{position:absolute;top:6px;left:6px;font-size:12px;padding:0 10px}
+.k{color:#7cc4ff}.s{color:#9be28f}.n{color:#ffb86b}.c{color:#8aa5a0}.p{color:#d9a0ff}.f{color:#ffd866}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+label{display:flex;gap:6px;align-items:center}
+input,select{font:inherit;background:var(--bg);color:var(--ink);border:2px solid var(--bd);border-radius:8px;padding:2px 8px;max-width:150px;direction:ltr}
+.msg{margin:4px 0;font-weight:600;min-height:28px}
+.box{min-width:110px;min-height:70px;border:2px dashed var(--ac);border-radius:10px;padding:6px;text-align:center;flex:1}
+.box b{direction:ltr;display:block;color:var(--ac)}
+.chipv{direction:ltr;display:inline-block;margin:2px;padding:0 10px;border-radius:8px;background:var(--bg);border:2px solid var(--bd);font-family:Consolas,monospace}
+.chipv.sel{border-color:var(--ac2);background:var(--ac2);color:#000}
+.q button{display:block;width:100%;text-align:right;margin:5px 0}
+.q .good{border-color:var(--ok);background:var(--ok);color:#fff}.q .bad{border-color:var(--bad)}
+.shake{animation:sh .3s}@keyframes sh{25%{transform:translateX(6px)}75%{transform:translateX(-6px)}}
+#toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ac);color:var(--onac);padding:6px 18px;border-radius:20px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9}
+#toast.on{opacity:1}
+.big{font-size:42px;text-align:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <h1><code>C++</code> من الصفر 🧩</h1>
+    <span class="chip">⭐ <span id="xp">0</span> XP</span>
+    <span class="chip" id="lvl">المستوى 1</span>
+    <button class="btn" id="th" aria-label="تبديل الوضع الفاتح/الداكن">🌓</button>
+  </div>
+  <div class="pbar" role="progressbar" aria-label="تقدّم الكورس" aria-valuemin="0" aria-valuemax="100"><div id="bar"></div></div>
+  <nav id="nav" aria-label="الدروس"></nav>
+</header>
+<main class="wrap" id="app"></main>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ===== أدوات عامة ===== */
+const $=s=>document.querySelector(s), V=id=>document.getElementById(id).value;
+const hl=c=>c.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/(\/\/.*|#include.*|"[^"]*"|'[^']'|\b(?:int|double|char|string|bool|if|else|return|using|namespace|std|true|false)\b|\b\d+\.?\d*\b|\b(?:cout|cin|endl)\b)/g,m=>{
+  const t=m[0]=='/'?'c':m[0]=='#'?'p':(m[0]=='"'||m[0]=="'")?'s':/\d/.test(m[0])?'n':/^(cout|cin|endl)$/.test(m)?'f':'k';return `<span class="${t}">${m}</span>`});
+const code=c=>`<div class="code"><button class="btn cp">نسخ الكود</button><pre dir="ltr"><code>${hl(c)}</code></pre></div>`;
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),1800)}
+
+/* ===== حفظ التقدم: localStorage وبديل في الذاكرة ===== */
+let mem=null;
+const store={get(){try{return JSON.parse(localStorage.getItem('cppcourse'))||mem}catch(e){return mem}},set(v){mem=v;try{localStorage.setItem('cppcourse',JSON.stringify(v))}catch(e){}}};
+let S=Object.assign({xp:0,done:{},g:{},qa:{},theme:''},store.get());
+const save=()=>store.set(S);
+
+/* ===== الوضع الفاتح/الداكن ===== */
+function theme(t){S.theme=t;document.documentElement.dataset.theme=t;save()}
+theme(S.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
+$('#th').onclick=()=>theme(S.theme=='dark'?'light':'dark');
+
+/* ===== تقدّم ونقاط ===== */
+const prog=()=>Math.round(L.reduce((s,l)=>s+(S.g[l.id]?.5:0)+.5*l.q.filter((_,i)=>S.qa[l.id+i]).length/l.q.length,0)/L.length*100);
+function head(){
+  $('#xp').textContent=S.xp;$('#lvl').textContent='المستوى '+(Math.floor(S.xp/100)+1);
+  const p=prog();$('#bar').style.width=p+'%';$('#bar').parentNode.setAttribute('aria-valuenow',p);
+  $('#nav').innerHTML=L.map((l,i)=>`<button class="tab ${i==cur?'on':''}" data-i="${i}">${l.i} ${i+1}. ${l.t} ${S.done[l.id]?'🏅':''}</button>`).join('')+`<span class="chip">${p}%</span>`;
+  document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>show(+b.dataset.i));
+}
+function xp(n,m){S.xp+=n;save();head();toast(`+${n} XP ${m||''}`)}
+function chk(l){ // شارة الدرس لما اللعبة والاختبار يخلصوا
+  if(!S.done[l.id]&&S.g[l.id]&&l.q.every((_,i)=>S.qa[l.id+i])){S.done[l.id]=1;xp(50,'🏅 شارة: '+l.b)}
+}
+function win(el,l,m){el.innerHTML=`<p class="msg big">🎉</p><p class="msg">${m}</p>`;if(!S.g[l.id]){S.g[l.id]=1;xp(30,'لعبة مكتملة 🎮')}chk(l);head()}
+
+/* ===== ألعاب ===== */
+// 1) سحب وإفلات (أو اضغط القيمة ثم الصندوق)
+function gDrag(el,l){
+  const it=[['25','int'],['"Ali"','string'],['3.14','double'],['true','bool'],["'A'",'char'],['-7','int']],
+  tip={int:'رقم صحيح من غير كسور',double:'رقم فيه علامة عشرية',char:'حرف واحد بين علامتي \' \'',string:'نص بين علامتي " "',bool:'true أو false بس'};
+  let sel=null,left=it.length;
+  el.innerHTML=`<p>اسحب كل قيمة للصندوق الصح (أو اضغط القيمة ثم الصندوق):</p><div class="row" id="vals">${it.map((v,i)=>`<button class="chipv" draggable="true" data-i="${i}">${v[0]}</button>`).join('')}</div><div class="row">${Object.keys(tip).map(t=>`<div class="box" tabindex="0" role="button" data-t="${t}" aria-label="صندوق ${t}"><b>${t}</b></div>`).join('')}</div>`;
+  const put=(i,box)=>{const b=el.querySelector(`[data-i="${i}"]`);if(!b)return;
+    if(it[i][1]==box.dataset.t){box.appendChild(b);b.draggable=false;b.classList.remove('sel');sel=null;toast('✅ صح! +5 XP');S.xp+=5;save();head();if(!--left)win(el,l,'أحسنت! كل قيمة في صندوقها الصح.')}
+    else{box.classList.add('shake');setTimeout(()=>box.classList.remove('shake'),300);toast('🤔 قريب! تلميح: '+tip[it[i][1]])}};
+  el.querySelectorAll('.chipv').forEach(b=>{b.ondragstart=e=>e.dataTransfer.setData('t',b.dataset.i);b.onclick=()=>{el.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));sel=b.dataset.i;b.classList.add('sel')}});
+  el.querySelectorAll('.box').forEach(x=>{x.ondragover=e=>e.preventDefault();x.ondrop=e=>{e.preventDefault();put(e.dataTransfer.getData('t'),x)};
+    x.onclick=e=>{if(e.target==x||e.target.tagName=='B')if(sel!==null)put(sel,x)};x.onkeydown=e=>{if(e.key=='Enter'&&sel!==null)put(sel,x)}});
+}
+// 2) ترتيب الأسطر
+function gOrder(el,l){
+  const ok=['#include <iostream>','using namespace std;','int main() {','string name;','cout << "Enter your name: ";','cin >> name;','cout << "Hello, " << name << endl;','return 0;','}'];
+  let pool=ok.map((t,i)=>i).sort(()=>Math.random()-.5),ans=[];
+  const r=()=>{el.innerHTML=`<p>اضغط الأسطر بالترتيب الصح (اضغط سطر في برنامجك لإرجاعه):</p><div class="out" id="pl2">${pool.map(i=>`<button class="chipv" data-p="${i}">${hl(ok[i]).replace(/<\/?span[^>]*>/g,'')}</button>`).join('')}</div><div class="out" id="an">${ans.map(i=>`<button class="chipv" data-a="${i}">${ok[i].replace(/</g,'&lt;')}</button><br>`).join('')||'<span class="c">برنامجك فاضي…</span>'}</div><button class="btn pri" id="ck">تحقّق ✔️</button><p class="msg" id="mm"></p>`;
+    el.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const i=+b.dataset.p;pool=pool.filter(x=>x!=i);ans.push(i);r()});
+    el.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const i=+b.dataset.a;ans=ans.filter(x=>x!=i);pool.push(i);r()});
+    $('#ck').onclick=()=>{const good=ans.filter((x,k)=>x==k).length;
+      if(ans.length==ok.length&&good==ok.length)win(el,l,'برنامج كامل: بيطلب الاسم ويطبع ترحيب! 👏');
+      else $('#mm').textContent=`🤔 ${good} سطور في مكانها الصح. تلميح: ابدأ بـ #include وانتهي بـ }`}};
+  r();
+}
+// دالة مشتركة لألعاب الاختيار (إشارة المرور + حاسبة التقدير)
+function choice(el,l,N,view,opts,ans,end){
+  let i=0;const r=()=>{el.innerHTML=`<div class="out">${view(i)}</div><div class="row">${opts.map(o=>`<button class="btn">${o}</button>`).join('')}</div><p class="msg">جولة ${i+1} من ${N}</p>`;
+    el.querySelectorAll('.row .btn').forEach(b=>b.onclick=()=>{if(b.textContent==ans(i)){toast('✅ صح!');if(++i>=N)win(el,l,end);else r()}else{b.classList.add('shake');toast('🤔 مش بالظبط… اقرأ الشرط خطوة خطوة وجرّب تاني')}})};r();
+}
+// 3) حارس البوابة
+function gGate(el,l){
+  const R=[{r:'ادخل لو عمرك 18 أو أكتر',ok:['age>=18','18<=age'],a:19,e:'🧑'},{r:'ادخل لو عمرك أكبر من 12 (مش 12 نفسها)',ok:['age>12','12<age'],a:15,e:'🧒'},{r:'ادخل لو عمرك بالظبط 21',ok:['age==21','21==age'],a:21,e:'👨'}];
+  let i=0;const r=()=>{const x=R[i];el.innerHTML=`<p class="big">${x.e} 🚪</p><p class="msg">الشخص عمره ${x.a} — القاعدة: ${x.r}</p><div class="row"><code dir="ltr">if (</code><input id="gi" dir="ltr" placeholder="age >= 18" aria-label="الشرط"><code dir="ltr">)</code><button class="btn pri" id="gb">جرّب</button></div><p class="msg" id="gm">اكتب الشرط (استخدم المتغير age)</p>`;
+    const go=()=>{const v=V('gi').replace(/\s/g,'');
+      if(x.ok.includes(v)){toast('🚪 البوابة اتفتحت! +5 XP');S.xp+=5;save();head();if(++i>=R.length)win(el,l,'كل البوابات اتفتحت بشروط صح!');else r()}
+      else $('#gm').textContent=/^age=\d+$/.test(v)?'⚠️ = للإسناد! للمقارنة استخدم ==':'🤔 مش مظبوط. تلميح: استخدم >, <, >=, <= أو == مع الرقم'};
+    $('#gb').onclick=go;$('#gi').onkeydown=e=>{if(e.key=='Enter')go()}};r();
+}
+// 4) إشارة المرور
+function gLight(el,l){
+  const R=[['green','==','🟢'],['red','==','🔴'],['red','!=','🔴'],['yellow','==','🟡']];
+  choice(el,l,4,i=>{const[v,o,e]=R[i];return `<span class="big">${e}</span><pre dir="ltr" style="margin:0">string light = "${v}";\nif (light ${o} "green") { cout &lt;&lt; "Go"; }\nelse { cout &lt;&lt; "Stop"; }</pre>`},['Go','Stop'],i=>{const[v,o]=R[i];return ((v=='green')==(o=='=='))?'Go':'Stop'},'فهمت: if لو الشرط اتحقق، وإلا else بتشتغل!');
+}
+// 5) حاسبة التقدير
+function gGrade(el,l){
+  const S5=[95,85,72,40,80],f=s=>s>=90?'A':s>=80?'B':s>=70?'C':'F';
+  choice(el,l,5,i=>`<pre dir="ltr" style="margin:0">if (score >= 90) grade = 'A';\nelse if (score >= 80) grade = 'B';\nelse if (score >= 70) grade = 'C';\nelse grade = 'F';\n// score = ${S5[i]}</pre>`,['A','B','C','F'],i=>f(S5[i]),'ترتيب الشروط من الأكبر للأصغر هو السر: أول شرط يتحقق بيوقف السلسلة!');
+}
+
+/* ===== التجارب التفاعلية (محاكاة JavaScript) ===== */
+const O=(c,m,extra)=>{V('o');document.getElementById('o').innerHTML=hl(c)+(extra?'\n<span class="c">// الناتج:</span>\n'+extra:'');document.getElementById('m').textContent=m};
+const OUT='<pre dir="ltr" class="out" id="o"></pre><p class="msg" id="m"></p>';
+const cmp=(a,o,b)=>({'==':a==b,'!=':a!=b,'>':a>b,'<':a<b,'>=':a>=b,'<=':a<=b}[o]);
+
+/* ===== محتوى الدروس (لإضافة درس: أضف عنصرًا جديدًا هنا) ===== */
+const L=[
+{id:'vars',i:'📦',t:'المتغيرات',b:'صانع الصناديق',
+intro:`<p>المتغير زي <b>صندوق عليه اسم</b>: بنحط جواه قيمة ونناديه باسمه وقت ما نحتاجها. لازم نحدد <b>نوع</b> الصندوق: <code>int</code> للأعداد الصحيحة، <code>double</code> للأعداد العشرية، <code>char</code> لحرف واحد، <code>string</code> للنص، <code>bool</code> لـ true/false.</p><p><b>قواعد الأسماء:</b> تبدأ بحرف أو _ ، من غير مسافات، حساسة لحالة الأحرف (age ≠ Age)، ومينفعش تكون كلمة محجوزة زي int.</p>`,
+code:`int age = 25;          // تصريح + إسناد
+double price = 3.14;
+char grade = 'A';
+string name = "Ali";
+bool isStudent = true;
+age = 26;              // تغيير القيمة`,
+ph:`<div class="row"><label>النوع <select id="a"><option>int<option>double<option>char<option>string<option>bool</select></label><label>الاسم <input id="b" value="age"></label><label>القيمة <input id="c" value="25"></label></div>${OUT}`,
+pu(){const t=V('a'),n=V('b').trim(),v=V('c');let lit=v,m='';
+ if(!/^[A-Za-z_]\w*$/.test(n))m='❌ الاسم لازم يبدأ بحرف أو _ ومن غير مسافات';
+ else if(t=='int'&&!/^-?\d+$/.test(v))m='❌ int بياخد رقم صحيح بس (من غير كسور)';
+ else if(t=='double'&&!/^-?\d+(\.\d+)?$/.test(v))m='❌ double بياخد رقم (ممكن بكسر)';
+ else if(t=='bool'&&!/^(true|false)$/.test(v))m='❌ bool إما true أو false';
+ else if(t=='char'&&v.length!=1)m='❌ char حرف واحد بس';
+ if(t=='char')lit="'"+v+"'";if(t=='string')lit='"'+v+'"';
+ O(`${t} ${n} = ${lit};`,m||'✅ تصريح صحيح!')},
+game:gDrag,gt:'🎮 لعبة: صناديق الأنواع',
+q:[['إيه نوع المتغير المناسب لتخزين 3.14؟',['int','double','char','bool'],1,'3.14 فيه كسر، فالنوع double. int بيشيل الأعداد الصحيحة بس، و char حرف واحد، و bool true/false.'],
+['أي اسم متغير مسموح؟',['2name','my name','my_name','int'],2,'my_name صح. 2name بيبدأ برقم، my name فيه مسافة، و int كلمة محجوزة.'],
+['إيه الصح لتخزين النص Ali؟',['string s = Ali;','string s = "Ali";','char s = "Ali";','int s = "Ali";'],1,'النص لازم يكون بين " " ونوعه string. char بياخد حرف واحد بين \' \'.']]},
+
+{id:'io',i:'⌨️',t:'الإدخال والإخراج',b:'المتحدث',
+intro:`<p>البرنامج بيتكلم بـ <code>cout</code> (الطباعة) وبيسمع بـ <code>cin</code> (القراءة). تخيل <b>cout</b> ميكروفون و<b>cin</b> أُذن.</p><p>الأسهم: <code>&lt;&lt;</code> مع cout (الكلام خارج)، و<code>&gt;&gt;</code> مع cin (القيمة داخلة للمتغير). للنزول لسطر جديد استخدم <code>endl</code> أو <code>"\\n"</code>.</p>`,
+code:`#include <iostream>
+using namespace std;
+int main() {
+  string name;
+  cout << "Enter your name: ";
+  cin >> name;
+  cout << "Hello, " << name << endl;
+  return 0;
+}`,
+ph:`<div class="row"><label>الاسم <input id="a" value="Sara"></label><label>بعد الترحيب <select id="b"><option value="endl">endl<option value="\\n">"\\n"<option value="none">بدون</select></label></div>${OUT}`,
+pu(){const n=V('a'),s=V('b');
+ O(`cout << "Hello, " << ${n?'name':'""'} << ${s=='none'?'""':s=='endl'?'endl':'"\\n"'};\ncout << "Bye";`,s=='none'?'⚠️ من غير سطر جديد الكلمتين لزقوا في بعض':'✅ endl و \\n الاتنين بينزلوا سطر',`Enter your name: ${n}\nHello, ${n}${s=='none'?'':'\n'}Bye`.replace(/</g,'&lt;'))},
+game:gOrder,gt:'🎮 لعبة: رتّب البرنامج',
+q:[['أي أمر بيقرأ قيمة من المستخدم؟',['cout','cin','endl','print'],1,'cin بيقرأ من لوحة المفاتيح، و cout بيطبع على الشاشة.'],
+['إيه الفرق بين endl و "\\n" عمليًا؟',['endl بتمسح الشاشة','الاتنين بينزلوا سطر جديد','"\\n" بتقفل البرنامج','مفيش أي سطر جديد'],1,'الاتنين بينزلوا سطر. endl بتفرّغ كمان الذاكرة المؤقتة فهي أبطأ شوية.'],
+['الصح لقراءة العمر في المتغير age؟',['cin << age;','cin >> age;','cout >> age;','cout << age >> cin;'],1,'cin بيستخدم >> (القيمة داخلة للمتغير)، و cout بيستخدم <<.']]},
+
+{id:'if',i:'🚦',t:'جملة if',b:'حارس البوابة',
+intro:`<p><code>if</code> زي حارس بوابة: <b>لو</b> الشرط صح بينفّذ الكود اللي جواها، ولو غلط بيعدّي عليها. الشرط بيستخدم عمليات المقارنة: <code>==</code> <code>!=</code> <code>&gt;</code> <code>&lt;</code> <code>&gt;=</code> <code>&lt;=</code>.</p><p>⚠️ <b>فخ مشهور:</b> <code>=</code> معناها <u>إسناد</u> (حط قيمة)، أما <code>==</code> فمعناها <u>مقارنة</u> (هل متساويين؟).</p>`,
+code:`int age = 20;
+if (age >= 18) {
+  cout << "Welcome!";
+}`,
+ph:`<div class="row"><label>age <input id="a" type="number" value="20"></label><label>العملية <select id="b"><option>>=<option>><option><<option><=<option>==<option>!=<option value="=">= (غلط!)</select></label><label>الرقم <input id="c" type="number" value="18"></label></div>${OUT}`,
+pu(){const a=+V('a'),o=V('b'),b=+V('c');let r=o=='='?true:cmp(a,o,b);
+ O(`int age = ${a};\nif (age ${o} ${b}) {\n  cout << "Welcome!";\n}`,o=='='?'⚠️ ده إسناد مش مقارنة! age بقت '+b+' والشرط بقى true دايمًا':(r?'✅ الشرط true':'❌ الشرط false'),r?'Welcome!':'(مفيش طباعة)')},
+game:gGate,gt:'🎮 لعبة: حارس البوابة',
+q:[['إيه معنى age == 18؟',['حط 18 في age','هل age بتساوي 18؟','age أكبر من 18','age مختلفة عن 18'],1,'== مقارنة وبترجع true/false. حط القيمة ده دور = (إسناد).'],
+['لو age = 17 هل بيتنفذ if (age >= 18)؟',['أيوه','لأ','يعتمد على المترجم','بيحصل خطأ'],1,'17 مش أكبر من أو تساوي 18 فالشرط false والكود اللي جواه بيتعدّى.'],
+['أي شرط معناه "مش بتساوي"؟',['age =! 5','age <> 5','age != 5','age =/= 5'],2,'علامة "مش بتساوي" في C++ هي !=.'],
+['إيه المشكلة في if (x = 5)؟',['مفيش مشكلة','بتسند 5 لـ x بدل ما تقارن','بتقارن x مع 5','بتطبع خطأ'],1,'= بتسند القيمة، والـ 5 غير صفر يعني true دايمًا. اكتب ==.']]},
+
+{id:'else',i:'🔀',t:'جملة else',b:'منظّم المرور',
+intro:`<p><code>else</code> هي <b>الخطة البديلة</b>: لو الشرط في if اتحقق ينفّذ الأولى، <u>وإلا</u> ينفّذ else. زي إشارة المرور: لو الإشارة خضرا امشي، وإلا قف. واحد بس من الاتنين هو اللي بيشتغل.</p>`,
+code:`int temp = 30;
+if (temp >= 25) {
+  cout << "Hot";
+} else {
+  cout << "Cool";
+}`,
+ph:`<div class="row"><label>temp <input id="a" type="number" value="30"></label></div>${OUT}`,
+pu(){const t=+V('a');O(`int temp = ${t};\nif (temp >= 25) {\n  cout << "Hot";\n} else {\n  cout << "Cool";\n}`,t>=25?'✅ الشرط اتحقق ← if اشتغلت':'↩️ الشرط ما اتحققش ← else اشتغلت',t>=25?'Hot':'Cool')},
+game:gLight,gt:'🎮 لعبة: إشارة المرور',
+q:[['إمتى بتشتغل else؟',['دايمًا','لما شرط if يكون false','لما شرط if يكون true','أول البرنامج'],1,'else بتشتغل بس لما شرط if ما يتحققش.'],
+['ممكن يشتغل if و else مع بعض في نفس التشغيل؟',['أيوه','لأ، واحد بس منهم','أحيانًا','بيعتمد على النوع'],1,'السلسلة بتنفّذ فرع واحد بس.'],
+['هل else محتاجة شرط؟',['أيوه','لأ، من غير شرط','أيوه ومعاه ==','أيوه ومعاه !='],1,'else بتاخد كل الحالات اللي باقية، فمش بتكتب لها شرط.']]},
+
+{id:'elif',i:'🎯',t:'جملة else if',b:'حاسب التقديرات',
+intro:`<p>لما يكون عندك أكتر من احتمالين، استخدم <code>else if</code> بين if و else. زي تصحيح الدرجات: A لو 90 فأكتر، B لو 80، C لو 70، وغير كده F.</p><p>⚠️ <b>الترتيب مهم!</b> C++ بيجرّب الشروط من فوق لتحت وبيقف عند <u>أول شرط</u> يتحقق. فابدأ بالشرط الأكثر تحديدًا (الأعلى).</p>`,
+code:`int score = 85;
+if (score >= 90) {
+  cout << "A";
+} else if (score >= 80) {
+  cout << "B";
+} else if (score >= 70) {
+  cout << "C";
+} else {
+  cout << "F";
+}`,
+ph:`<div class="row"><label>score <input id="a" type="number" value="95"></label><label><input id="b" type="checkbox" style="max-width:20px"> اعكس ترتيب الشروط</label></div>${OUT}`,
+pu(){const s=+V('a'),rev=document.getElementById('b').checked,ch=rev?[[70,'C'],[80,'B'],[90,'A']]:[[90,'A'],[80,'B'],[70,'C']];
+ const g=(ch.find(x=>s>=x[0])||[0,'F'])[1];
+ O(`int score = ${s};\n`+ch.map((x,i)=>`${i?'else ':''}if (score >= ${x[0]}) cout << "${x[1]}";`).join('\n')+`\nelse cout << "F";`,rev&&s>=80?'🐞 باج! أول شرط (>=70) اتحقق فوقف وماوصلش للأعلى':'✅ بيتنفّذ أول شرط صحيح من فوق',g)},
+game:gGrade,gt:'🎮 لعبة: حاسبة التقدير',
+q:[['score = 75. إيه الناتج في سلسلة (>=90 A, >=80 B, >=70 C, else F)؟',['A','B','C','F'],2,'75 مش >=90 ولا >=80، لكن >=70 فالناتج C.'],
+['ليه ترتيب الشروط مهم؟',['مش مهم','لأن أول شرط صحيح بيوقف السلسلة','عشان الشكل','عشان السرعة بس'],1,'لو بدأت بـ >=70 فـ 95 هتاخد C مع إنها تستاهل A.'],
+['إمتى نستخدم else if؟',['لما شرط واحد كفاية','لما عندنا أكتر من احتمالين','بدل cout','بدل المتغيرات'],1,'else if بيضيف فروع إضافية بين if و else.'],
+['هل else إجباري في نهاية السلسلة؟',['أيوه','لأ، اختياري','لأ وممنوع','أيوه ومعاه شرط'],1,'اختياري، لكنه مفيد لمعالجة أي حالة باقية.']]}
+];
+
+/* ===== عرض الدرس ===== */
+let cur=0;
+function show(i){
+  cur=i;const l=L[i],app=$('#app');
+  app.innerHTML=`<section><h2>${l.i} الدرس ${i+1}: ${l.t}</h2>${l.intro}${code(l.code)}</section>
+  <section><h3>🧪 جرّب بنفسك (محاكاة)</h3><div id="pl">${l.ph}</div></section>
+  <section><h3>${l.gt}</h3><div id="gm">${S.g[l.id]?'<p class="msg">✅ خلّصت اللعبة قبل كده — تقدر تعيدها للتدريب</p>':''}</div><button class="btn" id="gr">${S.g[l.id]?'العب تاني':'ابدأ اللعبة'}</button></section>
+  <section class="q"><h3>📝 اختبار سريع</h3><div id="qz"></div></section>
+  <div class="row"><button class="btn" id="pv" ${i?'':'disabled'}>◀ السابق</button><button class="btn pri" id="nx" ${i<L.length-1?'':'disabled'}>الدرس التالي ▶</button></div>`;
+  app.querySelector('.cp').onclick=e=>{const b=e.target;try{navigator.clipboard.writeText(l.code)}catch(x){const t=document.createElement('textarea');t.value=l.code;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}b.textContent='اتنسخ ✅';setTimeout(()=>b.textContent='نسخ الكود',1500)};
+  document.querySelectorAll('#pl input,#pl select').forEach(e=>{e.oninput=()=>l.pu();e.onchange=()=>l.pu()});l.pu();
+  $('#gr').onclick=()=>{$('#gr').hidden=true;l.game($('#gm'),l)};
+  $('#pv').onclick=()=>show(i-1);$('#nx').onclick=()=>show(i+1);
+  quiz(l);head();scrollTo(0,0);
+}
+/* ===== الاختبار ===== */
+function quiz(l){
+  $('#qz').innerHTML=l.q.map((q,qi)=>`<div data-q="${qi}"><p><b>${qi+1}. ${q[0].replace(/</g,'&lt;')}</b></p>${q[1].map((o,oi)=>`<button class="btn" data-o="${oi}" dir="auto">${o.replace(/</g,'&lt;')}</button>`).join('')}<p class="msg" aria-live="polite">${S.qa[l.id+qi]?'✅ '+q[3]:''}</p></div>`).join('');
+  l.q.forEach((q,qi)=>{let tries=0;const box=$(`[data-q="${qi}"]`);
+    box.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{const m=box.querySelector('.msg');if(S.qa[l.id+qi])return;
+      if(+b.dataset.o==q[2]){b.classList.add('good');S.qa[l.id+qi]=1;m.textContent='✅ صح! '+q[3];xp(tries?5:10,'إجابة صحيحة');chk(l);head()}
+      else{tries++;b.classList.add('bad');b.disabled=true;m.textContent=tries>1?'🤔 مش دي، ولا يهمك! '+q[3]:'🤔 قريب! فكّر تاني وجرّب إجابة تانية — ولا تقلق، الغلط جزء من التعلّم 💪'}})});
+}
+head();show(0);
+</script>
+</body>
+</html>
